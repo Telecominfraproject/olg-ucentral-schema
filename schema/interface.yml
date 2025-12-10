@@ -26,6 +26,11 @@ properties:
     description: Enable or disable the interface.
     type: boolean
     default: true
+  mac:
+    description: Mac address of the interface.
+    type: string
+    example:
+    - 98:e7:9a:27:fe:49
   mtu:
     description: Maximum Transmission Unit.
     type: integer

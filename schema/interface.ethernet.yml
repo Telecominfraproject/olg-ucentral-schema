@@ -20,12 +20,30 @@ properties:
     - full
     - half
     default: auto
-  options:
-    description: Ethernet options
-    type: array
-    items:
-      type: string
-      enum:
-      - enable-proxy-arp
-      - disable-arp-filter
-      - disable-forwarding
+  vlan-tag:
+    description:
+      Shall the port have a vlan tag.
+    type: string
+    enum:
+    - tagged
+    - un-tagged
+    - auto
+    default: auto
+  proxy-arp:
+    type: object
+    properties:
+      enable:
+        type: boolean
+        default: false
+  arp-filter:
+    type: object
+    properties:
+      enable:
+        type: boolean
+        default: true
+  forwarding:
+    type: object
+    properties:
+      enable:
+        type: boolean
+        default: true
