@@ -1,0 +1,47 @@
+description: Logical network interface configuration.
+type: object
+properties:
+  name:
+    description: Interface name.
+    type: string
+  type:
+    description: Interface type.
+    type: string
+    enum:
+    - ethernet
+    - vlan
+    - bridge
+    - loopback
+    - pppoe
+    default: ethernet
+  role:
+    description: Interface role.
+    type: string
+    enum:
+    - upstream
+    - downstream
+    - local
+  enabled:
+    description: Enable or disable the interface.
+    type: boolean
+    default: true
+  mtu:
+    description: Maximum Transmission Unit.
+    type: integer
+    maximum: 9000
+    minimum: 68
+  ethernet:
+    description: Physical port(s) for this interface.
+    type: array
+    items:
+      type: string
+  vlan:
+    $ref: https://ucentral.io/schema/v1/interface/vlan/
+  bridge:
+    $ref: https://ucentral.io/schema/v1/interface/bridge/
+  pppoe:
+    $ref: https://ucentral.io/schema/v1/interface/pppoe/
+  ipv4:
+    $ref: https://ucentral.io/schema/v1/interface/ipv4/
+  ipv6:
+    $ref: https://ucentral.io/schema/v1/interface/ipv6/

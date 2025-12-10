@@ -1,0 +1,24 @@
+description: sFlow export configuration.
+type: object
+properties:
+  agent-address:
+    type: string
+  interfaces:
+    type: array
+    items:
+      type: string
+  sampling-rate:
+    type: integer
+    default: 1000
+  servers:
+    type: array
+    items:
+      type: object
+      properties:
+        address:
+          type: string
+        port:
+          type: integer
+          default: 6343
+      required:
+      - address

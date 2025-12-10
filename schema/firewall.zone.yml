@@ -1,0 +1,21 @@
+description: Firewall zone configuration.
+type: object
+properties:
+  name:
+    description: Zone name.
+    type: string
+  default-action:
+    description: Default action for traffic.
+    type: string
+    enum:
+    - accept
+    - drop
+    - reject
+    default: drop
+  interfaces:
+    description: Interfaces in this zone.
+    type: array
+    items:
+      type: string
+required:
+- name

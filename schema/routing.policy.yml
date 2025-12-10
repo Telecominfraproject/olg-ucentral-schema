@@ -1,0 +1,49 @@
+description: Policy-based routing configuration.
+type: object
+properties:
+  rules:
+    description: Policy routing rules.
+    type: array
+    items:
+      type: object
+      properties:
+        priority:
+          description: Rule priority.
+          type: integer
+        source:
+          description: Source address/network to match.
+          type: string
+        destination:
+          description: Destination address/network to match.
+          type: string
+        inbound-interface:
+          description: Inbound interface to match.
+          type: string
+        table:
+          description: Routing table to use.
+          type: string
+      required:
+      - priority
+      - table
+  tables:
+    description: Custom routing tables.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        table-id:
+          type: integer
+        routes:
+          type: array
+          items:
+            type: object
+            properties:
+              destination:
+                type: string
+              next-hop:
+                type: string
+      required:
+      - name
+      - table-id

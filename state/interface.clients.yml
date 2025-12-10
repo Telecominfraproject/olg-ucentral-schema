@@ -1,0 +1,32 @@
+type: array
+items:
+  type: object
+  description:
+    This section describes a network neighbour.
+  properties:
+    mac:
+      type: string
+      description:
+        The MAC address of the neighbour.
+    ipv4_addresses:
+      type: array
+      description:
+        The IPv4 addresses that the neighbour is known to use.
+      items:
+        type: string
+    ipv6_addresses:
+      type: array
+      description:
+        The IPv4 addresses that the neighbour is known to use.
+      items:
+        type: string
+    ports:
+      type: array
+      description:
+        The physical network devices that that the neighbour has been seen on.
+      items:
+        type: string
+    last_seen:
+      type: number
+      description:
+        How long along was traffic from this neighbour last seen.

@@ -1,0 +1,37 @@
+description: Firewall configuration (zone-based, stateful).
+type: object
+properties:
+  state-policy:
+    description: Global connection state policy.
+    type: object
+    properties:
+      established:
+        type: string
+        enum:
+        - accept
+        - drop
+        default: accept
+      related:
+        type: string
+        enum:
+        - accept
+        - drop
+        default: accept
+      invalid:
+        type: string
+        enum:
+        - accept
+        - drop
+        default: drop
+  zones:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/zone/
+  rulesets:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/ruleset/
+  zone-policies:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/zone-policy/

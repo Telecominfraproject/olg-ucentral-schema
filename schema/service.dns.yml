@@ -1,0 +1,24 @@
+description: DNS recursive server configuration.
+type: object
+properties:
+  listen-addresses:
+    type: array
+    items:
+      type: string
+  allow-from:
+    type: array
+    items:
+      type: string
+  forwarding-servers:
+    type: array
+    items:
+      type: string
+  static-host-mappings:
+    type: array
+    items:
+      type: object
+      properties:
+        hostname:
+          type: string
+        address:
+          type: string

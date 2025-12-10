@@ -1,0 +1,75 @@
+description: OpenVPN configuration.
+type: object
+properties:
+  servers:
+    description: OpenVPN server instances.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        mode:
+          type: string
+          enum:
+          - site-to-site
+          - client-server
+          default: client-server
+        protocol:
+          type: string
+          enum:
+          - udp
+          - tcp
+          default: udp
+        port:
+          type: integer
+          default: 1194
+        subnet:
+          description: Client address pool.
+          type: string
+        tls:
+          type: object
+          properties:
+            ca-certificate:
+              type: string
+            certificate:
+              type: string
+            private-key:
+              type: string
+        push-routes:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+  clients:
+    description: OpenVPN client instances.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        remote-host:
+          type: string
+        remote-port:
+          type: integer
+          default: 1194
+        protocol:
+          type: string
+          enum:
+          - udp
+          - tcp
+          default: udp
+        tls:
+          type: object
+          properties:
+            ca-certificate:
+              type: string
+            certificate:
+              type: string
+            private-key:
+              type: string
+      required:
+      - name
+      - remote-host

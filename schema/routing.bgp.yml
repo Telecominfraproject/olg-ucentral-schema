@@ -1,0 +1,58 @@
+description: BGP routing protocol configuration.
+type: object
+properties:
+  enabled:
+    type: boolean
+    default: false
+  local-as:
+    description: Local autonomous system number.
+    type: integer
+    minimum: 1
+    maximum: 4294967295
+  router-id:
+    description: BGP router ID.
+    type: string
+    format: ipv4
+  neighbors:
+    description: BGP neighbors.
+    type: array
+    items:
+      type: object
+      properties:
+        address:
+          description: Neighbor IP address.
+          type: string
+        remote-as:
+          description: Neighbor AS number.
+          type: integer
+        description:
+          type: string
+        update-source:
+          description: Source address/interface for BGP session.
+          type: string
+        ebgp-multihop:
+          description: Allow EBGP multihop.
+          type: integer
+        password:
+          description: MD5 authentication password.
+          type: string
+      required:
+      - address
+      - remote-as
+  networks:
+    description: Networks to advertise.
+    type: array
+    items:
+      type: string
+  redistribute:
+    description: Route redistribution.
+    type: object
+    properties:
+      connected:
+        type: boolean
+        default: false
+      static:
+        type: boolean
+        default: false
+required:
+- local-as

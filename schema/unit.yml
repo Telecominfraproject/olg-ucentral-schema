@@ -1,0 +1,21 @@
+description: Device identity and location properties.
+type: object
+properties:
+  name:
+    description: Administrative name of the device.
+    type: string
+  hostname:
+    description: Hostname to set on the device.
+    type: string
+    format: hostname
+  location:
+    description: Location of the device.
+    type: string
+  timezone:
+    description: Timezone of the device.
+    type: string
+    examples:
+    - UTC
+    - America/New_York
+    - Europe/London
+    - Asia/Taipei

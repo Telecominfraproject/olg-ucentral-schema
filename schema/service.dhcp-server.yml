@@ -1,0 +1,57 @@
+description: DHCP server configuration.
+type: object
+properties:
+  shared-networks:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        subnets:
+          type: array
+          items:
+            type: object
+            properties:
+              subnet:
+                type: string
+              default-router:
+                type: string
+              dns-servers:
+                type: array
+                items:
+                  type: string
+              domain-name:
+                type: string
+              lease:
+                description: Lease time in seconds.
+                type: integer
+                default: 86400
+              ranges:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                    stop:
+                      type: string
+                  required:
+                  - start
+                  - stop
+              static-mappings:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    mac-address:
+                      type: string
+                    ip-address:
+                      type: string
+            required:
+            - subnet
+      required:
+      - name
+      - subnets

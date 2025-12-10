@@ -1,0 +1,26 @@
+description: Static routing configuration.
+type: object
+properties:
+  routes:
+    description: List of static routes.
+    type: array
+    items:
+      type: object
+      properties:
+        destination:
+          description: Destination network (CIDR).
+          type: string
+        next-hop:
+          description: Next-hop IP address.
+          type: string
+        interface:
+          description: Outgoing interface.
+          type: string
+        distance:
+          description: Administrative distance.
+          type: integer
+          minimum: 1
+          maximum: 255
+          default: 1
+      required:
+      - destination

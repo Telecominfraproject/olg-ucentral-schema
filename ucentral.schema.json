@@ -1,0 +1,2063 @@
+{
+    "$id": "https://openwrt.org/olg.ucentral.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "uuid": {
+            "type": "integer"
+        },
+        "unit": {
+            "$ref": "#/$defs/unit"
+        },
+        "globals": {
+            "$ref": "#/$defs/globals"
+        },
+        "ethernet": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/ethernet"
+            }
+        },
+        "interfaces": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/interface"
+            }
+        },
+        "routing": {
+            "$ref": "#/$defs/routing"
+        },
+        "firewall": {
+            "$ref": "#/$defs/firewall"
+        },
+        "nat": {
+            "$ref": "#/$defs/nat"
+        },
+        "vpn": {
+            "$ref": "#/$defs/vpn"
+        },
+        "high-availability": {
+            "$ref": "#/$defs/high-availability"
+        },
+        "services": {
+            "$ref": "#/$defs/service"
+        },
+        "metrics": {
+            "$ref": "#/$defs/metrics"
+        }
+    },
+    "$defs": {
+        "unit": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "hostname": {
+                    "type": "string",
+                    "format": "hostname"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "timezone": {
+                    "type": "string",
+                    "examples": [
+                        "UTC",
+                        "America/New_York",
+                        "Europe/London",
+                        "Asia/Taipei"
+                    ]
+                }
+            }
+        },
+        "globals": {
+            "type": "object",
+            "properties": {
+                "router-id": {
+                    "type": "string",
+                    "format": "ipv4",
+                    "examples": [
+                        "10.0.0.1"
+                    ]
+                },
+                "domain-name": {
+                    "type": "string",
+                    "format": "hostname",
+                    "examples": [
+                        "example.local"
+                    ]
+                }
+            }
+        },
+        "ethernet": {
+            "type": "object",
+            "properties": {
+                "select-ports": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "examples": [
+                        "eth0",
+                        "eth1",
+                        "eth*",
+                        "lan1",
+                        "lan2",
+                        "lan3",
+                        "lan4"
+                    ]
+                },
+                "speed": {
+                    "type": "string",
+                    "enum": [
+                        "auto",
+                        "10",
+                        "100",
+                        "1000",
+                        "2500",
+                        "10000"
+                    ],
+                    "default": "auto"
+                },
+                "duplex": {
+                    "type": "string",
+                    "enum": [
+                        "auto",
+                        "full",
+                        "half"
+                    ],
+                    "default": "auto"
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "default": true
+                }
+            },
+            "required": [
+                "select-ports"
+            ]
+        },
+        "interface.vlan": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4094
+                },
+                "parent-interface": {
+                    "type": "string"
+                }
+            }
+        },
+        "interface.bridge": {
+            "type": "object",
+            "properties": {
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "stp": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        "interface.pppoe": {
+            "type": "object",
+            "properties": {
+                "source-interface": {
+                    "type": "string"
+                },
+                "user-name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "default-route": {
+                    "type": "boolean",
+                    "default": true
+                }
+            },
+            "required": [
+                "source-interface",
+                "user-name",
+                "password"
+            ]
+        },
+        "interface.ipv4": {
+            "type": "object",
+            "properties": {
+                "addressing": {
+                    "type": "string",
+                    "enum": [
+                        "dynamic",
+                        "static",
+                        "none"
+                    ]
+                },
+                "address": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uc-cidr4"
+                    },
+                    "examples": [
+                        "192.168.1.1/24"
+                    ]
+                },
+                "gateway": {
+                    "type": "string",
+                    "format": "ipv4"
+                }
+            }
+        },
+        "interface.ipv6": {
+            "type": "object",
+            "properties": {
+                "addressing": {
+                    "type": "string",
+                    "enum": [
+                        "dynamic",
+                        "static",
+                        "slaac",
+                        "dhcpv6",
+                        "none"
+                    ]
+                },
+                "address": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uc-cidr6"
+                    },
+                    "examples": [
+                        "2001:db8::1/64"
+                    ]
+                },
+                "gateway": {
+                    "type": "string",
+                    "format": "ipv6"
+                }
+            }
+        },
+        "interface": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "ethernet",
+                        "vlan",
+                        "bridge",
+                        "loopback",
+                        "pppoe"
+                    ],
+                    "default": "ethernet"
+                },
+                "role": {
+                    "type": "string",
+                    "enum": [
+                        "upstream",
+                        "downstream",
+                        "local"
+                    ]
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "mtu": {
+                    "type": "integer",
+                    "maximum": 9000,
+                    "minimum": 68
+                },
+                "ethernet": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "vlan": {
+                    "$ref": "#/$defs/interface.vlan"
+                },
+                "bridge": {
+                    "$ref": "#/$defs/interface.bridge"
+                },
+                "pppoe": {
+                    "$ref": "#/$defs/interface.pppoe"
+                },
+                "ipv4": {
+                    "$ref": "#/$defs/interface.ipv4"
+                },
+                "ipv6": {
+                    "$ref": "#/$defs/interface.ipv6"
+                }
+            }
+        },
+        "routing.static": {
+            "type": "object",
+            "properties": {
+                "routes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "destination": {
+                                "type": "string"
+                            },
+                            "next-hop": {
+                                "type": "string"
+                            },
+                            "interface": {
+                                "type": "string"
+                            },
+                            "distance": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 255,
+                                "default": 1
+                            }
+                        },
+                        "required": [
+                            "destination"
+                        ]
+                    }
+                }
+            }
+        },
+        "routing.policy": {
+            "type": "object",
+            "properties": {
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "priority": {
+                                "type": "integer"
+                            },
+                            "source": {
+                                "type": "string"
+                            },
+                            "destination": {
+                                "type": "string"
+                            },
+                            "inbound-interface": {
+                                "type": "string"
+                            },
+                            "table": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "priority",
+                            "table"
+                        ]
+                    }
+                },
+                "tables": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "table-id": {
+                                "type": "integer"
+                            },
+                            "routes": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "destination": {
+                                            "type": "string"
+                                        },
+                                        "next-hop": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "table-id"
+                        ]
+                    }
+                }
+            }
+        },
+        "routing.bgp": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "local-as": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4294967295
+                },
+                "router-id": {
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "neighbors": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "address": {
+                                "type": "string"
+                            },
+                            "remote-as": {
+                                "type": "integer"
+                            },
+                            "update-source": {
+                                "type": "string"
+                            },
+                            "ebgp-multihop": {
+                                "type": "integer"
+                            },
+                            "password": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "address",
+                            "remote-as"
+                        ]
+                    }
+                },
+                "networks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "redistribute": {
+                    "type": "object",
+                    "properties": {
+                        "connected": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "static": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                }
+            },
+            "required": [
+                "local-as"
+            ]
+        },
+        "routing.ospf": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "router-id": {
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "areas": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "area-id": {
+                                "type": "string",
+                                "examples": [
+                                    "0",
+                                    "0.0.0.0",
+                                    "1"
+                                ]
+                            },
+                            "area-type": {
+                                "type": "string",
+                                "enum": [
+                                    "normal",
+                                    "stub",
+                                    "nssa"
+                                ],
+                                "default": "normal"
+                            },
+                            "networks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "area-id"
+                        ]
+                    }
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "area": {
+                                "type": "string"
+                            },
+                            "cost": {
+                                "type": "integer"
+                            },
+                            "passive": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "network-type": {
+                                "type": "string",
+                                "enum": [
+                                    "broadcast",
+                                    "point-to-point",
+                                    "non-broadcast",
+                                    "point-to-multipoint"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "redistribute": {
+                    "type": "object",
+                    "properties": {
+                        "connected": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "static": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "bgp": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                }
+            }
+        },
+        "routing.ospfv3": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "router-id": {
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "areas": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "area-id": {
+                                "type": "string"
+                            },
+                            "area-type": {
+                                "type": "string",
+                                "enum": [
+                                    "normal",
+                                    "stub",
+                                    "nssa"
+                                ],
+                                "default": "normal"
+                            }
+                        },
+                        "required": [
+                            "area-id"
+                        ]
+                    }
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "area": {
+                                "type": "string"
+                            },
+                            "cost": {
+                                "type": "integer"
+                            },
+                            "passive": {
+                                "type": "boolean",
+                                "default": false
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "area"
+                        ]
+                    }
+                },
+                "redistribute": {
+                    "type": "object",
+                    "properties": {
+                        "connected": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "static": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                }
+            }
+        },
+        "routing.rip": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "version": {
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2
+                    ],
+                    "default": 2
+                },
+                "networks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "passive": {
+                                "type": "boolean",
+                                "default": false
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "redistribute": {
+                    "type": "object",
+                    "properties": {
+                        "connected": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "static": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                }
+            }
+        },
+        "routing.ripng": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "networks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "passive": {
+                                "type": "boolean",
+                                "default": false
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "redistribute": {
+                    "type": "object",
+                    "properties": {
+                        "connected": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "static": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                }
+            }
+        },
+        "routing": {
+            "type": "object",
+            "properties": {
+                "static": {
+                    "$ref": "#/$defs/routing.static"
+                },
+                "policy": {
+                    "$ref": "#/$defs/routing.policy"
+                },
+                "bgp": {
+                    "$ref": "#/$defs/routing.bgp"
+                },
+                "ospf": {
+                    "$ref": "#/$defs/routing.ospf"
+                },
+                "ospfv3": {
+                    "$ref": "#/$defs/routing.ospfv3"
+                },
+                "rip": {
+                    "$ref": "#/$defs/routing.rip"
+                },
+                "ripng": {
+                    "$ref": "#/$defs/routing.ripng"
+                }
+            }
+        },
+        "firewall.zone": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "default-action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop",
+                        "reject"
+                    ],
+                    "default": "drop"
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "firewall.rule": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop",
+                        "reject"
+                    ]
+                },
+                "protocol": {
+                    "type": "string",
+                    "examples": [
+                        "tcp",
+                        "udp",
+                        "icmp",
+                        "all"
+                    ]
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string"
+                        },
+                        "port": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "destination": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string"
+                        },
+                        "port": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "state": {
+                    "type": "object",
+                    "properties": {
+                        "established": {
+                            "type": "boolean"
+                        },
+                        "related": {
+                            "type": "boolean"
+                        },
+                        "new": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "log": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "required": [
+                "rule-number",
+                "action"
+            ]
+        },
+        "firewall.ruleset": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "default-action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop",
+                        "reject"
+                    ],
+                    "default": "drop"
+                },
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.rule"
+                    }
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "firewall.zone-policy": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "ruleset": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "from",
+                "to",
+                "ruleset"
+            ]
+        },
+        "firewall": {
+            "type": "object",
+            "properties": {
+                "state-policy": {
+                    "type": "object",
+                    "properties": {
+                        "established": {
+                            "type": "string",
+                            "enum": [
+                                "accept",
+                                "drop"
+                            ],
+                            "default": "accept"
+                        },
+                        "related": {
+                            "type": "string",
+                            "enum": [
+                                "accept",
+                                "drop"
+                            ],
+                            "default": "accept"
+                        },
+                        "invalid": {
+                            "type": "string",
+                            "enum": [
+                                "accept",
+                                "drop"
+                            ],
+                            "default": "drop"
+                        }
+                    }
+                },
+                "zones": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.zone"
+                    }
+                },
+                "rulesets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.ruleset"
+                    }
+                },
+                "zone-policies": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.zone-policy"
+                    }
+                }
+            }
+        },
+        "nat.source": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "outbound-interface": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "translation": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "rule-number"
+            ]
+        },
+        "nat.destination": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "inbound-interface": {
+                    "type": "string"
+                },
+                "protocol": {
+                    "type": "string"
+                },
+                "destination": {
+                    "type": "object",
+                    "properties": {
+                        "port": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "translation": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string"
+                        },
+                        "port": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "rule-number"
+            ]
+        },
+        "nat": {
+            "type": "object",
+            "properties": {
+                "source": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/nat.source"
+                    }
+                },
+                "destination": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/nat.destination"
+                    }
+                }
+            }
+        },
+        "vpn.ipsec": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "site-to-site": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "peer": {
+                                "type": "string"
+                            },
+                            "local-address": {
+                                "type": "string"
+                            },
+                            "authentication": {
+                                "type": "object",
+                                "properties": {
+                                    "mode": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pre-shared-secret",
+                                            "x509"
+                                        ],
+                                        "default": "pre-shared-secret"
+                                    },
+                                    "pre-shared-secret": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "ike-group": {
+                                "type": "object",
+                                "properties": {
+                                    "key-exchange": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ikev1",
+                                            "ikev2"
+                                        ],
+                                        "default": "ikev2"
+                                    },
+                                    "encryption": {
+                                        "type": "string",
+                                        "default": "aes256"
+                                    },
+                                    "hash": {
+                                        "type": "string",
+                                        "default": "sha256"
+                                    }
+                                }
+                            },
+                            "esp-group": {
+                                "type": "object",
+                                "properties": {
+                                    "encryption": {
+                                        "type": "string",
+                                        "default": "aes256"
+                                    },
+                                    "hash": {
+                                        "type": "string",
+                                        "default": "sha256"
+                                    }
+                                }
+                            },
+                            "tunnels": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "local-prefix": {
+                                            "type": "string"
+                                        },
+                                        "remote-prefix": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "peer"
+                        ]
+                    }
+                }
+            }
+        },
+        "vpn.openvpn": {
+            "type": "object",
+            "properties": {
+                "servers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "mode": {
+                                "type": "string",
+                                "enum": [
+                                    "site-to-site",
+                                    "client-server"
+                                ],
+                                "default": "client-server"
+                            },
+                            "protocol": {
+                                "type": "string",
+                                "enum": [
+                                    "udp",
+                                    "tcp"
+                                ],
+                                "default": "udp"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "default": 1194
+                            },
+                            "subnet": {
+                                "type": "string"
+                            },
+                            "tls": {
+                                "type": "object",
+                                "properties": {
+                                    "ca-certificate": {
+                                        "type": "string"
+                                    },
+                                    "certificate": {
+                                        "type": "string"
+                                    },
+                                    "private-key": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "push-routes": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "clients": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "remote-host": {
+                                "type": "string"
+                            },
+                            "remote-port": {
+                                "type": "integer",
+                                "default": 1194
+                            },
+                            "protocol": {
+                                "type": "string",
+                                "enum": [
+                                    "udp",
+                                    "tcp"
+                                ],
+                                "default": "udp"
+                            },
+                            "tls": {
+                                "type": "object",
+                                "properties": {
+                                    "ca-certificate": {
+                                        "type": "string"
+                                    },
+                                    "certificate": {
+                                        "type": "string"
+                                    },
+                                    "private-key": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "remote-host"
+                        ]
+                    }
+                }
+            }
+        },
+        "vpn.wireguard": {
+            "type": "object",
+            "properties": {
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "private-key": {
+                                "type": "string"
+                            },
+                            "port": {
+                                "type": "integer"
+                            },
+                            "address": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "peers": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "public-key": {
+                                            "type": "string"
+                                        },
+                                        "allowed-ips": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "persistent-keepalive": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "public-key",
+                                        "allowed-ips"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "private-key"
+                        ]
+                    }
+                }
+            }
+        },
+        "vpn": {
+            "type": "object",
+            "properties": {
+                "ipsec": {
+                    "$ref": "#/$defs/vpn.ipsec"
+                },
+                "openvpn": {
+                    "$ref": "#/$defs/vpn.openvpn"
+                },
+                "wireguard": {
+                    "$ref": "#/$defs/vpn.wireguard"
+                }
+            }
+        },
+        "high-availability.vrrp": {
+            "type": "object",
+            "properties": {
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "interface": {
+                                "type": "string"
+                            },
+                            "vrid": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 255
+                            },
+                            "priority": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 255,
+                                "default": 100
+                            },
+                            "virtual-addresses": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "preempt": {
+                                "type": "boolean",
+                                "default": true
+                            },
+                            "authentication": {
+                                "type": "object",
+                                "properties": {
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "interface",
+                            "vrid",
+                            "virtual-addresses"
+                        ]
+                    }
+                }
+            }
+        },
+        "high-availability.load-balancing": {
+            "type": "object",
+            "properties": {
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "weight": {
+                                "type": "integer",
+                                "default": 1
+                            },
+                            "failover-only": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "health-check": {
+                                "type": "object",
+                                "properties": {
+                                    "target": {
+                                        "type": "string"
+                                    },
+                                    "interval": {
+                                        "type": "integer",
+                                        "default": 5
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "rule-number": {
+                                "type": "integer"
+                            },
+                            "source": {
+                                "type": "string"
+                            },
+                            "destination": {
+                                "type": "string"
+                            },
+                            "interfaces": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "high-availability": {
+            "type": "object",
+            "properties": {
+                "vrrp": {
+                    "$ref": "#/$defs/high-availability.vrrp"
+                },
+                "load-balancing": {
+                    "$ref": "#/$defs/high-availability.load-balancing"
+                }
+            }
+        },
+        "service.dhcp-server": {
+            "type": "object",
+            "properties": {
+                "shared-networks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "subnets": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "subnet": {
+                                            "type": "string"
+                                        },
+                                        "default-router": {
+                                            "type": "string"
+                                        },
+                                        "dns-servers": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "domain-name": {
+                                            "type": "string"
+                                        },
+                                        "lease": {
+                                            "type": "integer",
+                                            "default": 86400
+                                        },
+                                        "ranges": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "start": {
+                                                        "type": "string"
+                                                    },
+                                                    "stop": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "start",
+                                                    "stop"
+                                                ]
+                                            }
+                                        },
+                                        "static-mappings": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "mac-address": {
+                                                        "type": "string"
+                                                    },
+                                                    "ip-address": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "subnet"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "subnets"
+                        ]
+                    }
+                }
+            }
+        },
+        "service.dhcp-relay": {
+            "type": "object",
+            "properties": {
+                "listen-interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "upstream-interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "servers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "service.dns": {
+            "type": "object",
+            "properties": {
+                "listen-addresses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "allow-from": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "forwarding-servers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "static-host-mappings": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "hostname": {
+                                "type": "string"
+                            },
+                            "address": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "service.ntp": {
+            "type": "object",
+            "properties": {
+                "servers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "listen-addresses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "allow-clients": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "service.lldp": {
+            "type": "object",
+            "properties": {
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "management-address": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.mdns": {
+            "type": "object",
+            "properties": {
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "service.pppoe-server": {
+            "type": "object",
+            "properties": {
+                "interface": {
+                    "type": "string"
+                },
+                "local-ip": {
+                    "type": "string"
+                },
+                "client-ip-pool": {
+                    "type": "object",
+                    "properties": {
+                        "start": {
+                            "type": "string"
+                        },
+                        "stop": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "dns-servers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "local-users": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "service.web-proxy": {
+            "type": "object",
+            "properties": {
+                "listen-address": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer",
+                    "default": 3128
+                },
+                "cache-size": {
+                    "type": "integer",
+                    "default": 100
+                },
+                "transparent": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "url-filtering": {
+                    "type": "object",
+                    "properties": {
+                        "block-domains": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "service.tftp-server": {
+            "type": "object",
+            "properties": {
+                "directory": {
+                    "type": "string",
+                    "default": "/var/lib/tftpboot"
+                },
+                "listen-address": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.igmp-proxy": {
+            "type": "object",
+            "properties": {
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "role": {
+                                "type": "string",
+                                "enum": [
+                                    "upstream",
+                                    "downstream"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "role"
+                        ]
+                    }
+                }
+            }
+        },
+        "service.traffic-policy": {
+            "type": "object",
+            "properties": {
+                "shaper": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "bandwidth": {
+                                "type": "string"
+                            },
+                            "default-bandwidth": {
+                                "type": "string"
+                            },
+                            "default-priority": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "bandwidth"
+                        ]
+                    }
+                },
+                "rate-limiter": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "bandwidth": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                }
+            }
+        },
+        "service.snmp": {
+            "type": "object",
+            "properties": {
+                "listen-addresses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "contact": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "communities": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "authorization": {
+                                "type": "string",
+                                "enum": [
+                                    "ro",
+                                    "rw"
+                                ],
+                                "default": "ro"
+                            },
+                            "networks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "trap-targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "address": {
+                                "type": "string"
+                            },
+                            "community": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "service.syslog": {
+            "type": "object",
+            "properties": {
+                "global": {
+                    "type": "object",
+                    "properties": {
+                        "facility": {
+                            "type": "string"
+                        },
+                        "level": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "hosts": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "address": {
+                                "type": "string"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "default": 514
+                            },
+                            "protocol": {
+                                "type": "string",
+                                "enum": [
+                                    "udp",
+                                    "tcp"
+                                ],
+                                "default": "udp"
+                            }
+                        },
+                        "required": [
+                            "address"
+                        ]
+                    }
+                }
+            }
+        },
+        "service.netflow": {
+            "type": "object",
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "enum": [
+                        "5",
+                        "9",
+                        "10"
+                    ],
+                    "default": "9"
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "servers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "address": {
+                                "type": "string"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "default": 2055
+                            }
+                        },
+                        "required": [
+                            "address"
+                        ]
+                    }
+                },
+                "sampling-rate": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service.sflow": {
+            "type": "object",
+            "properties": {
+                "agent-address": {
+                    "type": "string"
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sampling-rate": {
+                    "type": "integer",
+                    "default": 1000
+                },
+                "servers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "address": {
+                                "type": "string"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "default": 6343
+                            }
+                        },
+                        "required": [
+                            "address"
+                        ]
+                    }
+                }
+            }
+        },
+        "service": {
+            "type": "object",
+            "properties": {
+                "dhcp-server": {
+                    "$ref": "#/$defs/service.dhcp-server"
+                },
+                "dhcp-relay": {
+                    "$ref": "#/$defs/service.dhcp-relay"
+                },
+                "dns": {
+                    "$ref": "#/$defs/service.dns"
+                },
+                "ntp": {
+                    "$ref": "#/$defs/service.ntp"
+                },
+                "lldp": {
+                    "$ref": "#/$defs/service.lldp"
+                },
+                "mdns": {
+                    "$ref": "#/$defs/service.mdns"
+                },
+                "pppoe-server": {
+                    "$ref": "#/$defs/service.pppoe-server"
+                },
+                "web-proxy": {
+                    "$ref": "#/$defs/service.web-proxy"
+                },
+                "tftp-server": {
+                    "$ref": "#/$defs/service.tftp-server"
+                },
+                "igmp-proxy": {
+                    "$ref": "#/$defs/service.igmp-proxy"
+                },
+                "traffic-policy": {
+                    "$ref": "#/$defs/service.traffic-policy"
+                },
+                "snmp": {
+                    "$ref": "#/$defs/service.snmp"
+                },
+                "syslog": {
+                    "$ref": "#/$defs/service.syslog"
+                },
+                "netflow": {
+                    "$ref": "#/$defs/service.netflow"
+                },
+                "sflow": {
+                    "$ref": "#/$defs/service.sflow"
+                }
+            }
+        },
+        "metrics": {
+            "type": "object",
+            "properties": {
+                "statistics": {
+                    "type": "object",
+                    "properties": {
+                        "interval": {
+                            "type": "integer",
+                            "minimum": 60
+                        },
+                        "types": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "interfaces",
+                                    "routes",
+                                    "arp",
+                                    "conntrack",
+                                    "dhcp-leases"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "health": {
+                    "type": "object",
+                    "properties": {
+                        "interval": {
+                            "type": "integer",
+                            "minimum": 60
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

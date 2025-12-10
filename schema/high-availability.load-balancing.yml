@@ -1,0 +1,42 @@
+description: WAN load balancing configuration.
+type: object
+properties:
+  interfaces:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        weight:
+          type: integer
+          default: 1
+        failover-only:
+          type: boolean
+          default: false
+        health-check:
+          type: object
+          properties:
+            target:
+              description: IP to ping for health check.
+              type: string
+            interval:
+              type: integer
+              default: 5
+      required:
+      - name
+  rules:
+    type: array
+    items:
+      type: object
+      properties:
+        rule-number:
+          type: integer
+        source:
+          type: string
+        destination:
+          type: string
+        interfaces:
+          type: array
+          items:
+            type: string

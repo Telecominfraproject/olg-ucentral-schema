@@ -1,0 +1,20 @@
+description: PPPoE client configuration.
+type: object
+properties:
+  source-interface:
+    description: Underlying interface for PPPoE.
+    type: string
+  user-name:
+    description: PPPoE username.
+    type: string
+  password:
+    description: PPPoE password.
+    type: string
+  default-route:
+    description: Install default route when connected.
+    type: boolean
+    default: true
+required:
+- source-interface
+- user-name
+- password

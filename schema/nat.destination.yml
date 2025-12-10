@@ -1,0 +1,26 @@
+description: Destination NAT rule (DNAT/Port Forward).
+type: object
+properties:
+  rule-number:
+    type: integer
+    minimum: 1
+  description:
+    type: string
+  inbound-interface:
+    type: string
+  protocol:
+    type: string
+  destination:
+    type: object
+    properties:
+      port:
+        type: string
+  translation:
+    type: object
+    properties:
+      address:
+        type: string
+      port:
+        type: string
+required:
+- rule-number

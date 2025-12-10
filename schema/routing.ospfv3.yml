@@ -1,0 +1,51 @@
+description: OSPFv3 (IPv6) routing protocol configuration.
+type: object
+properties:
+  enabled:
+    type: boolean
+    default: false
+  router-id:
+    type: string
+    format: ipv4
+  areas:
+    type: array
+    items:
+      type: object
+      properties:
+        area-id:
+          type: string
+        area-type:
+          type: string
+          enum:
+          - normal
+          - stub
+          - nssa
+          default: normal
+      required:
+      - area-id
+  interfaces:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        area:
+          type: string
+        cost:
+          type: integer
+        passive:
+          type: boolean
+          default: false
+      required:
+      - name
+      - area
+  redistribute:
+    type: object
+    properties:
+      connected:
+        type: boolean
+        default: false
+      static:
+        type: boolean
+        default: false

@@ -1,0 +1,8 @@
+description: mDNS repeater configuration.
+type: object
+properties:
+  interfaces:
+    description: Interfaces to repeat mDNS between.
+    type: array
+    items:
+      type: string

@@ -1,0 +1,8 @@
+description: TFTP server configuration.
+type: object
+properties:
+  directory:
+    type: string
+    default: /var/lib/tftpboot
+  listen-address:
+    type: string

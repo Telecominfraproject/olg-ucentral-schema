@@ -1,0 +1,11 @@
+description: VLAN configuration.
+type: object
+properties:
+  id:
+    description: VLAN ID.
+    type: integer
+    minimum: 1
+    maximum: 4094
+  parent-interface:
+    description: Parent interface for the VLAN.
+    type: string

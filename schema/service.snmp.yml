@@ -1,0 +1,39 @@
+description: SNMP configuration.
+type: object
+properties:
+  listen-addresses:
+    type: array
+    items:
+      type: string
+  contact:
+    type: string
+  location:
+    type: string
+  communities:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        authorization:
+          type: string
+          enum:
+          - ro
+          - rw
+          default: ro
+        networks:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+  trap-targets:
+    type: array
+    items:
+      type: object
+      properties:
+        address:
+          type: string
+        community:
+          type: string

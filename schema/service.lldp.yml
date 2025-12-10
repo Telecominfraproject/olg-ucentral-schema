@@ -1,0 +1,9 @@
+description: LLDP server and client configuration.
+type: object
+properties:
+  interfaces:
+    type: array
+    items:
+      type: string
+  management-address:
+    type: string

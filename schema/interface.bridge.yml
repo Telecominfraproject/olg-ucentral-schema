@@ -1,0 +1,12 @@
+description: Bridge interface configuration.
+type: object
+properties:
+  members:
+    description: Member interfaces.
+    type: array
+    items:
+      type: string
+  stp:
+    description: Enable Spanning Tree Protocol.
+    type: boolean
+    default: false

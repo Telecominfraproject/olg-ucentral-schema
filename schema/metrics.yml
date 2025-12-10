@@ -1,0 +1,26 @@
+description: Metrics and monitoring configuration.
+type: object
+properties:
+  statistics:
+    type: object
+    properties:
+      interval:
+        description: Reporting interval in seconds.
+        type: integer
+        minimum: 60
+      types:
+        type: array
+        items:
+          type: string
+          enum:
+          - interfaces
+          - routes
+          - arp
+          - conntrack
+          - dhcp-leases
+  health:
+    type: object
+    properties:
+      interval:
+        type: integer
+        minimum: 60

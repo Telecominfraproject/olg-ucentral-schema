@@ -1,0 +1,67 @@
+description: IPSec VPN configuration.
+type: object
+properties:
+  enabled:
+    type: boolean
+    default: false
+  site-to-site:
+    description: Site-to-site VPN connections.
+    type: array
+    items:
+      type: object
+      properties:
+        peer:
+          description: Remote peer address.
+          type: string
+        description:
+          type: string
+        local-address:
+          type: string
+        authentication:
+          type: object
+          properties:
+            mode:
+              type: string
+              enum:
+              - pre-shared-secret
+              - x509
+              default: pre-shared-secret
+            pre-shared-secret:
+              type: string
+        ike-group:
+          description: IKE settings.
+          type: object
+          properties:
+            key-exchange:
+              type: string
+              enum:
+              - ikev1
+              - ikev2
+              default: ikev2
+            encryption:
+              type: string
+              default: aes256
+            hash:
+              type: string
+              default: sha256
+        esp-group:
+          description: ESP settings.
+          type: object
+          properties:
+            encryption:
+              type: string
+              default: aes256
+            hash:
+              type: string
+              default: sha256
+        tunnels:
+          type: array
+          items:
+            type: object
+            properties:
+              local-prefix:
+                type: string
+              remote-prefix:
+                type: string
+      required:
+      - peer

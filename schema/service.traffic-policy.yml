@@ -1,0 +1,31 @@
+description: Traffic policing configuration (shaping, rate limiting, priority-based queues).
+type: object
+properties:
+  shaper:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        bandwidth:
+          description: Available bandwidth (e.g., '100mbit').
+          type: string
+        default-bandwidth:
+          type: string
+        default-priority:
+          type: integer
+      required:
+      - name
+      - bandwidth
+  rate-limiter:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        bandwidth:
+          type: string
+      required:
+      - name

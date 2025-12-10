@@ -1,0 +1,44 @@
+description: WireGuard VPN configuration.
+type: object
+properties:
+  interfaces:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        private-key:
+          type: string
+        port:
+          type: integer
+        address:
+          description: Interface addresses.
+          type: array
+          items:
+            type: string
+        peers:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              public-key:
+                type: string
+              allowed-ips:
+                type: array
+                items:
+                  type: string
+              endpoint:
+                description: Peer endpoint (host:port).
+                type: string
+              persistent-keepalive:
+                type: integer
+            required:
+            - name
+            - public-key
+            - allowed-ips
+      required:
+      - name
+      - private-key

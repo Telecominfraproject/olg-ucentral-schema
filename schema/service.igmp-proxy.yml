@@ -1,0 +1,18 @@
+description: IGMP-Proxy configuration.
+type: object
+properties:
+  interfaces:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+          enum:
+          - upstream
+          - downstream
+      required:
+      - name
+      - role

@@ -1,0 +1,39 @@
+description: VRRP configuration.
+type: object
+properties:
+  groups:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        interface:
+          type: string
+        vrid:
+          description: Virtual Router ID.
+          type: integer
+          minimum: 1
+          maximum: 255
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 255
+          default: 100
+        virtual-addresses:
+          type: array
+          items:
+            type: string
+        preempt:
+          type: boolean
+          default: true
+        authentication:
+          type: object
+          properties:
+            password:
+              type: string
+      required:
+      - name
+      - interface
+      - vrid
+      - virtual-addresses

@@ -1,0 +1,15 @@
+description: DHCP relay configuration.
+type: object
+properties:
+  listen-interfaces:
+    type: array
+    items:
+      type: string
+  upstream-interfaces:
+    type: array
+    items:
+      type: string
+  servers:
+    type: array
+    items:
+      type: string

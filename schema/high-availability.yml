@@ -1,0 +1,7 @@
+description: High availability configuration section.
+type: object
+properties:
+  vrrp:
+    $ref: https://ucentral.io/schema/v1/high-availability/vrrp/
+  load-balancing:
+    $ref: https://ucentral.io/schema/v1/high-availability/load-balancing/

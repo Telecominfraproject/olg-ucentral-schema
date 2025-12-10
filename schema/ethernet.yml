@@ -1,0 +1,41 @@
+description: Physical port configuration.
+type: object
+properties:
+  select-ports:
+    description: List of physical ports to configure.
+    type: array
+    items:
+      type: string
+    examples:
+    - eth0
+    - eth1
+    - eth*
+    - lan1
+    - lan2
+    - lan3
+    - lan4
+  speed:
+    description: Link speed.
+    type: string
+    enum:
+    - auto
+    - '10'
+    - '100'
+    - '1000'
+    - '2500'
+    - '10000'
+    default: auto
+  duplex:
+    description: Duplex mode.
+    type: string
+    enum:
+    - auto
+    - full
+    - half
+    default: auto
+  enabled:
+    description: Enable or disable the port(s).
+    type: boolean
+    default: true
+required:
+- select-ports

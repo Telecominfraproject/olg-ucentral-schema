@@ -1,0 +1,17 @@
+description: NTP server and client configuration.
+type: object
+properties:
+  servers:
+    description: Upstream NTP servers.
+    type: array
+    items:
+      type: string
+  listen-addresses:
+    description: Addresses to listen on as NTP server.
+    type: array
+    items:
+      type: string
+  allow-clients:
+    type: array
+    items:
+      type: string

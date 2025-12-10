@@ -1,0 +1,17 @@
+description: Routing configuration section.
+type: object
+properties:
+  static:
+    $ref: https://ucentral.io/schema/v1/routing/static/
+  policy:
+    $ref: https://ucentral.io/schema/v1/routing/policy/
+  bgp:
+    $ref: https://ucentral.io/schema/v1/routing/bgp/
+  ospf:
+    $ref: https://ucentral.io/schema/v1/routing/ospf/
+  ospfv3:
+    $ref: https://ucentral.io/schema/v1/routing/ospfv3/
+  rip:
+    $ref: https://ucentral.io/schema/v1/routing/rip/
+  ripng:
+    $ref: https://ucentral.io/schema/v1/routing/ripng/

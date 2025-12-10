@@ -1,0 +1,28 @@
+description: NetFlow export configuration.
+type: object
+properties:
+  version:
+    type: string
+    enum:
+    - '5'
+    - '9'
+    - '10'
+    default: '9'
+  interfaces:
+    type: array
+    items:
+      type: string
+  servers:
+    type: array
+    items:
+      type: object
+      properties:
+        address:
+          type: string
+        port:
+          type: integer
+          default: 2055
+      required:
+      - address
+  sampling-rate:
+    type: integer

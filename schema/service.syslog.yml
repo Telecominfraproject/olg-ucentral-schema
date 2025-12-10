@@ -1,0 +1,29 @@
+description: Syslog configuration.
+type: object
+properties:
+  global:
+    type: object
+    properties:
+      facility:
+        type: string
+      level:
+        type: string
+  hosts:
+    description: Remote syslog servers.
+    type: array
+    items:
+      type: object
+      properties:
+        address:
+          type: string
+        port:
+          type: integer
+          default: 514
+        protocol:
+          type: string
+          enum:
+          - udp
+          - tcp
+          default: udp
+      required:
+      - address

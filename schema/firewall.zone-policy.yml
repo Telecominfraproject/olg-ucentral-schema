@@ -1,0 +1,16 @@
+description: Zone-to-zone policy.
+type: object
+properties:
+  from:
+    description: Source zone.
+    type: string
+  to:
+    description: Destination zone.
+    type: string
+  ruleset:
+    description: Ruleset to apply.
+    type: string
+required:
+- from
+- to
+- ruleset

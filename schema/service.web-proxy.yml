@@ -1,0 +1,22 @@
+description: Proxy server with cache and filtering.
+type: object
+properties:
+  listen-address:
+    type: string
+  port:
+    type: integer
+    default: 3128
+  cache-size:
+    description: Cache size in MB.
+    type: integer
+    default: 100
+  transparent:
+    type: boolean
+    default: false
+  url-filtering:
+    type: object
+    properties:
+      block-domains:
+        type: array
+        items:
+          type: string

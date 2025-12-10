@@ -1,0 +1,24 @@
+description: IPv6 interface configuration.
+type: object
+properties:
+  addressing:
+    description: Address assignment method.
+    type: string
+    enum:
+    - dynamic
+    - static
+    - slaac
+    - dhcpv6
+    - none
+  address:
+    description: IPv6 address(es) in CIDR notation.
+    type: array
+    items:
+      type: string
+      format: uc-cidr6
+    examples:
+    - 2001:db8::1/64
+  gateway:
+    description: Default gateway.
+    type: string
+    format: ipv6

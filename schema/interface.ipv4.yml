@@ -1,0 +1,22 @@
+description: IPv4 interface configuration.
+type: object
+properties:
+  addressing:
+    description: Address assignment method.
+    type: string
+    enum:
+    - dynamic
+    - static
+    - none
+  address:
+    description: IPv4 address(es) in CIDR notation.
+    type: array
+    items:
+      type: string
+      format: uc-cidr4
+    examples:
+    - 192.168.1.1/24
+  gateway:
+    description: Default gateway.
+    type: string
+    format: ipv4

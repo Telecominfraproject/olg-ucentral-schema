@@ -1,0 +1,30 @@
+description: PPPoE server configuration.
+type: object
+properties:
+  interface:
+    type: string
+  local-ip:
+    type: string
+  client-ip-pool:
+    type: object
+    properties:
+      start:
+        type: string
+      stop:
+        type: string
+  dns-servers:
+    type: array
+    items:
+      type: string
+  authentication:
+    type: object
+    properties:
+      local-users:
+        type: array
+        items:
+          type: object
+          properties:
+            username:
+              type: string
+            password:
+              type: string

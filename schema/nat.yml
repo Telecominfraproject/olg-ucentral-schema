@@ -1,0 +1,13 @@
+description: Network Address Translation configuration.
+type: object
+properties:
+  source:
+    description: Source NAT rules (one-to-many, many-to-many).
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/nat/source/
+  destination:
+    description: Destination NAT rules (port forwarding).
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/nat/destination/

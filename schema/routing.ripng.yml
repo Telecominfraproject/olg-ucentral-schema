@@ -1,0 +1,31 @@
+description: RIPng (IPv6) routing protocol configuration.
+type: object
+properties:
+  enabled:
+    type: boolean
+    default: false
+  networks:
+    type: array
+    items:
+      type: string
+  interfaces:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        passive:
+          type: boolean
+          default: false
+      required:
+      - name
+  redistribute:
+    type: object
+    properties:
+      connected:
+        type: boolean
+        default: false
+      static:
+        type: boolean
+        default: false
