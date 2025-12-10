@@ -13,6 +13,7 @@ properties:
     - bridge
     - loopback
     - pppoe
+    - dummy
     default: ethernet
   role:
     description: Interface role.
@@ -31,10 +32,7 @@ properties:
     maximum: 9000
     minimum: 68
   ethernet:
-    description: Physical port(s) for this interface.
-    type: array
-    items:
-      type: string
+    $ref: https://ucentral.io/schema/v1/interface/ethernet/
   vlan:
     $ref: https://ucentral.io/schema/v1/interface/vlan/
   bridge:

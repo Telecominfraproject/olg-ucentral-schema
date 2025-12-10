@@ -1,19 +1,6 @@
 description: Physical port configuration.
 type: object
 properties:
-  select-ports:
-    description: List of physical ports to configure.
-    type: array
-    items:
-      type: string
-    examples:
-    - eth0
-    - eth1
-    - eth*
-    - lan1
-    - lan2
-    - lan3
-    - lan4
   speed:
     description: Link speed.
     type: string
@@ -33,9 +20,12 @@ properties:
     - full
     - half
     default: auto
-  enabled:
-    description: Enable or disable the port(s).
-    type: boolean
-    default: true
-required:
-- select-ports
+  options:
+    description: Ethernet options
+    type: array
+    items:
+      type: string
+      enum:
+      - enable-proxy-arp
+      - disable-arp-filter
+      - disable-forwarding
