@@ -25,6 +25,25 @@ properties:
         remote-as:
           description: Neighbor AS number.
           type: integer
+        advertisement-interval:
+          type: integer
+          minimum: 0
+          maximum: 600
+          default: 30
+        address-family:
+          type: enum
+          enum:
+          - ipv4-unicast
+          - ipv4-multicast
+          - ipv6-unicast
+          - ipv6-multicast
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        source-interface:
+          description: Interface used to establish connection
+          type: string
         description:
           type: string
         update-source:
@@ -51,7 +70,19 @@ properties:
       connected:
         type: boolean
         default: false
+      kernel:
+        type: boolean
+        default: false
+      ospf:
+        type: boolean
+        default: false
+      rip:
+        type: boolean
+        default: false
       static:
+        type: boolean
+        default: false
+      table:
         type: boolean
         default: false
 required:

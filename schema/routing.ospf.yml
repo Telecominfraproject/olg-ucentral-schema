@@ -16,11 +16,7 @@ properties:
       properties:
         area-id:
           description: Area ID.
-          type: string
-          examples:
-          - '0'
-          - 0.0.0.0
-          - '1'
+          type: integer
         area-type:
           type: string
           enum:

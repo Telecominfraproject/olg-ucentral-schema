@@ -4,6 +4,10 @@ properties:
   enabled:
     type: boolean
     default: false
+  router-id:
+    description: RIP router ID.
+    type: string
+    format: ipv4
   version:
     type: integer
     enum:
@@ -27,6 +31,12 @@ properties:
           default: false
       required:
       - name
+  neighbors:
+    description: Neighbors to advertise with unicast
+    type: array
+    items:
+      type: string
+      format: ipv4
   redistribute:
     type: object
     properties:

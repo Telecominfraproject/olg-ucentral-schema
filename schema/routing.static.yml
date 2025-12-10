@@ -22,5 +22,13 @@ properties:
           minimum: 1
           maximum: 255
           default: 1
+        action:
+          type: enum
+          enum:
+          - accept
+          - reject
+          - blackhole
+          default:
+          - accept
       required:
       - destination
