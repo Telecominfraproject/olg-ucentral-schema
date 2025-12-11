@@ -1,0 +1,85 @@
+description: IPv4 Source NAT rule (SNAT/Masquerade).
+type: object
+properties:
+  rule-number:
+    description: Rule number for ordering (lower numbers processed first).
+    type: integer
+    minimum: 1
+  outbound-interface:
+    description: Outbound interface for NAT.
+    type: string
+  protocol:
+    description: Protocol to match.
+    type: string
+    examples:
+    - tcp
+    - udp
+    - icmp
+    - all
+  source:
+    description: Source address/port to match.
+    type: object
+    properties:
+      address:
+        description: Source IPv4 address, network, or address range.
+        type: string
+        examples:
+        - "192.168.1.100"
+        - "192.168.1.0/24"
+      port:
+        description: Source port or port range.
+        type: string
+        examples:
+        - "80"
+        - "1024-65535"
+      group:
+        description: Reference to a firewall address/network/port group.
+        type: object
+        properties:
+          address-group:
+            type: string
+          network-group:
+            type: string
+          port-group:
+            type: string
+  destination:
+    description: Destination address/port to match.
+    type: object
+    properties:
+      address:
+        description: Destination IPv4 address, network, or address range.
+        type: string
+        examples:
+        - "10.0.0.1"
+        - "10.0.0.0/8"
+      port:
+        description: Destination port or port range.
+        type: string
+        examples:
+        - "443"
+        - "8000-9000"
+      group:
+        description: Reference to a firewall address/network/port group.
+        type: object
+        properties:
+          address-group:
+            type: string
+          network-group:
+            type: string
+          port-group:
+            type: string
+  translation:
+    description: Translation parameters.
+    type: object
+    properties:
+      address:
+        description: Translated source address. Use 'masquerade' for dynamic IP.
+        type: string
+      port:
+        description: Translated source port or port range.
+        type: string
+        examples:
+        - "8080"
+        - "10000-20000"
+required:
+  - rule-number

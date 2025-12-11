@@ -1,0 +1,88 @@
+description: IPv6 Source NAT rule (NAT66/NPTv6).
+type: object
+properties:
+  rule-number:
+    description: Rule number for ordering (lower numbers processed first).
+    type: integer
+    minimum: 1
+  outbound-interface:
+    description: Outbound interface for NAT.
+    type: string
+  protocol:
+    description: Protocol to match.
+    type: string
+    examples:
+    - tcp
+    - udp
+    - icmpv6
+    - all
+  source:
+    description: Source address/port to match.
+    type: object
+    properties:
+      prefix:
+        description: Source IPv6 prefix.
+        type: string
+        format: uc-cidr6
+        examples:
+        - "2001:db8:1::/64"
+      port:
+        description: Source port or port range.
+        type: string
+        examples:
+        - "80"
+        - "1024-65535"
+      group:
+        description: Reference to a firewall address/network/port group.
+        type: object
+        properties:
+          address-group:
+            type: string
+          network-group:
+            type: string
+          port-group:
+            type: string
+  destination:
+    description: Destination address/port to match.
+    type: object
+    properties:
+      prefix:
+        description: Destination IPv6 prefix.
+        type: string
+        format: uc-cidr6
+        examples:
+        - "2001:db8:2::/64"
+      port:
+        description: Destination port or port range.
+        type: string
+        examples:
+        - "443"
+        - "8000-9000"
+      group:
+        description: Reference to a firewall address/network/port group.
+        type: object
+        properties:
+          address-group:
+            type: string
+          network-group:
+            type: string
+          port-group:
+            type: string
+  translation:
+    description: Translation parameters.
+    type: object
+    properties:
+      prefix:
+        description: Translated source IPv6 prefix.
+        type: string
+        format: uc-cidr6
+        examples:
+        - "2001:db8:a::/64"
+      port:
+        description: Translated source port or port range.
+        type: string
+        examples:
+        - "8080"
+        - "10000-20000"
+required:
+  - rule-number

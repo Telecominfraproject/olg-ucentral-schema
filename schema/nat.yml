@@ -1,13 +1,28 @@
 description: Network Address Translation configuration.
 type: object
 properties:
-  source:
-    description: Source NAT rules (one-to-many, many-to-many).
+  source-ipv4:
+    description: IPv4 Source NAT rules (SNAT/Masquerade).
     type: array
     items:
-      $ref: https://ucentral.io/schema/v1/nat/source/
-  destination:
-    description: Destination NAT rules (port forwarding).
+      $ref: https://ucentral.io/schema/v1/nat/source/ipv4/
+  destination-ipv4:
+    description: IPv4 Destination NAT rules (DNAT/Port forwarding).
     type: array
     items:
-      $ref: https://ucentral.io/schema/v1/nat/destination/
+      $ref: https://ucentral.io/schema/v1/nat/destination/ipv4/
+  source-ipv6:
+    description: IPv6 Source NAT rules (NAT66/NPTv6).
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/nat/source/ipv6/
+  destination-ipv6:
+    description: IPv6 Destination NAT rules.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/nat/destination/ipv6/
+  nat64:
+    description: NAT64 configuration for IPv6-to-IPv4 translation.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/nat/nat64/
