@@ -2,7 +2,7 @@ description: Firewall configuration (zone-based, stateful).
 type: object
 properties:
   state-policy:
-    description: Global connection state policy.
+    description: Global connection state policy applied before zone rules.
     type: object
     properties:
       established:
@@ -23,14 +23,26 @@ properties:
         - accept
         - drop
         default: drop
+  groups:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/groups/
+  ipv4-rulesets:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/ruleset/ipv4/
+  ipv6-rulesets:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/ruleset/ipv6/
+  bridge-rulesets:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/ruleset/bridge/
   zones:
     type: array
     items:
       $ref: https://ucentral.io/schema/v1/firewall/zone/
-  rulesets:
-    type: array
-    items:
-      $ref: https://ucentral.io/schema/v1/firewall/ruleset/
   zone-policies:
     type: array
     items:

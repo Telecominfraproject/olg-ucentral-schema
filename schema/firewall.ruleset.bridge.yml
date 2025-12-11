@@ -1,0 +1,21 @@
+description: Bridge firewall ruleset configuration.
+type: object
+properties:
+  name:
+    description: Ruleset name for reference in zone policies.
+    type: string
+  default-action:
+    type: string
+    enum:
+      - accept
+      - drop
+    default: drop
+  default-log:
+    type: boolean
+    default: false
+  rules:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/rule/bridge/
+required:
+  - name

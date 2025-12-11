@@ -5,7 +5,7 @@ properties:
     description: Zone name.
     type: string
   default-action:
-    description: Default action for traffic.
+    description: Default action for intra-zone traffic.
     type: string
     enum:
     - accept
@@ -13,9 +13,13 @@ properties:
     - reject
     default: drop
   interfaces:
-    description: Interfaces in this zone.
+    description: Interfaces belonging to this zone.
     type: array
     items:
       type: string
+  local-zone:
+    description: Designate as local zone (traffic to/from router itself).
+    type: boolean
+    default: false
 required:
 - name

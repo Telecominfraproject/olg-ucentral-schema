@@ -1,0 +1,131 @@
+description: IPv4 firewall rule configuration.
+type: object
+properties:
+  rule-number:
+    description: Rule sequence number. Lower numbers evaluated first.
+    type: integer
+    minimum: 1
+    maximum: 65535
+  disabled:
+    type: boolean
+    default: false
+  action:
+    type: string
+    enum:
+      - accept
+      - drop
+      - reject
+  protocol:
+    description: Protocol to match.
+    type: string
+    examples:
+      - tcp
+      - udp
+      - icmp
+      - all
+  source:
+    type: object
+    properties:
+      address:
+        description: IPv4 address or network (CIDR notation).
+        type: string
+        format: uc-cidr4
+      port:
+        type: string
+      mac-address:
+        type: string
+      group:
+        type: object
+        properties:
+          address-group:
+            description: Reference to IPv4 address group.
+            type: string
+          port-group:
+            type: string
+      negate:
+        type: boolean
+        default: false
+  destination:
+    type: object
+    properties:
+      address:
+        description: IPv4 address or network (CIDR notation).
+        type: string
+        format: uc-cidr4
+      port:
+        type: string
+      group:
+        type: object
+        properties:
+          address-group:
+            description: Reference to IPv4 address group.
+            type: string
+          port-group:
+            type: string
+      negate:
+        type: boolean
+        default: false
+  state:
+    type: object
+    properties:
+      established:
+        type: boolean
+      related:
+        type: boolean
+      new:
+        type: boolean
+      invalid:
+        type: boolean
+  icmp:
+    description: ICMP matching (IPv4).
+    type: object
+    properties:
+      type:
+        type: string
+        examples:
+          - echo-request
+          - echo-reply
+          - destination-unreachable
+      code:
+        type: integer
+  tcp:
+    type: object
+    properties:
+      flags:
+        type: object
+        properties:
+          set:
+            type: array
+            items:
+              type: string
+              enum:
+                - syn
+                - ack
+                - fin
+                - rst
+                - urg
+                - psh
+          not-set:
+            type: array
+            items:
+              type: string
+              enum:
+                - syn
+                - ack
+                - fin
+                - rst
+                - urg
+                - psh
+  limit:
+    type: object
+    properties:
+      rate:
+        type: string
+      burst:
+        type: integer
+  log:
+    type: boolean
+    default: false
+required:
+  - rule-number
+  - action

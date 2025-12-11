@@ -1,0 +1,25 @@
+description: IPv4 firewall ruleset configuration.
+type: object
+properties:
+  name:
+    description: Ruleset name for reference in zone policies.
+    type: string
+  description:
+    type: string
+  default-action:
+    type: string
+    enum:
+      - accept
+      - drop
+      - reject
+    default: drop
+  default-log:
+    description: Log packets hitting default action.
+    type: boolean
+    default: false
+  rules:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/rule/ipv4/
+required:
+  - name

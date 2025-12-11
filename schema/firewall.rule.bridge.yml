@@ -1,0 +1,75 @@
+description: Bridge (Layer 2) firewall rule configuration.
+type: object
+properties:
+  rule-number:
+    description: Rule sequence number. Lower numbers evaluated first.
+    type: integer
+    minimum: 1
+    maximum: 65535
+  disabled:
+    type: boolean
+    default: false
+  action:
+    type: string
+    enum:
+      - accept
+      - drop
+  source:
+    type: object
+    properties:
+      mac-address:
+        description: Source MAC address.
+        type: string
+      mac-group:
+        description: Reference to MAC address group.
+        type: string
+      negate:
+        type: boolean
+        default: false
+  destination:
+    type: object
+    properties:
+      mac-address:
+        description: Destination MAC address.
+        type: string
+      mac-group:
+        description: Reference to MAC address group.
+        type: string
+      negate:
+        type: boolean
+        default: false
+  vlan:
+    description: Match VLAN tag.
+    type: object
+    properties:
+      id:
+        description: VLAN ID to match.
+        type: integer
+        minimum: 1
+        maximum: 4094
+      priority:
+        description: VLAN priority (802.1p).
+        type: integer
+        minimum: 0
+        maximum: 7
+  ethertype:
+    description: Match Ethernet frame type.
+    type: string
+    examples:
+      - ipv4
+      - ipv6
+      - arp
+      - "0x0800"
+      - "0x86dd"
+  inbound-interface:
+    description: Match inbound bridge port.
+    type: string
+  outbound-interface:
+    description: Match outbound bridge port.
+    type: string
+  log:
+    type: boolean
+    default: false
+required:
+  - rule-number
+  - action

@@ -8,7 +8,7 @@ properties:
     description: Destination zone.
     type: string
   ruleset:
-    description: Ruleset to apply.
+    description: Name of ruleset to apply.
     type: string
 required:
 - from
