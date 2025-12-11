@@ -59,62 +59,6 @@
                 }
             }
         },
-        "ethernet": {
-            "type": "array",
-            "items": {
-                "description": "Physical port configuration.",
-                "type": "object",
-                "properties": {
-                    "select-ports": {
-                        "description": "List of physical ports to configure.",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "examples": [
-                            "eth0",
-                            "eth1",
-                            "eth*",
-                            "lan1",
-                            "lan2",
-                            "lan3",
-                            "lan4"
-                        ]
-                    },
-                    "speed": {
-                        "description": "Link speed.",
-                        "type": "string",
-                        "enum": [
-                            "auto",
-                            "10",
-                            "100",
-                            "1000",
-                            "2500",
-                            "10000"
-                        ],
-                        "default": "auto"
-                    },
-                    "duplex": {
-                        "description": "Duplex mode.",
-                        "type": "string",
-                        "enum": [
-                            "auto",
-                            "full",
-                            "half"
-                        ],
-                        "default": "auto"
-                    },
-                    "enabled": {
-                        "description": "Enable or disable the port(s).",
-                        "type": "boolean",
-                        "default": true
-                    }
-                },
-                "required": [
-                    "select-ports"
-                ]
-            }
-        },
         "interfaces": {
             "type": "array",
             "items": {
@@ -133,7 +77,8 @@
                             "vlan",
                             "bridge",
                             "loopback",
-                            "pppoe"
+                            "pppoe",
+                            "dummy"
                         ],
                         "default": "ethernet"
                     },
@@ -151,6 +96,13 @@
                         "type": "boolean",
                         "default": true
                     },
+                    "mac-address": {
+                        "description": "Mac address of the interface.",
+                        "type": "string",
+                        "example": [
+                            "98:e7:9a:27:fe:49"
+                        ]
+                    },
                     "mtu": {
                         "description": "Maximum Transmission Unit.",
                         "type": "integer",
@@ -158,25 +110,89 @@
                         "minimum": 68
                     },
                     "ethernet": {
-                        "description": "Physical port(s) for this interface.",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
+                        "description": "Physical port configuration.",
+                        "type": "object",
+                        "properties": {
+                            "speed": {
+                                "description": "Link speed.",
+                                "type": "string",
+                                "enum": [
+                                    "auto",
+                                    "10",
+                                    "100",
+                                    "1000",
+                                    "2500",
+                                    "10000"
+                                ],
+                                "default": "auto"
+                            },
+                            "duplex": {
+                                "description": "Duplex mode.",
+                                "type": "string",
+                                "enum": [
+                                    "auto",
+                                    "full",
+                                    "half"
+                                ],
+                                "default": "auto"
+                            },
+                            "vlan-tag": {
+                                "description": "Shall the port have a vlan tag.",
+                                "type": "string",
+                                "enum": [
+                                    "tagged",
+                                    "un-tagged",
+                                    "auto"
+                                ],
+                                "default": "auto"
+                            },
+                            "proxy-arp": {
+                                "type": "object",
+                                "properties": {
+                                    "enable": {
+                                        "type": "boolean",
+                                        "default": false
+                                    }
+                                }
+                            },
+                            "arp-filter": {
+                                "type": "object",
+                                "properties": {
+                                    "enable": {
+                                        "type": "boolean",
+                                        "default": true
+                                    }
+                                }
+                            },
+                            "forwarding": {
+                                "type": "object",
+                                "properties": {
+                                    "enable": {
+                                        "type": "boolean",
+                                        "default": true
+                                    }
+                                }
+                            }
                         }
                     },
                     "vlan": {
-                        "description": "VLAN configuration.",
+                        "description": "This section describes the vlan behaviour of a logical network interface.",
                         "type": "object",
                         "properties": {
                             "id": {
-                                "description": "VLAN ID.",
+                                "description": "This is the pvid of the vlan that shall be assigned to the interface. The individual physical network devices contained within the interface need to be told explicitly if egress traffic shall be tagged.",
                                 "type": "integer",
                                 "minimum": 1,
                                 "maximum": 4094
                             },
-                            "parent-interface": {
-                                "description": "Parent interface for the VLAN.",
-                                "type": "string"
+                            "proto": {
+                                "decription": "The L2 vlan tag that shall be added (1q,1ad)",
+                                "type": "string",
+                                "enum": [
+                                    "802.1ad",
+                                    "802.1q"
+                                ],
+                                "default": "802.1q"
                             }
                         }
                     },
@@ -325,6 +341,17 @@
                                         "minimum": 1,
                                         "maximum": 255,
                                         "default": 1
+                                    },
+                                    "action": {
+                                        "type": "enum",
+                                        "enum": [
+                                            "accept",
+                                            "reject",
+                                            "blackhole"
+                                        ],
+                                        "default": [
+                                            "accept"
+                                        ]
                                     }
                                 },
                                 "required": [
@@ -344,57 +371,172 @@
                             "items": {
                                 "type": "object",
                                 "properties": {
+                                    "name": {
+                                        "description": "Rule set name for reference when binding to interfaces.",
+                                        "type": "string"
+                                    },
                                     "priority": {
-                                        "description": "Rule priority.",
-                                        "type": "integer"
+                                        "description": "Rule priority. Lower values evaluated first.",
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 65535
+                                    },
+                                    "description": {
+                                        "description": "Human-readable description.",
+                                        "type": "string"
+                                    },
+                                    "address-family": {
+                                        "description": "IPv4 or IPv6 policy.",
+                                        "type": "string",
+                                        "enum": [
+                                            "ipv4",
+                                            "ipv6"
+                                        ],
+                                        "default": "ipv4"
                                     },
                                     "source": {
-                                        "description": "Source address/network to match.",
-                                        "type": "string"
+                                        "description": "Source matching criteria.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address": {
+                                                "description": "Source network (CIDR).",
+                                                "type": "string"
+                                            },
+                                            "port": {
+                                                "description": "Source port or range.",
+                                                "type": "string"
+                                            },
+                                            "group": {
+                                                "description": "Address/port group reference.",
+                                                "type": "string"
+                                            },
+                                            "mac-address": {
+                                                "description": "Source MAC address.",
+                                                "type": "string"
+                                            }
+                                        }
                                     },
                                     "destination": {
-                                        "description": "Destination address/network to match.",
-                                        "type": "string"
+                                        "description": "Destination matching criteria.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address": {
+                                                "description": "Destination network (CIDR).",
+                                                "type": "string"
+                                            },
+                                            "port": {
+                                                "description": "Destination port or range.",
+                                                "type": "string"
+                                            },
+                                            "group": {
+                                                "description": "Address/port group reference.",
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "protocol": {
+                                        "description": "IP protocol to match.",
+                                        "type": "string",
+                                        "examples": [
+                                            "tcp",
+                                            "udp",
+                                            "icmp",
+                                            "all"
+                                        ]
                                     },
                                     "inbound-interface": {
-                                        "description": "Inbound interface to match.",
+                                        "description": "Match traffic arriving on this interface.",
                                         "type": "string"
                                     },
-                                    "table": {
-                                        "description": "Routing table to use.",
-                                        "type": "string"
+                                    "action": {
+                                        "description": "Action for matching traffic. Use either table OR next-hop, not both.",
+                                        "type": "object",
+                                        "properties": {
+                                            "drop": {
+                                                "description": "Drop matching packets.",
+                                                "type": "boolean",
+                                                "default": false
+                                            },
+                                            "table": {
+                                                "description": "Routing table to use. Can be \"main\" for default table or custom table name/ID.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "main",
+                                                    "10",
+                                                    "ISP-A"
+                                                ]
+                                            },
+                                            "next-hop": {
+                                                "description": "Override next-hop directly without specifying a table. Uses main table with forced gateway.",
+                                                "type": "string",
+                                                "format": "ipv4"
+                                            },
+                                            "mark": {
+                                                "description": "Set firewall mark.",
+                                                "type": "integer"
+                                            },
+                                            "dscp": {
+                                                "description": "Set DSCP value.",
+                                                "type": "integer",
+                                                "minimum": 0,
+                                                "maximum": 63
+                                            }
+                                        }
                                     }
                                 },
                                 "required": [
                                     "priority",
-                                    "table"
+                                    "action"
                                 ]
                             }
                         },
                         "tables": {
-                            "description": "Custom routing tables.",
+                            "description": "Custom routing tables. Only needed when traffic requires different routes than main table.",
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
                                     "name": {
+                                        "description": "Table name for reference in rules.",
                                         "type": "string"
                                     },
                                     "table-id": {
-                                        "type": "integer"
+                                        "description": "Numeric table ID (1-200).",
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 200
+                                    },
+                                    "description": {
+                                        "description": "Purpose of this table.",
+                                        "type": "string"
                                     },
                                     "routes": {
+                                        "description": "Routes in this table.",
                                         "type": "array",
                                         "items": {
                                             "type": "object",
                                             "properties": {
                                                 "destination": {
+                                                    "description": "Destination network (CIDR). Use 0.0.0.0/0 for default.",
                                                     "type": "string"
                                                 },
                                                 "next-hop": {
+                                                    "description": "Next-hop IP address.",
                                                     "type": "string"
+                                                },
+                                                "interface": {
+                                                    "description": "Outgoing interface.",
+                                                    "type": "string"
+                                                },
+                                                "distance": {
+                                                    "description": "Administrative distance.",
+                                                    "type": "integer",
+                                                    "default": 1
                                                 }
-                                            }
+                                            },
+                                            "required": [
+                                                "destination"
+                                            ]
                                         }
                                     }
                                 },
@@ -439,6 +581,30 @@
                                         "description": "Neighbor AS number.",
                                         "type": "integer"
                                     },
+                                    "advertisement-interval": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 600,
+                                        "default": 30
+                                    },
+                                    "address-family": {
+                                        "type": "enum",
+                                        "enum": [
+                                            "ipv4-unicast",
+                                            "ipv4-multicast",
+                                            "ipv6-unicast",
+                                            "ipv6-multicast"
+                                        ]
+                                    },
+                                    "port": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 65535
+                                    },
+                                    "source-interface": {
+                                        "description": "Interface used to establish connection",
+                                        "type": "string"
+                                    },
                                     "description": {
                                         "type": "string"
                                     },
@@ -476,7 +642,23 @@
                                     "type": "boolean",
                                     "default": false
                                 },
+                                "kernel": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "ospf": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "rip": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
                                 "static": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "table": {
                                     "type": "boolean",
                                     "default": false
                                 }
@@ -496,26 +678,61 @@
                             "default": false
                         },
                         "router-id": {
-                            "description": "OSPF router ID.",
+                            "description": "OSPF router identifier. Must be unique within the OSPF domain.",
                             "type": "string",
                             "format": "ipv4"
                         },
+                        "all-interface-passive": {
+                            "description": "Make all interfaces passive by default. Explicitly configure non-passive interfaces.",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "default-information": {
+                            "description": "Originate default route into OSPF.",
+                            "type": "object",
+                            "properties": {
+                                "originate": {
+                                    "description": "Advertise default route when one exists in routing table.",
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "always": {
+                                    "description": "Always advertise default route even if not in routing table.",
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "metric": {
+                                    "description": "Metric for the default route.",
+                                    "type": "integer"
+                                },
+                                "metric-type": {
+                                    "description": "External metric type (1 or 2).",
+                                    "type": "integer",
+                                    "enum": [
+                                        1,
+                                        2
+                                    ],
+                                    "default": 2
+                                }
+                            }
+                        },
                         "areas": {
-                            "description": "OSPF areas.",
+                            "description": "OSPF area definitions.",
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
                                     "area-id": {
-                                        "description": "Area ID.",
+                                        "description": "Area identifier (integer or dotted-decimal).",
                                         "type": "string",
                                         "examples": [
                                             "0",
-                                            "0.0.0.0",
-                                            "1"
+                                            "1",
+                                            "0.0.0.1"
                                         ]
                                     },
                                     "area-type": {
+                                        "description": "Area type. Stub/NSSA areas reduce LSA flooding.",
                                         "type": "string",
                                         "enum": [
                                             "normal",
@@ -524,8 +741,13 @@
                                         ],
                                         "default": "normal"
                                     },
+                                    "no-summary": {
+                                        "description": "For stub/NSSA, block inter-area routes (totally stubby).",
+                                        "type": "boolean",
+                                        "default": false
+                                    },
                                     "networks": {
-                                        "description": "Networks in this area.",
+                                        "description": "Networks to include in this area (CIDR notation).",
                                         "type": "array",
                                         "items": {
                                             "type": "string"
@@ -538,25 +760,32 @@
                             }
                         },
                         "interfaces": {
-                            "description": "OSPF interface settings.",
+                            "description": "Per-interface OSPF settings.",
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
                                     "name": {
+                                        "description": "Interface name.",
                                         "type": "string"
                                     },
                                     "area": {
+                                        "description": "Area this interface belongs to.",
                                         "type": "string"
                                     },
                                     "cost": {
-                                        "type": "integer"
+                                        "description": "OSPF cost for this interface. Lower is preferred.",
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 65535
                                     },
                                     "passive": {
+                                        "description": "Advertise network but do not form adjacencies.",
                                         "type": "boolean",
                                         "default": false
                                     },
                                     "network-type": {
+                                        "description": "OSPF network type. Affects DR election and hello behavior.",
                                         "type": "string",
                                         "enum": [
                                             "broadcast",
@@ -564,84 +793,35 @@
                                             "non-broadcast",
                                             "point-to-multipoint"
                                         ]
-                                    }
-                                },
-                                "required": [
-                                    "name"
-                                ]
-                            }
-                        },
-                        "redistribute": {
-                            "type": "object",
-                            "properties": {
-                                "connected": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "static": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "bgp": {
-                                    "type": "boolean",
-                                    "default": false
-                                }
-                            }
-                        }
-                    }
-                },
-                "ospfv3": {
-                    "description": "OSPFv3 (IPv6) routing protocol configuration.",
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "router-id": {
-                            "type": "string",
-                            "format": "ipv4"
-                        },
-                        "areas": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "area-id": {
-                                        "type": "string"
                                     },
-                                    "area-type": {
-                                        "type": "string",
-                                        "enum": [
-                                            "normal",
-                                            "stub",
-                                            "nssa"
-                                        ],
-                                        "default": "normal"
-                                    }
-                                },
-                                "required": [
-                                    "area-id"
-                                ]
-                            }
-                        },
-                        "interfaces": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
+                                    "priority": {
+                                        "description": "Router priority for DR/BDR election. 0 prevents becoming DR.",
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 255,
+                                        "default": 1
                                     },
-                                    "area": {
-                                        "type": "string"
-                                    },
-                                    "cost": {
-                                        "type": "integer"
-                                    },
-                                    "passive": {
-                                        "type": "boolean",
-                                        "default": false
+                                    "authentication": {
+                                        "description": "Interface authentication.",
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "plaintext",
+                                                    "md5"
+                                                ]
+                                            },
+                                            "password": {
+                                                "type": "string"
+                                            },
+                                            "key-id": {
+                                                "description": "Key ID for MD5 authentication.",
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 255
+                                            }
+                                        }
                                     }
                                 },
                                 "required": [
@@ -651,19 +831,157 @@
                             }
                         },
                         "redistribute": {
+                            "description": "Import routes from other sources into OSPF.",
                             "type": "object",
                             "properties": {
                                 "connected": {
+                                    "description": "Redistribute directly connected networks.",
                                     "type": "boolean",
                                     "default": false
                                 },
                                 "static": {
+                                    "description": "Redistribute static routes.",
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "bgp": {
+                                    "description": "Redistribute BGP routes.",
                                     "type": "boolean",
                                     "default": false
                                 }
                             }
                         }
-                    }
+                    },
+                    "required": [
+                        "router-id"
+                    ]
+                },
+                "ospfv3": {
+                    "description": "OSPFv3 (IPv6) routing protocol configuration.",
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "description": "Enable or disable OSPFv3 routing protocol.",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "router-id": {
+                            "description": "OSPFv3 router identifier. Uses IPv4 format (32-bit) even for IPv6 routing.",
+                            "type": "string",
+                            "format": "ipv4"
+                        },
+                        "areas": {
+                            "description": "OSPFv3 area definitions.",
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "area-id": {
+                                            "description": "Area identifier.",
+                                            "type": "string",
+                                            "examples": [
+                                                "0",
+                                                "0.0.0.0",
+                                                "1"
+                                            ]
+                                        },
+                                        "area-type": {
+                                            "description": "Area type. Stub/NSSA areas reduce LSA flooding.",
+                                            "type": "string",
+                                            "enum": [
+                                                "normal",
+                                                "stub",
+                                                "nssa"
+                                            ],
+                                            "default": "normal"
+                                        },
+                                        "no-summary": {
+                                            "description": "For stub/NSSA areas, block inter-area routes (totally stubby).",
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    },
+                                    "required": [
+                                        "area-id"
+                                    ]
+                                }
+                            ]
+                        },
+                        "interfaces": {
+                            "description": "Per-interface OSPFv3 settings.",
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Interface name.",
+                                            "type": "string"
+                                        },
+                                        "area": {
+                                            "description": "Area this interface belongs to.",
+                                            "type": "string"
+                                        },
+                                        "cost": {
+                                            "description": "OSPFv3 cost for this interface. Lower is preferred.",
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 65535
+                                        },
+                                        "passive": {
+                                            "description": "Advertise connected prefixes but do not form adjacencies.",
+                                            "type": "boolean",
+                                            "default": false
+                                        },
+                                        "network-type": {
+                                            "description": "OSPFv3 network type. Affects DR election and hello behavior.",
+                                            "type": "string",
+                                            "enum": [
+                                                "broadcast",
+                                                "point-to-point"
+                                            ]
+                                        },
+                                        "priority": {
+                                            "description": "Router priority for DR/BDR election. 0 prevents becoming DR.",
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 255,
+                                            "default": 1
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "area"
+                                    ]
+                                }
+                            ]
+                        },
+                        "redistribute": {
+                            "description": "Import routes from other sources into OSPFv3.",
+                            "type": "object",
+                            "properties": {
+                                "connected": {
+                                    "description": "Redistribute directly connected IPv6 networks.",
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "static": {
+                                    "description": "Redistribute static IPv6 routes.",
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "bgp": {
+                                    "description": "Redistribute BGP IPv6 routes.",
+                                    "type": "boolean",
+                                    "default": false
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "router-id"
+                    ]
                 },
                 "rip": {
                     "description": "RIP routing protocol configuration.",
@@ -672,6 +990,11 @@
                         "enabled": {
                             "type": "boolean",
                             "default": false
+                        },
+                        "router-id": {
+                            "description": "RIP router ID.",
+                            "type": "string",
+                            "format": "ipv4"
                         },
                         "version": {
                             "type": "integer",
@@ -704,6 +1027,14 @@
                                 "required": [
                                     "name"
                                 ]
+                            }
+                        },
+                        "neighbors": {
+                            "description": "Neighbors to advertise with unicast",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "ipv4"
                             }
                         },
                         "redistribute": {
@@ -775,7 +1106,7 @@
             "type": "object",
             "properties": {
                 "state-policy": {
-                    "description": "Global connection state policy.",
+                    "description": "Global connection state policy applied before zone rules.",
                     "type": "object",
                     "properties": {
                         "established": {
@@ -804,46 +1135,177 @@
                         }
                     }
                 },
-                "zones": {
+                "groups": {
                     "type": "array",
                     "items": {
-                        "description": "Firewall zone configuration.",
+                        "description": "Firewall address, port, and MAC groups for reuse in rules.",
                         "type": "object",
                         "properties": {
-                            "name": {
-                                "description": "Zone name.",
-                                "type": "string"
-                            },
-                            "default-action": {
-                                "description": "Default action for traffic.",
-                                "type": "string",
-                                "enum": [
-                                    "accept",
-                                    "drop",
-                                    "reject"
-                                ],
-                                "default": "drop"
-                            },
-                            "interfaces": {
-                                "description": "Interfaces in this zone.",
+                            "ipv4-address-groups": {
+                                "description": "Groups of IPv4 addresses or networks.",
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Group name for reference in IPv4 rules.",
+                                            "type": "string"
+                                        },
+                                        "members": {
+                                            "description": "IPv4 addresses or networks in CIDR notation.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "examples": [
+                                                "10.0.0.1",
+                                                "192.168.1.0/24",
+                                                "172.16.0.0/12"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "members"
+                                    ]
+                                }
+                            },
+                            "ipv6-address-groups": {
+                                "description": "Groups of IPv6 addresses or networks.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Group name for reference in IPv6 rules.",
+                                            "type": "string"
+                                        },
+                                        "members": {
+                                            "description": "IPv6 addresses or networks in CIDR notation.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "examples": [
+                                                "2001:db8::1",
+                                                "2001:db8::/32",
+                                                "fd00::/8"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "members"
+                                    ]
+                                }
+                            },
+                            "port-groups": {
+                                "description": "Groups of ports. Shared between IPv4 and IPv6 rulesets.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Group name for reference in rules.",
+                                            "type": "string"
+                                        },
+                                        "members": {
+                                            "description": "Ports, port ranges, or service names.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "examples": [
+                                                "80",
+                                                "443",
+                                                "8080-8090",
+                                                "http",
+                                                "https"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "members"
+                                    ]
+                                }
+                            },
+                            "mac-groups": {
+                                "description": "Groups of MAC addresses for bridge firewall rules.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Group name for reference in bridge rules.",
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "members": {
+                                            "description": "MAC addresses.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "examples": [
+                                                "00:11:22:33:44:55",
+                                                "aa:bb:cc:dd:ee:ff"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "members"
+                                    ]
+                                }
+                            },
+                            "domain-groups": {
+                                "description": "Groups of domain names. Shared between IPv4 and IPv6 rulesets.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Group name for reference in rules.",
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "members": {
+                                            "description": "Domain names (resolved dynamically).",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "examples": [
+                                                "example.com",
+                                                "*.google.com"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "members"
+                                    ]
                                 }
                             }
-                        },
-                        "required": [
-                            "name"
-                        ]
+                        }
                     }
                 },
-                "rulesets": {
+                "ipv4-rulesets": {
                     "type": "array",
                     "items": {
-                        "description": "Firewall ruleset configuration.",
+                        "description": "IPv4 firewall ruleset configuration.",
                         "type": "object",
                         "properties": {
                             "name": {
+                                "description": "Ruleset name for reference in zone policies.",
+                                "type": "string"
+                            },
+                            "description": {
                                 "type": "string"
                             },
                             "default-action": {
@@ -854,20 +1316,27 @@
                                     "reject"
                                 ],
                                 "default": "drop"
+                            },
+                            "default-log": {
+                                "description": "Log packets hitting default action.",
+                                "type": "boolean",
+                                "default": false
                             },
                             "rules": {
                                 "type": "array",
                                 "items": {
-                                    "description": "Firewall rule configuration.",
+                                    "description": "IPv4 firewall rule configuration.",
                                     "type": "object",
                                     "properties": {
                                         "rule-number": {
-                                            "description": "Rule sequence number.",
+                                            "description": "Rule sequence number. Lower numbers evaluated first.",
                                             "type": "integer",
-                                            "minimum": 1
+                                            "minimum": 1,
+                                            "maximum": 65535
                                         },
-                                        "description": {
-                                            "type": "string"
+                                        "disabled": {
+                                            "type": "boolean",
+                                            "default": false
                                         },
                                         "action": {
                                             "type": "string",
@@ -891,10 +1360,31 @@
                                             "type": "object",
                                             "properties": {
                                                 "address": {
-                                                    "type": "string"
+                                                    "description": "IPv4 address or network (CIDR notation).",
+                                                    "type": "string",
+                                                    "format": "uc-cidr4"
                                                 },
                                                 "port": {
                                                     "type": "string"
+                                                },
+                                                "mac-address": {
+                                                    "type": "string"
+                                                },
+                                                "group": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "address-group": {
+                                                            "description": "Reference to IPv4 address group.",
+                                                            "type": "string"
+                                                        },
+                                                        "port-group": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "negate": {
+                                                    "type": "boolean",
+                                                    "default": false
                                                 }
                                             }
                                         },
@@ -902,10 +1392,28 @@
                                             "type": "object",
                                             "properties": {
                                                 "address": {
-                                                    "type": "string"
+                                                    "description": "IPv4 address or network (CIDR notation).",
+                                                    "type": "string",
+                                                    "format": "uc-cidr4"
                                                 },
                                                 "port": {
                                                     "type": "string"
+                                                },
+                                                "group": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "address-group": {
+                                                            "description": "Reference to IPv4 address group.",
+                                                            "type": "string"
+                                                        },
+                                                        "port-group": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "negate": {
+                                                    "type": "boolean",
+                                                    "default": false
                                                 }
                                             }
                                         },
@@ -920,6 +1428,75 @@
                                                 },
                                                 "new": {
                                                     "type": "boolean"
+                                                },
+                                                "invalid": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        },
+                                        "icmp": {
+                                            "description": "ICMP matching (IPv4).",
+                                            "type": "object",
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "echo-request",
+                                                        "echo-reply",
+                                                        "destination-unreachable"
+                                                    ]
+                                                },
+                                                "code": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "tcp": {
+                                            "type": "object",
+                                            "properties": {
+                                                "flags": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "set": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "syn",
+                                                                    "ack",
+                                                                    "fin",
+                                                                    "rst",
+                                                                    "urg",
+                                                                    "psh"
+                                                                ]
+                                                            }
+                                                        },
+                                                        "not-set": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "syn",
+                                                                    "ack",
+                                                                    "fin",
+                                                                    "rst",
+                                                                    "urg",
+                                                                    "psh"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "limit": {
+                                            "type": "object",
+                                            "properties": {
+                                                "rate": {
+                                                    "type": "string"
+                                                },
+                                                "burst": {
+                                                    "type": "integer"
                                                 }
                                             }
                                         },
@@ -933,6 +1510,401 @@
                                         "action"
                                     ]
                                 }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "ipv6-rulesets": {
+                    "type": "array",
+                    "items": {
+                        "description": "IPv6 firewall ruleset configuration.",
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Ruleset name for reference in zone policies.",
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "default-action": {
+                                "type": "string",
+                                "enum": [
+                                    "accept",
+                                    "drop",
+                                    "reject"
+                                ],
+                                "default": "drop"
+                            },
+                            "default-log": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "rules": {
+                                "type": "array",
+                                "items": {
+                                    "description": "IPv6 firewall rule configuration.",
+                                    "type": "object",
+                                    "properties": {
+                                        "rule-number": {
+                                            "description": "Rule sequence number. Lower numbers evaluated first.",
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 65535
+                                        },
+                                        "disabled": {
+                                            "type": "boolean",
+                                            "default": false
+                                        },
+                                        "action": {
+                                            "type": "string",
+                                            "enum": [
+                                                "accept",
+                                                "drop",
+                                                "reject"
+                                            ]
+                                        },
+                                        "protocol": {
+                                            "description": "Protocol to match.",
+                                            "type": "string",
+                                            "examples": [
+                                                "tcp",
+                                                "udp",
+                                                "icmpv6",
+                                                "all"
+                                            ]
+                                        },
+                                        "source": {
+                                            "type": "object",
+                                            "properties": {
+                                                "address": {
+                                                    "description": "IPv6 address or network (CIDR notation).",
+                                                    "type": "string",
+                                                    "format": "uc-cidr6"
+                                                },
+                                                "port": {
+                                                    "type": "string"
+                                                },
+                                                "mac-address": {
+                                                    "type": "string"
+                                                },
+                                                "group": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "address-group": {
+                                                            "description": "Reference to IPv6 address group.",
+                                                            "type": "string"
+                                                        },
+                                                        "port-group": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "negate": {
+                                                    "type": "boolean",
+                                                    "default": false
+                                                }
+                                            }
+                                        },
+                                        "destination": {
+                                            "type": "object",
+                                            "properties": {
+                                                "address": {
+                                                    "description": "IPv6 address or network (CIDR notation).",
+                                                    "type": "string",
+                                                    "format": "ipv6-prefix"
+                                                },
+                                                "port": {
+                                                    "type": "string"
+                                                },
+                                                "group": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "address-group": {
+                                                            "description": "Reference to IPv6 address group.",
+                                                            "type": "string"
+                                                        },
+                                                        "port-group": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "negate": {
+                                                    "type": "boolean",
+                                                    "default": false
+                                                }
+                                            }
+                                        },
+                                        "state": {
+                                            "type": "object",
+                                            "properties": {
+                                                "established": {
+                                                    "type": "boolean"
+                                                },
+                                                "related": {
+                                                    "type": "boolean"
+                                                },
+                                                "new": {
+                                                    "type": "boolean"
+                                                },
+                                                "invalid": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        },
+                                        "icmpv6": {
+                                            "description": "ICMPv6 matching.",
+                                            "type": "object",
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "echo-request",
+                                                        "echo-reply",
+                                                        "neighbor-solicitation",
+                                                        "neighbor-advertisement",
+                                                        "router-solicitation",
+                                                        "router-advertisement"
+                                                    ]
+                                                },
+                                                "code": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "tcp": {
+                                            "type": "object",
+                                            "properties": {
+                                                "flags": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "set": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "syn",
+                                                                    "ack",
+                                                                    "fin",
+                                                                    "rst",
+                                                                    "urg",
+                                                                    "psh"
+                                                                ]
+                                                            }
+                                                        },
+                                                        "not-set": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "syn",
+                                                                    "ack",
+                                                                    "fin",
+                                                                    "rst",
+                                                                    "urg",
+                                                                    "psh"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "limit": {
+                                            "type": "object",
+                                            "properties": {
+                                                "rate": {
+                                                    "type": "string"
+                                                },
+                                                "burst": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "log": {
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    },
+                                    "required": [
+                                        "rule-number",
+                                        "action"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "bridge-rulesets": {
+                    "type": "array",
+                    "items": {
+                        "description": "Bridge firewall ruleset configuration.",
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Ruleset name for reference in zone policies.",
+                                "type": "string"
+                            },
+                            "default-action": {
+                                "type": "string",
+                                "enum": [
+                                    "accept",
+                                    "drop"
+                                ],
+                                "default": "drop"
+                            },
+                            "default-log": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "rules": {
+                                "type": "array",
+                                "items": {
+                                    "description": "Bridge (Layer 2) firewall rule configuration.",
+                                    "type": "object",
+                                    "properties": {
+                                        "rule-number": {
+                                            "description": "Rule sequence number. Lower numbers evaluated first.",
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 65535
+                                        },
+                                        "disabled": {
+                                            "type": "boolean",
+                                            "default": false
+                                        },
+                                        "action": {
+                                            "type": "string",
+                                            "enum": [
+                                                "accept",
+                                                "drop"
+                                            ]
+                                        },
+                                        "source": {
+                                            "type": "object",
+                                            "properties": {
+                                                "mac-address": {
+                                                    "description": "Source MAC address.",
+                                                    "type": "string"
+                                                },
+                                                "mac-group": {
+                                                    "description": "Reference to MAC address group.",
+                                                    "type": "string"
+                                                },
+                                                "negate": {
+                                                    "type": "boolean",
+                                                    "default": false
+                                                }
+                                            }
+                                        },
+                                        "destination": {
+                                            "type": "object",
+                                            "properties": {
+                                                "mac-address": {
+                                                    "description": "Destination MAC address.",
+                                                    "type": "string"
+                                                },
+                                                "mac-group": {
+                                                    "description": "Reference to MAC address group.",
+                                                    "type": "string"
+                                                },
+                                                "negate": {
+                                                    "type": "boolean",
+                                                    "default": false
+                                                }
+                                            }
+                                        },
+                                        "vlan": {
+                                            "description": "Match VLAN tag.",
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "VLAN ID to match.",
+                                                    "type": "integer",
+                                                    "minimum": 1,
+                                                    "maximum": 4094
+                                                },
+                                                "priority": {
+                                                    "description": "VLAN priority (802.1p).",
+                                                    "type": "integer",
+                                                    "minimum": 0,
+                                                    "maximum": 7
+                                                }
+                                            }
+                                        },
+                                        "ethertype": {
+                                            "description": "Match Ethernet frame type.",
+                                            "type": "string",
+                                            "examples": [
+                                                "ipv4",
+                                                "ipv6",
+                                                "arp",
+                                                "0x0800",
+                                                "0x86dd"
+                                            ]
+                                        },
+                                        "inbound-interface": {
+                                            "description": "Match inbound bridge port.",
+                                            "type": "string"
+                                        },
+                                        "outbound-interface": {
+                                            "description": "Match outbound bridge port.",
+                                            "type": "string"
+                                        },
+                                        "log": {
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    },
+                                    "required": [
+                                        "rule-number",
+                                        "action"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "zones": {
+                    "type": "array",
+                    "items": {
+                        "description": "Firewall zone configuration.",
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Zone name.",
+                                "type": "string"
+                            },
+                            "default-action": {
+                                "description": "Default action for intra-zone traffic.",
+                                "type": "string",
+                                "enum": [
+                                    "accept",
+                                    "drop",
+                                    "reject"
+                                ],
+                                "default": "drop"
+                            },
+                            "interfaces": {
+                                "description": "Interfaces belonging to this zone.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "local-zone": {
+                                "description": "Designate as local zone (traffic to/from router itself).",
+                                "type": "boolean",
+                                "default": false
                             }
                         },
                         "required": [
@@ -955,7 +1927,7 @@
                                 "type": "string"
                             },
                             "ruleset": {
-                                "description": "Ruleset to apply.",
+                                "description": "Name of ruleset to apply.",
                                 "type": "string"
                             }
                         },
@@ -972,38 +1944,121 @@
             "description": "Network Address Translation configuration.",
             "type": "object",
             "properties": {
-                "source": {
-                    "description": "Source NAT rules (one-to-many, many-to-many).",
+                "source-ipv4": {
+                    "description": "IPv4 Source NAT rules (SNAT/Masquerade).",
                     "type": "array",
                     "items": {
-                        "description": "Source NAT rule (SNAT/Masquerade).",
+                        "description": "IPv4 Source NAT rule (SNAT/Masquerade).",
                         "type": "object",
                         "properties": {
                             "rule-number": {
+                                "description": "Rule number for ordering (lower numbers processed first).",
                                 "type": "integer",
                                 "minimum": 1
-                            },
-                            "description": {
-                                "type": "string"
                             },
                             "outbound-interface": {
                                 "description": "Outbound interface for NAT.",
                                 "type": "string"
                             },
+                            "protocol": {
+                                "description": "Protocol to match.",
+                                "type": "string",
+                                "examples": [
+                                    "tcp",
+                                    "udp",
+                                    "icmp",
+                                    "all"
+                                ]
+                            },
                             "source": {
+                                "description": "Source address/port to match.",
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "type": "string"
+                                        "description": "Source IPv4 address, network, or address range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "192.168.1.100",
+                                            "192.168.1.0/24"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "Source port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "80",
+                                            "1024-65535"
+                                        ]
+                                    },
+                                    "group": {
+                                        "description": "Reference to a firewall address/network/port group.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address-group": {
+                                                "type": "string"
+                                            },
+                                            "network-group": {
+                                                "type": "string"
+                                            },
+                                            "port-group": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "destination": {
+                                "description": "Destination address/port to match.",
+                                "type": "object",
+                                "properties": {
+                                    "address": {
+                                        "description": "Destination IPv4 address, network, or address range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "10.0.0.1",
+                                            "10.0.0.0/8"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "Destination port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "443",
+                                            "8000-9000"
+                                        ]
+                                    },
+                                    "group": {
+                                        "description": "Reference to a firewall address/network/port group.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address-group": {
+                                                "type": "string"
+                                            },
+                                            "network-group": {
+                                                "type": "string"
+                                            },
+                                            "port-group": {
+                                                "type": "string"
+                                            }
+                                        }
                                     }
                                 }
                             },
                             "translation": {
+                                "description": "Translation parameters.",
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "description": "Translated address. Use 'masquerade' for dynamic.",
+                                        "description": "Translated source address. Use 'masquerade' for dynamic IP.",
                                         "type": "string"
+                                    },
+                                    "port": {
+                                        "description": "Translated source port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "8080",
+                                            "10000-20000"
+                                        ]
                                     }
                                 }
                             }
@@ -1013,42 +2068,447 @@
                         ]
                     }
                 },
-                "destination": {
-                    "description": "Destination NAT rules (port forwarding).",
+                "destination-ipv4": {
+                    "description": "IPv4 Destination NAT rules (DNAT/Port forwarding).",
                     "type": "array",
                     "items": {
-                        "description": "Destination NAT rule (DNAT/Port Forward).",
+                        "description": "IPv4 Destination NAT rule (DNAT/Port Forward).",
                         "type": "object",
                         "properties": {
                             "rule-number": {
+                                "description": "Rule number for ordering (lower numbers processed first).",
                                 "type": "integer",
                                 "minimum": 1
                             },
-                            "description": {
-                                "type": "string"
-                            },
                             "inbound-interface": {
+                                "description": "Inbound interface for NAT.",
                                 "type": "string"
                             },
                             "protocol": {
-                                "type": "string"
+                                "description": "Protocol to match.",
+                                "type": "string",
+                                "examples": [
+                                    "tcp",
+                                    "udp",
+                                    "icmp",
+                                    "all"
+                                ]
                             },
-                            "destination": {
+                            "source": {
+                                "description": "Source address/port to match.",
                                 "type": "object",
                                 "properties": {
+                                    "address": {
+                                        "description": "Source IPv4 address, network, or address range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "192.168.1.100",
+                                            "192.168.1.0/24"
+                                        ]
+                                    },
                                     "port": {
-                                        "type": "string"
+                                        "description": "Source port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "80",
+                                            "1024-65535"
+                                        ]
+                                    },
+                                    "group": {
+                                        "description": "Reference to a firewall address/network/port group.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address-group": {
+                                                "type": "string"
+                                            },
+                                            "network-group": {
+                                                "type": "string"
+                                            },
+                                            "port-group": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "destination": {
+                                "description": "Original destination address/port to match.",
+                                "type": "object",
+                                "properties": {
+                                    "address": {
+                                        "description": "Original destination IPv4 address, network, or address range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "203.0.113.1",
+                                            "203.0.113.0/24"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "Original destination port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "443",
+                                            "8000-9000"
+                                        ]
+                                    },
+                                    "group": {
+                                        "description": "Reference to a firewall address/network/port group.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address-group": {
+                                                "type": "string"
+                                            },
+                                            "network-group": {
+                                                "type": "string"
+                                            },
+                                            "port-group": {
+                                                "type": "string"
+                                            }
+                                        }
                                     }
                                 }
                             },
                             "translation": {
+                                "description": "Translation parameters.",
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "type": "string"
+                                        "description": "Translated destination address.",
+                                        "type": "string",
+                                        "examples": [
+                                            "192.168.1.10"
+                                        ]
                                     },
                                     "port": {
-                                        "type": "string"
+                                        "description": "Translated destination port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "8080",
+                                            "3000-4000"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "rule-number"
+                        ]
+                    }
+                },
+                "source-ipv6": {
+                    "description": "IPv6 Source NAT rules (NAT66/NPTv6).",
+                    "type": "array",
+                    "items": {
+                        "description": "IPv6 Source NAT rule (NAT66/NPTv6).",
+                        "type": "object",
+                        "properties": {
+                            "rule-number": {
+                                "description": "Rule number for ordering (lower numbers processed first).",
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "outbound-interface": {
+                                "description": "Outbound interface for NAT.",
+                                "type": "string"
+                            },
+                            "protocol": {
+                                "description": "Protocol to match.",
+                                "type": "string",
+                                "examples": [
+                                    "tcp",
+                                    "udp",
+                                    "icmpv6",
+                                    "all"
+                                ]
+                            },
+                            "source": {
+                                "description": "Source address/port to match.",
+                                "type": "object",
+                                "properties": {
+                                    "prefix": {
+                                        "description": "Source IPv6 prefix.",
+                                        "type": "string",
+                                        "format": "uc-cidr6",
+                                        "examples": [
+                                            "2001:db8:1::/64"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "Source port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "80",
+                                            "1024-65535"
+                                        ]
+                                    },
+                                    "group": {
+                                        "description": "Reference to a firewall address/network/port group.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address-group": {
+                                                "type": "string"
+                                            },
+                                            "network-group": {
+                                                "type": "string"
+                                            },
+                                            "port-group": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "destination": {
+                                "description": "Destination address/port to match.",
+                                "type": "object",
+                                "properties": {
+                                    "prefix": {
+                                        "description": "Destination IPv6 prefix.",
+                                        "type": "string",
+                                        "format": "uc-cidr6",
+                                        "examples": [
+                                            "2001:db8:2::/64"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "Destination port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "443",
+                                            "8000-9000"
+                                        ]
+                                    },
+                                    "group": {
+                                        "description": "Reference to a firewall address/network/port group.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address-group": {
+                                                "type": "string"
+                                            },
+                                            "network-group": {
+                                                "type": "string"
+                                            },
+                                            "port-group": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "translation": {
+                                "description": "Translation parameters.",
+                                "type": "object",
+                                "properties": {
+                                    "prefix": {
+                                        "description": "Translated source IPv6 prefix.",
+                                        "type": "string",
+                                        "format": "uc-cidr6",
+                                        "examples": [
+                                            "2001:db8:a::/64"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "Translated source port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "8080",
+                                            "10000-20000"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "rule-number"
+                        ]
+                    }
+                },
+                "destination-ipv6": {
+                    "description": "IPv6 Destination NAT rules.",
+                    "type": "array",
+                    "items": {
+                        "description": "IPv6 Destination NAT rule.",
+                        "type": "object",
+                        "properties": {
+                            "rule-number": {
+                                "description": "Rule number for ordering (lower numbers processed first).",
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "inbound-interface": {
+                                "description": "Inbound interface for NAT.",
+                                "type": "string"
+                            },
+                            "protocol": {
+                                "description": "Protocol to match.",
+                                "type": "string",
+                                "examples": [
+                                    "tcp",
+                                    "udp",
+                                    "icmpv6",
+                                    "all"
+                                ]
+                            },
+                            "source": {
+                                "description": "Source address/port to match.",
+                                "type": "object",
+                                "properties": {
+                                    "prefix": {
+                                        "description": "Source IPv6 prefix.",
+                                        "type": "string",
+                                        "format": "uc-cidr6",
+                                        "examples": [
+                                            "2001:db8:1::/64"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "Source port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "80",
+                                            "1024-65535"
+                                        ]
+                                    },
+                                    "group": {
+                                        "description": "Reference to a firewall address/network/port group.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address-group": {
+                                                "type": "string"
+                                            },
+                                            "network-group": {
+                                                "type": "string"
+                                            },
+                                            "port-group": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "destination": {
+                                "description": "Original destination address/port to match.",
+                                "type": "object",
+                                "properties": {
+                                    "prefix": {
+                                        "description": "Original destination IPv6 prefix.",
+                                        "type": "string",
+                                        "format": "uc-cidr6",
+                                        "examples": [
+                                            "2001:db8:2::/64"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "Original destination port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "443",
+                                            "8000-9000"
+                                        ]
+                                    },
+                                    "group": {
+                                        "description": "Reference to a firewall address/network/port group.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address-group": {
+                                                "type": "string"
+                                            },
+                                            "network-group": {
+                                                "type": "string"
+                                            },
+                                            "port-group": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "translation": {
+                                "description": "Translation parameters.",
+                                "type": "object",
+                                "properties": {
+                                    "prefix": {
+                                        "description": "Translated destination IPv6 prefix.",
+                                        "type": "string",
+                                        "format": "uc-cidr6",
+                                        "examples": [
+                                            "2001:db8:a::/64"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "Translated destination port or port range.",
+                                        "type": "string",
+                                        "examples": [
+                                            "8080",
+                                            "3000-4000"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "rule-number"
+                        ]
+                    }
+                },
+                "nat64": {
+                    "description": "NAT64 configuration for IPv6-to-IPv4 translation.",
+                    "type": "array",
+                    "items": {
+                        "description": "NAT64 configuration for IPv6-to-IPv4 translation.",
+                        "type": "object",
+                        "properties": {
+                            "rule-number": {
+                                "description": "Rule number for ordering (lower numbers processed first).",
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "source": {
+                                "description": "IPv6 source prefix configuration.",
+                                "type": "object",
+                                "properties": {
+                                    "prefix": {
+                                        "description": "IPv6 source prefix to match.",
+                                        "type": "string",
+                                        "format": "uc-cidr6",
+                                        "examples": [
+                                            "2001:db8:1::/64"
+                                        ]
+                                    }
+                                }
+                            },
+                            "translation": {
+                                "description": "NAT64 translation parameters.",
+                                "type": "object",
+                                "properties": {
+                                    "ipv6-prefix": {
+                                        "description": "Well-known prefix or custom NAT64 prefix.",
+                                        "type": "string",
+                                        "format": "uc-cidr6",
+                                        "default": "64:ff9b::/96",
+                                        "examples": [
+                                            "64:ff9b::/96"
+                                        ]
+                                    },
+                                    "ipv4-pool": {
+                                        "description": "IPv4 address pool for translated traffic.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address": {
+                                                "description": "IPv4 address or address range for source NAT.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "198.51.100.1",
+                                                    "198.51.100.1-198.51.100.10"
+                                                ]
+                                            },
+                                            "port-range": {
+                                                "type": "string",
+                                                "examples": [
+                                                    "1024-65535"
+                                                ]
+                                            }
+                                        }
                                     }
                                 }
                             }
