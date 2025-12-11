@@ -5,65 +5,134 @@ properties:
     type: boolean
     default: false
   router-id:
-    description: OSPF router ID.
+    description: OSPF router identifier. Must be unique within the OSPF domain.
     type: string
     format: ipv4
+  all-interface-passive:
+    description: Make all interfaces passive by default. Explicitly configure non-passive interfaces.
+    type: boolean
+    default: false
+  default-information:
+    description: Originate default route into OSPF.
+    type: object
+    properties:
+      originate:
+        description: Advertise default route when one exists in routing table.
+        type: boolean
+        default: false
+      always:
+        description: Always advertise default route even if not in routing table.
+        type: boolean
+        default: false
+      metric:
+        description: Metric for the default route.
+        type: integer
+      metric-type:
+        description: External metric type (1 or 2).
+        type: integer
+        enum: [1, 2]
+        default: 2
   areas:
-    description: OSPF areas.
+    description: OSPF area definitions.
     type: array
     items:
       type: object
       properties:
         area-id:
-          description: Area ID.
-          type: integer
+          description: Area identifier (integer or dotted-decimal).
+          type: string
+          examples:
+          - "0"
+          - "1"
+          - "0.0.0.1"
         area-type:
+          description: Area type. Stub/NSSA areas reduce LSA flooding.
           type: string
           enum:
           - normal
           - stub
           - nssa
           default: normal
+        no-summary:
+          description: For stub/NSSA, block inter-area routes (totally stubby).
+          type: boolean
+          default: false
         networks:
-          description: Networks in this area.
+          description: Networks to include in this area (CIDR notation).
           type: array
           items:
             type: string
       required:
-      - area-id
+        - area-id
   interfaces:
-    description: OSPF interface settings.
+    description: Per-interface OSPF settings.
     type: array
     items:
       type: object
       properties:
         name:
+          description: Interface name.
           type: string
         area:
+          description: Area this interface belongs to.
           type: string
         cost:
+          description: OSPF cost for this interface. Lower is preferred.
           type: integer
+          minimum: 1
+          maximum: 65535
         passive:
+          description: Advertise network but do not form adjacencies.
           type: boolean
           default: false
         network-type:
+          description: OSPF network type. Affects DR election and hello behavior.
           type: string
           enum:
           - broadcast
           - point-to-point
           - non-broadcast
           - point-to-multipoint
+        priority:
+          description: Router priority for DR/BDR election. 0 prevents becoming DR.
+          type: integer
+          minimum: 0
+          maximum: 255
+          default: 1
+        authentication:
+          description: Interface authentication.
+          type: object
+          properties:
+            type:
+              type: string
+              enum: 
+              - plaintext
+              - md5
+            password:
+              type: string
+            key-id:
+              description: Key ID for MD5 authentication.
+              type: integer
+              minimum: 1
+              maximum: 255
       required:
-      - name
+        - name
+        - area
   redistribute:
+    description: Import routes from other sources into OSPF.
     type: object
     properties:
       connected:
+        description: Redistribute directly connected networks.
         type: boolean
         default: false
       static:
+        description: Redistribute static routes.
         type: boolean
         default: false
       bgp:
+        description: Redistribute BGP routes.
         type: boolean
         default: false
+required:
+  - router-id
