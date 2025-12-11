@@ -1,7 +1,8 @@
-description: NetFlow export configuration.
+description: NetFlow monitoring configuration.
 type: object
 properties:
   version:
+    description: NetFlow protocol version (5, 9, or 10/IPFIX).
     type: string
     enum:
     - '5'
@@ -9,20 +10,30 @@ properties:
     - '10'
     default: '9'
   interfaces:
+    description: Interfaces to collect flow data.
     type: array
     items:
       type: string
   servers:
+    description: NetFlow collector servers.
     type: array
     items:
       type: object
       properties:
         address:
           type: string
+          format: uc-ip
         port:
           type: integer
-          default: 2055
+          maximum: 65535
       required:
       - address
-  sampling-rate:
+  engine-id:
+    description: Engine ID to identify this router.
     type: integer
+    minimum: 0
+    maximum: 255
+  sampling-rate:
+    description: How frequent to sample a packet (1 = every packet)
+    type: integer
+    default: 1

@@ -1,18 +1,17 @@
 description: IGMP-Proxy configuration.
 type: object
 properties:
-  interfaces:
+  upstream-interface:
+    description: Interface facing the multicast source.
+    type: string
+  downstream-interfaces:
+    description: Interfaces facing multicast receivers.
     type: array
     items:
-      type: object
-      properties:
-        name:
-          type: string
-        role:
-          type: string
-          enum:
-          - upstream
-          - downstream
-      required:
-      - name
-      - role
+      type: string
+  alt-subnets:
+    description: Additional subnets allowed to send multicast traffic.
+    type: array
+    items:
+      type: string
+      format: uc-cidr4

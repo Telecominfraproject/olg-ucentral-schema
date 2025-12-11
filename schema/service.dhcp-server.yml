@@ -1,7 +1,8 @@
 description: DHCP server configuration.
 type: object
 properties:
-  shared-networks:
+  networks:
+    description: List of DHCP networks to serve.
     type: array
     items:
       type: object
@@ -9,37 +10,49 @@ properties:
         name:
           type: string
         subnets:
+          description: Subnets within this DHCP network.
           type: array
           items:
             type: object
             properties:
               subnet:
+                description: Network address in CIDR notation.
                 type: string
+                format: uc-cidr4
               default-router:
+                description: Default gateway address for DHCP clients.
                 type: string
+                format: ipv4
               dns-servers:
+                description: DNS server addresses to provide to clients.
                 type: array
                 items:
                   type: string
+                  format: ipv4
               domain-name:
+                description: Domain name to provide to DHCP clients.
                 type: string
-              lease:
+              lease-time:
                 description: Lease time in seconds.
                 type: integer
                 default: 86400
               ranges:
+                description: IP address ranges for dynamic allocation.
                 type: array
                 items:
                   type: object
                   properties:
                     start:
                       type: string
+                      format: ipv4
                     stop:
                       type: string
+                      format: ipv4
                   required:
                   - start
                   - stop
               static-mappings:
+                description: Static IP assignments based on MAC address.
                 type: array
                 items:
                   type: object
@@ -47,9 +60,13 @@ properties:
                     name:
                       type: string
                     mac-address:
+                      description: MAC address of the client.
                       type: string
+                      format: uc-mac
                     ip-address:
+                      description: IP address to assign to this client.
                       type: string
+                      format: ipv4
             required:
             - subnet
       required:

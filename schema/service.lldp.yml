@@ -2,8 +2,13 @@ description: LLDP server and client configuration.
 type: object
 properties:
   interfaces:
+    description: Interfaces to enable LLDP.
     type: array
     items:
       type: string
-  management-address:
-    type: string
+  management-addresses:
+    description: Management IP addresses to advertise via LLDP.
+    type: array
+    items:
+      type: string
+      format: uc-ip

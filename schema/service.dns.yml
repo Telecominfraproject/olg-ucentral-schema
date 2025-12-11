@@ -1,19 +1,39 @@
 description: DNS recursive server configuration.
 type: object
 properties:
-  listen-addresses:
-    type: array
-    items:
-      type: string
-  allow-from:
+  domains:
+    description: Domain names for local resolution.
     type: array
     items:
       type: string
   forwarding-servers:
+    description: Upstream DNS servers for forwarding queries.
+    type: array
+    items:
+      type: object
+      properties:
+        address:
+          description: IP address of the upstream DNS server.
+          type: string
+          format: uc-ip
+        port:
+          description: Port number of the upstream DNS server.
+          type: integer
+          maximum: 65535
+  allow-from:
+    description: Networks allowed to query this DNS server (CIDR notation).
     type: array
     items:
       type: string
+      format: uc-cidr
+  listen-addresses:
+    description: IP addresses the DNS server listens.
+    type: array
+    items:
+      type: string
+      format: uc-ip
   static-host-mappings:
+    description: Static hostname to IP address mappings.
     type: array
     items:
       type: object
@@ -22,3 +42,4 @@ properties:
           type: string
         address:
           type: string
+          format: uc-ip

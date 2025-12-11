@@ -5,13 +5,49 @@ properties:
     description: Upstream NTP servers.
     type: array
     items:
-      type: string
-  listen-addresses:
-    description: Addresses to listen on as NTP server.
-    type: array
-    items:
-      type: string
+      type: object
+      properties:
+        address:
+          description: Hostname or IP address of the NTP server.
+          type: string
+          format: uc-host
+        no-select:
+          description: Use for timing but do not synchronize to this server.
+          type: boolean
+          default: false
+        nts:
+          description: Enable Network Time Security (NTS) for this server.
+          type: boolean
+          default: false
+        pool:
+          description: Treat this address as an NTP pool.
+          type: boolean
+          default: false
+        prefer:
+          description: Prefer this server over others.
+          type: boolean
+          default: false
+        ptp:
+          description: Enable Precision Time Protocol (PTP) for this server.
+          type: boolean
+          default: false
+        interleave:
+          description: Enable interleaved mode for improved accuracy.
+          type: boolean
+          default: false
+      required:
+      - address
+  listen-ipv4-address:
+    description: IPv4 address to listen on as NTP server.
+    type: string
+    format: ipv4
+  listen-ipv6-address:
+    description: IPv6 address to listen on as NTP server.
+    type: string
+    format: ipv6
   allow-clients:
+    description: Allowed IPv4 or IPv6 address
     type: array
     items:
       type: string
+      format: uc-ip

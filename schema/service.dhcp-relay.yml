@@ -2,14 +2,18 @@ description: DHCP relay configuration.
 type: object
 properties:
   listen-interfaces:
+    description: Interfaces to listen for DHCP requests.
     type: array
     items:
       type: string
   upstream-interfaces:
+    description: Interfaces connected to DHCP servers.
     type: array
     items:
       type: string
   servers:
+    description: Addresses of upstream DHCP servers.
     type: array
     items:
       type: string
+      format: ipv4
