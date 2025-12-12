@@ -325,11 +325,13 @@
                                 "properties": {
                                     "destination": {
                                         "description": "Destination network (CIDR).",
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "uc-cidr"
                                     },
                                     "next-hop": {
                                         "description": "Next-hop IP address.",
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "uc-ip"
                                     },
                                     "interface": {
                                         "description": "Outgoing interface.",
@@ -343,7 +345,7 @@
                                         "default": 1
                                     },
                                     "action": {
-                                        "type": "enum",
+                                        "type": "string",
                                         "enum": [
                                             "accept",
                                             "reject",
@@ -400,11 +402,13 @@
                                         "properties": {
                                             "address": {
                                                 "description": "Source network (CIDR).",
-                                                "type": "string"
+                                                "type": "string",
+                                                "format": "uc-cidr"
                                             },
                                             "port": {
                                                 "description": "Source port or range.",
-                                                "type": "string"
+                                                "type": "string",
+                                                "format": "uc-portrange"
                                             },
                                             "group": {
                                                 "description": "Address/port group reference.",
@@ -412,7 +416,8 @@
                                             },
                                             "mac-address": {
                                                 "description": "Source MAC address.",
-                                                "type": "string"
+                                                "type": "string",
+                                                "format": "uc-mac"
                                             }
                                         }
                                     },
@@ -422,11 +427,13 @@
                                         "properties": {
                                             "address": {
                                                 "description": "Destination network (CIDR).",
-                                                "type": "string"
+                                                "type": "string",
+                                                "format": "uc-cidr"
                                             },
                                             "port": {
                                                 "description": "Destination port or range.",
-                                                "type": "string"
+                                                "type": "string",
+                                                "format": "uc-portrange"
                                             },
                                             "group": {
                                                 "description": "Address/port group reference.",
@@ -518,11 +525,13 @@
                                             "properties": {
                                                 "destination": {
                                                     "description": "Destination network (CIDR). Use 0.0.0.0/0 for default.",
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "format": "uc-cidr"
                                                 },
                                                 "next-hop": {
                                                     "description": "Next-hop IP address.",
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "format": "uc-ip"
                                                 },
                                                 "interface": {
                                                     "description": "Outgoing interface.",
@@ -575,7 +584,8 @@
                                 "properties": {
                                     "address": {
                                         "description": "Neighbor IP address.",
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "uc-ip"
                                     },
                                     "remote-as": {
                                         "description": "Neighbor AS number.",
@@ -588,7 +598,7 @@
                                         "default": 30
                                     },
                                     "address-family": {
-                                        "type": "enum",
+                                        "type": "string",
                                         "enum": [
                                             "ipv4-unicast",
                                             "ipv4-multicast",
@@ -613,8 +623,9 @@
                                         "type": "string"
                                     },
                                     "ebgp-multihop": {
-                                        "description": "Allow EBGP multihop.",
-                                        "type": "integer"
+                                        "description": "The number of hops to reach the neighbor.",
+                                        "type": "integer",
+                                        "minimum": 1
                                     },
                                     "password": {
                                         "description": "MD5 authentication password.",
@@ -631,7 +642,20 @@
                             "description": "Networks to advertise.",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "object",
+                                "properties": {
+                                    "address-family": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ipv4-unicast",
+                                            "ipv6-unicast"
+                                        ]
+                                    },
+                                    "network": {
+                                        "type": "string",
+                                        "format": "uc-cidr"
+                                    }
+                                }
                             }
                         },
                         "redistribute": {
@@ -673,10 +697,6 @@
                     "description": "OSPF routing protocol configuration.",
                     "type": "object",
                     "properties": {
-                        "enabled": {
-                            "type": "boolean",
-                            "default": false
-                        },
                         "router-id": {
                             "description": "OSPF router identifier. Must be unique within the OSPF domain.",
                             "type": "string",
@@ -691,11 +711,6 @@
                             "description": "Originate default route into OSPF.",
                             "type": "object",
                             "properties": {
-                                "originate": {
-                                    "description": "Advertise default route when one exists in routing table.",
-                                    "type": "boolean",
-                                    "default": false
-                                },
                                 "always": {
                                     "description": "Always advertise default route even if not in routing table.",
                                     "type": "boolean",
@@ -706,13 +721,13 @@
                                     "type": "integer"
                                 },
                                 "metric-type": {
-                                    "description": "External metric type (1 or 2).",
-                                    "type": "integer",
+                                    "description": "External metric type. E1 => External cost + Internal OSPF cost E2 => External cost only",
+                                    "type": "string",
                                     "enum": [
-                                        1,
-                                        2
+                                        "E1",
+                                        "E2"
                                     ],
-                                    "default": 2
+                                    "default": "E2"
                                 }
                             }
                         },
@@ -750,7 +765,8 @@
                                         "description": "Networks to include in this area (CIDR notation).",
                                         "type": "array",
                                         "items": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "format": "uc-cidr4"
                                         }
                                     }
                                 },
@@ -997,18 +1013,19 @@
                             "format": "ipv4"
                         },
                         "version": {
-                            "type": "integer",
+                            "type": "string",
                             "enum": [
-                                1,
-                                2
+                                "1",
+                                "2"
                             ],
-                            "default": 2
+                            "default": "2"
                         },
                         "networks": {
                             "description": "Networks to advertise.",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "string",
+                                "format": "uc-cidr4"
                             }
                         },
                         "interfaces": {
@@ -1061,9 +1078,11 @@
                             "default": false
                         },
                         "networks": {
+                            "description": "IPv6 networks to advertise.",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "string",
+                                "format": "uc-cidr6"
                             }
                         },
                         "interfaces": {
@@ -2934,7 +2953,8 @@
                     "description": "DHCP server configuration.",
                     "type": "object",
                     "properties": {
-                        "shared-networks": {
+                        "networks": {
+                            "description": "List of DHCP networks to serve.",
                             "type": "array",
                             "items": {
                                 "type": "object",
@@ -2943,40 +2963,51 @@
                                         "type": "string"
                                     },
                                     "subnets": {
+                                        "description": "Subnets within this DHCP network.",
                                         "type": "array",
                                         "items": {
                                             "type": "object",
                                             "properties": {
                                                 "subnet": {
-                                                    "type": "string"
+                                                    "description": "Network address in CIDR notation.",
+                                                    "type": "string",
+                                                    "format": "uc-cidr4"
                                                 },
                                                 "default-router": {
-                                                    "type": "string"
+                                                    "description": "Default gateway address for DHCP clients.",
+                                                    "type": "string",
+                                                    "format": "ipv4"
                                                 },
                                                 "dns-servers": {
+                                                    "description": "DNS server addresses to provide to clients.",
                                                     "type": "array",
                                                     "items": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "format": "ipv4"
                                                     }
                                                 },
                                                 "domain-name": {
+                                                    "description": "Domain name to provide to DHCP clients.",
                                                     "type": "string"
                                                 },
-                                                "lease": {
+                                                "lease-time": {
                                                     "description": "Lease time in seconds.",
                                                     "type": "integer",
                                                     "default": 86400
                                                 },
                                                 "ranges": {
+                                                    "description": "IP address ranges for dynamic allocation.",
                                                     "type": "array",
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
                                                             "start": {
-                                                                "type": "string"
+                                                                "type": "string",
+                                                                "format": "ipv4"
                                                             },
                                                             "stop": {
-                                                                "type": "string"
+                                                                "type": "string",
+                                                                "format": "ipv4"
                                                             }
                                                         },
                                                         "required": [
@@ -2986,6 +3017,7 @@
                                                     }
                                                 },
                                                 "static-mappings": {
+                                                    "description": "Static IP assignments based on MAC address.",
                                                     "type": "array",
                                                     "items": {
                                                         "type": "object",
@@ -2994,10 +3026,14 @@
                                                                 "type": "string"
                                                             },
                                                             "mac-address": {
-                                                                "type": "string"
+                                                                "description": "MAC address of the client.",
+                                                                "type": "string",
+                                                                "format": "uc-mac"
                                                             },
                                                             "ip-address": {
-                                                                "type": "string"
+                                                                "description": "IP address to assign to this client.",
+                                                                "type": "string",
+                                                                "format": "ipv4"
                                                             }
                                                         }
                                                     }
@@ -3022,21 +3058,25 @@
                     "type": "object",
                     "properties": {
                         "listen-interfaces": {
+                            "description": "Interfaces to listen for DHCP requests.",
                             "type": "array",
                             "items": {
                                 "type": "string"
                             }
                         },
                         "upstream-interfaces": {
+                            "description": "Interfaces connected to DHCP servers.",
                             "type": "array",
                             "items": {
                                 "type": "string"
                             }
                         },
                         "servers": {
+                            "description": "Addresses of upstream DHCP servers.",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "string",
+                                "format": "ipv4"
                             }
                         }
                     }
@@ -3045,25 +3085,50 @@
                     "description": "DNS recursive server configuration.",
                     "type": "object",
                     "properties": {
-                        "listen-addresses": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "allow-from": {
+                        "domains": {
+                            "description": "Domain names for local resolution.",
                             "type": "array",
                             "items": {
                                 "type": "string"
                             }
                         },
                         "forwarding-servers": {
+                            "description": "Upstream DNS servers for forwarding queries.",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "object",
+                                "properties": {
+                                    "address": {
+                                        "description": "IP address of the upstream DNS server.",
+                                        "type": "string",
+                                        "format": "uc-ip"
+                                    },
+                                    "port": {
+                                        "description": "Port number of the upstream DNS server.",
+                                        "type": "integer",
+                                        "maximum": 65535
+                                    }
+                                }
+                            }
+                        },
+                        "allow-from": {
+                            "description": "Networks allowed to query this DNS server (CIDR notation).",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "uc-cidr"
+                            }
+                        },
+                        "listen-addresses": {
+                            "description": "IP addresses the DNS server listens.",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "uc-ip"
                             }
                         },
                         "static-host-mappings": {
+                            "description": "Static hostname to IP address mappings.",
                             "type": "array",
                             "items": {
                                 "type": "object",
@@ -3072,7 +3137,8 @@
                                         "type": "string"
                                     },
                                     "address": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "uc-ip"
                                     }
                                 }
                             }
@@ -3087,20 +3153,65 @@
                             "description": "Upstream NTP servers.",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "object",
+                                "properties": {
+                                    "address": {
+                                        "description": "Hostname or IP address of the NTP server.",
+                                        "type": "string",
+                                        "format": "uc-host"
+                                    },
+                                    "no-select": {
+                                        "description": "Use for timing but do not synchronize to this server.",
+                                        "type": "boolean",
+                                        "default": false
+                                    },
+                                    "nts": {
+                                        "description": "Enable Network Time Security (NTS) for this server.",
+                                        "type": "boolean",
+                                        "default": false
+                                    },
+                                    "pool": {
+                                        "description": "Treat this address as an NTP pool.",
+                                        "type": "boolean",
+                                        "default": false
+                                    },
+                                    "prefer": {
+                                        "description": "Prefer this server over others.",
+                                        "type": "boolean",
+                                        "default": false
+                                    },
+                                    "ptp": {
+                                        "description": "Enable Precision Time Protocol (PTP) for this server.",
+                                        "type": "boolean",
+                                        "default": false
+                                    },
+                                    "interleave": {
+                                        "description": "Enable interleaved mode for improved accuracy.",
+                                        "type": "boolean",
+                                        "default": false
+                                    }
+                                },
+                                "required": [
+                                    "address"
+                                ]
                             }
                         },
-                        "listen-addresses": {
-                            "description": "Addresses to listen on as NTP server.",
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
+                        "listen-ipv4-address": {
+                            "description": "IPv4 address to listen on as NTP server.",
+                            "type": "string",
+                            "format": "ipv4"
+                        },
+                        "listen-ipv6-address": {
+                            "description": "IPv6 address to listen on as NTP server.",
+                            "type": "string",
+                            "format": "ipv6"
                         },
                         "allow-clients": {
+                            "description": "Allowed IPv4 or IPv6 address",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "string",
+                                "format": "uc-ip"
                             }
                         }
                     }
@@ -3110,13 +3221,19 @@
                     "type": "object",
                     "properties": {
                         "interfaces": {
+                            "description": "Interfaces to enable LLDP.",
                             "type": "array",
                             "items": {
                                 "type": "string"
                             }
                         },
-                        "management-address": {
-                            "type": "string"
+                        "management-addresses": {
+                            "description": "Management IP addresses to advertise via LLDP.",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "uc-ip"
+                            }
                         }
                     }
                 },
@@ -3137,79 +3254,153 @@
                     "description": "PPPoE server configuration.",
                     "type": "object",
                     "properties": {
-                        "interface": {
+                        "description": {
                             "type": "string"
                         },
-                        "local-ip": {
+                        "auth-mode": {
+                            "description": "Authentication mode for PPPoE clients.",
+                            "type": "string",
+                            "enum": [
+                                "radius",
+                                "local",
+                                "noauth"
+                            ]
+                        },
+                        "interface": {
+                            "description": "Interface to listen as PPPoE server.",
                             "type": "string"
                         },
                         "client-ip-pool": {
+                            "description": "IP address pool for assigning to PPPoE clients.",
                             "type": "object",
                             "properties": {
                                 "start": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "format": "ipv4"
                                 },
                                 "stop": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "format": "ipv4"
                                 }
                             }
                         },
-                        "dns-servers": {
+                        "wins-servers": {
+                            "description": "Windows Internet Name Service (WINS) servers propagated to client.",
+                            "type": "array",
+                            "items": {
+                                "description": "Address of WINS server",
+                                "type": "string",
+                                "format": "uc-ip"
+                            }
+                        },
+                        "service-names": {
+                            "description": "Service-Name to respond. If absent, any Service-Name is acceptable and client's Service-Name will be sent back.",
                             "type": "array",
                             "items": {
                                 "type": "string"
                             }
                         },
-                        "authentication": {
+                        "mtu": {
+                            "description": "Maximum Transmission Unit used by PPPoE server",
+                            "type": "integer",
+                            "default": 1492
+                        },
+                        "local": {
+                            "description": "Local user accounts for authentication.",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "user": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "user",
+                                    "password"
+                                ]
+                            }
+                        },
+                        "radius": {
+                            "description": "RADIUS server configuration for authentication.",
                             "type": "object",
                             "properties": {
-                                "local-users": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "username": {
-                                                "type": "string"
-                                            },
-                                            "password": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
+                                "address": {
+                                    "type": "string",
+                                    "format": "uc-ip"
+                                },
+                                "port": {
+                                    "type": "integer",
+                                    "maximum": 65535
+                                },
+                                "required": [
+                                    "user",
+                                    "password"
+                                ]
                             }
-                        }
+                        },
+                        "required": [
+                            "auth-mode"
+                        ]
                     }
                 },
                 "web-proxy": {
                     "description": "Proxy server with cache and filtering.",
                     "type": "object",
                     "properties": {
-                        "listen-address": {
-                            "type": "string"
-                        },
-                        "port": {
+                        "default-port": {
+                            "description": "Port used for all specified listen-address.",
                             "type": "integer",
                             "default": 3128
+                        },
+                        "servers": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "ip": {
+                                        "description": "IP address that the proxy server listens.",
+                                        "type": "string",
+                                        "format": "uc-ip"
+                                    },
+                                    "port": {
+                                        "description": "Port number that the proxy server listens.",
+                                        "type": "integer",
+                                        "maximum": 65535
+                                    },
+                                    "transparent-proxy": {
+                                        "description": "Automatically forward traffic arriving on port 80 destined for Internet.",
+                                        "type": "boolean",
+                                        "default": true
+                                    }
+                                },
+                                "required": [
+                                    "ip"
+                                ]
+                            }
                         },
                         "cache-size": {
                             "description": "Cache size in MB.",
                             "type": "integer",
                             "default": 100
                         },
-                        "transparent": {
-                            "type": "boolean",
-                            "default": false
+                        "block-domains": {
+                            "description": "Domains to block.",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "hostname"
+                            }
                         },
-                        "url-filtering": {
-                            "type": "object",
-                            "properties": {
-                                "block-domains": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
+                        "non-cache-domains": {
+                            "description": "Allow access to domains without retrieving them from the Proxy cache.",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "hostname"
                             }
                         }
                     }
@@ -3219,38 +3410,45 @@
                     "type": "object",
                     "properties": {
                         "directory": {
-                            "type": "string",
-                            "default": "/var/lib/tftpboot"
+                            "description": "Root directory for TFTP file transfers.",
+                            "type": "string"
                         },
                         "listen-address": {
-                            "type": "string"
-                        }
+                            "description": "IP address on which the TFTP server listens.",
+                            "type": "string",
+                            "format": "uc-ip"
+                        },
+                        "allow-upload": {
+                            "description": "Enable uploads, else TFTP server will act as a read-only server.",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "required": [
+                            "directory"
+                        ]
                     }
                 },
                 "igmp-proxy": {
                     "description": "IGMP-Proxy configuration.",
                     "type": "object",
                     "properties": {
-                        "interfaces": {
+                        "upstream-interface": {
+                            "description": "Interface facing the multicast source.",
+                            "type": "string"
+                        },
+                        "downstream-interfaces": {
+                            "description": "Interfaces facing multicast receivers.",
                             "type": "array",
                             "items": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "role": {
-                                        "type": "string",
-                                        "enum": [
-                                            "upstream",
-                                            "downstream"
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "role"
-                                ]
+                                "type": "string"
+                            }
+                        },
+                        "alt-subnets": {
+                            "description": "Additional subnets allowed to send multicast traffic.",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "uc-cidr4"
                             }
                         }
                     }
@@ -3260,6 +3458,7 @@
                     "type": "object",
                     "properties": {
                         "shaper": {
+                            "description": "Traffic shaper policies for bandwidth management.",
                             "type": "array",
                             "items": {
                                 "type": "object",
@@ -3268,14 +3467,65 @@
                                         "type": "string"
                                     },
                                     "bandwidth": {
-                                        "description": "Available bandwidth (e.g., '100mbit').",
-                                        "type": "string"
+                                        "description": "Available bandwidth.",
+                                        "type": "string",
+                                        "examles": [
+                                            "100mbit"
+                                        ]
                                     },
-                                    "default-bandwidth": {
-                                        "type": "string"
-                                    },
-                                    "default-priority": {
-                                        "type": "integer"
+                                    "classes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "minimum": 2,
+                                                    "maximum": 4095
+                                                },
+                                                "bandwidth": {
+                                                    "description": "Guarantee bandwidth (in percentage) of the class.",
+                                                    "type": "string",
+                                                    "examles": [
+                                                        "40%"
+                                                    ]
+                                                },
+                                                "burst": {
+                                                    "description": "Size of token bucket (in bytes), which will be available to be sent at ceiling speed.",
+                                                    "type": "string",
+                                                    "examles": [
+                                                        "15Kb"
+                                                    ]
+                                                },
+                                                "ceiling": {
+                                                    "description": "Maximum speed possible for this class. Default is bandwidth value.",
+                                                    "type": "string",
+                                                    "examles": [
+                                                        "100mbit"
+                                                    ]
+                                                },
+                                                "priority": {
+                                                    "description": "Priority for usage of available bandwidth once guarantees have been met. The lower the priority number, the higher the priority.",
+                                                    "type": "integer",
+                                                    "minimum": 0,
+                                                    "maximum": 7,
+                                                    "default": 0
+                                                },
+                                                "queue-type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "fq-codel",
+                                                        "fair-queue",
+                                                        "drop-tail"
+                                                    ],
+                                                    "default": "fq-codel"
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "bandwidth"
+                                            ]
+                                        }
                                     }
                                 },
                                 "required": [
@@ -3283,43 +3533,29 @@
                                     "bandwidth"
                                 ]
                             }
-                        },
-                        "rate-limiter": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "bandwidth": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "name"
-                                ]
-                            }
                         }
                     }
                 },
                 "snmp": {
-                    "description": "SNMP configuration.",
+                    "description": "SNMPv3 configuration.",
                     "type": "object",
                     "properties": {
                         "listen-addresses": {
+                            "description": "IP addresses that SNMP agent listens.",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "string",
+                                "format": "uc-ip"
                             }
                         },
-                        "contact": {
-                            "type": "string"
-                        },
                         "location": {
+                            "description": "Physical location of the device.",
                             "type": "string"
                         },
-                        "communities": {
+                        "engine-id": {
+                            "type": "string"
+                        },
+                        "groups": {
                             "type": "array",
                             "items": {
                                 "type": "object",
@@ -3327,7 +3563,7 @@
                                     "name": {
                                         "type": "string"
                                     },
-                                    "authorization": {
+                                    "mode": {
                                         "type": "string",
                                         "enum": [
                                             "ro",
@@ -3335,28 +3571,67 @@
                                         ],
                                         "default": "ro"
                                     },
-                                    "networks": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
+                                    "view": {
+                                        "type": "string",
+                                        "default": "default"
+                                    },
+                                    "oid": {
+                                        "type": "string"
                                     }
-                                },
-                                "required": [
-                                    "name"
-                                ]
+                                }
                             }
                         },
-                        "trap-targets": {
+                        "users": {
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "address": {
+                                    "name": {
                                         "type": "string"
                                     },
-                                    "community": {
+                                    "group": {
+                                        "description": "The group this user belong to.",
                                         "type": "string"
+                                    },
+                                    "auth": {
+                                        "type": "object",
+                                        "properties": {
+                                            "encrypted": {
+                                                "type": "boolean",
+                                                "default": false
+                                            },
+                                            "password": {
+                                                "type": "string"
+                                            },
+                                            "hash-algo": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "md5",
+                                                    "sha"
+                                                ],
+                                                "default": "md5"
+                                            }
+                                        }
+                                    },
+                                    "privacy": {
+                                        "type": "object",
+                                        "properties": {
+                                            "encrypted": {
+                                                "type": "boolean",
+                                                "default": false
+                                            },
+                                            "password": {
+                                                "type": "string"
+                                            },
+                                            "hash-algo": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "aes",
+                                                    "des"
+                                                ],
+                                                "default": "des"
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -3367,51 +3642,115 @@
                     "description": "Syslog configuration.",
                     "type": "object",
                     "properties": {
-                        "global": {
+                        "marker": {
                             "type": "object",
                             "properties": {
-                                "facility": {
-                                    "type": "string"
+                                "enable": {
+                                    "type": "boolean",
+                                    "default": true
                                 },
-                                "level": {
-                                    "type": "string"
+                                "interval": {
+                                    "description": "Interval (in seconds) for sending mark messages to the syslog input.",
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "default": 1200
                                 }
                             }
                         },
-                        "hosts": {
+                        "preserve-fqdn": {
+                            "description": "Always send the domain part of the hostname.",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "remote-hosts": {
                             "description": "Remote syslog servers.",
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "type": "string"
+                                        "description": "IP address or hostname of the syslog server.",
+                                        "type": "string",
+                                        "format": "uc-ip"
                                     },
                                     "port": {
+                                        "description": "Port number of the syslog server.",
                                         "type": "integer",
+                                        "maximum": 65535,
                                         "default": 514
                                     },
                                     "protocol": {
+                                        "description": "Transport protocol for syslog messages.",
                                         "type": "string",
                                         "enum": [
                                             "udp",
                                             "tcp"
                                         ],
                                         "default": "udp"
+                                    },
+                                    "facility": {
+                                        "description": "Syslog facility to use for messages sent to this server.",
+                                        "type": "string",
+                                        "enum": [
+                                            "all",
+                                            "kern",
+                                            "user",
+                                            "mail",
+                                            "daemon",
+                                            "auth",
+                                            "syslog",
+                                            "lpr",
+                                            "news",
+                                            "uucp",
+                                            "cron",
+                                            "security",
+                                            "ftp",
+                                            "ntp",
+                                            "logaudit",
+                                            "logalert",
+                                            "clock",
+                                            "local0",
+                                            "local1",
+                                            "local2",
+                                            "local3",
+                                            "local4",
+                                            "local5",
+                                            "local6",
+                                            "local7"
+                                        ],
+                                        "default": "daemon"
+                                    },
+                                    "severity": {
+                                        "description": "Minimum severity level of messages to send to this server.",
+                                        "type": "string",
+                                        "enum": [
+                                            "emerg",
+                                            "alert",
+                                            "crit",
+                                            "err",
+                                            "warning",
+                                            "notice",
+                                            "info",
+                                            "debug"
+                                        ],
+                                        "default": "info"
                                     }
                                 },
                                 "required": [
-                                    "address"
+                                    "address",
+                                    "facility",
+                                    "severity"
                                 ]
                             }
                         }
                     }
                 },
                 "netflow": {
-                    "description": "NetFlow export configuration.",
+                    "description": "NetFlow monitoring configuration.",
                     "type": "object",
                     "properties": {
                         "version": {
+                            "description": "NetFlow protocol version (5, 9, or 10/IPFIX).",
                             "type": "string",
                             "enum": [
                                 "5",
@@ -3421,22 +3760,25 @@
                             "default": "9"
                         },
                         "interfaces": {
+                            "description": "Interfaces to collect flow data.",
                             "type": "array",
                             "items": {
                                 "type": "string"
                             }
                         },
                         "servers": {
+                            "description": "NetFlow collector servers.",
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "uc-ip"
                                     },
                                     "port": {
                                         "type": "integer",
-                                        "default": 2055
+                                        "maximum": 65535
                                     }
                                 },
                                 "required": [
@@ -3444,8 +3786,16 @@
                                 ]
                             }
                         },
+                        "engine-id": {
+                            "description": "Engine ID to identify this router.",
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255
+                        },
                         "sampling-rate": {
-                            "type": "integer"
+                            "description": "Packet sampling rate (1 in N packets).",
+                            "type": "integer",
+                            "default": 1
                         }
                     }
                 },
@@ -3453,29 +3803,50 @@
                     "description": "sFlow export configuration.",
                     "type": "object",
                     "properties": {
-                        "agent-address": {
-                            "type": "string"
+                        "agent": {
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "description": "IP address to use as the sFlow agent identifier.",
+                                    "type": "string",
+                                    "format": "uc-ip"
+                                },
+                                "interface": {
+                                    "description": "Interface to bind agent address.",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "address"
+                            ]
                         },
                         "interfaces": {
+                            "description": "Interfaces to collect sFlow samples.",
                             "type": "array",
                             "items": {
                                 "type": "string"
                             }
                         },
                         "sampling-rate": {
+                            "description": "Packet sampling rate (1 in N packets).",
                             "type": "integer",
                             "default": 1000
                         },
                         "servers": {
+                            "description": "sFlow collector servers.",
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "type": "string"
+                                        "description": "IP address of the sFlow collector.",
+                                        "type": "string",
+                                        "format": "uc-ip"
                                     },
                                     "port": {
+                                        "description": "Port number of the sFlow collector.",
                                         "type": "integer",
+                                        "maximum": 65535,
                                         "default": 6343
                                     }
                                 },
@@ -3483,6 +3854,11 @@
                                     "address"
                                 ]
                             }
+                        },
+                        "sample-egress": {
+                            "description": "Enable egress traffic sampling.",
+                            "type": "boolean",
+                            "default": false
                         }
                     }
                 }
