@@ -32,14 +32,3 @@ properties:
     items:
       type: string
       format: uc-ip
-  static-host-mappings:
-    description: Static hostname to IP address mappings.
-    type: array
-    items:
-      type: object
-      properties:
-        hostname:
-          type: string
-        address:
-          type: string
-          format: uc-ip
