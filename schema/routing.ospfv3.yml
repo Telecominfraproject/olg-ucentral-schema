@@ -1,10 +1,6 @@
 description: OSPFv3 (IPv6) routing protocol configuration.
 type: object
 properties:
-  enabled:
-    description: Enable or disable OSPFv3 routing protocol.
-    type: boolean
-    default: false
   router-id:
     description: OSPFv3 router identifier. Uses IPv4 format (32-bit) even for IPv6 routing.
     type: string

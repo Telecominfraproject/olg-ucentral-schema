@@ -21,6 +21,8 @@ properties:
     $ref: "https://ucentral.io/schema/v1/firewall/"
   nat:
     $ref: "https://ucentral.io/schema/v1/nat/"
+  pki:
+    $ref: "https://ucentral.io/schema/v1/pki/"
   vpn:
     $ref: "https://ucentral.io/schema/v1/vpn/"
   high-availability:

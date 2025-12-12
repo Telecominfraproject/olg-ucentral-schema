@@ -1,37 +1,31 @@
 description: OSPF routing protocol configuration.
 type: object
 properties:
-  enabled:
-    type: boolean
-    default: false
   router-id:
     description: OSPF router identifier. Must be unique within the OSPF domain.
     type: string
     format: ipv4
-  all-interface-passive:
-    description: Make all interfaces passive by default. Explicitly configure non-passive interfaces.
-    type: boolean
-    default: false
-  default-information:
-    description: Originate default route into OSPF.
+  default-route-options:
+    description: Options for default route in OSPF.
     type: object
     properties:
-      originate:
-        description: Advertise default route when one exists in routing table.
-        type: boolean
-        default: false
-      always:
+      always-advertise:
         description: Always advertise default route even if not in routing table.
         type: boolean
         default: false
-      metric:
+      metric-value:
         description: Metric for the default route.
         type: integer
       metric-type:
-        description: External metric type (1 or 2).
-        type: integer
-        enum: [1, 2]
-        default: 2
+        description:
+          External metric type.
+          E1 => External cost + Internal OSPF cost
+          E2 => External cost only
+        type: string
+        enum:
+        - E1
+        - E2
+        default: E2
   areas:
     description: OSPF area definitions.
     type: array
@@ -62,6 +56,7 @@ properties:
           type: array
           items:
             type: string
+            format: uc-cidr4
       required:
         - area-id
   interfaces:
@@ -116,8 +111,7 @@ properties:
               minimum: 1
               maximum: 255
       required:
-        - name
-        - area
+      - name
   redistribute:
     description: Import routes from other sources into OSPF.
     type: object

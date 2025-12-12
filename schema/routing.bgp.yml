@@ -1,9 +1,6 @@
 description: BGP routing protocol configuration.
 type: object
 properties:
-  enabled:
-    type: boolean
-    default: false
   local-as:
     description: Local autonomous system number.
     type: integer
@@ -22,39 +19,62 @@ properties:
         address:
           description: Neighbor IP address.
           type: string
+          format: uc-ip
+        # port:
+        #   type: integer
+        #   minimum: 1
+        #   maximum: 65535
         remote-as:
           description: Neighbor AS number.
           type: integer
+          minimum: 1
+          maximum: 4294967295
+        # source-interface:
+        #   description: Interface used to establish connection
+        #   type: string
+        update-source:
+          description: Source interface for BGP session.
+          type: string
+        passive:
+          description: Only accept inbound connections.
+          type: boolean
+          default: false
         advertisement-interval:
           type: integer
           minimum: 0
           maximum: 600
           default: 30
-        address-family:
-          type: enum
-          enum:
-          - ipv4-unicast
-          - ipv4-multicast
-          - ipv6-unicast
-          - ipv6-multicast
-        port:
+        ebgp-multihop:
+          description: The number of hops to reach the neighbor.
           type: integer
           minimum: 1
-          maximum: 65535
-        source-interface:
-          description: Interface used to establish connection
-          type: string
-        description:
-          type: string
-        update-source:
-          description: Source address/interface for BGP session.
-          type: string
-        ebgp-multihop:
-          description: Allow EBGP multihop.
-          type: integer
         password:
           description: MD5 authentication password.
           type: string
+        peer-params:
+          type: array
+          items:
+            type: object
+            properties:
+              address-family:
+                type: string
+                enum:
+                - ipv4-unicast
+                - ipv6-unicast
+                # - ipv4-multicast
+                # - ipv6-multicast
+              nexthop-self:
+                type: boolean
+                default: false
+              soft-reconfig:
+                type: boolean
+                default: false
+              default-originate:
+                description: Advertise default route to this neighbor.
+                type: boolean
+                default: false
+            required:
+            - address-family
       required:
       - address
       - remote-as
@@ -62,28 +82,53 @@ properties:
     description: Networks to advertise.
     type: array
     items:
-      type: string
+      type: object
+      properties:
+        address-family:
+          type: string
+          enum:
+          - ipv4-unicast
+          - ipv6-unicast
+          # - ipv4-multicast
+          # - ipv6-multicast
+        network:
+          type: string
+          format: uc-cidr
+      required:
+      - address-family
+      - network
   redistribute:
     description: Route redistribution.
-    type: object
-    properties:
-      connected:
-        type: boolean
-        default: false
-      kernel:
-        type: boolean
-        default: false
-      ospf:
-        type: boolean
-        default: false
-      rip:
-        type: boolean
-        default: false
-      static:
-        type: boolean
-        default: false
-      table:
-        type: boolean
-        default: false
+    type: array
+    items:
+      type: object
+      properties:
+        address-family:
+          type: string
+          enum:
+          - ipv4-unicast
+          - ipv6-unicast
+          # - ipv4-multicast
+          # - ipv6-multicast
+        connected:
+          type: boolean
+          default: false
+        kernel:
+          type: boolean
+          default: false
+        ospf:
+          type: boolean
+          default: false
+        rip:
+          type: boolean
+          default: false
+        static:
+          type: boolean
+          default: false
+        table:
+          type: boolean
+          default: false
+      required:
+      - address-family
 required:
 - local-as

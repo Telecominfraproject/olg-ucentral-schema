@@ -10,9 +10,11 @@ properties:
         destination:
           description: Destination network (CIDR).
           type: string
+          format: uc-cidr
         next-hop:
           description: Next-hop IP address.
           type: string
+          format: uc-ip
         interface:
           description: Outgoing interface.
           type: string
@@ -23,12 +25,16 @@ properties:
           maximum: 255
           default: 1
         action:
-          type: enum
+          type: string
           enum:
-          - accept
+          # - accept
           - reject
           - blackhole
-          default:
-          - accept
+        table:
+          description: Custom table ID to store the route. Dont set this to use the main table.
+          type: integer
+          minimum: 1
+          maximum: 200
       required:
       - destination
+      - next-hop

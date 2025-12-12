@@ -1,24 +1,22 @@
 description: RIP routing protocol configuration.
 type: object
 properties:
-  enabled:
-    type: boolean
-    default: false
   router-id:
     description: RIP router ID.
     type: string
     format: ipv4
   version:
-    type: integer
+    type: string
     enum:
-    - 1
-    - 2
-    default: 2
+    - '1'
+    - '2'
+    default: '2'
   networks:
     description: Networks to advertise.
     type: array
     items:
       type: string
+      format: uc-cidr4
   interfaces:
     type: array
     items:

@@ -1,6 +1,17 @@
 description: Policy-based routing configuration.
 type: object
 properties:
+  name:
+    type: string
+  interface:
+    description: Interface to apply this policy to.
+    type: string
+  address-family:
+    description: IPv4 or IPv6 policy.
+    type: string
+    enum:
+    - ipv4
+    - ipv6
   rules:
     description: Policy routing rules.
     type: array
@@ -8,21 +19,13 @@ properties:
       type: object
       properties:
         name:
-          description: Rule set name for reference when binding to interfaces.
+          description: Rule name for reference when binding to interfaces.
           type: string
         priority:
           description: Rule priority. Lower values evaluated first.
           type: integer
           minimum: 1
           maximum: 65535
-        description:
-          description: Human-readable description.
-          type: string
-        address-family:
-          description: IPv4 or IPv6 policy.
-          type: string
-          enum: [ipv4, ipv6]
-          default: ipv4
         source:
           description: Source matching criteria.
           type: object
@@ -30,15 +33,18 @@ properties:
             address:
               description: Source network (CIDR).
               type: string
+              format: uc-cidr
             port:
               description: Source port or range.
               type: string
+              format: uc-portrange
             group:
               description: Address/port group reference.
               type: string
             mac-address:
               description: Source MAC address.
               type: string
+              format: uc-mac
         destination:
           description: Destination matching criteria.
           type: object
@@ -46,16 +52,41 @@ properties:
             address:
               description: Destination network (CIDR).
               type: string
+              format: uc-cidr
             port:
               description: Destination port or range.
               type: string
+              format: uc-portrange
             group:
               description: Address/port group reference.
               type: string
         protocol:
-          description: IP protocol to match.
+          description:
+            IP protocol to match. 
+            Use "all" for all protocols and "tcp_udp" for both TCP and UDP.
           type: string
-          examples: [tcp, udp, icmp, all]
+          examples:
+          - tcp
+          - tcp_udp
+          - icmp
+          - all
+        conn-mark:
+          description: Connection mark number to match
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        mark:
+          description: Packet mark number to match
+          type: object
+          properties:
+            start:
+              type: integer
+              minimum: 1
+              maximum: 2147483647
+            end:
+              type: integer
+              minimum: 1
+              maximum: 2147483647
         inbound-interface:
           description: Match traffic arriving on this interface.
           type: string
@@ -67,21 +98,26 @@ properties:
               description: Drop matching packets.
               type: boolean
               default: false
-            table:
-              description: Routing table to use. Can be "main" for default table or custom table name/ID.
-              type: string
-              examples:
-                - "main"
-                - "10"
-                - "ISP-A"
-            next-hop:
-              description: Override next-hop directly without specifying a table. Uses main table with forced gateway.
-              type: string
-              format: ipv4
-            mark:
-              description: Set firewall mark.
+            use-table:
+              description: Routing table to use. Can be 0 for main table or a custom table ID.
               type: integer
-            dscp:
+              minimum: 0
+              maximum: 200
+            next-hop:
+              description: Override next-hop directly without specifying a table.
+              type: string
+              format: uc-ip
+            set-conn-mark:
+              description: Set connection mark.
+              type: integer
+              minimum: 1
+              maximum: 2147483647
+            set-mark:
+              description: Set packet mark.
+              type: integer
+              minimum: 1
+              maximum: 2147483647
+            set-dscp:
               description: Set DSCP value.
               type: integer
               minimum: 0
@@ -89,44 +125,3 @@ properties:
       required:
         - priority
         - action
-  tables:
-    description: Custom routing tables. Only needed when traffic requires different routes than main table.
-    type: array
-    items:
-      type: object
-      properties:
-        name:
-          description: Table name for reference in rules.
-          type: string
-        table-id:
-          description: Numeric table ID (1-200).
-          type: integer
-          minimum: 1
-          maximum: 200
-        description:
-          description: Purpose of this table.
-          type: string
-        routes:
-          description: Routes in this table.
-          type: array
-          items:
-            type: object
-            properties:
-              destination:
-                description: Destination network (CIDR). Use 0.0.0.0/0 for default.
-                type: string
-              next-hop:
-                description: Next-hop IP address.
-                type: string
-              interface:
-                description: Outgoing interface.
-                type: string
-              distance:
-                description: Administrative distance.
-                type: integer
-                default: 1
-            required:
-              - destination
-      required:
-        - name
-        - table-id

@@ -3,8 +3,10 @@ type: object
 properties:
   static:
     $ref: https://ucentral.io/schema/v1/routing/static/
-  policy:
-    $ref: https://ucentral.io/schema/v1/routing/policy/
+  policies:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/policy/
   bgp:
     $ref: https://ucentral.io/schema/v1/routing/bgp/
   ospf:
