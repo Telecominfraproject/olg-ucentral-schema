@@ -30,13 +30,24 @@ properties:
     items:
       type: object
       properties:
-        rule-number:
+        id:
           type: integer
+          minimum: 1
+          maximum: 9999
         source:
           type: string
+          format: uc-cidr
         destination:
           type: string
-        interfaces:
+          format: uc-cidr
+        inbound-interface:
+          type: string
+        wan-interfaces:
           type: array
           items:
             type: string
+      required:
+      - id
+      - inbound-interface
+      - wan-interface
+

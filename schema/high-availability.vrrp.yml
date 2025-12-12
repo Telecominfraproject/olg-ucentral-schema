@@ -8,6 +8,15 @@ properties:
       properties:
         name:
           type: string
+        virtual-addresses:
+          type: array
+          items:
+            type: string
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 255
+          default: 100
         interface:
           type: string
         vrid:
@@ -15,23 +24,9 @@ properties:
           type: integer
           minimum: 1
           maximum: 255
-        priority:
-          type: integer
-          minimum: 1
-          maximum: 255
-          default: 100
-        virtual-addresses:
-          type: array
-          items:
-            type: string
         preempt:
           type: boolean
           default: true
-        authentication:
-          type: object
-          properties:
-            password:
-              type: string
       required:
       - name
       - interface
