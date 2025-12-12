@@ -1,0 +1,41 @@
+description: PKI certificates.
+type: object
+properties:
+  ca-certs:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        certificate:
+          type: string
+        private-key:
+          type: string
+      required:
+      - name
+  certs:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        certificate:
+          type: string
+        private-key:
+          type: string
+      required:
+      - name
+  dh:
+    description: Diffie-Hellman algorithm.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        parameter:
+          type: string
+      required:
+      - name
