@@ -1,4 +1,4 @@
-description: IPSec VPN configuration.
+description: IPsec VPN configuration.
 type: object
 properties:
   interface:
@@ -11,41 +11,52 @@ properties:
       type: object
       properties:
         name:
+          description: Name identifier for this IKE group.
           type: string
         key-exchange:
+          description: IKE version to use for key exchange.
           type: string
           enum: [ikev1, ikev2]
           default: ikev2
         lifetime:
-          description: IKE lifetime in seconds.
+          description: IKE SA lifetime in seconds.
           type: integer
           default: 28800
         proposal:
+          description: Cryptographic proposal for IKE negotiation.
           type: object
           properties:
             encryption:
+              description: Encryption algorithm for IKE SA.
               type: string
               enum: [aes128, aes256, aes128gcm, aes256gcm, 3des]
             hash:
+              description: Hash algorithm for IKE SA integrity.
               type: string
               enum: [sha1, sha256, sha384, sha512]
             dh-group:
+              description: Diffie-Hellman group number for key exchange.
               type: integer
               enum: [2, 14, 15, 16, 19, 20, 21]
           required: [encryption, hash, dh-group]
         dead-peer-detection:
+          description: Dead Peer Detection (DPD) settings.
           type: object
           properties:
             action:
+              description: Action to take when a dead peer is detected.
               type: string
               enum: [restart, clear, hold, none]
             interval:
+              description: Interval in seconds between DPD keepalive messages.
               type: integer
               default: 30
             timeout:
+              description: Timeout in seconds before declaring a peer dead.
               type: integer
               default: 120
         close-action:
+          description: Action to take when the remote peer closes the connection.
           type: string
           enum: [none, start, hold]
           default: none
@@ -57,40 +68,46 @@ properties:
       type: object
       properties:
         name:
+          description: Name identifier for this ESP group.
           type: string
         lifetime:
-          description: ESP lifetime in seconds.
+          description: ESP SA lifetime in seconds.
           type: integer
           default: 3600
         mode:
+          description: IPsec encapsulation mode.
           type: string
           enum: [tunnel, transport]
           default: tunnel
         pfs:
-          description: Perfect Forward Secrecy.
+          description: Enable Perfect Forward Secrecy.
           type: boolean
           default: true
         proposal:
+          description: Cryptographic proposal for ESP negotiation.
           type: object
           properties:
             encryption:
+              description: Encryption algorithm for ESP SA.
               type: string
               enum: [aes128, aes256, aes128gcm, aes256gcm, 3des]
             hash:
+              description: Hash algorithm for ESP SA integrity.
               type: string
               enum: [sha1, sha256, sha384, sha512]
           required: [encryption, hash]
       required: [name, proposal]
   authentication:
-    description: PSK authentication configuration.
+    description: Pre-shared key (PSK) authentication configuration.
     type: object
     properties:
       id:
-        description: Local and remote IDs for this PSK.
+        description: List of local and remote IDs authorized to use this PSK.
         type: array
         items:
           type: string
       secret:
+        description: Pre-shared key secret.
         type: string
     required: [id, secret]
   peers:
@@ -100,22 +117,30 @@ properties:
       type: object
       properties:
         name:
+          description: Name identifier for this peer configuration.
           type: string
         local-address:
+          description: Local IP address for the IPsec connection.
           type: string
           format: ipv4
         remote-address:
+          description: Remote peer IP address.
           type: string
           format: ipv4
         local-id:
+          description: Local identity for IKE authentication.
           type: string
         remote-id:
+          description: Remote identity for IKE authentication.
           type: string
         ike-group:
+          description: Name of the IKE group to use for this peer.
           type: string
         esp-group:
+          description: Name of the ESP group to use for this peer.
           type: string
         connection-type:
+          description: Connection initiation behavior.
           type: string
           enum: [initiate, none, trap]
           default: none
@@ -126,9 +151,11 @@ properties:
             type: object
             properties:
               local-prefix:
+                description: Local subnet for this tunnel.
                 type: string
                 format: uc-cidr4
               remote-prefix:
+                description: Remote subnet for this tunnel.
                 type: string
                 format: uc-cidr4
             required: [local-prefix, remote-prefix]

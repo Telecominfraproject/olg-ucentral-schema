@@ -10,11 +10,13 @@ properties:
         name:
           type: string
         mode:
+          description: Operating mode of the OpenVPN server.
           type: string
           enum:
           - site-to-site
           - server
         persistent-tunnel:
+          description: Keep the tunnel interface open across restarts.
           type: boolean
           default: false
         protocol:
@@ -24,21 +26,24 @@ properties:
           - tcp
           default: udp
         address:
+          description: Local IP address for the OpenVPN server to bind to.
           type: string
           format: uc-ip
         port:
+          description: Port number for the OpenVPN server to listen on.
           type: integer
           maximum: 65535
           default: 1194
         subnet:
-          description: Client address pool.
+          # description: Client address pool for assigning IP addresses to clients.
           type: string
           format: uc-cidr
         encryption:
+          description: Encryption settings for the VPN connection.
           type: object
           properties:
             cipher:
-              description: Standard Data Encryption Algorithm.
+              description: Standard data encryption algorithm.
               type: string
               enum:
               - none
@@ -50,7 +55,7 @@ properties:
               - aes256
               - aes256gcm
             data-ciphers:
-              description: Cipher negotiation list.
+              description: Cipher negotiation list for data channel encryption.
               type: array
               items:
                 type: string
@@ -64,6 +69,7 @@ properties:
                 - aes256
                 - aes256gcm
         hash:
+          description: Hash algorithm for HMAC authentication.
           type: string
           enum:
           - md5
@@ -72,46 +78,54 @@ properties:
           - sha384
           - sha512
         tls:
+          description: TLS certificate configuration.
           type: object
           properties:
             ca-cert:
-              description: Name of CA certificate.
+              description: Name of the CA certificate.
               type: string
             cert:
-              description: Name of certificate.
+              description: Name of the server certificate.
               type: string
             dh:
-              description: Name of DH algorithm.
+              description: Name of the Diffie-Hellman parameter.
               type: string
         topology:
+          description: Virtual network topology for client addressing.
           type: string
           enum:
           - subnet
           - point-to-point
         domain:
+          description: DNS domain to push to clients.
           type: string
           format: hostname
         max-connections:
+          description: Maximum number of concurrent client connections.
           type: integer
           minimum: 1
           maximum: 4096
         name-server:
+          description: DNS server address to push to clients.
           type: string
           format: uc-ip
         clients:
+          description: Static client configurations.
           type: array
           items:
             type: object
             properties:
               address:
+                description: Fixed IP address assigned to this client.
                 type: string
                 format: uc-ip
               subnet:
+                description: Subnet routed through this client.
                 type: string
                 format: uc-cidr
-              cert: 
-                description: Name of certificate.
-                type: string            
+              cert:
+                description: Name of the client certificate.
+                type: string
       required:
       - name
   clients:
@@ -123,8 +137,10 @@ properties:
         name:
           type: string
         interface:
+          description: Network interface to use for the VPN connection.
           type: string
         authentication:
+          description: Username and password authentication credentials.
           type: object
           properties:
             username:
@@ -132,15 +148,17 @@ properties:
             password:
               type: string
         mode:
+          description: Operating mode of the OpenVPN client.
           type: string
           enum:
           - site-to-site
           - client
         encryption:
+          description: Encryption settings for the VPN connection.
           type: object
           properties:
             cipher:
-              description: Standard Data Encryption Algorithm.
+              description: Standard data encryption algorithm.
               type: string
               enum:
               - none
@@ -152,7 +170,7 @@ properties:
               - aes256
               - aes256gcm
             data-ciphers:
-              description: Cipher negotiation list.
+              description: Cipher negotiation list for data channel encryption.
               type: array
               items:
                 type: string
@@ -166,6 +184,7 @@ properties:
                 - aes256
                 - aes256gcm
         hash:
+          description: Hash algorithm for HMAC authentication.
           type: string
           enum:
           - md5
@@ -174,15 +193,19 @@ properties:
           - sha384
           - sha512
         persistent-tunnel:
+          description: Keep the tunnel interface open across restarts.
           type: boolean
           default: false
         persist-key:
+          description: Preserve key material across restarts.
           type: boolean
           default: false
         remote-host:
+          description: IP address or hostname of the remote OpenVPN server.
           type: string
           format: uc-ip
         remote-port:
+          description: Port number of the remote OpenVPN server.
           type: integer
           maximum: 65535
           default: 1194
@@ -193,13 +216,17 @@ properties:
           - tcp
           default: udp
         tls:
+          description: TLS certificate configuration.
           type: object
           properties:
             ca-cert:
+              description: Name of the CA certificate.
               type: string
             cert:
+              description: Name of the client certificate.
               type: string
             private-key:
+              description: Name of the private key.
               type: string
       required:
       - name
