@@ -30,10 +30,13 @@ properties:
         description: IPv4 address or network (CIDR notation).
         type: string
         format: uc-cidr4
+        example: 192.168.1.0/24
       port:
         type: string
       mac-address:
         type: string
+        format: uc-mac
+        example: 98:e7:9a:27:fe:49
       group:
         type: object
         properties:
@@ -49,9 +52,10 @@ properties:
     type: object
     properties:
       address:
-        description: IPv4 address or network (CIDR notation).
+        description: IPv4 network (CIDR notation).
         type: string
         format: uc-cidr4
+        example: 10.0.0.0/8
       port:
         type: string
       group:

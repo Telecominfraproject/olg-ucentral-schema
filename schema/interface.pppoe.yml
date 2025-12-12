@@ -15,6 +15,6 @@ properties:
     type: boolean
     default: true
 required:
-- source-interface
-- user-name
-- password
+  - source-interface
+  - user-name
+  - password

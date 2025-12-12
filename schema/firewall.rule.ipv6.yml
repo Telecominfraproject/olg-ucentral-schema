@@ -27,13 +27,16 @@ properties:
     type: object
     properties:
       address:
-        description: IPv6 address or network (CIDR notation).
+        description: IPv6 network (CIDR notation).
         type: string
         format: uc-cidr6
+        example: 2001:db8::/32
       port:
         type: string
       mac-address:
         type: string
+        format: uc-mac
+        example: 98:e7:9a:27:fe:49
       group:
         type: object
         properties:
@@ -49,9 +52,10 @@ properties:
     type: object
     properties:
       address:
-        description: IPv6 address or network (CIDR notation).
+        description: IPv6 network (CIDR notation).
         type: string
-        format: ipv6-prefix
+        format: uc-cidr6
+        example: 2001:db8::/32
       port:
         type: string
       group:

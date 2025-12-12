@@ -20,6 +20,8 @@ properties:
       mac-address:
         description: Source MAC address.
         type: string
+        format: uc-mac
+        example: 98:e7:9a:27:fe:49
       mac-group:
         description: Reference to MAC address group.
         type: string
@@ -32,6 +34,8 @@ properties:
       mac-address:
         description: Destination MAC address.
         type: string
+        format: uc-mac
+        example: 98:e7:9a:27:fe:49
       mac-group:
         description: Reference to MAC address group.
         type: string
