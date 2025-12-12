@@ -5,11 +5,9 @@ properties:
     description: Global router ID for routing protocols (BGP, OSPF, etc.).
     type: string
     format: ipv4
-    examples:
-    - 10.0.0.1
+    example: 10.0.0.1
   domain-name:
     description: Default domain name for the device.
     type: string
     format: hostname
-    examples:
-    - example.local
+    example: example.local

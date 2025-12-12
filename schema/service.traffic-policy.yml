@@ -12,8 +12,7 @@ properties:
         bandwidth:
           description: Available bandwidth.
           type: string
-          examles:
-          - 100mbit
+          example: 100mbit
         classes:
           type: array
           items:
@@ -26,18 +25,15 @@ properties:
               bandwidth:
                 description: Guarantee bandwidth (in percentage) of the class.
                 type: string
-                examles:
-                - 40%
+                example: 40%
               burst:
                 description: Size of token bucket (in bytes), which will be available to be sent at ceiling speed.
                 type: string
-                examles:
-                - 15Kb
+                example: 15Kb
               ceiling:
                 description: Maximum speed possible for this class. Default is bandwidth value.
                 type: string
-                examles:
-                - 100mbit
+                example: 100mbit
               priority:
                 description: Priority for usage of available bandwidth once guarantees have been met. The lower the priority number, the higher the priority.
                 type: integer

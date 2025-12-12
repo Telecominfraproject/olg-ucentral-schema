@@ -15,7 +15,7 @@ properties:
     description: Timezone of the device.
     type: string
     examples:
-    - UTC
-    - America/New_York
-    - Europe/London
-    - Asia/Taipei
+      - UTC
+      - America/New_York
+      - Europe/London
+      - Asia/Taipei

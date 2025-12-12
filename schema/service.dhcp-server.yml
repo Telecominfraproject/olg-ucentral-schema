@@ -63,6 +63,7 @@ properties:
                       description: MAC address of the client.
                       type: string
                       format: uc-mac
+                      example: 98:e7:9a:27:fe:49
                     ip-address:
                       description: IP address to assign to this client.
                       type: string
