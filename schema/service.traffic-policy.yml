@@ -2,6 +2,7 @@ description: Traffic policing configuration (shaping, rate limiting, priority-ba
 type: object
 properties:
   shaper:
+    description: Traffic shaper policies for bandwidth management.
     type: array
     items:
       type: object
@@ -9,23 +10,50 @@ properties:
         name:
           type: string
         bandwidth:
-          description: Available bandwidth (e.g., '100mbit').
+          description: Available bandwidth.
           type: string
-        default-bandwidth:
-          type: string
-        default-priority:
-          type: integer
+          examles:
+          - 100mbit
+        classes:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                minimum: 2
+                maximum: 4095
+              bandwidth:
+                description: Guarantee bandwidth (in percentage) of the class.
+                type: string
+                examles:
+                - 40%
+              burst:
+                description: Size of token bucket (in bytes), which will be available to be sent at ceiling speed.
+                type: string
+                examles:
+                - 15Kb
+              ceiling:
+                description: Maximum speed possible for this class. Default is bandwidth value.
+                type: string
+                examles:
+                - 100mbit
+              priority:
+                description: Priority for usage of available bandwidth once guarantees have been met. The lower the priority number, the higher the priority.
+                type: integer
+                minimum: 0
+                maximum: 7
+                default: 0
+              queue-type:
+                type: string
+                enum:
+                - fq-codel
+                - fair-queue
+                - drop-tail
+                default: fq-codel
+            required:
+            - id
+            - bandwidth
       required:
       - name
       - bandwidth
-  rate-limiter:
-    type: array
-    items:
-      type: object
-      properties:
-        name:
-          type: string
-        bandwidth:
-          type: string
-      required:
-      - name

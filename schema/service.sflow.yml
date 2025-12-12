@@ -1,24 +1,45 @@
 description: sFlow export configuration.
 type: object
 properties:
-  agent-address:
-    type: string
+  agent:
+    type: object
+    properties:
+      address:
+        description: IP address to use as the sFlow agent identifier.
+        type: string
+        format: uc-ip
+      interface:
+        description: Interface to bind agent address.
+        type: string
+    required:
+    - address
   interfaces:
+    description: Interfaces to collect sFlow samples.
     type: array
     items:
       type: string
   sampling-rate:
+    description: Packet sampling rate (1 in N packets).
     type: integer
     default: 1000
   servers:
+    description: sFlow collector servers.
     type: array
     items:
       type: object
       properties:
         address:
+          description: IP address of the sFlow collector.
           type: string
+          format: uc-ip
         port:
+          description: Port number of the sFlow collector.
           type: integer
+          maximum: 65535
           default: 6343
       required:
       - address
+  sample-egress:
+    description: Enable egress traffic sampling.
+    type: boolean
+    default: false

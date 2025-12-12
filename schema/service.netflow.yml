@@ -34,6 +34,6 @@ properties:
     minimum: 0
     maximum: 255
   sampling-rate:
-    description: How frequent to sample a packet (1 = every packet)
+    description: Packet sampling rate (1 in N packets).
     type: integer
     default: 1

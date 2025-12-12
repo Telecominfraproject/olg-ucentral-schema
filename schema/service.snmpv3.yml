@@ -1,0 +1,71 @@
+description: SNMPv3 configuration.
+type: object
+properties:
+  listen-addresses:
+    description: IP addresses that SNMP agent listens.
+    type: array
+    items:
+      type: string
+      format: uc-ip
+  location:
+    description: Physical location of the device.
+    type: string
+  engine-id:
+    type: string
+  groups:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        mode:
+          type: string
+          enum:
+          - ro
+          - rw
+          default: ro
+        view:
+          type: string
+          default: default
+        oid:
+          type: string
+  users:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        group:
+          description: The group this user belong to.
+          type: string
+        auth:
+          type: object
+          properties:
+            encrypted:
+              type: boolean
+              default: false
+            password:
+              type: string   
+            hash-algo:
+              type: string
+              enum:
+              - md5
+              - sha
+              default: md5
+        privacy:
+          type: object
+          properties:
+            encrypted:
+              type: boolean
+              default: false
+            password:
+              type: string   
+            hash-algo:
+              type: string
+              enum:
+              - aes
+              - des
+              default: des
+        

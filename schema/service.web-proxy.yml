@@ -1,22 +1,42 @@
 description: Proxy server with cache and filtering.
 type: object
 properties:
-  listen-address:
-    type: string
-  port:
+  default-port:
+    description: Port used for all specified listen-address.
     type: integer
     default: 3128
+  servers:
+    type: array
+    items:
+      type: object
+      properties:
+        ip:
+          description: IP address that the proxy server listens.
+          type: string
+          format: uc-ip
+        port:
+          description: Port number that the proxy server listens.
+          type: integer
+          maximum: 65535
+        transparent-proxy:
+          description: Automatically forward traffic arriving on port 80 destined for Internet.
+          type: boolean
+          default: true
+      required:
+      - ip
   cache-size:
     description: Cache size in MB.
     type: integer
     default: 100
-  transparent:
-    type: boolean
-    default: false
-  url-filtering:
-    type: object
-    properties:
-      block-domains:
-        type: array
-        items:
-          type: string
+  block-domains:
+    description: Domains to block.
+    type: array
+    items:
+      type: string
+      format: hostname
+  non-cache-domains:
+    description: Allow access to domains without retrieving them from the Proxy cache.
+    type: array
+    items:
+      type: string
+      format: hostname

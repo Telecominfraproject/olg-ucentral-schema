@@ -2,7 +2,15 @@ description: TFTP server configuration.
 type: object
 properties:
   directory:
+    description: Root directory for TFTP file transfers.
     type: string
-    default: /var/lib/tftpboot
   listen-address:
+    description: IP address on which the TFTP server listens.
     type: string
+    format: uc-ip
+  allow-upload:
+    description: Enable uploads, else TFTP server will act as a read-only server.
+    type: boolean
+    default: false
+  required:
+  - directory
