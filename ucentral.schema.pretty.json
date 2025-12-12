@@ -29,6 +29,9 @@
         "nat": {
             "$ref": "#/$defs/nat"
         },
+        "pki": {
+            "$ref": "#/$defs/pki"
+        },
         "vpn": {
             "$ref": "#/$defs/vpn"
         },
@@ -393,17 +396,20 @@
                             "action": {
                                 "type": "string",
                                 "enum": [
-                                    "accept",
                                     "reject",
                                     "blackhole"
-                                ],
-                                "default": [
-                                    "accept"
                                 ]
+                            },
+                            "table": {
+                                "description": "Custom table ID to store the route. Dont set this to use the main table.",
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 200
                             }
                         },
                         "required": [
-                            "destination"
+                            "destination",
+                            "next-hop"
                         ]
                     }
                 }
@@ -413,6 +419,21 @@
             "description": "Policy-based routing configuration.",
             "type": "object",
             "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "interface": {
+                    "description": "Interface to apply this policy to.",
+                    "type": "string"
+                },
+                "address-family": {
+                    "description": "IPv4 or IPv6 policy.",
+                    "type": "string",
+                    "enum": [
+                        "ipv4",
+                        "ipv6"
+                    ]
+                },
                 "rules": {
                     "description": "Policy routing rules.",
                     "type": "array",
@@ -420,7 +441,7 @@
                         "type": "object",
                         "properties": {
                             "name": {
-                                "description": "Rule set name for reference when binding to interfaces.",
+                                "description": "Rule name for reference when binding to interfaces.",
                                 "type": "string"
                             },
                             "priority": {
@@ -428,19 +449,6 @@
                                 "type": "integer",
                                 "minimum": 1,
                                 "maximum": 65535
-                            },
-                            "description": {
-                                "description": "Human-readable description.",
-                                "type": "string"
-                            },
-                            "address-family": {
-                                "description": "IPv4 or IPv6 policy.",
-                                "type": "string",
-                                "enum": [
-                                    "ipv4",
-                                    "ipv6"
-                                ],
-                                "default": "ipv4"
                             },
                             "source": {
                                 "description": "Source matching criteria.",
@@ -488,14 +496,36 @@
                                 }
                             },
                             "protocol": {
-                                "description": "IP protocol to match.",
+                                "description": "IP protocol to match. Use \"all\" for all protocols and \"tcp_udp\" for both TCP and UDP.",
                                 "type": "string",
                                 "examples": [
                                     "tcp",
-                                    "udp",
+                                    "tcp_udp",
                                     "icmp",
                                     "all"
                                 ]
+                            },
+                            "conn-mark": {
+                                "description": "Connection mark number to match",
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 2147483647
+                            },
+                            "mark": {
+                                "description": "Packet mark number to match",
+                                "type": "object",
+                                "properties": {
+                                    "start": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 2147483647
+                                    },
+                                    "end": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 2147483647
+                                    }
+                                }
                             },
                             "inbound-interface": {
                                 "description": "Match traffic arriving on this interface.",
@@ -510,25 +540,30 @@
                                         "type": "boolean",
                                         "default": false
                                     },
-                                    "table": {
-                                        "description": "Routing table to use. Can be \"main\" for default table or custom table name/ID.",
-                                        "type": "string",
-                                        "examples": [
-                                            "main",
-                                            "10",
-                                            "ISP-A"
-                                        ]
+                                    "use-table": {
+                                        "description": "Routing table to use. Can be 0 for main table or a custom table ID.",
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 200
                                     },
                                     "next-hop": {
-                                        "description": "Override next-hop directly without specifying a table. Uses main table with forced gateway.",
+                                        "description": "Override next-hop directly without specifying a table.",
                                         "type": "string",
-                                        "format": "ipv4"
+                                        "format": "uc-ip"
                                     },
-                                    "mark": {
-                                        "description": "Set firewall mark.",
-                                        "type": "integer"
+                                    "set-conn-mark": {
+                                        "description": "Set connection mark.",
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 2147483647
                                     },
-                                    "dscp": {
+                                    "set-mark": {
+                                        "description": "Set packet mark.",
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 2147483647
+                                    },
+                                    "set-dscp": {
                                         "description": "Set DSCP value.",
                                         "type": "integer",
                                         "minimum": 0,
@@ -542,64 +577,6 @@
                             "action"
                         ]
                     }
-                },
-                "tables": {
-                    "description": "Custom routing tables. Only needed when traffic requires different routes than main table.",
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "description": "Table name for reference in rules.",
-                                "type": "string"
-                            },
-                            "table-id": {
-                                "description": "Numeric table ID (1-200).",
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 200
-                            },
-                            "description": {
-                                "description": "Purpose of this table.",
-                                "type": "string"
-                            },
-                            "routes": {
-                                "description": "Routes in this table.",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "destination": {
-                                            "description": "Destination network (CIDR). Use 0.0.0.0/0 for default.",
-                                            "type": "string",
-                                            "format": "uc-cidr"
-                                        },
-                                        "next-hop": {
-                                            "description": "Next-hop IP address.",
-                                            "type": "string",
-                                            "format": "uc-ip"
-                                        },
-                                        "interface": {
-                                            "description": "Outgoing interface.",
-                                            "type": "string"
-                                        },
-                                        "distance": {
-                                            "description": "Administrative distance.",
-                                            "type": "integer",
-                                            "default": 1
-                                        }
-                                    },
-                                    "required": [
-                                        "destination"
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "table-id"
-                        ]
-                    }
                 }
             }
         },
@@ -607,10 +584,6 @@
             "description": "BGP routing protocol configuration.",
             "type": "object",
             "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "default": false
-                },
                 "local-as": {
                     "description": "Local autonomous system number.",
                     "type": "integer",
@@ -635,38 +608,24 @@
                             },
                             "remote-as": {
                                 "description": "Neighbor AS number.",
-                                "type": "integer"
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 4294967295
+                            },
+                            "update-source": {
+                                "description": "Source interface for BGP session.",
+                                "type": "string"
+                            },
+                            "passive": {
+                                "description": "Only accept inbound connections.",
+                                "type": "boolean",
+                                "default": false
                             },
                             "advertisement-interval": {
                                 "type": "integer",
                                 "minimum": 0,
                                 "maximum": 600,
                                 "default": 30
-                            },
-                            "address-family": {
-                                "type": "string",
-                                "enum": [
-                                    "ipv4-unicast",
-                                    "ipv4-multicast",
-                                    "ipv6-unicast",
-                                    "ipv6-multicast"
-                                ]
-                            },
-                            "port": {
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 65535
-                            },
-                            "source-interface": {
-                                "description": "Interface used to establish connection",
-                                "type": "string"
-                            },
-                            "description": {
-                                "type": "string"
-                            },
-                            "update-source": {
-                                "description": "Source address/interface for BGP session.",
-                                "type": "string"
                             },
                             "ebgp-multihop": {
                                 "description": "The number of hops to reach the neighbor.",
@@ -676,6 +635,37 @@
                             "password": {
                                 "description": "MD5 authentication password.",
                                 "type": "string"
+                            },
+                            "peer-params": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "address-family": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ipv4-unicast",
+                                                "ipv6-unicast"
+                                            ]
+                                        },
+                                        "nexthop-self": {
+                                            "type": "boolean",
+                                            "default": false
+                                        },
+                                        "soft-reconfig": {
+                                            "type": "boolean",
+                                            "default": false
+                                        },
+                                        "default-originate": {
+                                            "description": "Advertise default route to this neighbor.",
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    },
+                                    "required": [
+                                        "address-family"
+                                    ]
+                                }
                             }
                         },
                         "required": [
@@ -701,37 +691,54 @@
                                 "type": "string",
                                 "format": "uc-cidr"
                             }
-                        }
+                        },
+                        "required": [
+                            "address-family",
+                            "network"
+                        ]
                     }
                 },
                 "redistribute": {
                     "description": "Route redistribution.",
-                    "type": "object",
-                    "properties": {
-                        "connected": {
-                            "type": "boolean",
-                            "default": false
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "address-family": {
+                                "type": "string",
+                                "enum": [
+                                    "ipv4-unicast",
+                                    "ipv6-unicast"
+                                ]
+                            },
+                            "connected": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "kernel": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "ospf": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "rip": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "static": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "table": {
+                                "type": "boolean",
+                                "default": false
+                            }
                         },
-                        "kernel": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "ospf": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "rip": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "static": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "table": {
-                            "type": "boolean",
-                            "default": false
-                        }
+                        "required": [
+                            "address-family"
+                        ]
                     }
                 }
             },
@@ -748,21 +755,16 @@
                     "type": "string",
                     "format": "ipv4"
                 },
-                "all-interface-passive": {
-                    "description": "Make all interfaces passive by default. Explicitly configure non-passive interfaces.",
-                    "type": "boolean",
-                    "default": false
-                },
-                "default-information": {
-                    "description": "Originate default route into OSPF.",
+                "default-route-options": {
+                    "description": "Options for default route in OSPF.",
                     "type": "object",
                     "properties": {
-                        "always": {
+                        "always-advertise": {
                             "description": "Always advertise default route even if not in routing table.",
                             "type": "boolean",
                             "default": false
                         },
-                        "metric": {
+                        "metric-value": {
                             "description": "Metric for the default route.",
                             "type": "integer"
                         },
@@ -887,8 +889,7 @@
                             }
                         },
                         "required": [
-                            "name",
-                            "area"
+                            "name"
                         ]
                     }
                 },
@@ -922,11 +923,6 @@
             "description": "OSPFv3 (IPv6) routing protocol configuration.",
             "type": "object",
             "properties": {
-                "enabled": {
-                    "description": "Enable or disable OSPFv3 routing protocol.",
-                    "type": "boolean",
-                    "default": false
-                },
                 "router-id": {
                     "description": "OSPFv3 router identifier. Uses IPv4 format (32-bit) even for IPv6 routing.",
                     "type": "string",
@@ -1049,10 +1045,6 @@
             "description": "RIP routing protocol configuration.",
             "type": "object",
             "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "default": false
-                },
                 "router-id": {
                     "description": "RIP router ID.",
                     "type": "string",
@@ -1119,10 +1111,6 @@
             "description": "RIPng (IPv6) routing protocol configuration.",
             "type": "object",
             "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "default": false
-                },
                 "networks": {
                     "description": "IPv6 networks to advertise.",
                     "type": "array",
@@ -1171,8 +1159,11 @@
                 "static": {
                     "$ref": "#/$defs/routing.static"
                 },
-                "policy": {
-                    "$ref": "#/$defs/routing.policy"
+                "policies": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/routing.policy"
+                    }
                 },
                 "bgp": {
                     "$ref": "#/$defs/routing.bgp"
@@ -2652,103 +2643,366 @@
                 }
             }
         },
-        "vpn.ipsec": {
-            "description": "IPSec VPN configuration.",
+        "pki": {
+            "description": "PKI certificates.",
             "type": "object",
             "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "site-to-site": {
-                    "description": "Site-to-site VPN connections.",
+                "ca-certs": {
                     "type": "array",
                     "items": {
                         "type": "object",
                         "properties": {
-                            "peer": {
-                                "description": "Remote peer address.",
+                            "name": {
                                 "type": "string"
                             },
-                            "description": {
+                            "certificate": {
+                                "type": "string"
+                            },
+                            "private-key": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "certs": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "certificate": {
+                                "type": "string"
+                            },
+                            "private-key": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "dh": {
+                    "description": "Diffie-Hellman algorithm.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "parameter": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                }
+            }
+        },
+        "vpn.ipsec": {
+            "description": "IPsec VPN configuration.",
+            "type": "object",
+            "properties": {
+                "interface": {
+                    "description": "Interface facing the remote peer.",
+                    "type": "string"
+                },
+                "ike-groups": {
+                    "description": "IKE (Phase 1) group definitions.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name identifier for this IKE group.",
+                                "type": "string"
+                            },
+                            "key-exchange": {
+                                "description": "IKE version to use for key exchange.",
+                                "type": "string",
+                                "enum": [
+                                    "ikev1",
+                                    "ikev2"
+                                ],
+                                "default": "ikev2"
+                            },
+                            "lifetime": {
+                                "description": "IKE SA lifetime in seconds.",
+                                "type": "integer",
+                                "default": 28800
+                            },
+                            "proposal": {
+                                "description": "Cryptographic proposal for IKE negotiation.",
+                                "type": "object",
+                                "properties": {
+                                    "encryption": {
+                                        "description": "Encryption algorithm for IKE SA.",
+                                        "type": "string",
+                                        "enum": [
+                                            "aes128",
+                                            "aes256",
+                                            "aes128gcm",
+                                            "aes256gcm",
+                                            "3des"
+                                        ]
+                                    },
+                                    "hash": {
+                                        "description": "Hash algorithm for IKE SA integrity.",
+                                        "type": "string",
+                                        "enum": [
+                                            "sha1",
+                                            "sha256",
+                                            "sha384",
+                                            "sha512"
+                                        ]
+                                    },
+                                    "dh-group": {
+                                        "description": "Diffie-Hellman group number for key exchange.",
+                                        "type": "integer",
+                                        "enum": [
+                                            2,
+                                            14,
+                                            15,
+                                            16,
+                                            19,
+                                            20,
+                                            21
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "encryption",
+                                    "hash",
+                                    "dh-group"
+                                ]
+                            },
+                            "dead-peer-detection": {
+                                "description": "Dead Peer Detection (DPD) settings.",
+                                "type": "object",
+                                "properties": {
+                                    "action": {
+                                        "description": "Action to take when a dead peer is detected.",
+                                        "type": "string",
+                                        "enum": [
+                                            "restart",
+                                            "clear",
+                                            "hold",
+                                            "none"
+                                        ]
+                                    },
+                                    "interval": {
+                                        "description": "Interval in seconds between DPD keepalive messages.",
+                                        "type": "integer",
+                                        "default": 30
+                                    },
+                                    "timeout": {
+                                        "description": "Timeout in seconds before declaring a peer dead.",
+                                        "type": "integer",
+                                        "default": 120
+                                    }
+                                }
+                            },
+                            "close-action": {
+                                "description": "Action to take when the remote peer closes the connection.",
+                                "type": "string",
+                                "enum": [
+                                    "none",
+                                    "start",
+                                    "hold"
+                                ],
+                                "default": "none"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "proposal"
+                        ]
+                    }
+                },
+                "esp-groups": {
+                    "description": "ESP (Phase 2) group definitions.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name identifier for this ESP group.",
+                                "type": "string"
+                            },
+                            "lifetime": {
+                                "description": "ESP SA lifetime in seconds.",
+                                "type": "integer",
+                                "default": 3600
+                            },
+                            "mode": {
+                                "description": "IPsec encapsulation mode.",
+                                "type": "string",
+                                "enum": [
+                                    "tunnel",
+                                    "transport"
+                                ],
+                                "default": "tunnel"
+                            },
+                            "pfs": {
+                                "description": "Enable Perfect Forward Secrecy.",
+                                "type": "boolean",
+                                "default": true
+                            },
+                            "proposal": {
+                                "description": "Cryptographic proposal for ESP negotiation.",
+                                "type": "object",
+                                "properties": {
+                                    "encryption": {
+                                        "description": "Encryption algorithm for ESP SA.",
+                                        "type": "string",
+                                        "enum": [
+                                            "aes128",
+                                            "aes256",
+                                            "aes128gcm",
+                                            "aes256gcm",
+                                            "3des"
+                                        ]
+                                    },
+                                    "hash": {
+                                        "description": "Hash algorithm for ESP SA integrity.",
+                                        "type": "string",
+                                        "enum": [
+                                            "sha1",
+                                            "sha256",
+                                            "sha384",
+                                            "sha512"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "encryption",
+                                    "hash"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "proposal"
+                        ]
+                    }
+                },
+                "authentication": {
+                    "description": "Pre-shared key (PSK) authentication configuration.",
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "description": "List of local and remote IDs authorized to use this PSK.",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "secret": {
+                            "description": "Pre-shared key secret.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "secret"
+                    ]
+                },
+                "peers": {
+                    "description": "IPsec peer configurations.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name identifier for this peer configuration.",
                                 "type": "string"
                             },
                             "local-address": {
+                                "description": "Local IP address for the IPsec connection.",
+                                "type": "string",
+                                "format": "ipv4"
+                            },
+                            "remote-address": {
+                                "description": "Remote peer IP address.",
+                                "type": "string",
+                                "format": "ipv4"
+                            },
+                            "local-id": {
+                                "description": "Local identity for IKE authentication.",
                                 "type": "string"
                             },
-                            "authentication": {
-                                "type": "object",
-                                "properties": {
-                                    "mode": {
-                                        "type": "string",
-                                        "enum": [
-                                            "pre-shared-secret",
-                                            "x509"
-                                        ],
-                                        "default": "pre-shared-secret"
-                                    },
-                                    "pre-shared-secret": {
-                                        "type": "string"
-                                    }
-                                }
+                            "remote-id": {
+                                "description": "Remote identity for IKE authentication.",
+                                "type": "string"
                             },
                             "ike-group": {
-                                "description": "IKE settings.",
-                                "type": "object",
-                                "properties": {
-                                    "key-exchange": {
-                                        "type": "string",
-                                        "enum": [
-                                            "ikev1",
-                                            "ikev2"
-                                        ],
-                                        "default": "ikev2"
-                                    },
-                                    "encryption": {
-                                        "type": "string",
-                                        "default": "aes256"
-                                    },
-                                    "hash": {
-                                        "type": "string",
-                                        "default": "sha256"
-                                    }
-                                }
+                                "description": "Name of the IKE group to use for this peer.",
+                                "type": "string"
                             },
                             "esp-group": {
-                                "description": "ESP settings.",
-                                "type": "object",
-                                "properties": {
-                                    "encryption": {
-                                        "type": "string",
-                                        "default": "aes256"
-                                    },
-                                    "hash": {
-                                        "type": "string",
-                                        "default": "sha256"
-                                    }
-                                }
+                                "description": "Name of the ESP group to use for this peer.",
+                                "type": "string"
+                            },
+                            "connection-type": {
+                                "description": "Connection initiation behavior.",
+                                "type": "string",
+                                "enum": [
+                                    "initiate",
+                                    "none",
+                                    "trap"
+                                ],
+                                "default": "none"
                             },
                             "tunnels": {
+                                "description": "Policy-based tunnels (traffic selectors).",
                                 "type": "array",
                                 "items": {
                                     "type": "object",
                                     "properties": {
                                         "local-prefix": {
-                                            "type": "string"
+                                            "description": "Local subnet for this tunnel.",
+                                            "type": "string",
+                                            "format": "uc-cidr4"
                                         },
                                         "remote-prefix": {
-                                            "type": "string"
+                                            "description": "Remote subnet for this tunnel.",
+                                            "type": "string",
+                                            "format": "uc-cidr4"
                                         }
-                                    }
+                                    },
+                                    "required": [
+                                        "local-prefix",
+                                        "remote-prefix"
+                                    ]
                                 }
                             }
                         },
                         "required": [
-                            "peer"
+                            "name",
+                            "local-address",
+                            "remote-address",
+                            "ike-group",
+                            "esp-group",
+                            "tunnels"
                         ]
                     }
                 }
-            }
+            },
+            "required": [
+                "interface",
+                "ike-groups",
+                "esp-groups",
+                "authentication",
+                "peers"
+            ]
         },
         "vpn.openvpn": {
             "description": "OpenVPN configuration.",
@@ -2764,12 +3018,17 @@
                                 "type": "string"
                             },
                             "mode": {
+                                "description": "Operating mode of the OpenVPN server.",
                                 "type": "string",
                                 "enum": [
                                     "site-to-site",
-                                    "client-server"
-                                ],
-                                "default": "client-server"
+                                    "server"
+                                ]
+                            },
+                            "persistent-tunnel": {
+                                "description": "Keep the tunnel interface open across restarts.",
+                                "type": "boolean",
+                                "default": false
                             },
                             "protocol": {
                                 "type": "string",
@@ -2779,32 +3038,132 @@
                                 ],
                                 "default": "udp"
                             },
+                            "address": {
+                                "description": "Local IP address for the OpenVPN server to bind to.",
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
                             "port": {
+                                "description": "Port number for the OpenVPN server to listen on.",
                                 "type": "integer",
+                                "maximum": 65535,
                                 "default": 1194
                             },
                             "subnet": {
-                                "description": "Client address pool.",
-                                "type": "string"
+                                "type": "string",
+                                "format": "uc-cidr"
                             },
-                            "tls": {
+                            "encryption": {
+                                "description": "Encryption settings for the VPN connection.",
                                 "type": "object",
                                 "properties": {
-                                    "ca-certificate": {
+                                    "cipher": {
+                                        "description": "Standard data encryption algorithm.",
+                                        "type": "string",
+                                        "enum": [
+                                            "none",
+                                            "3des",
+                                            "aes128",
+                                            "aes128gcm",
+                                            "aes192",
+                                            "aes192gcm",
+                                            "aes256",
+                                            "aes256gcm"
+                                        ]
+                                    },
+                                    "data-ciphers": {
+                                        "description": "Cipher negotiation list for data channel encryption.",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "none",
+                                                "3des",
+                                                "aes128",
+                                                "aes128gcm",
+                                                "aes192",
+                                                "aes192gcm",
+                                                "aes256",
+                                                "aes256gcm"
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "hash": {
+                                "description": "Hash algorithm for HMAC authentication.",
+                                "type": "string",
+                                "enum": [
+                                    "md5",
+                                    "sha1",
+                                    "sha256",
+                                    "sha384",
+                                    "sha512"
+                                ]
+                            },
+                            "tls": {
+                                "description": "TLS certificate configuration.",
+                                "type": "object",
+                                "properties": {
+                                    "ca-cert": {
+                                        "description": "Name of the CA certificate.",
                                         "type": "string"
                                     },
-                                    "certificate": {
+                                    "cert": {
+                                        "description": "Name of the server certificate.",
                                         "type": "string"
                                     },
-                                    "private-key": {
+                                    "dh": {
+                                        "description": "Name of the Diffie-Hellman parameter.",
                                         "type": "string"
                                     }
                                 }
                             },
-                            "push-routes": {
+                            "topology": {
+                                "description": "Virtual network topology for client addressing.",
+                                "type": "string",
+                                "enum": [
+                                    "subnet",
+                                    "point-to-point"
+                                ]
+                            },
+                            "domain": {
+                                "description": "DNS domain to push to clients.",
+                                "type": "string",
+                                "format": "hostname"
+                            },
+                            "max-connections": {
+                                "description": "Maximum number of concurrent client connections.",
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 4096
+                            },
+                            "name-server": {
+                                "description": "DNS server address to push to clients.",
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
+                            "clients": {
+                                "description": "Static client configurations.",
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
+                                    "type": "object",
+                                    "properties": {
+                                        "address": {
+                                            "description": "Fixed IP address assigned to this client.",
+                                            "type": "string",
+                                            "format": "uc-ip"
+                                        },
+                                        "subnet": {
+                                            "description": "Subnet routed through this client.",
+                                            "type": "string",
+                                            "format": "uc-cidr"
+                                        },
+                                        "cert": {
+                                            "description": "Name of the client certificate.",
+                                            "type": "string"
+                                        }
+                                    }
                                 }
                             }
                         },
@@ -2822,11 +3181,97 @@
                             "name": {
                                 "type": "string"
                             },
-                            "remote-host": {
+                            "interface": {
+                                "description": "Network interface to use for the VPN connection.",
                                 "type": "string"
                             },
+                            "authentication": {
+                                "description": "Username and password authentication credentials.",
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "mode": {
+                                "description": "Operating mode of the OpenVPN client.",
+                                "type": "string",
+                                "enum": [
+                                    "site-to-site",
+                                    "client"
+                                ]
+                            },
+                            "encryption": {
+                                "description": "Encryption settings for the VPN connection.",
+                                "type": "object",
+                                "properties": {
+                                    "cipher": {
+                                        "description": "Standard data encryption algorithm.",
+                                        "type": "string",
+                                        "enum": [
+                                            "none",
+                                            "3des",
+                                            "aes128",
+                                            "aes128gcm",
+                                            "aes192",
+                                            "aes192gcm",
+                                            "aes256",
+                                            "aes256gcm"
+                                        ]
+                                    },
+                                    "data-ciphers": {
+                                        "description": "Cipher negotiation list for data channel encryption.",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "none",
+                                                "3des",
+                                                "aes128",
+                                                "aes128gcm",
+                                                "aes192",
+                                                "aes192gcm",
+                                                "aes256",
+                                                "aes256gcm"
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "hash": {
+                                "description": "Hash algorithm for HMAC authentication.",
+                                "type": "string",
+                                "enum": [
+                                    "md5",
+                                    "sha1",
+                                    "sha256",
+                                    "sha384",
+                                    "sha512"
+                                ]
+                            },
+                            "persistent-tunnel": {
+                                "description": "Keep the tunnel interface open across restarts.",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "persist-key": {
+                                "description": "Preserve key material across restarts.",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "remote-host": {
+                                "description": "IP address or hostname of the remote OpenVPN server.",
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
                             "remote-port": {
+                                "description": "Port number of the remote OpenVPN server.",
                                 "type": "integer",
+                                "maximum": 65535,
                                 "default": 1194
                             },
                             "protocol": {
@@ -2838,15 +3283,19 @@
                                 "default": "udp"
                             },
                             "tls": {
+                                "description": "TLS certificate configuration.",
                                 "type": "object",
                                 "properties": {
-                                    "ca-certificate": {
+                                    "ca-cert": {
+                                        "description": "Name of the CA certificate.",
                                         "type": "string"
                                     },
-                                    "certificate": {
+                                    "cert": {
+                                        "description": "Name of the client certificate.",
                                         "type": "string"
                                     },
                                     "private-key": {
+                                        "description": "Name of the private key.",
                                         "type": "string"
                                     }
                                 }
@@ -2865,6 +3314,7 @@
             "type": "object",
             "properties": {
                 "interfaces": {
+                    "description": "WireGuard interfaces.",
                     "type": "array",
                     "items": {
                         "type": "object",
@@ -2873,19 +3323,20 @@
                                 "type": "string"
                             },
                             "private-key": {
+                                "description": "Private key for this WireGuard interface.",
                                 "type": "string"
                             },
+                            "address": {
+                                "description": "IP address assigned to the WireGuard interface.",
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
                             "port": {
+                                "description": "UDP port for WireGuard to listen on.",
                                 "type": "integer"
                             },
-                            "address": {
-                                "description": "Interface addresses.",
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            },
                             "peers": {
+                                "description": "List of peers for this WireGuard interface.",
                                 "type": "array",
                                 "items": {
                                     "type": "object",
@@ -2894,19 +3345,39 @@
                                             "type": "string"
                                         },
                                         "public-key": {
+                                            "description": "Public key of the peer.",
                                             "type": "string"
                                         },
                                         "allowed-ips": {
+                                            "description": "List of IP ranges allowed through this peer.",
                                             "type": "array",
                                             "items": {
-                                                "type": "string"
+                                                "type": "string",
+                                                "format": "uc-cidr"
                                             }
                                         },
                                         "endpoint": {
-                                            "description": "Peer endpoint (host:port).",
-                                            "type": "string"
+                                            "description": "Peer endpoint.",
+                                            "type": "object",
+                                            "properties": {
+                                                "address": {
+                                                    "description": "IP address of the peer endpoint.",
+                                                    "type": "string",
+                                                    "format": "uc-ip"
+                                                },
+                                                "port": {
+                                                    "description": "UDP port of the peer endpoint.",
+                                                    "type": "integer",
+                                                    "maximum": 65535,
+                                                    "default": 51820
+                                                }
+                                            },
+                                            "required": [
+                                                "address"
+                                            ]
                                         },
                                         "persistent-keepalive": {
+                                            "description": "Interval (in seconds) for sending keepalive packets to maintain NAT mappings.",
                                             "type": "integer"
                                         }
                                     },
@@ -2953,6 +3424,18 @@
                             "name": {
                                 "type": "string"
                             },
+                            "virtual-addresses": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "priority": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 255,
+                                "default": 100
+                            },
                             "interface": {
                                 "type": "string"
                             },
@@ -2962,29 +3445,9 @@
                                 "minimum": 1,
                                 "maximum": 255
                             },
-                            "priority": {
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 255,
-                                "default": 100
-                            },
-                            "virtual-addresses": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            },
                             "preempt": {
                                 "type": "boolean",
                                 "default": true
-                            },
-                            "authentication": {
-                                "type": "object",
-                                "properties": {
-                                    "password": {
-                                        "type": "string"
-                                    }
-                                }
                             }
                         },
                         "required": [
@@ -3041,22 +3504,34 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "rule-number": {
-                                "type": "integer"
+                            "id": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9999
                             },
                             "source": {
-                                "type": "string"
+                                "type": "string",
+                                "format": "uc-cidr"
                             },
                             "destination": {
+                                "type": "string",
+                                "format": "uc-cidr"
+                            },
+                            "inbound-interface": {
                                 "type": "string"
                             },
-                            "interfaces": {
+                            "wan-interfaces": {
                                 "type": "array",
                                 "items": {
                                     "type": "string"
                                 }
                             }
-                        }
+                        },
+                        "required": [
+                            "id",
+                            "inbound-interface",
+                            "wan-interface"
+                        ]
                     }
                 }
             }
@@ -3249,22 +3724,6 @@
                     "items": {
                         "type": "string",
                         "format": "uc-ip"
-                    }
-                },
-                "static-host-mappings": {
-                    "description": "Static hostname to IP address mappings.",
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "hostname": {
-                                "type": "string"
-                            },
-                            "address": {
-                                "type": "string",
-                                "format": "uc-ip"
-                            }
-                        }
                     }
                 }
             }
