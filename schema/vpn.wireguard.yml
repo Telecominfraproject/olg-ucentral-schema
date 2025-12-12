@@ -2,6 +2,7 @@ description: WireGuard VPN configuration.
 type: object
 properties:
   interfaces:
+    description: Wireguard interfaces.
     type: array
     items:
       type: object
@@ -10,13 +11,11 @@ properties:
           type: string
         private-key:
           type: string
+        address:
+          type: string
+          format: uc-ip
         port:
           type: integer
-        address:
-          description: Interface addresses.
-          type: array
-          items:
-            type: string
         peers:
           type: array
           items:
@@ -30,9 +29,20 @@ properties:
                 type: array
                 items:
                   type: string
+                  format: uc-cidr
               endpoint:
                 description: Peer endpoint (host:port).
-                type: string
+                type: object
+                properties:
+                  address:
+                    type: string
+                    format: uc-ip
+                  port:
+                    type: integer
+                    maximum: 65535
+                    default: 51820
+                required:
+                - address
               persistent-keepalive:
                 type: integer
             required:

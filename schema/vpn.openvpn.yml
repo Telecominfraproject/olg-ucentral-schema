@@ -13,33 +13,105 @@ properties:
           type: string
           enum:
           - site-to-site
-          - client-server
-          default: client-server
+          - server
+        persistent-tunnel:
+          type: boolean
+          default: false
         protocol:
           type: string
           enum:
           - udp
           - tcp
           default: udp
+        address:
+          type: string
+          format: uc-ip
         port:
           type: integer
+          maximum: 65535
           default: 1194
         subnet:
           description: Client address pool.
           type: string
+          format: uc-cidr
+        encryption:
+          type: object
+          properties:
+            cipher:
+              description: Standard Data Encryption Algorithm.
+              type: string
+              enum:
+              - none
+              - 3des
+              - aes128
+              - aes128gcm
+              - aes192
+              - aes192gcm
+              - aes256
+              - aes256gcm
+            data-ciphers:
+              description: Cipher negotiation list.
+              type: array
+              items:
+                type: string
+                enum:
+                - none
+                - 3des
+                - aes128
+                - aes128gcm
+                - aes192
+                - aes192gcm
+                - aes256
+                - aes256gcm
+        hash:
+          type: string
+          enum:
+          - md5
+          - sha1
+          - sha256
+          - sha384
+          - sha512
         tls:
           type: object
           properties:
-            ca-certificate:
+            ca-cert:
+              description: Name of CA certificate.
               type: string
-            certificate:
+            cert:
+              description: Name of certificate.
               type: string
-            private-key:
+            dh:
+              description: Name of DH algorithm.
               type: string
-        push-routes:
+        topology:
+          type: string
+          enum:
+          - subnet
+          - point-to-point
+        domain:
+          type: string
+          format: hostname
+        max-connections:
+          type: integer
+          minimum: 1
+          maximum: 4096
+        name-server:
+          type: string
+          format: uc-ip
+        clients:
           type: array
           items:
-            type: string
+            type: object
+            properties:
+              address:
+                type: string
+                format: uc-ip
+              subnet:
+                type: string
+                format: uc-cidr
+              cert: 
+                description: Name of certificate.
+                type: string            
       required:
       - name
   clients:
@@ -50,10 +122,69 @@ properties:
       properties:
         name:
           type: string
+        interface:
+          type: string
+        authentication:
+          type: object
+          properties:
+            username:
+              type: string
+            password:
+              type: string
+        mode:
+          type: string
+          enum:
+          - site-to-site
+          - client
+        encryption:
+          type: object
+          properties:
+            cipher:
+              description: Standard Data Encryption Algorithm.
+              type: string
+              enum:
+              - none
+              - 3des
+              - aes128
+              - aes128gcm
+              - aes192
+              - aes192gcm
+              - aes256
+              - aes256gcm
+            data-ciphers:
+              description: Cipher negotiation list.
+              type: array
+              items:
+                type: string
+                enum:
+                - none
+                - 3des
+                - aes128
+                - aes128gcm
+                - aes192
+                - aes192gcm
+                - aes256
+                - aes256gcm
+        hash:
+          type: string
+          enum:
+          - md5
+          - sha1
+          - sha256
+          - sha384
+          - sha512
+        persistent-tunnel:
+          type: boolean
+          default: false
+        persist-key:
+          type: boolean
+          default: false
         remote-host:
           type: string
+          format: uc-ip
         remote-port:
           type: integer
+          maximum: 65535
           default: 1194
         protocol:
           type: string
@@ -64,9 +195,9 @@ properties:
         tls:
           type: object
           properties:
-            ca-certificate:
+            ca-cert:
               type: string
-            certificate:
+            cert:
               type: string
             private-key:
               type: string

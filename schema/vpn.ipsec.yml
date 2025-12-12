@@ -1,67 +1,147 @@
 description: IPSec VPN configuration.
 type: object
 properties:
-  enabled:
-    type: boolean
-    default: false
-  site-to-site:
-    description: Site-to-site VPN connections.
+  interface:
+    description: Interface facing the remote peer.
+    type: string
+  ike-groups:
+    description: IKE (Phase 1) group definitions.
     type: array
     items:
       type: object
       properties:
-        peer:
-          description: Remote peer address.
+        name:
           type: string
-        description:
+        key-exchange:
+          type: string
+          enum: [ikev1, ikev2]
+          default: ikev2
+        lifetime:
+          description: IKE lifetime in seconds.
+          type: integer
+          default: 28800
+        proposal:
+          type: object
+          properties:
+            encryption:
+              type: string
+              enum: [aes128, aes256, aes128gcm, aes256gcm, 3des]
+            hash:
+              type: string
+              enum: [sha1, sha256, sha384, sha512]
+            dh-group:
+              type: integer
+              enum: [2, 14, 15, 16, 19, 20, 21]
+          required: [encryption, hash, dh-group]
+        dead-peer-detection:
+          type: object
+          properties:
+            action:
+              type: string
+              enum: [restart, clear, hold, none]
+            interval:
+              type: integer
+              default: 30
+            timeout:
+              type: integer
+              default: 120
+        close-action:
+          type: string
+          enum: [none, start, hold]
+          default: none
+      required: [name, proposal]
+  esp-groups:
+    description: ESP (Phase 2) group definitions.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        lifetime:
+          description: ESP lifetime in seconds.
+          type: integer
+          default: 3600
+        mode:
+          type: string
+          enum: [tunnel, transport]
+          default: tunnel
+        pfs:
+          description: Perfect Forward Secrecy.
+          type: boolean
+          default: true
+        proposal:
+          type: object
+          properties:
+            encryption:
+              type: string
+              enum: [aes128, aes256, aes128gcm, aes256gcm, 3des]
+            hash:
+              type: string
+              enum: [sha1, sha256, sha384, sha512]
+          required: [encryption, hash]
+      required: [name, proposal]
+  authentication:
+    description: PSK authentication configuration.
+    type: object
+    properties:
+      id:
+        description: Local and remote IDs for this PSK.
+        type: array
+        items:
+          type: string
+      secret:
+        type: string
+    required: [id, secret]
+  peers:
+    description: IPsec peer configurations.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
           type: string
         local-address:
           type: string
-        authentication:
-          type: object
-          properties:
-            mode:
-              type: string
-              enum:
-              - pre-shared-secret
-              - x509
-              default: pre-shared-secret
-            pre-shared-secret:
-              type: string
+          format: ipv4
+        remote-address:
+          type: string
+          format: ipv4
+        local-id:
+          type: string
+        remote-id:
+          type: string
         ike-group:
-          description: IKE settings.
-          type: object
-          properties:
-            key-exchange:
-              type: string
-              enum:
-              - ikev1
-              - ikev2
-              default: ikev2
-            encryption:
-              type: string
-              default: aes256
-            hash:
-              type: string
-              default: sha256
+          type: string
         esp-group:
-          description: ESP settings.
-          type: object
-          properties:
-            encryption:
-              type: string
-              default: aes256
-            hash:
-              type: string
-              default: sha256
+          type: string
+        connection-type:
+          type: string
+          enum: [initiate, none, trap]
+          default: none
         tunnels:
+          description: Policy-based tunnels (traffic selectors).
           type: array
           items:
             type: object
             properties:
               local-prefix:
                 type: string
+                format: uc-cidr4
               remote-prefix:
                 type: string
+                format: uc-cidr4
+            required: [local-prefix, remote-prefix]
       required:
-      - peer
+        - name
+        - local-address
+        - remote-address
+        - ike-group
+        - esp-group
+        - tunnels
+required:
+  - interface
+  - ike-groups
+  - esp-groups
+  - authentication
+  - peers
