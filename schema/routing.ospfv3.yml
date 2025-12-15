@@ -1,87 +1,106 @@
 description: OSPFv3 (IPv6) routing protocol configuration.
 type: object
 properties:
-  router-id:
-    description: OSPFv3 router identifier. Uses IPv4 format (32-bit) even for IPv6 routing.
-    type: string
-    format: ipv4
   areas:
-    description: OSPFv3 area definitions.
+    description: OSPF area definitions.
     type: array
     items:
-      - type: object
-        properties:
-          area-id:
-            description: Area identifier.
+      type: object
+      properties:
+        area-id:
+          description: Area identifier (integer or dotted-decimal).
+          type: string
+          examples:
+            - "0"
+            - "1"
+            - "0.0.0.1"
+        area-type:
+          description: Area type. Stub/NSSA areas reduce LSA flooding.
+          type: string
+          enum:
+          - normal
+          - stub
+          - nssa
+          default: normal
+        no-summary:
+          description: For stub/NSSA, block inter-area routes (totally stubby).
+          type: boolean
+          default: false
+        networks:
+          description: Networks to include in this area (CIDR notation).
+          type: array
+          items:
             type: string
-            examples:
-              - "0"
-              - "0.0.0.0"
-              - "1"
-          area-type:
-            description: Area type. Stub/NSSA areas reduce LSA flooding.
-            type: string
-            enum:
-              - normal
-              - stub
-              - nssa
-            default: normal
-          no-summary:
-            description: For stub/NSSA areas, block inter-area routes (totally stubby).
-            type: boolean
-            default: false
-        required:
-          - area-id
+            format: uc-cidr6
+      required:
+        - area-id
   interfaces:
-    description: Per-interface OSPFv3 settings.
+    description: Per-interface OSPF settings.
     type: array
     items:
-      - type: object
-        properties:
-          name:
-            description: Interface name.
-            type: string
-          area:
-            description: Area this interface belongs to.
-            type: string
-          cost:
-            description: OSPFv3 cost for this interface. Lower is preferred.
-            type: integer
-            minimum: 1
-            maximum: 65535
-          passive:
-            description: Advertise connected prefixes but do not form adjacencies.
-            type: boolean
-            default: false
-          network-type:
-            description: OSPFv3 network type. Affects DR election and hello behavior.
-            type: string
-            enum:
-              - broadcast
-              - point-to-point
-          priority:
-            description: Router priority for DR/BDR election. 0 prevents becoming DR.
-            type: integer
-            minimum: 0
-            maximum: 255
-            default: 1
-        required:
-          - name
-          - area
+      type: object
+      properties:
+        name:
+          description: Interface name.
+          type: string
+        area:
+          description: Area this interface belongs to.
+          type: string
+        cost:
+          description: OSPF cost for this interface. Lower is preferred.
+          type: integer
+          minimum: 1
+          maximum: 65535
+        passive:
+          description: Advertise network but do not form adjacencies.
+          type: boolean
+          default: false
+        network-type:
+          description: OSPFv6 network type. Affects DR election and hello behavior.
+          type: string
+          enum:
+          - broadcast
+          - point-to-point
+          - non-broadcast
+          - point-to-multipoint
+        priority:
+          description: Router priority for DR/BDR election. 0 prevents becoming DR.
+          type: integer
+          minimum: 0
+          maximum: 255
+          default: 1
+        authentication:
+          description: Interface authentication.
+          type: object
+          properties:
+            type:
+              type: string
+              enum: 
+              - plaintext
+              - md5
+            password:
+              type: string
+            key-id:
+              description: Key ID for MD5 authentication.
+              type: integer
+              minimum: 1
+              maximum: 255
+      required:
+        - name
   redistribute:
-    description: Import routes from other sources into OSPFv3.
+    description: Import routes from other sources into OSPF.
     type: object
     properties:
       connected:
-        description: Redistribute directly connected IPv6 networks.
+        description: Redistribute directly connected networks.
         type: boolean
         default: false
       static:
-        description: Redistribute static IPv6 routes.
+        description: Redistribute static routes.
         type: boolean
         default: false
       bgp:
-        description: Redistribute BGP IPv6 routes.
+        description: Redistribute BGP routes.
         type: boolean
         default: false
 required:

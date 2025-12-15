@@ -36,8 +36,13 @@ properties:
               format: uc-cidr
             port:
               description: Source port or range.
-              type: string
+              type:
+                - integer
+                - string
               format: uc-portrange
+              examples:
+                - 2345
+                - 1024-65535
             group:
               description: Address/port group reference.
               type: string
@@ -45,6 +50,7 @@ properties:
               description: Source MAC address.
               type: string
               format: uc-mac
+              example: 98:e7:9a:27:fe:49
         destination:
           description: Destination matching criteria.
           type: object
@@ -55,8 +61,13 @@ properties:
               format: uc-cidr
             port:
               description: Destination port or range.
-              type: string
+              type:
+                - integer
+                - string
               format: uc-portrange
+              examples:
+                - 2345
+                - 1024-65535
             group:
               description: Address/port group reference.
               type: string
@@ -98,11 +109,6 @@ properties:
               description: Drop matching packets.
               type: boolean
               default: false
-            use-table:
-              description: Routing table to use. Can be 0 for main table or a custom table ID.
-              type: integer
-              minimum: 0
-              maximum: 200
             next-hop:
               description: Override next-hop directly without specifying a table.
               type: string

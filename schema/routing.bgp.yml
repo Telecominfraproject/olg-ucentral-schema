@@ -20,18 +20,15 @@ properties:
           description: Neighbor IP address.
           type: string
           format: uc-ip
-        # port:
-        #   type: integer
-        #   minimum: 1
-        #   maximum: 65535
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
         remote-as:
           description: Neighbor AS number.
           type: integer
           minimum: 1
           maximum: 4294967295
-        # source-interface:
-        #   description: Interface used to establish connection
-        #   type: string
         update-source:
           description: Source interface for BGP session.
           type: string
@@ -61,8 +58,8 @@ properties:
                 enum:
                 - ipv4-unicast
                 - ipv6-unicast
-                # - ipv4-multicast
-                # - ipv6-multicast
+                - ipv4-multicast
+                - ipv6-multicast
               nexthop-self:
                 type: boolean
                 default: false
@@ -89,8 +86,8 @@ properties:
           enum:
           - ipv4-unicast
           - ipv6-unicast
-          # - ipv4-multicast
-          # - ipv6-multicast
+          - ipv4-multicast
+          - ipv6-multicast
         network:
           type: string
           format: uc-cidr
@@ -108,8 +105,8 @@ properties:
           enum:
           - ipv4-unicast
           - ipv6-unicast
-          # - ipv4-multicast
-          # - ipv6-multicast
+          - ipv4-multicast
+          - ipv6-multicast
         connected:
           type: boolean
           default: false

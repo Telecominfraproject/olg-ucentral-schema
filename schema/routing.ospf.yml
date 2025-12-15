@@ -36,9 +36,9 @@ properties:
           description: Area identifier (integer or dotted-decimal).
           type: string
           examples:
-          - "0"
-          - "1"
-          - "0.0.0.1"
+            - "0"
+            - "1"
+            - "0.0.0.1"
         area-type:
           description: Area type. Stub/NSSA areas reduce LSA flooding.
           type: string
@@ -111,7 +111,7 @@ properties:
               minimum: 1
               maximum: 255
       required:
-      - name
+        - name
   redistribute:
     description: Import routes from other sources into OSPF.
     type: object

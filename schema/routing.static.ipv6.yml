@@ -1,0 +1,29 @@
+description: Static ipv6 routing configuration.
+type: object
+properties:
+  destination:
+    description: Destination network (CIDR).
+    type: string
+    format: uc-cidr6
+  next-hop:
+    description: Next-hop IP address.
+    type: string
+    format: ipv6
+  interface:
+    description: Outgoing interface.
+    type: string
+  distance:
+    description: Administrative distance.
+    type: integer
+    minimum: 1
+    maximum: 255
+    default: 1
+  action:
+    type: string
+    enum:
+      - accept
+      - reject
+      - blackhole
+required:
+  - destination
+  - next-hop

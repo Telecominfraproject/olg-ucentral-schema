@@ -2,7 +2,14 @@ description: Routing configuration section.
 type: object
 properties:
   static:
-    $ref: https://ucentral.io/schema/v1/routing/static/
+    ipv4-rules:
+      type: array
+      items:
+        $ref: https://ucentral.io/schema/v1/routing/static/ipv4
+    ipv6-rules:
+      type: array
+      items:
+        $ref: https://ucentral.io/schema/v1/routing/static/ipv6
   policies:
     type: array
     items:

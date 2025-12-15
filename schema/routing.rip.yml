@@ -1,10 +1,6 @@
 description: RIP routing protocol configuration.
 type: object
 properties:
-  router-id:
-    description: RIP router ID.
-    type: string
-    format: ipv4
   version:
     type: string
     enum:
@@ -42,5 +38,23 @@ properties:
         type: boolean
         default: false
       static:
+        type: boolean
+        default: false
+      babel:
+        type: boolean
+        default: false
+      bgp:
+        type: boolean
+        default: false
+      isis:
+        type: boolean
+        default: false
+      kernel:
+        type: boolean
+        default: false
+      nhrp:
+        type: boolean
+        default: false
+      ospf:
         type: boolean
         default: false
