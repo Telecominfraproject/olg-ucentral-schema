@@ -12,10 +12,10 @@ properties:
     description: Protocol to match.
     type: string
     examples:
-    - tcp
-    - udp
-    - icmpv6
-    - all
+      - tcp
+      - udp
+      - icmpv6
+      - all
   source:
     description: Source address/port to match.
     type: object
@@ -24,14 +24,16 @@ properties:
         description: Source IPv6 prefix.
         type: string
         format: uc-cidr6
-        examples:
-        - "2001:db8:1::/64"
+        example: "2001:db8:1::/64"
       port:
         description: Source port or port range.
-        type: string
+        type: 
+          - integer
+          - string
+        format: uc-portrange
         examples:
-        - "80"
-        - "1024-65535"
+          - 80
+          - 1024-65535
       group:
         description: Reference to a firewall address/network/port group.
         type: object
@@ -50,14 +52,16 @@ properties:
         description: Destination IPv6 prefix.
         type: string
         format: uc-cidr6
-        examples:
-        - "2001:db8:2::/64"
+        example: "2001:db8:2::/64"
       port:
         description: Destination port or port range.
-        type: string
+        type: 
+          - integer
+          - string
+        format: uc-portrange
         examples:
-        - "443"
-        - "8000-9000"
+          - 80
+          - 1024-65535
       group:
         description: Reference to a firewall address/network/port group.
         type: object
@@ -76,13 +80,15 @@ properties:
         description: Translated source IPv6 prefix.
         type: string
         format: uc-cidr6
-        examples:
-        - "2001:db8:a::/64"
+        example: 2001:db8:a::/64
       port:
         description: Translated source port or port range.
-        type: string
+        type: 
+          - integer
+          - string
+        format: uc-portrange
         examples:
-        - "8080"
-        - "10000-20000"
+          - 80
+          - 1024-65535
 required:
   - rule-number

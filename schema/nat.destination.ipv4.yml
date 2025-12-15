@@ -12,26 +12,28 @@ properties:
     description: Protocol to match.
     type: string
     examples:
-    - tcp
-    - udp
-    - icmp
-    - all
+      - tcp
+      - udp
+      - icmp
+      - all
   source:
     description: Source address/port to match.
     type: object
     properties:
       address:
-        description: Source IPv4 address, network, or address range.
+        description: Source IPv4 network.
         type: string
-        examples:
-        - "192.168.1.100"
-        - "192.168.1.0/24"
+        format: uc-cidr4
+        example: 192.168.1.0/24
       port:
         description: Source port or port range.
-        type: string
+        type: 
+          - integer
+          - string
+        format: uc-portrange
         examples:
-        - "80"
-        - "1024-65535"
+          - 80
+          - 1024-65535
       group:
         description: Reference to a firewall address/network/port group.
         type: object
@@ -47,17 +49,19 @@ properties:
     type: object
     properties:
       address:
-        description: Original destination IPv4 address, network, or address range.
+        description: Original destination IPv4 network.
         type: string
-        examples:
-        - "203.0.113.1"
-        - "203.0.113.0/24"
+        format: uc-cidr4
+        example: 192.168.1.0/24
       port:
         description: Original destination port or port range.
-        type: string
+        type: 
+          - integer
+          - string
+        format: uc-portrange
         examples:
-        - "443"
-        - "8000-9000"
+          - 80
+          - 1024-65535
       group:
         description: Reference to a firewall address/network/port group.
         type: object
@@ -75,13 +79,16 @@ properties:
       address:
         description: Translated destination address.
         type: string
-        examples:
-        - "192.168.1.10"
+        format: ipv4
+        example: 192.168.1.10
       port:
         description: Translated destination port or port range.
-        type: string
+        type: 
+          - integer
+          - string
+        format: uc-portrange
         examples:
-        - "8080"
-        - "3000-4000"
+          - 80
+          - 1024-65535
 required:
   - rule-number

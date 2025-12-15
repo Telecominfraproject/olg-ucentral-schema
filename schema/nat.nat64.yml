@@ -13,8 +13,7 @@ properties:
         description: IPv6 source prefix to match.
         type: string
         format: uc-cidr6
-        examples:
-        - "2001:db8:1::/64"
+        example: 2001:db8:1::/64
   translation:
     description: NAT64 translation parameters.
     type: object
@@ -23,9 +22,7 @@ properties:
         description: Well-known prefix or custom NAT64 prefix.
         type: string
         format: uc-cidr6
-        default: "64:ff9b::/96"
-        examples:
-        - "64:ff9b::/96"
+        default: 64:ff9b::/96
       ipv4-pool:
         description: IPv4 address pool for translated traffic.
         type: object
@@ -34,11 +31,15 @@ properties:
             description: IPv4 address or address range for source NAT.
             type: string
             examples:
-            - "198.51.100.1"
-            - "198.51.100.1-198.51.100.10"
+              - 198.51.100.1
+              - 198.51.100.1-198.51.100.10
           port-range:
-            type: string
+            type:
+              - integer
+              - string
+            format: uc-portrange
             examples:
-            - "1024-65535"
+              - 80
+              - 1024-65535
 required:
   - rule-number
