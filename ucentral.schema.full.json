@@ -45,17 +45,13 @@
                     "description": "Global router ID for routing protocols (BGP, OSPF, etc.).",
                     "type": "string",
                     "format": "ipv4",
-                    "examples": [
-                        "10.0.0.1"
-                    ]
+                    "example": "10.0.0.1"
                 },
                 "domain-name": {
                     "description": "Default domain name for the device.",
                     "type": "string",
                     "format": "hostname",
-                    "examples": [
-                        "example.local"
-                    ]
+                    "example": "example.local"
                 }
             }
         },
@@ -99,9 +95,8 @@
                     "mac-address": {
                         "description": "Mac address of the interface.",
                         "type": "string",
-                        "example": [
-                            "98:e7:9a:27:fe:49"
-                        ]
+                        "format": "uc-mac",
+                        "example": "98:e7:9a:27:fe:49"
                     },
                     "mtu": {
                         "description": "Maximum Transmission Unit.",
@@ -256,15 +251,12 @@
                                 ]
                             },
                             "address": {
-                                "description": "IPv4 address(es) in CIDR notation.",
+                                "description": "IPv4 addresses in CIDR notation.",
                                 "type": "array",
                                 "items": {
                                     "type": "string",
                                     "format": "uc-cidr4"
-                                },
-                                "examples": [
-                                    "192.168.1.1/24"
-                                ]
+                                }
                             },
                             "gateway": {
                                 "description": "Default gateway.",
@@ -294,10 +286,7 @@
                                 "items": {
                                     "type": "string",
                                     "format": "uc-cidr6"
-                                },
-                                "examples": [
-                                    "2001:db8::1/64"
-                                ]
+                                }
                             },
                             "gateway": {
                                 "description": "Default gateway.",
@@ -314,24 +303,23 @@
             "type": "object",
             "properties": {
                 "static": {
-                    "description": "Static routing configuration.",
                     "type": "object",
                     "properties": {
-                        "routes": {
-                            "description": "List of static routes.",
+                        "ipv4-rules": {
                             "type": "array",
                             "items": {
+                                "description": "Static ipv4 routing configuration.",
                                 "type": "object",
                                 "properties": {
                                     "destination": {
                                         "description": "Destination network (CIDR).",
                                         "type": "string",
-                                        "format": "uc-cidr"
+                                        "format": "uc-cidr4"
                                     },
                                     "next-hop": {
                                         "description": "Next-hop IP address.",
                                         "type": "string",
-                                        "format": "uc-ip"
+                                        "format": "ipv4"
                                     },
                                     "interface": {
                                         "description": "Outgoing interface.",
@@ -347,15 +335,52 @@
                                     "action": {
                                         "type": "string",
                                         "enum": [
+                                            "accept",
                                             "reject",
                                             "blackhole"
                                         ]
+                                    }
+                                },
+                                "required": [
+                                    "destination",
+                                    "next-hop"
+                                ]
+                            }
+                        },
+                        "ipv6-rules": {
+                            "type": "array",
+                            "items": {
+                                "description": "Static ipv6 routing configuration.",
+                                "type": "object",
+                                "properties": {
+                                    "destination": {
+                                        "description": "Destination network (CIDR).",
+                                        "type": "string",
+                                        "format": "uc-cidr6"
                                     },
-                                    "table": {
-                                        "description": "Custom table ID to store the route. Dont set this to use the main table.",
+                                    "next-hop": {
+                                        "description": "Next-hop IP address.",
+                                        "type": "string",
+                                        "format": "ipv6"
+                                    },
+                                    "interface": {
+                                        "description": "Outgoing interface.",
+                                        "type": "string"
+                                    },
+                                    "distance": {
+                                        "description": "Administrative distance.",
                                         "type": "integer",
                                         "minimum": 1,
-                                        "maximum": 200
+                                        "maximum": 255,
+                                        "default": 1
+                                    },
+                                    "action": {
+                                        "type": "string",
+                                        "enum": [
+                                            "accept",
+                                            "reject",
+                                            "blackhole"
+                                        ]
                                     }
                                 },
                                 "required": [
@@ -414,8 +439,15 @@
                                                 },
                                                 "port": {
                                                     "description": "Source port or range.",
-                                                    "type": "string",
-                                                    "format": "uc-portrange"
+                                                    "type": [
+                                                        "integer",
+                                                        "string"
+                                                    ],
+                                                    "format": "uc-portrange",
+                                                    "examples": [
+                                                        2345,
+                                                        "1024-65535"
+                                                    ]
                                                 },
                                                 "group": {
                                                     "description": "Address/port group reference.",
@@ -424,7 +456,8 @@
                                                 "mac-address": {
                                                     "description": "Source MAC address.",
                                                     "type": "string",
-                                                    "format": "uc-mac"
+                                                    "format": "uc-mac",
+                                                    "example": "98:e7:9a:27:fe:49"
                                                 }
                                             }
                                         },
@@ -439,8 +472,15 @@
                                                 },
                                                 "port": {
                                                     "description": "Destination port or range.",
-                                                    "type": "string",
-                                                    "format": "uc-portrange"
+                                                    "type": [
+                                                        "integer",
+                                                        "string"
+                                                    ],
+                                                    "format": "uc-portrange",
+                                                    "examples": [
+                                                        2345,
+                                                        "1024-65535"
+                                                    ]
                                                 },
                                                 "group": {
                                                     "description": "Address/port group reference.",
@@ -492,12 +532,6 @@
                                                     "description": "Drop matching packets.",
                                                     "type": "boolean",
                                                     "default": false
-                                                },
-                                                "use-table": {
-                                                    "description": "Routing table to use. Can be 0 for main table or a custom table ID.",
-                                                    "type": "integer",
-                                                    "minimum": 0,
-                                                    "maximum": 200
                                                 },
                                                 "next-hop": {
                                                     "description": "Override next-hop directly without specifying a table.",
@@ -560,6 +594,11 @@
                                         "type": "string",
                                         "format": "uc-ip"
                                     },
+                                    "port": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 65535
+                                    },
                                     "remote-as": {
                                         "description": "Neighbor AS number.",
                                         "type": "integer",
@@ -599,7 +638,9 @@
                                                     "type": "string",
                                                     "enum": [
                                                         "ipv4-unicast",
-                                                        "ipv6-unicast"
+                                                        "ipv6-unicast",
+                                                        "ipv4-multicast",
+                                                        "ipv6-multicast"
                                                     ]
                                                 },
                                                 "nexthop-self": {
@@ -638,7 +679,9 @@
                                         "type": "string",
                                         "enum": [
                                             "ipv4-unicast",
-                                            "ipv6-unicast"
+                                            "ipv6-unicast",
+                                            "ipv4-multicast",
+                                            "ipv6-multicast"
                                         ]
                                     },
                                     "network": {
@@ -662,7 +705,9 @@
                                         "type": "string",
                                         "enum": [
                                             "ipv4-unicast",
-                                            "ipv6-unicast"
+                                            "ipv6-unicast",
+                                            "ipv4-multicast",
+                                            "ipv6-multicast"
                                         ]
                                     },
                                     "connected": {
@@ -877,114 +922,136 @@
                     "description": "OSPFv3 (IPv6) routing protocol configuration.",
                     "type": "object",
                     "properties": {
-                        "router-id": {
-                            "description": "OSPFv3 router identifier. Uses IPv4 format (32-bit) even for IPv6 routing.",
-                            "type": "string",
-                            "format": "ipv4"
-                        },
                         "areas": {
-                            "description": "OSPFv3 area definitions.",
+                            "description": "OSPF area definitions.",
                             "type": "array",
-                            "items": [
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "area-id": {
-                                            "description": "Area identifier.",
-                                            "type": "string",
-                                            "examples": [
-                                                "0",
-                                                "0.0.0.0",
-                                                "1"
-                                            ]
-                                        },
-                                        "area-type": {
-                                            "description": "Area type. Stub/NSSA areas reduce LSA flooding.",
-                                            "type": "string",
-                                            "enum": [
-                                                "normal",
-                                                "stub",
-                                                "nssa"
-                                            ],
-                                            "default": "normal"
-                                        },
-                                        "no-summary": {
-                                            "description": "For stub/NSSA areas, block inter-area routes (totally stubby).",
-                                            "type": "boolean",
-                                            "default": false
-                                        }
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "area-id": {
+                                        "description": "Area identifier (integer or dotted-decimal).",
+                                        "type": "string",
+                                        "examples": [
+                                            "0",
+                                            "1",
+                                            "0.0.0.1"
+                                        ]
                                     },
-                                    "required": [
-                                        "area-id"
-                                    ]
-                                }
-                            ]
+                                    "area-type": {
+                                        "description": "Area type. Stub/NSSA areas reduce LSA flooding.",
+                                        "type": "string",
+                                        "enum": [
+                                            "normal",
+                                            "stub",
+                                            "nssa"
+                                        ],
+                                        "default": "normal"
+                                    },
+                                    "no-summary": {
+                                        "description": "For stub/NSSA, block inter-area routes (totally stubby).",
+                                        "type": "boolean",
+                                        "default": false
+                                    },
+                                    "networks": {
+                                        "description": "Networks to include in this area (CIDR notation).",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uc-cidr6"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "area-id"
+                                ]
+                            }
                         },
                         "interfaces": {
-                            "description": "Per-interface OSPFv3 settings.",
+                            "description": "Per-interface OSPF settings.",
                             "type": "array",
-                            "items": [
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "description": "Interface name.",
-                                            "type": "string"
-                                        },
-                                        "area": {
-                                            "description": "Area this interface belongs to.",
-                                            "type": "string"
-                                        },
-                                        "cost": {
-                                            "description": "OSPFv3 cost for this interface. Lower is preferred.",
-                                            "type": "integer",
-                                            "minimum": 1,
-                                            "maximum": 65535
-                                        },
-                                        "passive": {
-                                            "description": "Advertise connected prefixes but do not form adjacencies.",
-                                            "type": "boolean",
-                                            "default": false
-                                        },
-                                        "network-type": {
-                                            "description": "OSPFv3 network type. Affects DR election and hello behavior.",
-                                            "type": "string",
-                                            "enum": [
-                                                "broadcast",
-                                                "point-to-point"
-                                            ]
-                                        },
-                                        "priority": {
-                                            "description": "Router priority for DR/BDR election. 0 prevents becoming DR.",
-                                            "type": "integer",
-                                            "minimum": 0,
-                                            "maximum": 255,
-                                            "default": 1
-                                        }
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "description": "Interface name.",
+                                        "type": "string"
                                     },
-                                    "required": [
-                                        "name",
-                                        "area"
-                                    ]
-                                }
-                            ]
+                                    "area": {
+                                        "description": "Area this interface belongs to.",
+                                        "type": "string"
+                                    },
+                                    "cost": {
+                                        "description": "OSPF cost for this interface. Lower is preferred.",
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 65535
+                                    },
+                                    "passive": {
+                                        "description": "Advertise network but do not form adjacencies.",
+                                        "type": "boolean",
+                                        "default": false
+                                    },
+                                    "network-type": {
+                                        "description": "OSPFv6 network type. Affects DR election and hello behavior.",
+                                        "type": "string",
+                                        "enum": [
+                                            "broadcast",
+                                            "point-to-point",
+                                            "non-broadcast",
+                                            "point-to-multipoint"
+                                        ]
+                                    },
+                                    "priority": {
+                                        "description": "Router priority for DR/BDR election. 0 prevents becoming DR.",
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 255,
+                                        "default": 1
+                                    },
+                                    "authentication": {
+                                        "description": "Interface authentication.",
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "plaintext",
+                                                    "md5"
+                                                ]
+                                            },
+                                            "password": {
+                                                "type": "string"
+                                            },
+                                            "key-id": {
+                                                "description": "Key ID for MD5 authentication.",
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 255
+                                            }
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "name"
+                                ]
+                            }
                         },
                         "redistribute": {
-                            "description": "Import routes from other sources into OSPFv3.",
+                            "description": "Import routes from other sources into OSPF.",
                             "type": "object",
                             "properties": {
                                 "connected": {
-                                    "description": "Redistribute directly connected IPv6 networks.",
+                                    "description": "Redistribute directly connected networks.",
                                     "type": "boolean",
                                     "default": false
                                 },
                                 "static": {
-                                    "description": "Redistribute static IPv6 routes.",
+                                    "description": "Redistribute static routes.",
                                     "type": "boolean",
                                     "default": false
                                 },
                                 "bgp": {
-                                    "description": "Redistribute BGP IPv6 routes.",
+                                    "description": "Redistribute BGP routes.",
                                     "type": "boolean",
                                     "default": false
                                 }
@@ -999,11 +1066,6 @@
                     "description": "RIP routing protocol configuration.",
                     "type": "object",
                     "properties": {
-                        "router-id": {
-                            "description": "RIP router ID.",
-                            "type": "string",
-                            "format": "ipv4"
-                        },
                         "version": {
                             "type": "string",
                             "enum": [
@@ -1056,6 +1118,30 @@
                                 "static": {
                                     "type": "boolean",
                                     "default": false
+                                },
+                                "babel": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "bgp": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "isis": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "kernel": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "nhrp": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "ospf": {
+                                    "type": "boolean",
+                                    "default": false
                                 }
                             }
                         }
@@ -1099,6 +1185,30 @@
                                     "default": false
                                 },
                                 "static": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "babel": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "bgp": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "isis": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "kernel": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "nhrp": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "ospf": {
                                     "type": "boolean",
                                     "default": false
                                 }
@@ -1149,7 +1259,7 @@
                         "type": "object",
                         "properties": {
                             "ipv4-address-groups": {
-                                "description": "Groups of IPv4 addresses or networks.",
+                                "description": "Groups of IPv4 networks.",
                                 "type": "array",
                                 "items": {
                                     "type": "object",
@@ -1159,16 +1269,13 @@
                                             "type": "string"
                                         },
                                         "members": {
-                                            "description": "IPv4 addresses or networks in CIDR notation.",
+                                            "description": "IPv4 networks in CIDR notation.",
                                             "type": "array",
                                             "items": {
-                                                "type": "string"
-                                            },
-                                            "examples": [
-                                                "10.0.0.1",
-                                                "192.168.1.0/24",
-                                                "172.16.0.0/12"
-                                            ]
+                                                "type": "string",
+                                                "format": "uc-cidr4",
+                                                "example": "192.168.1.0/24"
+                                            }
                                         }
                                     },
                                     "required": [
@@ -1178,7 +1285,7 @@
                                 }
                             },
                             "ipv6-address-groups": {
-                                "description": "Groups of IPv6 addresses or networks.",
+                                "description": "Groups of IPv6 networks.",
                                 "type": "array",
                                 "items": {
                                     "type": "object",
@@ -1188,16 +1295,13 @@
                                             "type": "string"
                                         },
                                         "members": {
-                                            "description": "IPv6 addresses or networks in CIDR notation.",
+                                            "description": "IPv6 networks in CIDR notation.",
                                             "type": "array",
                                             "items": {
-                                                "type": "string"
-                                            },
-                                            "examples": [
-                                                "2001:db8::1",
-                                                "2001:db8::/32",
-                                                "fd00::/8"
-                                            ]
+                                                "type": "string",
+                                                "format": "uc-cidr6",
+                                                "example": "2001:db8::/32"
+                                            }
                                         }
                                     },
                                     "required": [
@@ -1217,18 +1321,18 @@
                                             "type": "string"
                                         },
                                         "members": {
-                                            "description": "Ports, port ranges, or service names.",
+                                            "description": "Ports or port ranges.",
                                             "type": "array",
                                             "items": {
-                                                "type": "string"
-                                            },
-                                            "examples": [
-                                                "80",
-                                                "443",
-                                                "8080-8090",
-                                                "http",
-                                                "https"
-                                            ]
+                                                "type": [
+                                                    "integer",
+                                                    "string"
+                                                ],
+                                                "examples": [
+                                                    80,
+                                                    "8080-8090"
+                                                ]
+                                            }
                                         }
                                     },
                                     "required": [
@@ -1254,12 +1358,10 @@
                                             "description": "MAC addresses.",
                                             "type": "array",
                                             "items": {
-                                                "type": "string"
-                                            },
-                                            "examples": [
-                                                "00:11:22:33:44:55",
-                                                "aa:bb:cc:dd:ee:ff"
-                                            ]
+                                                "type": "string",
+                                                "format": "uc-mac",
+                                                "example": "98:e7:9a:27:fe:49"
+                                            }
                                         }
                                     },
                                     "required": [
@@ -1285,12 +1387,9 @@
                                             "description": "Domain names (resolved dynamically).",
                                             "type": "array",
                                             "items": {
-                                                "type": "string"
-                                            },
-                                            "examples": [
-                                                "example.com",
-                                                "*.google.com"
-                                            ]
+                                                "type": "string",
+                                                "format": "hostname"
+                                            }
                                         }
                                     },
                                     "required": [
@@ -1369,13 +1468,16 @@
                                                 "address": {
                                                     "description": "IPv4 address or network (CIDR notation).",
                                                     "type": "string",
-                                                    "format": "uc-cidr4"
+                                                    "format": "uc-cidr4",
+                                                    "example": "192.168.1.0/24"
                                                 },
                                                 "port": {
                                                     "type": "string"
                                                 },
                                                 "mac-address": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "format": "uc-mac",
+                                                    "example": "98:e7:9a:27:fe:49"
                                                 },
                                                 "group": {
                                                     "type": "object",
@@ -1399,9 +1501,10 @@
                                             "type": "object",
                                             "properties": {
                                                 "address": {
-                                                    "description": "IPv4 address or network (CIDR notation).",
+                                                    "description": "IPv4 network (CIDR notation).",
                                                     "type": "string",
-                                                    "format": "uc-cidr4"
+                                                    "format": "uc-cidr4",
+                                                    "example": "10.0.0.0/8"
                                                 },
                                                 "port": {
                                                     "type": "string"
@@ -1588,15 +1691,18 @@
                                             "type": "object",
                                             "properties": {
                                                 "address": {
-                                                    "description": "IPv6 address or network (CIDR notation).",
+                                                    "description": "IPv6 network (CIDR notation).",
                                                     "type": "string",
-                                                    "format": "uc-cidr6"
+                                                    "format": "uc-cidr6",
+                                                    "example": "2001:db8::/32"
                                                 },
                                                 "port": {
                                                     "type": "string"
                                                 },
                                                 "mac-address": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "format": "uc-mac",
+                                                    "example": "98:e7:9a:27:fe:49"
                                                 },
                                                 "group": {
                                                     "type": "object",
@@ -1620,9 +1726,10 @@
                                             "type": "object",
                                             "properties": {
                                                 "address": {
-                                                    "description": "IPv6 address or network (CIDR notation).",
+                                                    "description": "IPv6 network (CIDR notation).",
                                                     "type": "string",
-                                                    "format": "ipv6-prefix"
+                                                    "format": "uc-cidr6",
+                                                    "example": "2001:db8::/32"
                                                 },
                                                 "port": {
                                                     "type": "string"
@@ -1798,7 +1905,9 @@
                                             "properties": {
                                                 "mac-address": {
                                                     "description": "Source MAC address.",
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "format": "uc-mac",
+                                                    "example": "98:e7:9a:27:fe:49"
                                                 },
                                                 "mac-group": {
                                                     "description": "Reference to MAC address group.",
@@ -1815,7 +1924,9 @@
                                             "properties": {
                                                 "mac-address": {
                                                     "description": "Destination MAC address.",
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "format": "uc-mac",
+                                                    "example": "98:e7:9a:27:fe:49"
                                                 },
                                                 "mac-group": {
                                                     "description": "Reference to MAC address group.",
@@ -1982,18 +2093,20 @@
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "description": "Source IPv4 address, network, or address range.",
+                                        "description": "Source IPv4 network.",
                                         "type": "string",
-                                        "examples": [
-                                            "192.168.1.100",
-                                            "192.168.1.0/24"
-                                        ]
+                                        "format": "uc-cidr4",
+                                        "example": "192.168.1.0/24"
                                     },
                                     "port": {
                                         "description": "Source port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "80",
+                                            80,
                                             "1024-65535"
                                         ]
                                     },
@@ -2019,19 +2132,21 @@
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "description": "Destination IPv4 address, network, or address range.",
+                                        "description": "Destination IPv4 network.",
                                         "type": "string",
-                                        "examples": [
-                                            "10.0.0.1",
-                                            "10.0.0.0/8"
-                                        ]
+                                        "format": "uc-cidr4",
+                                        "example": "192.168.1.0/24"
                                     },
                                     "port": {
                                         "description": "Destination port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "443",
-                                            "8000-9000"
+                                            80,
+                                            "1024-65535"
                                         ]
                                     },
                                     "group": {
@@ -2061,10 +2176,14 @@
                                     },
                                     "port": {
                                         "description": "Translated source port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "8080",
-                                            "10000-20000"
+                                            80,
+                                            "1024-65535"
                                         ]
                                     }
                                 }
@@ -2106,18 +2225,20 @@
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "description": "Source IPv4 address, network, or address range.",
+                                        "description": "Source IPv4 network.",
                                         "type": "string",
-                                        "examples": [
-                                            "192.168.1.100",
-                                            "192.168.1.0/24"
-                                        ]
+                                        "format": "uc-cidr4",
+                                        "example": "192.168.1.0/24"
                                     },
                                     "port": {
                                         "description": "Source port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "80",
+                                            80,
                                             "1024-65535"
                                         ]
                                     },
@@ -2143,19 +2264,21 @@
                                 "type": "object",
                                 "properties": {
                                     "address": {
-                                        "description": "Original destination IPv4 address, network, or address range.",
+                                        "description": "Original destination IPv4 network.",
                                         "type": "string",
-                                        "examples": [
-                                            "203.0.113.1",
-                                            "203.0.113.0/24"
-                                        ]
+                                        "format": "uc-cidr4",
+                                        "example": "192.168.1.0/24"
                                     },
                                     "port": {
                                         "description": "Original destination port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "443",
-                                            "8000-9000"
+                                            80,
+                                            "1024-65535"
                                         ]
                                     },
                                     "group": {
@@ -2182,16 +2305,19 @@
                                     "address": {
                                         "description": "Translated destination address.",
                                         "type": "string",
-                                        "examples": [
-                                            "192.168.1.10"
-                                        ]
+                                        "format": "ipv4",
+                                        "example": "192.168.1.10"
                                     },
                                     "port": {
                                         "description": "Translated destination port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "8080",
-                                            "3000-4000"
+                                            80,
+                                            "1024-65535"
                                         ]
                                     }
                                 }
@@ -2236,15 +2362,17 @@
                                         "description": "Source IPv6 prefix.",
                                         "type": "string",
                                         "format": "uc-cidr6",
-                                        "examples": [
-                                            "2001:db8:1::/64"
-                                        ]
+                                        "example": "2001:db8:1::/64"
                                     },
                                     "port": {
                                         "description": "Source port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "80",
+                                            80,
                                             "1024-65535"
                                         ]
                                     },
@@ -2273,16 +2401,18 @@
                                         "description": "Destination IPv6 prefix.",
                                         "type": "string",
                                         "format": "uc-cidr6",
-                                        "examples": [
-                                            "2001:db8:2::/64"
-                                        ]
+                                        "example": "2001:db8:2::/64"
                                     },
                                     "port": {
                                         "description": "Destination port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "443",
-                                            "8000-9000"
+                                            80,
+                                            "1024-65535"
                                         ]
                                     },
                                     "group": {
@@ -2310,16 +2440,18 @@
                                         "description": "Translated source IPv6 prefix.",
                                         "type": "string",
                                         "format": "uc-cidr6",
-                                        "examples": [
-                                            "2001:db8:a::/64"
-                                        ]
+                                        "example": "2001:db8:a::/64"
                                     },
                                     "port": {
                                         "description": "Translated source port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "8080",
-                                            "10000-20000"
+                                            80,
+                                            "1024-65535"
                                         ]
                                     }
                                 }
@@ -2364,15 +2496,17 @@
                                         "description": "Source IPv6 prefix.",
                                         "type": "string",
                                         "format": "uc-cidr6",
-                                        "examples": [
-                                            "2001:db8:1::/64"
-                                        ]
+                                        "example": "2001:db8:1::/64"
                                     },
                                     "port": {
                                         "description": "Source port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "80",
+                                            80,
                                             "1024-65535"
                                         ]
                                     },
@@ -2401,16 +2535,18 @@
                                         "description": "Original destination IPv6 prefix.",
                                         "type": "string",
                                         "format": "uc-cidr6",
-                                        "examples": [
-                                            "2001:db8:2::/64"
-                                        ]
+                                        "example": "2001:db8:2::/64"
                                     },
                                     "port": {
                                         "description": "Original destination port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "443",
-                                            "8000-9000"
+                                            80,
+                                            "1024-65535"
                                         ]
                                     },
                                     "group": {
@@ -2438,16 +2574,18 @@
                                         "description": "Translated destination IPv6 prefix.",
                                         "type": "string",
                                         "format": "uc-cidr6",
-                                        "examples": [
-                                            "2001:db8:a::/64"
-                                        ]
+                                        "example": "2001:db8:a::/64"
                                     },
                                     "port": {
                                         "description": "Translated destination port or port range.",
-                                        "type": "string",
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
                                         "examples": [
-                                            "8080",
-                                            "3000-4000"
+                                            80,
+                                            "1024-65535"
                                         ]
                                     }
                                 }
@@ -2478,9 +2616,7 @@
                                         "description": "IPv6 source prefix to match.",
                                         "type": "string",
                                         "format": "uc-cidr6",
-                                        "examples": [
-                                            "2001:db8:1::/64"
-                                        ]
+                                        "example": "2001:db8:1::/64"
                                     }
                                 }
                             },
@@ -2492,10 +2628,7 @@
                                         "description": "Well-known prefix or custom NAT64 prefix.",
                                         "type": "string",
                                         "format": "uc-cidr6",
-                                        "default": "64:ff9b::/96",
-                                        "examples": [
-                                            "64:ff9b::/96"
-                                        ]
+                                        "default": "64:ff9b::/96"
                                     },
                                     "ipv4-pool": {
                                         "description": "IPv4 address pool for translated traffic.",
@@ -2510,8 +2643,13 @@
                                                 ]
                                             },
                                             "port-range": {
-                                                "type": "string",
+                                                "type": [
+                                                    "integer",
+                                                    "string"
+                                                ],
+                                                "format": "uc-portrange",
                                                 "examples": [
+                                                    80,
                                                     "1024-65535"
                                                 ]
                                             }
@@ -3500,7 +3638,8 @@
                                                             "mac-address": {
                                                                 "description": "MAC address of the client.",
                                                                 "type": "string",
-                                                                "format": "uc-mac"
+                                                                "format": "uc-mac",
+                                                                "example": "98:e7:9a:27:fe:49"
                                                             },
                                                             "ip-address": {
                                                                 "description": "IP address to assign to this client.",
@@ -3925,9 +4064,7 @@
                                     "bandwidth": {
                                         "description": "Available bandwidth.",
                                         "type": "string",
-                                        "examles": [
-                                            "100mbit"
-                                        ]
+                                        "example": "100mbit"
                                     },
                                     "classes": {
                                         "type": "array",
@@ -3942,23 +4079,17 @@
                                                 "bandwidth": {
                                                     "description": "Guarantee bandwidth (in percentage) of the class.",
                                                     "type": "string",
-                                                    "examles": [
-                                                        "40%"
-                                                    ]
+                                                    "example": "40%"
                                                 },
                                                 "burst": {
                                                     "description": "Size of token bucket (in bytes), which will be available to be sent at ceiling speed.",
                                                     "type": "string",
-                                                    "examles": [
-                                                        "15Kb"
-                                                    ]
+                                                    "example": "15Kb"
                                                 },
                                                 "ceiling": {
                                                     "description": "Maximum speed possible for this class. Default is bandwidth value.",
                                                     "type": "string",
-                                                    "examles": [
-                                                        "100mbit"
-                                                    ]
+                                                    "example": "100mbit"
                                                 },
                                                 "priority": {
                                                     "description": "Priority for usage of available bandwidth once guarantees have been met. The lower the priority number, the higher the priority.",

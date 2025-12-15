@@ -74,16 +74,12 @@
                 "router-id": {
                     "type": "string",
                     "format": "ipv4",
-                    "examples": [
-                        "10.0.0.1"
-                    ]
+                    "example": "10.0.0.1"
                 },
                 "domain-name": {
                     "type": "string",
                     "format": "hostname",
-                    "examples": [
-                        "example.local"
-                    ]
+                    "example": "example.local"
                 }
             }
         },
@@ -222,10 +218,7 @@
                     "items": {
                         "type": "string",
                         "format": "uc-cidr4"
-                    },
-                    "examples": [
-                        "192.168.1.1/24"
-                    ]
+                    }
                 },
                 "gateway": {
                     "type": "string",
@@ -251,10 +244,7 @@
                     "items": {
                         "type": "string",
                         "format": "uc-cidr6"
-                    },
-                    "examples": [
-                        "2001:db8::1/64"
-                    ]
+                    }
                 },
                 "gateway": {
                     "type": "string",
@@ -294,9 +284,8 @@
                 },
                 "mac-address": {
                     "type": "string",
-                    "example": [
-                        "98:e7:9a:27:fe:49"
-                    ]
+                    "format": "uc-mac",
+                    "example": "98:e7:9a:27:fe:49"
                 },
                 "mtu": {
                     "type": "integer",
@@ -323,51 +312,73 @@
                 }
             }
         },
-        "routing.static": {
+        "routing.static.ipv4": {
             "type": "object",
             "properties": {
-                "routes": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "destination": {
-                                "type": "string",
-                                "format": "uc-cidr"
-                            },
-                            "next-hop": {
-                                "type": "string",
-                                "format": "uc-ip"
-                            },
-                            "interface": {
-                                "type": "string"
-                            },
-                            "distance": {
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 255,
-                                "default": 1
-                            },
-                            "action": {
-                                "type": "string",
-                                "enum": [
-                                    "reject",
-                                    "blackhole"
-                                ]
-                            },
-                            "table": {
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 200
-                            }
-                        },
-                        "required": [
-                            "destination",
-                            "next-hop"
-                        ]
-                    }
+                "destination": {
+                    "type": "string",
+                    "format": "uc-cidr4"
+                },
+                "next-hop": {
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "interface": {
+                    "type": "string"
+                },
+                "distance": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 255,
+                    "default": 1
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "reject",
+                        "blackhole"
+                    ]
                 }
-            }
+            },
+            "required": [
+                "destination",
+                "next-hop"
+            ]
+        },
+        "routing.static.ipv6": {
+            "type": "object",
+            "properties": {
+                "destination": {
+                    "type": "string",
+                    "format": "uc-cidr6"
+                },
+                "next-hop": {
+                    "type": "string",
+                    "format": "ipv6"
+                },
+                "interface": {
+                    "type": "string"
+                },
+                "distance": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 255,
+                    "default": 1
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "reject",
+                        "blackhole"
+                    ]
+                }
+            },
+            "required": [
+                "destination",
+                "next-hop"
+            ]
         },
         "routing.policy": {
             "type": "object",
@@ -406,15 +417,23 @@
                                         "format": "uc-cidr"
                                     },
                                     "port": {
-                                        "type": "string",
-                                        "format": "uc-portrange"
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
+                                        "examples": [
+                                            2345,
+                                            "1024-65535"
+                                        ]
                                     },
                                     "group": {
                                         "type": "string"
                                     },
                                     "mac-address": {
                                         "type": "string",
-                                        "format": "uc-mac"
+                                        "format": "uc-mac",
+                                        "example": "98:e7:9a:27:fe:49"
                                     }
                                 }
                             },
@@ -426,8 +445,15 @@
                                         "format": "uc-cidr"
                                     },
                                     "port": {
-                                        "type": "string",
-                                        "format": "uc-portrange"
+                                        "type": [
+                                            "integer",
+                                            "string"
+                                        ],
+                                        "format": "uc-portrange",
+                                        "examples": [
+                                            2345,
+                                            "1024-65535"
+                                        ]
                                     },
                                     "group": {
                                         "type": "string"
@@ -472,11 +498,6 @@
                                     "drop": {
                                         "type": "boolean",
                                         "default": false
-                                    },
-                                    "use-table": {
-                                        "type": "integer",
-                                        "minimum": 0,
-                                        "maximum": 200
                                     },
                                     "next-hop": {
                                         "type": "string",
@@ -529,6 +550,11 @@
                                 "type": "string",
                                 "format": "uc-ip"
                             },
+                            "port": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 65535
+                            },
                             "remote-as": {
                                 "type": "integer",
                                 "minimum": 1,
@@ -563,7 +589,9 @@
                                             "type": "string",
                                             "enum": [
                                                 "ipv4-unicast",
-                                                "ipv6-unicast"
+                                                "ipv6-unicast",
+                                                "ipv4-multicast",
+                                                "ipv6-multicast"
                                             ]
                                         },
                                         "nexthop-self": {
@@ -600,7 +628,9 @@
                                 "type": "string",
                                 "enum": [
                                     "ipv4-unicast",
-                                    "ipv6-unicast"
+                                    "ipv6-unicast",
+                                    "ipv4-multicast",
+                                    "ipv6-multicast"
                                 ]
                             },
                             "network": {
@@ -623,7 +653,9 @@
                                 "type": "string",
                                 "enum": [
                                     "ipv4-unicast",
-                                    "ipv6-unicast"
+                                    "ipv6-unicast",
+                                    "ipv4-multicast",
+                                    "ipv6-multicast"
                                 ]
                             },
                             "connected": {
@@ -813,94 +845,105 @@
         "routing.ospfv3": {
             "type": "object",
             "properties": {
-                "router-id": {
-                    "type": "string",
-                    "format": "ipv4"
-                },
                 "areas": {
                     "type": "array",
-                    "items": [
-                        {
-                            "type": "object",
-                            "properties": {
-                                "area-id": {
-                                    "description": "Area identifier.",
-                                    "type": "string",
-                                    "examples": [
-                                        "0",
-                                        "0.0.0.0",
-                                        "1"
-                                    ]
-                                },
-                                "area-type": {
-                                    "description": "Area type. Stub/NSSA areas reduce LSA flooding.",
-                                    "type": "string",
-                                    "enum": [
-                                        "normal",
-                                        "stub",
-                                        "nssa"
-                                    ],
-                                    "default": "normal"
-                                },
-                                "no-summary": {
-                                    "description": "For stub/NSSA areas, block inter-area routes (totally stubby).",
-                                    "type": "boolean",
-                                    "default": false
-                                }
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "area-id": {
+                                "type": "string",
+                                "examples": [
+                                    "0",
+                                    "1",
+                                    "0.0.0.1"
+                                ]
                             },
-                            "required": [
-                                "area-id"
-                            ]
-                        }
-                    ]
+                            "area-type": {
+                                "type": "string",
+                                "enum": [
+                                    "normal",
+                                    "stub",
+                                    "nssa"
+                                ],
+                                "default": "normal"
+                            },
+                            "no-summary": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "networks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "format": "uc-cidr6"
+                                }
+                            }
+                        },
+                        "required": [
+                            "area-id"
+                        ]
+                    }
                 },
                 "interfaces": {
                     "type": "array",
-                    "items": [
-                        {
-                            "type": "object",
-                            "properties": {
-                                "name": {
-                                    "description": "Interface name.",
-                                    "type": "string"
-                                },
-                                "area": {
-                                    "description": "Area this interface belongs to.",
-                                    "type": "string"
-                                },
-                                "cost": {
-                                    "description": "OSPFv3 cost for this interface. Lower is preferred.",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 65535
-                                },
-                                "passive": {
-                                    "description": "Advertise connected prefixes but do not form adjacencies.",
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "network-type": {
-                                    "description": "OSPFv3 network type. Affects DR election and hello behavior.",
-                                    "type": "string",
-                                    "enum": [
-                                        "broadcast",
-                                        "point-to-point"
-                                    ]
-                                },
-                                "priority": {
-                                    "description": "Router priority for DR/BDR election. 0 prevents becoming DR.",
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 255,
-                                    "default": 1
-                                }
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
                             },
-                            "required": [
-                                "name",
-                                "area"
-                            ]
-                        }
-                    ]
+                            "area": {
+                                "type": "string"
+                            },
+                            "cost": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 65535
+                            },
+                            "passive": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "network-type": {
+                                "type": "string",
+                                "enum": [
+                                    "broadcast",
+                                    "point-to-point",
+                                    "non-broadcast",
+                                    "point-to-multipoint"
+                                ]
+                            },
+                            "priority": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255,
+                                "default": 1
+                            },
+                            "authentication": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "plaintext",
+                                            "md5"
+                                        ]
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "key-id": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 255
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
                 },
                 "redistribute": {
                     "type": "object",
@@ -927,10 +970,6 @@
         "routing.rip": {
             "type": "object",
             "properties": {
-                "router-id": {
-                    "type": "string",
-                    "format": "ipv4"
-                },
                 "version": {
                     "type": "string",
                     "enum": [
@@ -981,6 +1020,30 @@
                         "static": {
                             "type": "boolean",
                             "default": false
+                        },
+                        "babel": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "bgp": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "isis": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "kernel": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "nhrp": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "ospf": {
+                            "type": "boolean",
+                            "default": false
                         }
                     }
                 }
@@ -1024,6 +1087,30 @@
                         "static": {
                             "type": "boolean",
                             "default": false
+                        },
+                        "babel": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "bgp": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "isis": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "kernel": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "nhrp": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "ospf": {
+                            "type": "boolean",
+                            "default": false
                         }
                     }
                 }
@@ -1033,7 +1120,21 @@
             "type": "object",
             "properties": {
                 "static": {
-                    "$ref": "#/$defs/routing.static"
+                    "type": "object",
+                    "properties": {
+                        "ipv4-rules": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/$defs/routing.static.ipv4"
+                            }
+                        },
+                        "ipv6-rules": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/$defs/routing.static.ipv6"
+                            }
+                        }
+                    }
                 },
                 "policies": {
                     "type": "array",
@@ -1072,13 +1173,10 @@
                             "members": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                },
-                                "examples": [
-                                    "10.0.0.1",
-                                    "192.168.1.0/24",
-                                    "172.16.0.0/12"
-                                ]
+                                    "type": "string",
+                                    "format": "uc-cidr4",
+                                    "example": "192.168.1.0/24"
+                                }
                             }
                         },
                         "required": [
@@ -1098,13 +1196,10 @@
                             "members": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                },
-                                "examples": [
-                                    "2001:db8::1",
-                                    "2001:db8::/32",
-                                    "fd00::/8"
-                                ]
+                                    "type": "string",
+                                    "format": "uc-cidr6",
+                                    "example": "2001:db8::/32"
+                                }
                             }
                         },
                         "required": [
@@ -1124,15 +1219,15 @@
                             "members": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                },
-                                "examples": [
-                                    "80",
-                                    "443",
-                                    "8080-8090",
-                                    "http",
-                                    "https"
-                                ]
+                                    "type": [
+                                        "integer",
+                                        "string"
+                                    ],
+                                    "examples": [
+                                        80,
+                                        "8080-8090"
+                                    ]
+                                }
                             }
                         },
                         "required": [
@@ -1152,12 +1247,10 @@
                             "members": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                },
-                                "examples": [
-                                    "00:11:22:33:44:55",
-                                    "aa:bb:cc:dd:ee:ff"
-                                ]
+                                    "type": "string",
+                                    "format": "uc-mac",
+                                    "example": "98:e7:9a:27:fe:49"
+                                }
                             }
                         },
                         "required": [
@@ -1177,12 +1270,9 @@
                             "members": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                },
-                                "examples": [
-                                    "example.com",
-                                    "*.google.com"
-                                ]
+                                    "type": "string",
+                                    "format": "hostname"
+                                }
                             }
                         },
                         "required": [
@@ -1227,13 +1317,16 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "format": "uc-cidr4"
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
                         },
                         "port": {
                             "type": "string"
                         },
                         "mac-address": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uc-mac",
+                            "example": "98:e7:9a:27:fe:49"
                         },
                         "group": {
                             "type": "object",
@@ -1257,7 +1350,8 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "format": "uc-cidr4"
+                            "format": "uc-cidr4",
+                            "example": "10.0.0.0/8"
                         },
                         "port": {
                             "type": "string"
@@ -1435,13 +1529,16 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "format": "uc-cidr6"
+                            "format": "uc-cidr6",
+                            "example": "2001:db8::/32"
                         },
                         "port": {
                             "type": "string"
                         },
                         "mac-address": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uc-mac",
+                            "example": "98:e7:9a:27:fe:49"
                         },
                         "group": {
                             "type": "object",
@@ -1465,7 +1562,8 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "format": "ipv6-prefix"
+                            "format": "uc-cidr6",
+                            "example": "2001:db8::/32"
                         },
                         "port": {
                             "type": "string"
@@ -1635,7 +1733,9 @@
                     "type": "object",
                     "properties": {
                         "mac-address": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uc-mac",
+                            "example": "98:e7:9a:27:fe:49"
                         },
                         "mac-group": {
                             "type": "string"
@@ -1650,7 +1750,9 @@
                     "type": "object",
                     "properties": {
                         "mac-address": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uc-mac",
+                            "example": "98:e7:9a:27:fe:49"
                         },
                         "mac-group": {
                             "type": "string"
@@ -1874,15 +1976,17 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "examples": [
-                                "192.168.1.100",
-                                "192.168.1.0/24"
-                            ]
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "80",
+                                80,
                                 "1024-65535"
                             ]
                         },
@@ -1907,16 +2011,18 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "examples": [
-                                "10.0.0.1",
-                                "10.0.0.0/8"
-                            ]
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "443",
-                                "8000-9000"
+                                80,
+                                "1024-65535"
                             ]
                         },
                         "group": {
@@ -1942,10 +2048,14 @@
                             "type": "string"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "8080",
-                                "10000-20000"
+                                80,
+                                "1024-65535"
                             ]
                         }
                     }
@@ -1979,15 +2089,17 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "examples": [
-                                "192.168.1.100",
-                                "192.168.1.0/24"
-                            ]
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "80",
+                                80,
                                 "1024-65535"
                             ]
                         },
@@ -2012,16 +2124,18 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "examples": [
-                                "203.0.113.1",
-                                "203.0.113.0/24"
-                            ]
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "443",
-                                "8000-9000"
+                                80,
+                                "1024-65535"
                             ]
                         },
                         "group": {
@@ -2045,15 +2159,18 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "examples": [
-                                "192.168.1.10"
-                            ]
+                            "format": "ipv4",
+                            "example": "192.168.1.10"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "8080",
-                                "3000-4000"
+                                80,
+                                "1024-65535"
                             ]
                         }
                     }
@@ -2088,14 +2205,16 @@
                         "prefix": {
                             "type": "string",
                             "format": "uc-cidr6",
-                            "examples": [
-                                "2001:db8:1::/64"
-                            ]
+                            "example": "2001:db8:1::/64"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "80",
+                                80,
                                 "1024-65535"
                             ]
                         },
@@ -2121,15 +2240,17 @@
                         "prefix": {
                             "type": "string",
                             "format": "uc-cidr6",
-                            "examples": [
-                                "2001:db8:2::/64"
-                            ]
+                            "example": "2001:db8:2::/64"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "443",
-                                "8000-9000"
+                                80,
+                                "1024-65535"
                             ]
                         },
                         "group": {
@@ -2154,15 +2275,17 @@
                         "prefix": {
                             "type": "string",
                             "format": "uc-cidr6",
-                            "examples": [
-                                "2001:db8:a::/64"
-                            ]
+                            "example": "2001:db8:a::/64"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "8080",
-                                "10000-20000"
+                                80,
+                                "1024-65535"
                             ]
                         }
                     }
@@ -2197,14 +2320,16 @@
                         "prefix": {
                             "type": "string",
                             "format": "uc-cidr6",
-                            "examples": [
-                                "2001:db8:1::/64"
-                            ]
+                            "example": "2001:db8:1::/64"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "80",
+                                80,
                                 "1024-65535"
                             ]
                         },
@@ -2230,15 +2355,17 @@
                         "prefix": {
                             "type": "string",
                             "format": "uc-cidr6",
-                            "examples": [
-                                "2001:db8:2::/64"
-                            ]
+                            "example": "2001:db8:2::/64"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "443",
-                                "8000-9000"
+                                80,
+                                "1024-65535"
                             ]
                         },
                         "group": {
@@ -2263,15 +2390,17 @@
                         "prefix": {
                             "type": "string",
                             "format": "uc-cidr6",
-                            "examples": [
-                                "2001:db8:a::/64"
-                            ]
+                            "example": "2001:db8:a::/64"
                         },
                         "port": {
-                            "type": "string",
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
                             "examples": [
-                                "8080",
-                                "3000-4000"
+                                80,
+                                "1024-65535"
                             ]
                         }
                     }
@@ -2294,9 +2423,7 @@
                         "prefix": {
                             "type": "string",
                             "format": "uc-cidr6",
-                            "examples": [
-                                "2001:db8:1::/64"
-                            ]
+                            "example": "2001:db8:1::/64"
                         }
                     }
                 },
@@ -2306,10 +2433,7 @@
                         "ipv6-prefix": {
                             "type": "string",
                             "format": "uc-cidr6",
-                            "default": "64:ff9b::/96",
-                            "examples": [
-                                "64:ff9b::/96"
-                            ]
+                            "default": "64:ff9b::/96"
                         },
                         "ipv4-pool": {
                             "type": "object",
@@ -2322,8 +2446,13 @@
                                     ]
                                 },
                                 "port-range": {
-                                    "type": "string",
+                                    "type": [
+                                        "integer",
+                                        "string"
+                                    ],
+                                    "format": "uc-portrange",
                                     "examples": [
+                                        80,
                                         "1024-65535"
                                     ]
                                 }
@@ -3248,7 +3377,8 @@
                                                     },
                                                     "mac-address": {
                                                         "type": "string",
-                                                        "format": "uc-mac"
+                                                        "format": "uc-mac",
+                                                        "example": "98:e7:9a:27:fe:49"
                                                     },
                                                     "ip-address": {
                                                         "type": "string",
@@ -3612,9 +3742,7 @@
                             },
                             "bandwidth": {
                                 "type": "string",
-                                "examles": [
-                                    "100mbit"
-                                ]
+                                "example": "100mbit"
                             },
                             "classes": {
                                 "type": "array",
@@ -3628,21 +3756,15 @@
                                         },
                                         "bandwidth": {
                                             "type": "string",
-                                            "examles": [
-                                                "40%"
-                                            ]
+                                            "example": "40%"
                                         },
                                         "burst": {
                                             "type": "string",
-                                            "examles": [
-                                                "15Kb"
-                                            ]
+                                            "example": "15Kb"
                                         },
                                         "ceiling": {
                                             "type": "string",
-                                            "examles": [
-                                                "100mbit"
-                                            ]
+                                            "example": "100mbit"
                                         },
                                         "priority": {
                                             "type": "integer",
