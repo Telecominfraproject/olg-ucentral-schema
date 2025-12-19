@@ -1,0 +1,152 @@
+Format Validators from generate-reader.uc
+==========================================
+
+1. uc-cidr4
+   Description: IPv4 CIDR
+   Validation Code:
+     let m = match(value, /^(auto|[0-9.]+)\/([0-9]+)$/);
+     return m ? ((m[1] == "auto" || length(iptoarr(m[1])) == 4) && +m[2] <= 32) : false;
+   Restrictions:
+     - Must match pattern: (auto|IPv4_address)/prefix
+     - IPv4 address must produce 4-byte array from iptoarr()
+     - Prefix must be <= 32
+
+2. uc-cidr6
+   Description: IPv6 CIDR
+   Validation Code:
+     let m = match(value, /^(auto|[0-9a-fA-F:.]+)\/([0-9]+)$/);
+     return m ? ((m[1] == "auto" || length(iptoarr(m[1])) == 16) && +m[2] <= 128) : false;
+   Restrictions:
+     - Must match pattern: (auto|IPv6_address)/prefix
+     - IPv6 address must produce 16-byte array from iptoarr()
+     - Prefix must be <= 128
+
+3. uc-cidr
+   Description: IPv4 or IPv6 CIDR
+   Validation Code:
+     let m = match(value, /^(auto|[0-9a-fA-F:.]+)\/([0-9]+)$/);
+     if (!m) return false;
+     let l = (m[1] == "auto") ? 16 : length(iptoarr(m[1]));
+     return (l > 0 && +m[2] <= (l * 8));
+   Restrictions:
+     - Must match pattern: (auto|IP_address)/prefix
+     - "auto" defaults to IPv6 (16 bytes)
+     - Prefix must be <= (address_length * 8)
+     - IPv4: prefix <= 32, IPv6: prefix <= 128
+
+4. uc-mac
+   Description: MAC address
+   Validation Code:
+     return match(value, /^[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]$/i);
+   Restrictions:
+     - Must be exactly 6 colon-separated hex octets
+     - Format: xx:xx:xx:xx:xx:xx
+     - Case-insensitive
+
+5. uc-mobility
+   Description: Mobility Domain
+   Validation Code:
+     return match(value, /^[0-9a-f][0-9a-f][0-9a-f][0-9a-f]$/i);
+   Restrictions:
+     - Must be exactly 4 hexadecimal characters
+     - Case-insensitive
+
+6. uc-host
+   Description: hostname or IP address
+   Validation Code:
+     if (length(iptoarr(value)) != 0) return true;
+     if (length(value) > 255) return false;
+     let labels = split(value, ".");
+     return (length(filter(labels, label => !match(label, /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])$/))) == 0 && length(labels) > 0);
+   Restrictions:
+     - Valid IP address (IPv4 or IPv6), OR
+     - Hostname with:
+       - Total length <= 255 characters
+       - At least one label
+       - Each label: 1-63 alphanumeric chars, hyphens allowed in middle
+
+7. uc-timeout
+   Description: timeout value
+   Validation Code:
+     return match(value, /^[0-9]+[smhdw]$/);
+   Restrictions:
+     - Format: number followed by time unit
+     - Valid units: s (seconds), m (minutes), h (hours), d (days), w (weeks)
+
+8. uc-base64
+   Description: base64 encoded data
+   Validation Code:
+     return b64dec(value) != null;
+   Restrictions:
+     - Must be valid base64 that can be decoded by b64dec()
+
+9. uc-portrange
+   Description: network port range
+   Validation Code:
+     let ports = match(value, /^([0-9]|[1-9][0-9]*)(-([0-9]|[1-9][0-9]*))?$/);
+     if (!ports) return false;
+     let min = +ports[1], max = ports[2] ? +ports[3] : min;
+     return (min <= 65535 && max <= 65535 && max >= min);
+   Restrictions:
+     - Format: single port OR port-port range
+     - Both ports must be 0-65535
+     - In ranges, max must be >= min
+
+10. hostname
+    Description: hostname
+    Validation Code:
+      if (length(value) > 255) return false;
+      let labels = split(value, ".");
+      return (length(filter(labels, label => !match(label, /^([a-zA-Z0-9]{1,2}|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])$/))) == 0 && length(labels) > 0);
+    Restrictions:
+      - Total length <= 255 characters
+      - At least one label (dot-separated)
+      - Each label: 1-2 alphanumeric chars OR 1-63 chars starting/ending alphanumeric
+
+11. uc-fqdn
+    Description: fully qualified domain name
+    Validation Code:
+      if (length(value) > 255) return false;
+      let labels = split(value, ".");
+      return (length(filter(labels, label => !match(label, /^([a-zA-Z0-9]{1,2}|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])$/))) == 0 && length(labels) > 1);
+    Restrictions:
+      - Total length <= 255 characters
+      - At least TWO labels (must contain at least one dot)
+      - Each label: 1-2 alphanumeric chars OR 1-63 chars starting/ending alphanumeric
+
+12. uc-ip
+    Description: IPv4 or IPv6 address
+    Validation Code:
+      return (length(iptoarr(value)) == 4 || length(iptoarr(value)) == 16);
+    Restrictions:
+      - Must be valid IPv4 (4-byte array) or IPv6 (16-byte array)
+
+13. ipv4
+    Description: IPv4 address
+    Validation Code:
+      return (length(iptoarr(value)) == 4);
+    Restrictions:
+      - Must produce exactly 4-byte array from iptoarr()
+
+14. ipv6
+    Description: IPv6 address
+    Validation Code:
+      return (length(iptoarr(value)) == 16);
+    Restrictions:
+      - Must produce exactly 16-byte array from iptoarr()
+
+15. uri
+    Description: URI
+    Validation Code:
+      if (index(value, "data:") == 0) return true;
+      let m = match(value, /^[a-z+-]+:\/\/([^\/]+).*$/);
+      if (!m) return false;
+      if (length(iptoarr(m[1])) != 0) return true;
+      if (length(m[1]) > 255) return false;
+      let labels = split(m[1], ".");
+      return (length(filter(labels, label => !match(label, /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])$/))) == 0 && length(labels) > 0);
+    Restrictions:
+      - Data URIs: must start with "data:"
+      - Other URIs: must match scheme://host format
+        - Scheme: lowercase letters, plus, or hyphen
+        - Host: valid IP address OR valid hostname (<=255 chars, valid labels)

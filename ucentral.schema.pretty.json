@@ -4042,12 +4042,12 @@
                             "password": {
                                 "type": "string"
                             }
-                        },
-                        "required": [
-                            "user",
-                            "password"
-                        ]
-                    }
+                        }
+                    },
+                    "required": [
+                        "user",
+                        "password"
+                    ]
                 },
                 "radius": {
                     "description": "RADIUS server configuration for authentication.",
@@ -4060,17 +4060,13 @@
                         "port": {
                             "type": "integer",
                             "maximum": 65535
-                        },
-                        "required": [
-                            "user",
-                            "password"
-                        ]
+                        }
                     }
-                },
-                "required": [
-                    "auth-mode"
-                ]
-            }
+                }
+            },
+            "required": [
+                "auth-mode"
+            ]
         },
         "service.web-proxy": {
             "description": "Proxy server with cache and filtering.",
@@ -4147,11 +4143,11 @@
                     "description": "Enable uploads, else TFTP server will act as a read-only server.",
                     "type": "boolean",
                     "default": false
-                },
-                "required": [
-                    "directory"
-                ]
-            }
+                }
+            },
+            "required": [
+                "directory"
+            ]
         },
         "service.igmp-proxy": {
             "description": "IGMP-Proxy configuration.",

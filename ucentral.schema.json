@@ -3610,12 +3610,12 @@
                             "password": {
                                 "type": "string"
                             }
-                        },
-                        "required": [
-                            "user",
-                            "password"
-                        ]
-                    }
+                        }
+                    },
+                    "required": [
+                        "user",
+                        "password"
+                    ]
                 },
                 "radius": {
                     "type": "object",
@@ -3627,17 +3627,13 @@
                         "port": {
                             "type": "integer",
                             "maximum": 65535
-                        },
-                        "required": [
-                            "user",
-                            "password"
-                        ]
+                        }
                     }
-                },
-                "required": [
-                    "auth-mode"
-                ]
-            }
+                }
+            },
+            "required": [
+                "auth-mode"
+            ]
         },
         "service.web-proxy": {
             "type": "object",
@@ -3702,11 +3698,11 @@
                 "allow-upload": {
                     "type": "boolean",
                     "default": false
-                },
-                "required": [
-                    "directory"
-                ]
-            }
+                }
+            },
+            "required": [
+                "directory"
+            ]
         },
         "service.igmp-proxy": {
             "type": "object",

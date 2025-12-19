@@ -49,7 +49,7 @@ properties:
           type: string
         password:
           type: string
-      required:
+    required:
       - user
       - password
   radius:
@@ -62,9 +62,6 @@ properties:
       port:
         type: integer
         maximum: 65535
-      required:
-      - user
-      - password
-  required:
+required:
   - auth-mode
   

@@ -12,5 +12,5 @@ properties:
     description: Enable uploads, else TFTP server will act as a read-only server.
     type: boolean
     default: false
-  required:
+required:
   - directory
