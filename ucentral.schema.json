@@ -3610,12 +3610,12 @@
                             "password": {
                                 "type": "string"
                             }
-                        }
-                    },
-                    "required": [
-                        "user",
-                        "password"
-                    ]
+                        },
+                        "required": [
+                            "user",
+                            "password"
+                        ]
+                    }
                 },
                 "radius": {
                     "type": "object",

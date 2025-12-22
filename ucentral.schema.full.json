@@ -3912,12 +3912,12 @@
                                     "password": {
                                         "type": "string"
                                     }
-                                }
-                            },
-                            "required": [
-                                "user",
-                                "password"
-                            ]
+                                },
+                                "required": [
+                                    "user",
+                                    "password"
+                                ]
+                            }
                         },
                         "radius": {
                             "description": "RADIUS server configuration for authentication.",
