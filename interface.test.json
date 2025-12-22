@@ -1,0 +1,121 @@
+{
+    "uuid": 1765963982,
+    "interfaces": [
+		{
+			"name": "post-resonnt-vision",
+			"type": "dummy",
+			"role": "upstream",
+			"enabled": true,
+			"mac-address": "02:45:b4:ae:78:e5",
+			"mtu": 2553,
+			"ethernet": {
+				"speed": "10000",
+				"duplex": "half",
+				"vlan-tag": "tagged",
+				"proxy-arp": {
+					"enable": false
+				},
+				"arp-filter": {
+					"enable": true
+				},
+				"forwarding": {
+					"enable": true
+				}
+			},
+			"vlan": {
+				"id": 2617,
+				"proto": "802.1ad"
+			},
+			"bridge": {
+				"members": [
+					"address-principal-source",
+					"sunset-dense-alignment",
+					"develop-national-platform"
+				],
+				"stp": true
+			},
+			"pppoe": {
+				"source-interface": "send-progressive-skillset",
+				"user-name": "execute-atomic-result",
+				"password": "upload-absolute-dialogue",
+				"default-route": true
+			},
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"172.20.188.196/8",
+					"172.22.122.145/22",
+					"172.23.190.140/3"
+				],
+				"gateway": "172.26.180.62"
+			},
+			"ipv6": {
+				"addressing": "none",
+				"address": [
+					"2001:db8:a836:14d2:26fe:f514:3b6a:7741/78",
+					"2001:db8:a808:4bde:1e4d:1518:11e9:f709/124",
+					"2001:db8:aa2:5e3e:1185:191c:17cf:fef5/106"
+				],
+				"gateway": "2001:db8:91ba:1ab4:a4e0:4fe1:4bc0:d2fa"
+			}
+		},
+        {
+			"name": "post-resonnt-vision",
+			"type": "dummy",
+			"role": "downstream",
+			"enabled": true,
+			"mac-address": "02:45:b4:ae:78:e5",
+			"mtu": 2553,
+			"ethernet": {
+				"speed": "10000",
+				"duplex": "half",
+				"vlan-tag": "tagged",
+				"proxy-arp": {
+					"enable": false
+				},
+				"arp-filter": {
+					"enable": true
+				},
+				"forwarding": {
+					"enable": true
+				}
+			},
+			"vlan": {
+				"id": 2617,
+				"proto": "802.1ad"
+			},
+			"bridge": {
+				"members": [
+					"address-principal-source",
+					"sunset-dense-alignment",
+					"develop-national-platform"
+				],
+				"stp": true
+			},
+			"pppoe": {
+				"source-interface": "send-progressive-skillset",
+				"user-name": "execute-atomic-result",
+				"password": "upload-absolute-dialogue",
+				"default-route": true
+			},
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"172.20.188.196/8",
+					"172.22.122.145/22",
+					"172.23.190.140/3"
+				],
+				"gateway": "172.26.180.62"
+			},
+			"ipv6": {
+				"addressing": "none",
+				"address": [
+					"2001:db8:a836:14d2:26fe:f514:3b6a:7741/78",
+					"2001:db8:a808:4bde:1e4d:1518:11e9:f709/124",
+					"2001:db8:aa2:5e3e:1185:191c:17cf:fef5/106"
+				],
+				"gateway": "2001:db8:91ba:1ab4:a4e0:4fe1:4bc0:d2fa"
+			}
+		}
+    ]
+}

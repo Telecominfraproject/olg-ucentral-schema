@@ -208,8 +208,8 @@
                 "addressing": {
                     "type": "string",
                     "enum": [
-                        "dynamic",
                         "static",
+                        "dhcp",
                         "none"
                     ]
                 },
@@ -232,9 +232,7 @@
                 "addressing": {
                     "type": "string",
                     "enum": [
-                        "dynamic",
                         "static",
-                        "slaac",
                         "dhcpv6",
                         "none"
                     ]

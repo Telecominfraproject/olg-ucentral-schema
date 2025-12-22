@@ -5,9 +5,7 @@ properties:
     description: Address assignment method.
     type: string
     enum:
-      - dynamic
       - static
-      - slaac
       - dhcpv6
       - none
   address:

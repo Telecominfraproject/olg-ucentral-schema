@@ -1,7 +1,9 @@
 #!/usr/bin/ucode
 push(REQUIRE_SEARCH_PATH,
 	"/usr/lib/ucode/*.so",
-	"/usr/share/ucentral/*.uc");
+	/* "/usr/share/ucentral/*.uc" */
+	"/home/tsumugi/olg-ucentral-schema/*.uc"
+	);
 
 let schemareader = require("schemareader");
 let renderer = require("renderer");
@@ -14,10 +16,10 @@ let custom_config = (split(ARGV[0], ".")[0] != "/etc/ucentral/ucentral");
 let error = 0;
 
 inputfile.close();
+let logs = [];
 
 try {
     let state = schemareader.validate(inputjson, logs);
-
 	let batch = state ? renderer.render(state, logs) : "";
 
     if (state?.strict && length(logs)) {
@@ -26,8 +28,13 @@ try {
 	}
 
 	fs.stdout.write("Log messages:\n" + join("\n", logs) + "\n\n");
-
 	if (state) {
+		fs.stdout.write("VyOS batch output:\n" + batch + "\n");
+
+		let outputjson = fs.open("/tmp/interfaces.vyos", "w");
+		outputjson.write(batch);
+		outputjson.close();
+
         if (!custom_config) {
 			fs.unlink('/etc/ucentral/ucentral.active');
 			fs.symlink(ARGV[0], '/etc/ucentral/ucentral.active');

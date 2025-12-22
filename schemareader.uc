@@ -525,8 +525,8 @@ function instantiateInterfaceIpv4(location, value, errors) {
 			if (type(value) != "string")
 				push(errors, [ location, "must be of type string" ]);
 
-			if (!(value in [ "dynamic", "static", "none" ]))
-				push(errors, [ location, "must be one of \"dynamic\", \"static\" or \"none\"" ]);
+			if (!(value in [ "static", "dhcp", "none" ]))
+				push(errors, [ location, "must be one of \"static\", \"dhcp\" or \"none\"" ]);
 
 			return value;
 		}
@@ -597,8 +597,8 @@ function instantiateInterfaceIpv6(location, value, errors) {
 			if (type(value) != "string")
 				push(errors, [ location, "must be of type string" ]);
 
-			if (!(value in [ "dynamic", "static", "slaac", "dhcpv6", "none" ]))
-				push(errors, [ location, "must be one of \"dynamic\", \"static\", \"slaac\", \"dhcpv6\" or \"none\"" ]);
+			if (!(value in [ "static", "dhcpv6", "none" ]))
+				push(errors, [ location, "must be one of \"static\", \"dhcpv6\" or \"none\"" ]);
 
 			return value;
 		}
@@ -10422,6 +10422,9 @@ function instantiateServicePppoeServer(location, value, errors) {
 						if (exists(value, "user")) {
 							obj.user = parseUser(location + "/user", value["user"], errors);
 						}
+						else {
+							push(errors, [ location, "is required" ]);
+						}
 
 						function parsePassword(location, value, errors) {
 							if (type(value) != "string")
@@ -10432,6 +10435,9 @@ function instantiateServicePppoeServer(location, value, errors) {
 
 						if (exists(value, "password")) {
 							obj.password = parsePassword(location + "/password", value["password"], errors);
+						}
+						else {
+							push(errors, [ location, "is required" ]);
 						}
 
 						return obj;

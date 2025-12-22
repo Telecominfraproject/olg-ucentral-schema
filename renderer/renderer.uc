@@ -1,205 +1,355 @@
-/*
- * OLG uCentral Configuration Renderer
+// VyOS tree config master template
+
+"use strict";
+let fs = require("fs");
+/**
+ * Formats a given input value as uci boolean value.
  *
- * Master renderer module that orchestrates configuration generation
- * for OpenLan Gateway (OLG) L3 routers using VyOS tree config format.
- *
- * Based on wlan-ucentral-schema renderer patterns adapted for VyOS.
+ * @memberof uCentral.prototype
+ * @param {*} val The value to format
+ * @returns {string}
+ * Returns '1' if the given value is truish (not `false`, `null`, `0`,
+ * `0.0` or an empty string), or `0` in all other cases.
  */
-
-'use strict';
-
-import * as fs from 'fs';
-
-/* Helper function: Convert value to boolean string */
 function b(val) {
-	return val ? 'true' : 'false';
+	return val ? '1' : '0';
 }
 
-/* Helper function: Format string with proper quoting */
-function s(str) {
-	if (str == null)
-		return "''";
-	str = '' + str;
-	/* Escape single quotes */
-	str = replace(str, "'", "'\\''");
-	return "'" + str + "'";
-}
-
-/*
- * Files utility class for managing configuration file outputs
- */
-let files = {
-	/* Storage for pending file writes */
-	pending: {},
-
-	/* Base directory for config files */
-	base_path: '/config',
-
-	/* Create directory path recursively */
-	mkdir_path: function(path) {
-		let parts = split(path, '/');
-		let current = '';
-
-		for (let i = 0; i < length(parts) - 1; i++) {
-			if (parts[i] == '')
-				continue;
-			current += '/' + parts[i];
-			fs.mkdir(current);
-		}
-	},
-
-	/* Add a file with explicit path */
-	add_named: function(path, content) {
-		/* Expand relative paths against base directory */
-		if (substr(path, 0, 1) != '/')
-			path = this.base_path + '/' + path;
-
-		this.pending[path] = content;
-	},
-
-	/* Add a file with generated name based on location and hint */
-	add_anonymous: function(location, name, content) {
-		/* Generate path from location pointer and name hint */
-		let escaped_location = replace(location, '~', '~0');
-		escaped_location = replace(escaped_location, '/', '~1');
-
-		let escaped_name = replace(name, '~', '~0');
-		escaped_name = replace(escaped_name, '/', '~1');
-
-		let path = sprintf('%s/%s-%s.uc', this.base_path, escaped_location, escaped_name);
-		this.pending[path] = content;
-	},
-
-	/* Write all pending files to filesystem */
-	write: function(logs) {
-		logs = logs || [];
-		let success = true;
-
-		for (let path in keys(this.pending)) {
-			let content = this.pending[path];
-
-			/* Create parent directories */
-			this.mkdir_path(path);
-
-			/* Write file */
-			let fd = fs.open(path, 'w');
-			if (fd) {
-				fd.write(content);
-				fd.close();
-				push(logs, { type: 'info', message: sprintf('Wrote config file: %s', path) });
-			} else {
-				push(logs, { type: 'error', message: sprintf('Failed to write: %s', path) });
-				success = false;
-			}
-		}
-
-		/* Clear pending files after write */
-		this.pending = {};
-		return success;
-	},
-
-	/* Clear all pending files without writing */
-	clear: function() {
-		this.pending = {};
-	}
-};
-
-/*
- * Template registry for interface renderers
- */
-let templates = {
-	interfaces: {}
-};
-
-/* Register an interface template */
-function register_interface_template(type, handler) {
-	templates.interfaces[type] = handler;
-}
-
-/* Load and register interface templates */
-function load_interface_templates() {
-	/* Bridge interface handler */
-	let bridge_module = require('interfaces/bridge.uc');
-	if (bridge_module)
-		templates.interfaces['bridge'] = bridge_module;
-
-	/* Ethernet interface handler */
-	let ethernet_module = require('interfaces/ethernet.uc');
-	if (ethernet_module)
-		templates.interfaces['ethernet'] = ethernet_module;
-}
-
-/*
- * Main render function
+/**
+ * Formats a given input value as single quoted string, honouring uci
+ * specific escaping semantics.
  *
- * Processes configuration state and generates output files
+ * @memberof uCentral.prototype
+ * @param {*} str The string to format
+ * @returns {string}
+ * Returns an empty string if the given input value is `null` or an
+ * empty string. Returns the escaped and quoted string in all other
+ * cases.
  */
-function render(state) {
-	let logs = {
-		warnings: [],
-		errors: [],
-		info: []
-	};
+function s(str) {
+	if (str === null || str === '')
+		return '';
 
-	if (!state) {
-		push(logs.errors, 'No state configuration provided');
-		return logs;
-	}
-
-	/* Load interface templates */
-	load_interface_templates();
-
-	/* Process interfaces */
-	if (state.interfaces && type(state.interfaces) == 'array') {
-		for (let iface in state.interfaces) {
-			let iface_type = iface.type;
-
-			if (templates.interfaces[iface_type]) {
-				let handler = templates.interfaces[iface_type];
-				if (handler.render) {
-					try {
-						handler.render(iface, state, files, logs);
-					} catch (e) {
-						push(logs.errors, sprintf('Error rendering %s interface: %s', iface_type, e));
-					}
-				}
-			}
-		}
-	}
-
-	/* Write all pending files */
-	if (!files.write(logs.info)) {
-		push(logs.errors, 'Some files failed to write');
-	}
-
-	return logs;
+	return sprintf("'%s'", replace(str, /'/g, "'\\''"));
 }
 
-/*
- * Render configuration for a specific interface type
+/**
+ * Attempt to include a file, catching potential exceptions.
+ *
+ * Try to include the given file path in a safe manner. The
+ * path is resolved relative to the path of the currently
+ * executed template and may only contain the character `A-Z`,
+ * `a-z`, `0-9`, `_`, `/` and `-` as must contain a final
+ * `.uc` file extension.
+ *
+ * Exception occuring while including the file are catched
+ * and a warning is emitted instead.
+ *
+ * @memberof uCentral.prototype
+ * @param {string} path Path of the file to include
+ * @param {object} scope The scope to pass to the include file
  */
-function render_interface(iface, state) {
-	let logs = { warnings: [], errors: [], info: [] };
-
-	let iface_type = iface.type;
-	if (templates.interfaces[iface_type]) {
-		let handler = templates.interfaces[iface_type];
-		if (handler.render) {
-			handler.render(iface, state, files, logs);
-		}
+function tryinclude(path, scope) {
+	if (!match(path, /^[A-Za-z0-9_\/-]+\.uc$/)) {
+		warn("Refusing to handle invalid include path '%s'", path);
+		return;
 	}
 
-	return logs;
+	let parent_path = sourcepath(1, true);
+
+	assert(parent_path, "Unable to determine calling template path");
+
+	try {
+		include(parent_path + "/" + path, scope);
+	}
+	catch (e) {
+		warn("Unable to include path '%s': %s\n%s", path, e, e.stacktrace[0].context);
+	}
 }
 
-/* Export public API */
-return {
-	b,
-	s,
-	files,
-	templates,
-	register_interface_template,
-	render,
-	render_interface
+/**
+ * @class uCentral.ethernet
+ * @classdesc
+ *
+ * This is the ethernet base class. It is automatically instantiated and
+ * accessible using the global 'ethernet' variable.
+ */
+
+/** @lends uCentral.ethernet.prototype */
+
+// let ethernet = {
+// 	ports: discover_ports(),
+
+// 	reverse_lookup: function(iface) {
+// 		for (let name, dev in this.ports)
+// 			if (dev == iface)
+// 				return name;
+// 		return null;
+// 	},
+
+// 	lookup_port: function(iface) {
+// 		for (let name, dev in this.ports)
+// 			if (dev.netdev == iface)
+// 				return dev;
+// 		return null;
+// 	},
+
+// 	/**
+// 	 * Get a list of all wireless PHYs for a specific wireless band
+// 	 *
+// 	 * @param {string} band
+// 	 *
+// 	 * @returns {object}
+// 	 * Returns an array of all wireless PHYs for a specific wireless
+// 	 * band.
+// 	 */
+// 	lookup: function(globs) {
+// 		let matched = {};
+
+// 		for (let glob, tag_state in globs) {
+// 			for (let name, spec in this.ports) {
+// 				if (wildcard(name, glob)) {
+// 					if (spec.netdev)
+// 						matched[spec.netdev] = tag_state;
+// 					else
+// 						warn("Not implemented yet: mapping switch port to netdev");
+// 				}
+// 			}
+// 		}
+
+// 		return matched;
+// 	},
+
+// 	lookup_name: function(globs) {
+// 		let matched = {};
+
+// 		for (let glob, tag_state in globs){
+// 			for (let name, spec in this.ports){
+// 				if (wildcard(name, glob))
+// 					matched[name] = tag_state;
+// 			}
+// 		}
+// 		return matched;
+// 	},
+
+// 	lookup_by_interface_vlan: function(interface, raw) {
+// 		// Gather the glob patterns in all `ethernet: [ { select-ports: ... }]` specs,
+// 		// dedup them and turn them into one global regular expression pattern, then
+// 		// match this pattern against all known system ethernet ports, remember the
+// 		// related netdevs and return them.
+// 		let globs = {};
+// 		map(interface.ethernet, eth => map(eth.select_ports, glob => globs[glob] = eth.vlan_tag));
+
+// 		let lookup = this.lookup(globs);
+// 		if (raw)
+// 			return lookup;
+
+// 		let rv = {};
+// 		for (let k, v in lookup) {
+// 			/* tagged swconfig downstream ports are not allowed */
+// 			if (interface.role == 'downstream') {
+// 				if (this.swconfig && this.swconfig[k].switch && v == 'tagged')
+// 					warn('%s:%d - vlan tagging on downstream swconfig ports is not supported', this.swconfig[k]?.switch.name, this.swconfig[k].swconfig);
+// 				else
+// 					rv[k] = v;
+// 				continue;
+// 			}
+// 			/* resolve upstream vlans on swconfig ports */
+// 			if (this.swconfig && interface.role == 'upstream' && interface.vlan.id && this.swconfig[k]?.switch) {
+// 				rv[split(k, '.')[0] + '.' + interface.vlan.id] = 'un-tagged';
+// 				continue;
+// 			}
+// 			rv[k] = v;
+// 		}
+// 		return rv;
+// 	},
+
+// 	switch_by_interface_vlan: function(interface, raw) {
+// 		let ports = this.lookup_by_interface_vlan(interface, true);
+// 		let rv = { ports: "" };
+// 		let cpu_port = 0;
+// 		for (let port, tag in ports) {
+// 			if (!this.swconfig || !this.swconfig[port]?.switch) continue;
+// 			rv.name = this.swconfig[port].switch.name;
+// 			cpu_port = this.swconfig[port].switch.port;
+// 			rv.ports += ' ' + this.swconfig[port].swconfig;
+// 			if (tag != 'un-tagged')
+// 				rv.ports += 't';
+// 		}
+// 		if (!rv.name)
+// 			return null;
+// 		rv.ports = cpu_port + 't' + rv.ports;
+
+// 		return rv;
+// 	},
+
+// 	lookup_by_interface_spec: function(interface) {
+// 		return sort(keys(this.lookup_by_interface_vlan(interface)));
+// 	},
+
+// 	lookup_by_select_ports: function(select_ports) {
+// 		let globs = {};
+// 		map(select_ports, glob => globs[glob] = true);
+
+// 		return sort(keys(this.lookup(globs)));
+// 	},
+
+// 	lookup_name_by_select_ports: function(select_ports) {
+// 		let globs = {};
+// 		map(select_ports, glob => globs[glob] = true);
+
+// 		return sort(keys(this.lookup_name(globs)));
+// 	},
+
+// 	lookup_by_ethernet: function(ethernets) {
+// 		let result = [];
+
+// 		for (let ethernet in ethernets)
+// 			result = [ ...result,  ...this.lookup_by_select_ports(ethernet.select_ports) ];
+// 		return result;
+// 	},
+
+// 	reserve_port: function(port) {
+// 		delete this.ports[port];
+// 	},
+
+// 	is_single_config: function(interface) {
+// 		let ipv4_mode = interface.ipv4 ? interface.ipv4.addressing : 'none';
+// 		let ipv6_mode = interface.ipv6 ? interface.ipv6.addressing : 'none';
+
+// 		return (
+// 			(ipv4_mode == 'none') || (ipv6_mode == 'none') ||
+// 			(ipv4_mode == 'static' && ipv6_mode == 'static')
+// 		);
+// 	},
+
+// 	calculate_name: function(interface) {
+// 		let vid = interface.vlan.id;
+// 		if (interface.admin_ui)
+// 			return 'admin_ui';
+// 		return (interface.role == 'upstream' ? 'up' : 'down') + interface.index + 'v' + vid;
+// 	},
+
+// 	calculate_names: function(interface) {
+// 		let name = this.calculate_name(interface);
+
+// 		return this.is_single_config(interface) ? [ name ] : [ name + '_4', name + '_6' ];
+// 	},
+
+// 	calculate_ipv4_name: function(interface) {
+// 		let name = this.calculate_name(interface);
+
+// 		return this.is_single_config(interface) ? name : name + '_4';
+// 	},
+
+// 	calculate_ipv6_name: function(interface) {
+// 		let name = this.calculate_name(interface);
+
+// 		return this.is_single_config(interface) ? name : name + '_6';
+// 	},
+
+// 	has_vlan: function(interface) {
+// 		return interface.vlan && interface.vlan.id;
+// 	},
+
+// 	port_vlan: function(interface, port) {
+// 		if (port == "tagged")
+// 			return ':t';
+// 		if (port == "un-tagged")
+// 			return '';
+// 		return ((interface.role == 'upstream') && this.has_vlan(interface)) ? ':t' : '';
+// 	},
+
+// 	find_interface: function(role, vid) {
+// 		for (let interface in state.interfaces)
+// 			if (interface.role == role &&
+// 			    interface.vlan?.id == vid)
+// 				return this.calculate_name(interface);
+// 		return '';
+// 	},
+
+// 	get_interface: function(role, vid) {
+// 		for (let interface in state.interfaces)
+// 			if (interface.role == role &&
+// 			    interface.vlan.id == vid)
+// 				return interface;
+// 		return null;
+// 	},
+
+// 	get_speed: function(dev) {
+// 		let fp = fs.open(sprintf("/sys/class/net/%s/speed", dev));
+// 		if (!fp)
+// 			return 1000;
+// 		let speed = fp.read("all");
+// 		fp.close();
+// 		return +speed;
+// 	}
+// };
+
+/**
+ * @constructs
+ * @name uCentral
+ * @classdesc
+ *
+ * The uCentral namespace is not an actual class but merely a virtual
+ * namespace for documentation purposes.
+ *
+ * From the perspective of a template author, the uCentral namespace
+ * is the global root level scope available to embedded code, so
+ * methods like `uCentral.b()` or `uCentral.info()` or utlity classes
+ * like `uCentral.files` or `uCentral.wiphy` are available to templates
+ * as `b()`, `info()`, `files` and `wiphy` respectively.
+ */
+return /** @lends uCentral.prototype */ {
+	render: function(state, logs) {
+		logs = logs || [];
+
+		/** @lends uCentral.prototype */
+		return render('templates/toplevel.uc', {
+			b,
+			s,
+			tryinclude,
+			state,
+			/**
+			 * Emit a warning message.
+			 *
+			 * @memberof uCentral.prototype
+			 * @param {string} fmt  The warning message format string
+			 * @param {...*} args	Optional format arguments
+			 */
+			warn: (fmt, ...args) => push(logs, sprintf("[W] (In %s) ", location || '/') + sprintf(fmt, ...args)),
+
+			/**
+			 * Emit an error message.
+			 *
+			 * @memberof uCentral.prototype
+			 * @param {string} fmt  The warning message format string
+			 * @param {...*} args	Optional format arguments
+			 */
+			error: (fmt, ...args) => push(logs, sprintf("[E] (In %s) ", location || '/') + sprintf(fmt, ...args)),
+
+			/**
+			 * Emit an informational message.
+			 *
+			 * @memberof uCentral.prototype
+			 * @param {string} fmt  The information message format string
+			 * @param {...*} args	Optional format arguments
+			 */
+			info: (fmt, ...args) => push(logs, sprintf("[!] (In %s) ", location || '/') + sprintf(fmt, ...args))
+		});
+	},
+
+	write_files: function(logs) {
+		logs = logs || [];
+
+		return files.write(logs);
+	},
+
+	files_state: function() {
+		return files.files;
+	},
+
+	services_state: function() {
+		return services.state;
+	}
 };

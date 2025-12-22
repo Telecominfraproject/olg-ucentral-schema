@@ -4,7 +4,7 @@ properties:
   source-interface:
     description: Underlying interface for PPPoE.
     type: string
-  user-name:
+  username:
     description: PPPoE username.
     type: string
   password:
