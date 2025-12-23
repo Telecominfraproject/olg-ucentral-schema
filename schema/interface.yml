@@ -9,7 +9,6 @@ properties:
     type: string
     enum:
       - ethernet
-      - vlan
       - bridge
       - loopback
       - pppoe
@@ -39,7 +38,10 @@ properties:
   ethernet:
     $ref: https://ucentral.io/schema/v1/interface/ethernet/
   vlan:
-    $ref: https://ucentral.io/schema/v1/interface/vlan/
+    type: array
+    description: VLAN sub-interfaces.
+    items:
+      $ref: https://ucentral.io/schema/v1/interface/vlan/
   bridge:
     $ref: https://ucentral.io/schema/v1/interface/bridge/
   pppoe:

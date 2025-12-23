@@ -145,63 +145,6 @@
                 }
             }
         },
-        "interface.vlan": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 4094
-                },
-                "proto": {
-                    "decription": "The L2 vlan tag that shall be added (1q,1ad)",
-                    "type": "string",
-                    "enum": [
-                        "802.1ad",
-                        "802.1q"
-                    ],
-                    "default": "802.1q"
-                }
-            }
-        },
-        "interface.bridge": {
-            "type": "object",
-            "properties": {
-                "members": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "stp": {
-                    "type": "boolean",
-                    "default": false
-                }
-            }
-        },
-        "interface.pppoe": {
-            "type": "object",
-            "properties": {
-                "source-interface": {
-                    "type": "string"
-                },
-                "user-name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "default-route": {
-                    "type": "boolean",
-                    "default": true
-                }
-            },
-            "required": [
-                "source-interface",
-                "user-name",
-                "password"
-            ]
-        },
         "interface.ipv4": {
             "type": "object",
             "properties": {
@@ -233,6 +176,8 @@
                     "type": "string",
                     "enum": [
                         "static",
+                        "slaac",
+                        "eui64",
                         "dhcpv6",
                         "none"
                     ]
@@ -250,6 +195,94 @@
                 }
             }
         },
+        "interface.vlan": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4094
+                },
+                "proto": {
+                    "decription": "The L2 vlan tag that shall be added (1q,1ad)",
+                    "type": "string",
+                    "enum": [
+                        "802.1ad",
+                        "802.1q"
+                    ],
+                    "default": "802.1q"
+                },
+                "role": {
+                    "type": "string",
+                    "enum": [
+                        "upstream",
+                        "downstream",
+                        "local"
+                    ]
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "mac-address": {
+                    "type": "string",
+                    "format": "uc-mac",
+                    "example": "98:e7:9a:27:fe:49"
+                },
+                "mtu": {
+                    "type": "integer",
+                    "maximum": 9000,
+                    "minimum": 68
+                },
+                "name": {
+                    "type": "string"
+                },
+                "ipv4": {
+                    "$ref": "#/$defs/interface.ipv4"
+                },
+                "ipv6": {
+                    "$ref": "#/$defs/interface.ipv6"
+                }
+            }
+        },
+        "interface.bridge": {
+            "type": "object",
+            "properties": {
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "stp": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        "interface.pppoe": {
+            "type": "object",
+            "properties": {
+                "source-interface": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "default-route": {
+                    "type": "boolean",
+                    "default": true
+                }
+            },
+            "required": [
+                "source-interface",
+                "user-name",
+                "password"
+            ]
+        },
         "interface": {
             "type": "object",
             "properties": {
@@ -260,7 +293,6 @@
                     "type": "string",
                     "enum": [
                         "ethernet",
-                        "vlan",
                         "bridge",
                         "loopback",
                         "pppoe",
@@ -294,7 +326,10 @@
                     "$ref": "#/$defs/interface.ethernet"
                 },
                 "vlan": {
-                    "$ref": "#/$defs/interface.vlan"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/interface.vlan"
+                    }
                 },
                 "bridge": {
                     "$ref": "#/$defs/interface.bridge"

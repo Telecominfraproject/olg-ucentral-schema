@@ -29,7 +29,7 @@ interfaces {
         {% let iface = getIfaceName(i.type, i.name) %}
     /* {{ i.role }} interface {{ iface }} */
     {{ i.type }} {{ iface }} {
-        hw-id {{ i.mac_address }}
+        mac {{ i.mac_address }}
         {% if (!i.enabled): %}
         disable
         {% endif %}
@@ -74,6 +74,48 @@ interfaces {
         /* end pppoe section*/
         {% endif %}
 
+        {% if (i.vlan): %}
+            {% for (let j in i.vlan): %}
+        vif {{ j.id }} {
+                {% if (!j.enabled): %}
+            disable
+                {% endif %}
+            mac {{ j.mac_address }}
+                {% if (j.mtu): %}
+            mtu {{ j.mtu }}
+                {% endif %}
+                {% if (j.ipv4): %}
+            /* vlan ipv4 section */
+                    {% if (j.ipv4.addressing == "static"): %}
+                        {% for (let k in i.ipv4.address): %}
+            address {{ k }}
+                        {% endfor %}
+                    {% elif (j.ipv4.addressing == "dhcp"): %}
+            address dhcp
+                    {% endif %}
+            /* end vlan ipv4 section */
+                {% endif %}
+                {% if (j.ipv6 && j.ipv6.addressing != "none"): %}
+            ipv6 {
+                    {% if (j.ipv6.addressing == "static"): %}
+                        {% for (let k in j.ipv6.address): %}
+                address {{ k }}
+                        {% endfor %}
+                    {% elif (j.ipv6.addressing == "dhcpv6"): %}
+                address dhcpv6
+                    {% elif (j.ipv6.addressing == "slaac"): %}
+                address autoconf
+                    {% elif (j.ipv6.addressing == "eui64"): %}
+                        {% for (let k in j.ipv6.address): %}
+                address {{ k }} eui64
+                        {% endfor %}
+                    {% endif %}
+            }
+                {% endif %}
+        }
+            {% endfor %}
+        {% endif %}
+
         {% if (i.ipv4): %}
         /* ipv4 section */
             {% if (i.ipv4.addressing == "static"): %}
@@ -95,6 +137,12 @@ interfaces {
                 {% endfor %}
             {% elif (i.ipv6.addressing == "dhcpv6"): %}
             address dhcpv6
+            {% elif (i.ipv6.addressing == "slaac"): %}
+            address autoconf
+            {% elif (i.ipv6.addressing == "eui64"): %}
+                {% for (let j in i.ipv6.address): %}
+            address {{ j }} eui64
+                {% endfor %}
             {% endif %}
         }
         /* end ipv6 section */

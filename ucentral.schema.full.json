@@ -70,7 +70,6 @@
                         "type": "string",
                         "enum": [
                             "ethernet",
-                            "vlan",
                             "bridge",
                             "loopback",
                             "pppoe",
@@ -171,23 +170,115 @@
                         }
                     },
                     "vlan": {
-                        "description": "This section describes the vlan behaviour of a logical network interface.",
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "description": "This is the pvid of the vlan that shall be assigned to the interface. The individual physical network devices contained within the interface need to be told explicitly if egress traffic shall be tagged.",
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 4094
-                            },
-                            "proto": {
-                                "decription": "The L2 vlan tag that shall be added (1q,1ad)",
-                                "type": "string",
-                                "enum": [
-                                    "802.1ad",
-                                    "802.1q"
-                                ],
-                                "default": "802.1q"
+                        "type": "array",
+                        "description": "VLAN sub-interfaces.",
+                        "items": {
+                            "description": "This section describes the vlan behaviour of a logical network interface.",
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "description": "This is the pvid of the vlan that shall be assigned to the interface. The individual physical network devices contained within the interface need to be told explicitly if egress traffic shall be tagged.",
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 4094
+                                },
+                                "proto": {
+                                    "decription": "The L2 vlan tag that shall be added (1q,1ad)",
+                                    "type": "string",
+                                    "enum": [
+                                        "802.1ad",
+                                        "802.1q"
+                                    ],
+                                    "default": "802.1q"
+                                },
+                                "role": {
+                                    "description": "Interface role.",
+                                    "type": "string",
+                                    "enum": [
+                                        "upstream",
+                                        "downstream",
+                                        "local"
+                                    ]
+                                },
+                                "enabled": {
+                                    "description": "Enable or disable the interface.",
+                                    "type": "boolean",
+                                    "default": true
+                                },
+                                "mac-address": {
+                                    "description": "Mac address of the interface.",
+                                    "type": "string",
+                                    "format": "uc-mac",
+                                    "example": "98:e7:9a:27:fe:49"
+                                },
+                                "mtu": {
+                                    "description": "Maximum Transmission Unit.",
+                                    "type": "integer",
+                                    "maximum": 9000,
+                                    "minimum": 68
+                                },
+                                "name": {
+                                    "description": "Interface name.",
+                                    "type": "string"
+                                },
+                                "ipv4": {
+                                    "description": "IPv4 interface configuration.",
+                                    "type": "object",
+                                    "properties": {
+                                        "addressing": {
+                                            "description": "Address assignment method.",
+                                            "type": "string",
+                                            "enum": [
+                                                "static",
+                                                "dhcp",
+                                                "none"
+                                            ]
+                                        },
+                                        "address": {
+                                            "description": "IPv4 addresses in CIDR notation.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "format": "uc-cidr4"
+                                            }
+                                        },
+                                        "gateway": {
+                                            "description": "Default gateway.",
+                                            "type": "string",
+                                            "format": "ipv4"
+                                        }
+                                    }
+                                },
+                                "ipv6": {
+                                    "description": "IPv6 interface configuration.",
+                                    "type": "object",
+                                    "properties": {
+                                        "addressing": {
+                                            "description": "Address assignment method.",
+                                            "type": "string",
+                                            "enum": [
+                                                "static",
+                                                "slaac",
+                                                "eui64",
+                                                "dhcpv6",
+                                                "none"
+                                            ]
+                                        },
+                                        "address": {
+                                            "description": "IPv6 address(es) in CIDR notation.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "format": "uc-cidr6"
+                                            }
+                                        },
+                                        "gateway": {
+                                            "description": "Default gateway.",
+                                            "type": "string",
+                                            "format": "ipv6"
+                                        }
+                                    }
+                                }
                             }
                         }
                     },
@@ -217,7 +308,7 @@
                                 "description": "Underlying interface for PPPoE.",
                                 "type": "string"
                             },
-                            "user-name": {
+                            "username": {
                                 "description": "PPPoE username.",
                                 "type": "string"
                             },
@@ -274,6 +365,8 @@
                                 "type": "string",
                                 "enum": [
                                     "static",
+                                    "slaac",
+                                    "eui64",
                                     "dhcpv6",
                                     "none"
                                 ]

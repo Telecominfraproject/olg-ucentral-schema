@@ -18,3 +18,31 @@ properties:
       - 802.1ad
       - 802.1q
     default: 802.1q
+  role:
+    description: Interface role.
+    type: string
+    enum:
+    - upstream
+    - downstream
+    - local
+  enabled:
+    description: Enable or disable the interface.
+    type: boolean
+    default: true
+  mac-address:
+    description: Mac address of the interface.
+    type: string
+    format: uc-mac
+    example: 98:e7:9a:27:fe:49
+  mtu:
+    description: Maximum Transmission Unit.
+    type: integer
+    maximum: 9000
+    minimum: 68
+  name:
+    description: Interface name.
+    type: string
+  ipv4:
+    $ref: https://ucentral.io/schema/v1/interface/ipv4/
+  ipv6:
+    $ref: https://ucentral.io/schema/v1/interface/ipv6/

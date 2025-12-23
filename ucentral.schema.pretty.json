@@ -159,73 +159,6 @@
                 }
             }
         },
-        "interface.vlan": {
-            "description": "This section describes the vlan behaviour of a logical network interface.",
-            "type": "object",
-            "properties": {
-                "id": {
-                    "description": "This is the pvid of the vlan that shall be assigned to the interface. The individual physical network devices contained within the interface need to be told explicitly if egress traffic shall be tagged.",
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 4094
-                },
-                "proto": {
-                    "decription": "The L2 vlan tag that shall be added (1q,1ad)",
-                    "type": "string",
-                    "enum": [
-                        "802.1ad",
-                        "802.1q"
-                    ],
-                    "default": "802.1q"
-                }
-            }
-        },
-        "interface.bridge": {
-            "description": "Bridge interface configuration.",
-            "type": "object",
-            "properties": {
-                "members": {
-                    "description": "Member interfaces.",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "stp": {
-                    "description": "Enable Spanning Tree Protocol.",
-                    "type": "boolean",
-                    "default": false
-                }
-            }
-        },
-        "interface.pppoe": {
-            "description": "PPPoE client configuration.",
-            "type": "object",
-            "properties": {
-                "source-interface": {
-                    "description": "Underlying interface for PPPoE.",
-                    "type": "string"
-                },
-                "user-name": {
-                    "description": "PPPoE username.",
-                    "type": "string"
-                },
-                "password": {
-                    "description": "PPPoE password.",
-                    "type": "string"
-                },
-                "default-route": {
-                    "description": "Install default route when connected.",
-                    "type": "boolean",
-                    "default": true
-                }
-            },
-            "required": [
-                "source-interface",
-                "user-name",
-                "password"
-            ]
-        },
         "interface.ipv4": {
             "description": "IPv4 interface configuration.",
             "type": "object",
@@ -263,6 +196,8 @@
                     "type": "string",
                     "enum": [
                         "static",
+                        "slaac",
+                        "eui64",
                         "dhcpv6",
                         "none"
                     ]
@@ -282,6 +217,109 @@
                 }
             }
         },
+        "interface.vlan": {
+            "description": "This section describes the vlan behaviour of a logical network interface.",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "This is the pvid of the vlan that shall be assigned to the interface. The individual physical network devices contained within the interface need to be told explicitly if egress traffic shall be tagged.",
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4094
+                },
+                "proto": {
+                    "decription": "The L2 vlan tag that shall be added (1q,1ad)",
+                    "type": "string",
+                    "enum": [
+                        "802.1ad",
+                        "802.1q"
+                    ],
+                    "default": "802.1q"
+                },
+                "role": {
+                    "description": "Interface role.",
+                    "type": "string",
+                    "enum": [
+                        "upstream",
+                        "downstream",
+                        "local"
+                    ]
+                },
+                "enabled": {
+                    "description": "Enable or disable the interface.",
+                    "type": "boolean",
+                    "default": true
+                },
+                "mac-address": {
+                    "description": "Mac address of the interface.",
+                    "type": "string",
+                    "format": "uc-mac",
+                    "example": "98:e7:9a:27:fe:49"
+                },
+                "mtu": {
+                    "description": "Maximum Transmission Unit.",
+                    "type": "integer",
+                    "maximum": 9000,
+                    "minimum": 68
+                },
+                "name": {
+                    "description": "Interface name.",
+                    "type": "string"
+                },
+                "ipv4": {
+                    "$ref": "#/$defs/interface.ipv4"
+                },
+                "ipv6": {
+                    "$ref": "#/$defs/interface.ipv6"
+                }
+            }
+        },
+        "interface.bridge": {
+            "description": "Bridge interface configuration.",
+            "type": "object",
+            "properties": {
+                "members": {
+                    "description": "Member interfaces.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "stp": {
+                    "description": "Enable Spanning Tree Protocol.",
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        "interface.pppoe": {
+            "description": "PPPoE client configuration.",
+            "type": "object",
+            "properties": {
+                "source-interface": {
+                    "description": "Underlying interface for PPPoE.",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "PPPoE username.",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "PPPoE password.",
+                    "type": "string"
+                },
+                "default-route": {
+                    "description": "Install default route when connected.",
+                    "type": "boolean",
+                    "default": true
+                }
+            },
+            "required": [
+                "source-interface",
+                "user-name",
+                "password"
+            ]
+        },
         "interface": {
             "description": "Logical network interface configuration.",
             "type": "object",
@@ -295,7 +333,6 @@
                     "type": "string",
                     "enum": [
                         "ethernet",
-                        "vlan",
                         "bridge",
                         "loopback",
                         "pppoe",
@@ -333,7 +370,11 @@
                     "$ref": "#/$defs/interface.ethernet"
                 },
                 "vlan": {
-                    "$ref": "#/$defs/interface.vlan"
+                    "type": "array",
+                    "description": "VLAN sub-interfaces.",
+                    "items": {
+                        "$ref": "#/$defs/interface.vlan"
+                    }
                 },
                 "bridge": {
                     "$ref": "#/$defs/interface.bridge"

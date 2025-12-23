@@ -349,174 +349,6 @@ function instantiateInterfaceEthernet(location, value, errors) {
 	return value;
 }
 
-function instantiateInterfaceVlan(location, value, errors) {
-	if (type(value) == "object") {
-		let obj = {};
-
-		function parseId(location, value, errors) {
-			if (type(value) in [ "int", "double" ]) {
-				if (value > 4094)
-					push(errors, [ location, "must be lower than or equal to 4094" ]);
-
-				if (value < 1)
-					push(errors, [ location, "must be bigger than or equal to 1" ]);
-
-			}
-
-			if (type(value) != "int")
-				push(errors, [ location, "must be of type integer" ]);
-
-			return value;
-		}
-
-		if (exists(value, "id")) {
-			obj.id = parseId(location + "/id", value["id"], errors);
-		}
-
-		function parseProto(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			if (!(value in [ "802.1ad", "802.1q" ]))
-				push(errors, [ location, "must be one of \"802.1ad\" or \"802.1q\"" ]);
-
-			return value;
-		}
-
-		if (exists(value, "proto")) {
-			obj.proto = parseProto(location + "/proto", value["proto"], errors);
-		}
-		else {
-			obj.proto = "802.1q";
-		}
-
-		return obj;
-	}
-
-	if (type(value) != "object")
-		push(errors, [ location, "must be of type object" ]);
-
-	return value;
-}
-
-function instantiateInterfaceBridge(location, value, errors) {
-	if (type(value) == "object") {
-		let obj = {};
-
-		function parseMembers(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "members")) {
-			obj.members = parseMembers(location + "/members", value["members"], errors);
-		}
-
-		function parseStp(location, value, errors) {
-			if (type(value) != "bool")
-				push(errors, [ location, "must be of type boolean" ]);
-
-			return value;
-		}
-
-		if (exists(value, "stp")) {
-			obj.stp = parseStp(location + "/stp", value["stp"], errors);
-		}
-		else {
-			obj.stp = false;
-		}
-
-		return obj;
-	}
-
-	if (type(value) != "object")
-		push(errors, [ location, "must be of type object" ]);
-
-	return value;
-}
-
-function instantiateInterfacePppoe(location, value, errors) {
-	if (type(value) == "object") {
-		let obj = {};
-
-		function parseSourceInterface(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			return value;
-		}
-
-		if (exists(value, "source-interface")) {
-			obj.source_interface = parseSourceInterface(location + "/source-interface", value["source-interface"], errors);
-		}
-		else {
-			push(errors, [ location, "is required" ]);
-		}
-
-		function parseUserName(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			return value;
-		}
-
-		if (exists(value, "user-name")) {
-			obj.user_name = parseUserName(location + "/user-name", value["user-name"], errors);
-		}
-		else {
-			push(errors, [ location, "is required" ]);
-		}
-
-		function parsePassword(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			return value;
-		}
-
-		if (exists(value, "password")) {
-			obj.password = parsePassword(location + "/password", value["password"], errors);
-		}
-		else {
-			push(errors, [ location, "is required" ]);
-		}
-
-		function parseDefaultRoute(location, value, errors) {
-			if (type(value) != "bool")
-				push(errors, [ location, "must be of type boolean" ]);
-
-			return value;
-		}
-
-		if (exists(value, "default-route")) {
-			obj.default_route = parseDefaultRoute(location + "/default-route", value["default-route"], errors);
-		}
-		else {
-			obj.default_route = true;
-		}
-
-		return obj;
-	}
-
-	if (type(value) != "object")
-		push(errors, [ location, "must be of type object" ]);
-
-	return value;
-}
-
 function instantiateInterfaceIpv4(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
@@ -597,8 +429,8 @@ function instantiateInterfaceIpv6(location, value, errors) {
 			if (type(value) != "string")
 				push(errors, [ location, "must be of type string" ]);
 
-			if (!(value in [ "static", "dhcpv6", "none" ]))
-				push(errors, [ location, "must be one of \"static\", \"dhcpv6\" or \"none\"" ]);
+			if (!(value in [ "static", "slaac", "eui64", "dhcpv6", "none" ]))
+				push(errors, [ location, "must be one of \"static\", \"slaac\", \"eui64\", \"dhcpv6\" or \"none\"" ]);
 
 			return value;
 		}
@@ -661,6 +493,255 @@ function instantiateInterfaceIpv6(location, value, errors) {
 	return value;
 }
 
+function instantiateInterfaceVlan(location, value, errors) {
+	if (type(value) == "object") {
+		let obj = {};
+
+		function parseId(location, value, errors) {
+			if (type(value) in [ "int", "double" ]) {
+				if (value > 4094)
+					push(errors, [ location, "must be lower than or equal to 4094" ]);
+
+				if (value < 1)
+					push(errors, [ location, "must be bigger than or equal to 1" ]);
+
+			}
+
+			if (type(value) != "int")
+				push(errors, [ location, "must be of type integer" ]);
+
+			return value;
+		}
+
+		if (exists(value, "id")) {
+			obj.id = parseId(location + "/id", value["id"], errors);
+		}
+
+		function parseProto(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			if (!(value in [ "802.1ad", "802.1q" ]))
+				push(errors, [ location, "must be one of \"802.1ad\" or \"802.1q\"" ]);
+
+			return value;
+		}
+
+		if (exists(value, "proto")) {
+			obj.proto = parseProto(location + "/proto", value["proto"], errors);
+		}
+		else {
+			obj.proto = "802.1q";
+		}
+
+		function parseRole(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			if (!(value in [ "upstream", "downstream", "local" ]))
+				push(errors, [ location, "must be one of \"upstream\", \"downstream\" or \"local\"" ]);
+
+			return value;
+		}
+
+		if (exists(value, "role")) {
+			obj.role = parseRole(location + "/role", value["role"], errors);
+		}
+
+		function parseEnabled(location, value, errors) {
+			if (type(value) != "bool")
+				push(errors, [ location, "must be of type boolean" ]);
+
+			return value;
+		}
+
+		if (exists(value, "enabled")) {
+			obj.enabled = parseEnabled(location + "/enabled", value["enabled"], errors);
+		}
+		else {
+			obj.enabled = true;
+		}
+
+		function parseMacAddress(location, value, errors) {
+			if (type(value) == "string") {
+				if (!matchUcMac(value))
+					push(errors, [ location, "must be a valid MAC address" ]);
+
+			}
+
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "mac-address")) {
+			obj.mac_address = parseMacAddress(location + "/mac-address", value["mac-address"], errors);
+		}
+
+		function parseMtu(location, value, errors) {
+			if (type(value) in [ "int", "double" ]) {
+				if (value > 9000)
+					push(errors, [ location, "must be lower than or equal to 9000" ]);
+
+				if (value < 68)
+					push(errors, [ location, "must be bigger than or equal to 68" ]);
+
+			}
+
+			if (type(value) != "int")
+				push(errors, [ location, "must be of type integer" ]);
+
+			return value;
+		}
+
+		if (exists(value, "mtu")) {
+			obj.mtu = parseMtu(location + "/mtu", value["mtu"], errors);
+		}
+
+		function parseName(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "name")) {
+			obj.name = parseName(location + "/name", value["name"], errors);
+		}
+
+		if (exists(value, "ipv4")) {
+			obj.ipv4 = instantiateInterfaceIpv4(location + "/ipv4", value["ipv4"], errors);
+		}
+
+		if (exists(value, "ipv6")) {
+			obj.ipv6 = instantiateInterfaceIpv6(location + "/ipv6", value["ipv6"], errors);
+		}
+
+		return obj;
+	}
+
+	if (type(value) != "object")
+		push(errors, [ location, "must be of type object" ]);
+
+	return value;
+}
+
+function instantiateInterfaceBridge(location, value, errors) {
+	if (type(value) == "object") {
+		let obj = {};
+
+		function parseMembers(location, value, errors) {
+			if (type(value) == "array") {
+				function parseItem(location, value, errors) {
+					if (type(value) != "string")
+						push(errors, [ location, "must be of type string" ]);
+
+					return value;
+				}
+
+				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
+
+			return value;
+		}
+
+		if (exists(value, "members")) {
+			obj.members = parseMembers(location + "/members", value["members"], errors);
+		}
+
+		function parseStp(location, value, errors) {
+			if (type(value) != "bool")
+				push(errors, [ location, "must be of type boolean" ]);
+
+			return value;
+		}
+
+		if (exists(value, "stp")) {
+			obj.stp = parseStp(location + "/stp", value["stp"], errors);
+		}
+		else {
+			obj.stp = false;
+		}
+
+		return obj;
+	}
+
+	if (type(value) != "object")
+		push(errors, [ location, "must be of type object" ]);
+
+	return value;
+}
+
+function instantiateInterfacePppoe(location, value, errors) {
+	if (type(value) == "object") {
+		let obj = {};
+
+		function parseSourceInterface(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "source-interface")) {
+			obj.source_interface = parseSourceInterface(location + "/source-interface", value["source-interface"], errors);
+		}
+		else {
+			push(errors, [ location, "is required" ]);
+		}
+
+		function parseUsername(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "username")) {
+			obj.username = parseUsername(location + "/username", value["username"], errors);
+		}
+
+		function parsePassword(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "password")) {
+			obj.password = parsePassword(location + "/password", value["password"], errors);
+		}
+		else {
+			push(errors, [ location, "is required" ]);
+		}
+
+		function parseDefaultRoute(location, value, errors) {
+			if (type(value) != "bool")
+				push(errors, [ location, "must be of type boolean" ]);
+
+			return value;
+		}
+
+		if (exists(value, "default-route")) {
+			obj.default_route = parseDefaultRoute(location + "/default-route", value["default-route"], errors);
+		}
+		else {
+			obj.default_route = true;
+		}
+
+		return obj;
+	}
+
+	if (type(value) != "object")
+		push(errors, [ location, "must be of type object" ]);
+
+	return value;
+}
+
 function instantiateInterface(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
@@ -680,8 +761,8 @@ function instantiateInterface(location, value, errors) {
 			if (type(value) != "string")
 				push(errors, [ location, "must be of type string" ]);
 
-			if (!(value in [ "ethernet", "vlan", "bridge", "loopback", "pppoe", "dummy" ]))
-				push(errors, [ location, "must be one of \"ethernet\", \"vlan\", \"bridge\", \"loopback\", \"pppoe\" or \"dummy\"" ]);
+			if (!(value in [ "ethernet", "bridge", "loopback", "pppoe", "dummy" ]))
+				push(errors, [ location, "must be one of \"ethernet\", \"bridge\", \"loopback\", \"pppoe\" or \"dummy\"" ]);
 
 			return value;
 		}
@@ -762,8 +843,19 @@ function instantiateInterface(location, value, errors) {
 			obj.ethernet = instantiateInterfaceEthernet(location + "/ethernet", value["ethernet"], errors);
 		}
 
+		function parseVlan(location, value, errors) {
+			if (type(value) == "array") {
+				return map(value, (item, i) => instantiateInterfaceVlan(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
+
+			return value;
+		}
+
 		if (exists(value, "vlan")) {
-			obj.vlan = instantiateInterfaceVlan(location + "/vlan", value["vlan"], errors);
+			obj.vlan = parseVlan(location + "/vlan", value["vlan"], errors);
 		}
 
 		if (exists(value, "bridge")) {
