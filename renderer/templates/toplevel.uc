@@ -59,12 +59,6 @@
 		upstream = interface;
 	}
 
-	if (!upstream) {
-		state.strict = true;
-		error('Configuration must contain at least one valid upstream interface. Rejecting whole file');
-		return;
-	}
-
     if (state.interfaces)
         include("interfaces.uc", { location: '/interfaces', interfaces: state.interfaces})
 %}

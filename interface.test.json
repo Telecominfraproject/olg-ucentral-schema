@@ -2,140 +2,23 @@
     "uuid": 1765963982,
     "interfaces": [
 		{
-			"name": "compile-relative-skill",
+			"name": "eth4",
 			"type": "bridge",
-			"role": "upstream",
+			"role": "downstream",
 			"enabled": true,
 			"mac-address": "02:61:b2:a2:0b:00",
-			"mtu": 4183,
-			"ethernet": {
-				"speed": "2500",
-				"duplex": "half",
-				"vlan-tag": "tagged",
-				"proxy-arp": {
-					"enable": false
-				},
-				"arp-filter": {
-					"enable": true
-				},
-				"forwarding": {
-					"enable": true
-				}
-			},
-			"vlan": [
-				{
-					"id": 2017,
-					"proto": "802.1ad",
-					"role": "upstream",
-					"enabled": true,
-					"mac-address": "02:00:ca:56:9a:2f",
-					"mtu": 1647,
-					"name": "develop-kinetic-shrink",
-					"ipv4": {
-						"addressing": "static",
-						"address": [
-							"172.31.80.44/32",
-							"172.16.252.201/14",
-							"192.168.156.105/5"
-						],
-						"gateway": "172.18.175.205"
-					},
-					"ipv6": {
-						"addressing": "eui64",
-						"address": [
-							"2001:db8:1861:3bd5:913d:deb8:816f:4a6c/39",
-							"2001:db8:8a16:742c:e0f2:bb9e:765a:9242/30",
-							"2001:db8:c3bd:27d0:5cc7:4eba:fa99:17c1/81"
-						],
-						"gateway": "2001:db8:e014:e05e:f180:9990:4072:b97e"
-					}
-				},
-				{
-					"id": 593,
-					"proto": "802.1q",
-					"role": "upstream",
-					"enabled": true,
-					"mac-address": "02:b2:a0:28:f0:58",
-					"mtu": 1679,
-					"name": "view-corporate-brass",
-					"ipv4": {
-						"addressing": "static",
-						"address": [
-							"172.31.75.227/21",
-							"172.19.196.220/3",
-							"172.31.114.114/24"
-						],
-						"gateway": "172.31.110.112"
-					},
-					"ipv6": {
-						"addressing": "slaac",
-						"address": [
-							"2001:db8:12c3:88f3:ee4d:74eb:8e3:b3a6/74",
-							"2001:db8:d340:fc66:c62f:11c8:2618:ef7a/64",
-							"2001:db8:e20c:938f:3f4c:c5d1:946c:6a6/59"
-						],
-						"gateway": "2001:db8:ad0a:4818:62a0:a606:7b0b:baa2"
-					}
-				},
-				{
-					"id": 338,
-					"proto": "802.1q",
-					"role": "upstream",
-					"enabled": true,
-					"mac-address": "02:21:3f:d7:6e:2a",
-					"mtu": 3578,
-					"name": "ping-coherent-learning",
-					"ipv4": {
-						"addressing": "dhcp",
-						"address": [
-							"172.25.195.146/32",
-							"172.22.230.186/31",
-							"172.28.158.92/29"
-						],
-						"gateway": "172.19.132.225"
-					},
-					"ipv6": {
-						"addressing": "dhcpv6",
-						"address": [
-							"2001:db8:69c5:3ef7:7d3f:479c:1466:6c69/33",
-							"2001:db8:9d7a:b416:e851:22f5:c1f3:b414/54",
-							"2001:db8:bf4a:4682:5c26:5030:183d:af96/127"
-						],
-						"gateway": "2001:db8:f09e:a735:47df:1117:174:c042"
-					}
-				}
-			],
-			"bridge": {
-				"members": [
-					"receive-progressive-architecture",
-					"step-absolute-number",
-					"downsize-binding-imperative"
-				],
-				"stp": false
-			},
-			"pppoe": {
-				"source-interface": "load-direct-language",
-				"username": "evangelize-buoyant-methodology",
-				"password": "connect-quantum-service",
-				"default-route": true
-			},
 			"ipv4": {
 				"addressing": "static",
 				"address": [
-					"172.31.147.200/9",
-					"172.28.207.95/31",
-					"172.30.109.131/9"
-				],
-				"gateway": "192.168.67.149"
+					"10.7.65.254/24"
+				]
 			},
-			"ipv6": {
-				"addressing": "static",
-				"address": [
-					"2001:db8:770b:153e:306:7ffc:6299:e164/39",
-					"2001:db8:71e7:73d6:a64e:407f:4ccb:fce2/38",
-					"2001:db8:3dfc:30c:f393:1fcc:b06b:cfbe/66"
+			"bridge": {
+				"members": [
+					"eth1",
+					"eth2"
 				],
-				"gateway": "2001:db8:5f3e:6c2b:b236:2466:20b1:155"
+				"stp": false
 			}
 		}
     ]

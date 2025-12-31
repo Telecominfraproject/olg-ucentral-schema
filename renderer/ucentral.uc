@@ -1,8 +1,7 @@
 #!/usr/bin/ucode
 push(REQUIRE_SEARCH_PATH,
 	"/usr/lib/ucode/*.so",
-	/* "/usr/share/ucentral/*.uc" */
-	"/home/tsumugi/olg-ucentral-schema/*.uc"
+	"/usr/share/ucentral/*.uc"
 	);
 
 let schemareader = require("schemareader");
@@ -31,7 +30,7 @@ try {
 	if (state) {
 		fs.stdout.write("VyOS batch output:\n" + batch + "\n");
 
-		let outputjson = fs.open("/tmp/interfaces.vyos", "w");
+		let outputjson = fs.open("/config/config.new", "w");
 		outputjson.write(batch);
 		outputjson.close();
 
