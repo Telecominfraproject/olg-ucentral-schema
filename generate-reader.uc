@@ -132,6 +132,22 @@ let GeneratorProto = {
 				'return (length(iptoarr(value)) == 4 || length(iptoarr(value)) == 16);'
 			]
 		},
+		"uc-ip4range": {
+			desc: 'IPv4 address range',
+			code: [
+				'let m = match(value, /^([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3})-([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3})$/);',
+				'if (!m) return false;',
+				'return (length(iptoarr(m[1])) == 4 && length(iptoarr(m[2])) == 4);'
+			]
+		},
+		"uc-ip6range": {
+			desc: 'IPv6 address range',
+			code: [
+				'let m = match(value, /^([0-9a-fA-F:]+)-([0-9a-fA-F:]+)$/);',
+				'if (!m) return false;',
+				'return (length(iptoarr(m[1])) == 16 && length(iptoarr(m[2])) == 16);'
+			]
+		},
 		"ipv4": {
 			desc: 'IPv4 address',
 			code: [

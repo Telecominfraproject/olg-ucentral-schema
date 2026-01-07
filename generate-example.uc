@@ -219,6 +219,12 @@ function random_value(kind, minLength, maxLength) {
 
 		break;
 
+	case 'uc-ip4range':
+		return random_ip4addr() + '-' + random_ip4addr();
+
+	case 'uc-ip6range':
+		return random_ip6addr() + '-' + random_ip6addr();
+
 	default:
 		if (minLength <= 15 && maxLength >= 20)
 			return random_phrase(minLength, maxLength);
