@@ -503,101 +503,130 @@
                                 "minimum": 1,
                                 "maximum": 65535
                             },
-                            "source": {
-                                "description": "Source matching criteria.",
+                            "match": {
+                                "description": "Matching criteria for this rule.",
                                 "type": "object",
                                 "properties": {
-                                    "address": {
-                                        "description": "Source network (CIDR).",
-                                        "type": "string",
-                                        "format": "uc-cidr"
+                                    "source": {
+                                        "description": "Source matching criteria.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address": {
+                                                "description": "Source address, network (CIDR), or IP range.",
+                                                "type": "string",
+                                                "anyOf": [
+                                                    {
+                                                        "format": "uc-cidr"
+                                                    },
+                                                    {
+                                                        "format": "uc-ip"
+                                                    },
+                                                    {
+                                                        "format": "uc-ip4range"
+                                                    },
+                                                    {
+                                                        "format": "uc-ip6range"
+                                                    }
+                                                ]
+                                            },
+                                            "port": {
+                                                "description": "Source port or range.",
+                                                "type": [
+                                                    "integer",
+                                                    "string"
+                                                ],
+                                                "format": "uc-portrange",
+                                                "examples": [
+                                                    2345,
+                                                    "1024-65535"
+                                                ]
+                                            },
+                                            "group": {
+                                                "description": "Address/port group reference.",
+                                                "type": "string"
+                                            },
+                                            "mac-address": {
+                                                "description": "Source MAC address.",
+                                                "type": "string",
+                                                "format": "uc-mac",
+                                                "example": "98:e7:9a:27:fe:49"
+                                            }
+                                        }
                                     },
-                                    "port": {
-                                        "description": "Source port or range.",
+                                    "destination": {
+                                        "description": "Destination matching criteria.",
+                                        "type": "object",
+                                        "properties": {
+                                            "address": {
+                                                "description": "Destination address, network (CIDR), or IP range.",
+                                                "type": "string",
+                                                "anyOf": [
+                                                    {
+                                                        "format": "uc-cidr"
+                                                    },
+                                                    {
+                                                        "format": "uc-ip"
+                                                    },
+                                                    {
+                                                        "format": "uc-ip4range"
+                                                    },
+                                                    {
+                                                        "format": "uc-ip6range"
+                                                    }
+                                                ]
+                                            },
+                                            "port": {
+                                                "description": "Destination port or range.",
+                                                "type": [
+                                                    "integer",
+                                                    "string"
+                                                ],
+                                                "format": "uc-portrange",
+                                                "examples": [
+                                                    2345,
+                                                    "1024-65535"
+                                                ]
+                                            },
+                                            "group": {
+                                                "description": "Address/port group reference.",
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "protocol": {
+                                        "description": "IP protocol to match. Use \"all\" for all protocols and \"tcp_udp\" for both TCP and UDP.",
+                                        "type": "string",
+                                        "examples": [
+                                            "tcp",
+                                            "tcp_udp",
+                                            "icmp",
+                                            "all"
+                                        ]
+                                    },
+                                    "conn-mark": {
+                                        "description": "Connection mark number to match.",
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 2147483647
+                                    },
+                                    "mark": {
+                                        "description": "Packet mark number or range to match.",
                                         "type": [
                                             "integer",
                                             "string"
                                         ],
                                         "format": "uc-portrange",
                                         "examples": [
-                                            2345,
-                                            "1024-65535"
+                                            11451,
+                                            "11451",
+                                            "11451-11454"
                                         ]
                                     },
-                                    "group": {
-                                        "description": "Address/port group reference.",
-                                        "type": "string"
-                                    },
-                                    "mac-address": {
-                                        "description": "Source MAC address.",
-                                        "type": "string",
-                                        "format": "uc-mac",
-                                        "example": "98:e7:9a:27:fe:49"
-                                    }
-                                }
-                            },
-                            "destination": {
-                                "description": "Destination matching criteria.",
-                                "type": "object",
-                                "properties": {
-                                    "address": {
-                                        "description": "Destination network (CIDR).",
-                                        "type": "string",
-                                        "format": "uc-cidr"
-                                    },
-                                    "port": {
-                                        "description": "Destination port or range.",
-                                        "type": [
-                                            "integer",
-                                            "string"
-                                        ],
-                                        "format": "uc-portrange",
-                                        "examples": [
-                                            2345,
-                                            "1024-65535"
-                                        ]
-                                    },
-                                    "group": {
-                                        "description": "Address/port group reference.",
+                                    "inbound-interface": {
+                                        "description": "Match traffic arriving on this interface.",
                                         "type": "string"
                                     }
                                 }
-                            },
-                            "protocol": {
-                                "description": "IP protocol to match. Use \"all\" for all protocols and \"tcp_udp\" for both TCP and UDP.",
-                                "type": "string",
-                                "examples": [
-                                    "tcp",
-                                    "tcp_udp",
-                                    "icmp",
-                                    "all"
-                                ]
-                            },
-                            "conn-mark": {
-                                "description": "Connection mark number to match",
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 2147483647
-                            },
-                            "mark": {
-                                "description": "Packet mark number to match",
-                                "type": "object",
-                                "properties": {
-                                    "start": {
-                                        "type": "integer",
-                                        "minimum": 1,
-                                        "maximum": 2147483647
-                                    },
-                                    "end": {
-                                        "type": "integer",
-                                        "minimum": 1,
-                                        "maximum": 2147483647
-                                    }
-                                }
-                            },
-                            "inbound-interface": {
-                                "description": "Match traffic arriving on this interface.",
-                                "type": "string"
                             },
                             "action": {
                                 "description": "Action for matching traffic. Use either table OR next-hop, not both.",
