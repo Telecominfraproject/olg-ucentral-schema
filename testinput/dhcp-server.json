@@ -1,0 +1,67 @@
+{
+    "uuid": 1765963988,
+    "interfaces": [
+		{
+			"name": "eth4",
+			"type": "bridge",
+			"role": "downstream",
+			"enabled": true,
+			"mac-address": "02:61:b2:a2:0b:00",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"10.7.65.254/24"
+				]
+			},
+			"bridge": {
+				"members": [
+					"eth1",
+					"eth2"
+				],
+				"stp": false
+			}
+		}
+    ],
+    "services": {
+        "dhcp-server": {
+			"networks": [
+				{
+					"name": "subnet1",
+					"subnets": [
+						{
+							"subnet": "10.7.65.0/24",
+							"default-router": "10.7.65.254",
+							"dns-servers": [
+								"1.1.1.1"
+							],
+							"domain-name": "vyos.moe",
+							"lease-time": 86400,
+							"ranges": [
+								{
+									"start": "10.7.65.1",
+									"stop": "10.7.65.50"
+								},
+								{
+									"start": "10.7.65.101",
+									"stop": "10.7.65.200"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "device1",
+									"mac-address": "02:ec:ec:bd:86:74",
+									"ip-address": "10.7.65.55"
+								},
+								{
+									"name": "device2",
+									"mac-address": "02:a2:d9:42:b4:bf",
+									"ip-address": "10.7.65.60"
+								}
+							]
+						}
+					]
+				}
+            ]
+        }
+    }
+}

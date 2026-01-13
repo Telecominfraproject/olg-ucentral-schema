@@ -1,0 +1,40 @@
+{
+    "uuid": 1765963988,
+    "interfaces": [
+		{
+			"name": "eth4",
+			"type": "bridge",
+			"role": "downstream",
+			"enabled": true,
+			"mac-address": "02:61:b2:a2:0b:00",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"10.7.65.254/24"
+				]
+			},
+			"bridge": {
+				"members": [
+					"eth1",
+					"eth2"
+				],
+				"stp": false
+			}
+		}
+    ],
+    "services": {
+        "dhcp-relay": {
+            "listen-interfaces": [
+                "br0"
+            ],
+            "upstream-interfaces": [
+                "eth3",
+                "eth4"
+            ],
+            "servers": [
+                "192.168.240.254",
+                "192.168.210.254"
+            ]
+        }
+    }
+}

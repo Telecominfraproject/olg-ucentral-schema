@@ -49,7 +49,9 @@ interfaces {
     {% for (let i in interfaces): %}
         {% let iface = getIfaceName(i.type, i.name) %}
     {{ i.type }} {{ iface }} {
+        {% if (i.mac_address): %}
         mac "{{ i.mac_address }}"
+        {% endif %}
         {% if (!i.enabled): %}
         disable
         {% endif %}
@@ -99,7 +101,9 @@ interfaces {
                 {% if (!j.enabled): %}
             disable
                 {% endif %}
+                {% if (j.mac_address): %}
             mac "{{ j.mac_address }}"
+                {% endif %}
                 {% if (j.mtu): %}
             mtu {{ j.mtu }}
                 {% endif %}
@@ -112,19 +116,27 @@ interfaces {
             address "dhcp"
                     {% endif %}
                 {% endif %}
-                {% if (j.ipv6 && j.ipv6.addressing != "none"): %}
-            ipv6 {
-                    {% if (j.ipv6.addressing == "static"): %}
-                        {% for (let k in j.ipv6.address): %}
-                address "{{ k }}"
+                {% if (i.ipv6): %}
+                    {% if (i.ipv6.addressing == "static"): %}
+                        {% for (let j in i.ipv6.address): %}
+            address "{{ j }}"
                         {% endfor %}
-                    {% elif (j.ipv6.addressing == "dhcpv6"): %}
-                address "dhcpv6"
-                    {% elif (j.ipv6.addressing == "slaac"): %}
-                address "autoconf"
-                    {% elif (j.ipv6.addressing == "eui64"): %}
-                        {% for (let k in j.ipv6.address): %}
-                address "{{ k }}" eui64
+                    {% elif (i.ipv6.addressing == "dhcpv6"): %}
+            dhcpv6-options {
+
+            }
+                    {% endif %}
+                {% endif %}
+
+                {% if (i.ipv6 && i.ipv6.addressing != "none"): %}
+            ipv6 {
+                    {% if (i.ipv6.addressing == "slaac"): %}
+                address {
+                    autoconf
+                }
+                    {% elif (i.ipv6.addressing == "eui64"): %}
+                        {% for (let j in i.ipv6.address): %}
+                eui64 {{ j }}
                         {% endfor %}
                     {% endif %}
             }
@@ -143,27 +155,31 @@ interfaces {
             {% endif %}
         {% endif %}
 
-        {% if (i.ipv6 && i.ipv6.addressing != "none"): %}
-        ipv6 {
+        {% if (i.ipv6): %}
             {% if (i.ipv6.addressing == "static"): %}
                 {% for (let j in i.ipv6.address): %}
-            address "{{ j }}"
+        address "{{ j }}"
                 {% endfor %}
             {% elif (i.ipv6.addressing == "dhcpv6"): %}
-            address "dhcpv6"
-            {% elif (i.ipv6.addressing == "slaac"): %}
-            address "autoconf"
+        dhcpv6-options {
+
+        }
+            {% endif %}
+        {% endif %}
+
+        {% if (i.ipv6 && i.ipv6.addressing != "none"): %}
+        ipv6 {
+            {% if (i.ipv6.addressing == "slaac"): %}
+            address {
+                autoconf
+            }
             {% elif (i.ipv6.addressing == "eui64"): %}
                 {% for (let j in i.ipv6.address): %}
-            address "{{ j }}" eui64
+            eui64 {{ j }}
                 {% endfor %}
             {% endif %}
         }
         {% endif %}
     }
     {% endfor %}
-}
-
-system {
-
 }

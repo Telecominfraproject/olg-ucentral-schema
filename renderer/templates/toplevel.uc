@@ -26,21 +26,6 @@
  *   - unit.uc       -> state.unit       -> unit.vyos
  *   - globals.uc    -> state.globals    -> globals.vyos
  *
- * Available Context (passed to all templates):
- *   state      - Domain-specific configuration data
- *   full_state - Complete configuration object
- *   vyos       - VyOS tree format helper module
- *   b          - Boolean helper function
- *   s          - String quoting helper function
- *
- * VyOS Helper Functions:
- *   vyos.block_open(name, ...keys)  - Open: "name key1 key2 {"
- *   vyos.block_close()              - Close: "}"
- *   vyos.leaf(key, value)           - Leaf: "key value"
- *   vyos.leaf_list(key, values)     - Multiple leaves for array
- *   vyos.flag(key, condition)       - Presence flag if true
- *   vyos.comment(text)              - Comment: "/* text * /"
- *   vyos.reset_indent()             - Reset indentation to 0
  */
 
  	let fs = require('fs');
@@ -59,6 +44,20 @@
 		upstream = interface;
 	}
 
-    if (state.interfaces)
-        include("interfaces.uc", { location: '/interfaces', interfaces: state.interfaces})
+    if (state.interfaces) {
+        include("interfaces.uc", { location: '/interfaces', interfaces: state.interfaces});
+	}
+
+	if (state.routing) {
+		include("routing.uc", { location: '/routing', routing: state.routing});
+	}
+
+	if (state.nat) {
+		include("nat.uc", { location: '/nat', nat: state.nat });
+	}
+
+	if (state.services) {
+		include("services/service.uc", { location: '/services', services: state.services });
+	}
+
 %}

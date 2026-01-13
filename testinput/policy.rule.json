@@ -1,0 +1,28 @@
+{
+    "name": "deploy-internal-initiative",
+    "priority": 20369,
+    "match": {
+        "source": {
+            "address": "2001:db8:38a5:463a:db4e:25f3:1bb2:32f5",
+            "port": "1024-65535",
+            "group": "sunset-gravitational-cowboy",
+            "mac-address": "02:af:bd:83:d8:b1"
+        },
+        "destination": {
+            "address": "2001:db8:6c0f:1c2f:6769:69a1:900c:5317",
+            "port": 2345,
+            "group": "search-acoustic-infrastructure"
+        },
+        "protocol": "icmp",
+        "conn-mark": 1511028185,
+        "mark": "11451-11454",
+        "inbound-interface": "share-relative-practice"
+    },
+    "action": {
+        "drop": false,
+        "next-hop": "172.30.4.76",
+        "set-conn-mark": 82581633,
+        "set-mark": 96311035,
+        "set-dscp": 15
+    }
+}

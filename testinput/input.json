@@ -1,0 +1,4780 @@
+{
+	"uuid": 700298228,
+	"unit": {
+		"name": "visit-resultant-scrub",
+		"hostname": "type-free-service.example.org",
+		"location": "ping-lead-method",
+		"timezone": "Europe/London"
+	},
+	"globals": {
+		"router-id": "172.18.247.155",
+		"domain-name": "insource-senior-market.example.org"
+	},
+	"interfaces": [
+		{
+			"name": "release-potential-alignment",
+			"type": "ethernet",
+			"role": "local",
+			"enabled": true,
+			"mac-address": "02:72:9b:c4:d2:b5",
+			"mtu": 5433,
+			"ethernet": {
+				"speed": "2500",
+				"duplex": "half",
+				"vlan-tag": "tagged",
+				"proxy-arp": {
+					"enable": false
+				},
+				"arp-filter": {
+					"enable": true
+				},
+				"forwarding": {
+					"enable": true
+				}
+			},
+			"vlan": [
+				{
+					"id": 1901,
+					"proto": "802.1q",
+					"role": "local",
+					"enabled": true,
+					"mac-address": "02:de:ce:c3:86:95",
+					"mtu": 683,
+					"name": "execute-isochoric-learning",
+					"ipv4": {
+						"addressing": "dhcp",
+						"address": [
+							"172.27.159.50/27",
+							"172.17.215.140/27",
+							"172.16.105.28/18"
+						],
+						"gateway": "10.85.111.128"
+					},
+					"ipv6": {
+						"addressing": "static",
+						"address": [
+							"2001:db8:f7f5:6c5e:b47e:49b8:4fe4:9314/46",
+							"2001:db8:4e9d:f931:ff06:eff1:f667:bba5/60",
+							"2001:db8:2497:64c:7ea2:726e:40d8:6e47/98"
+						],
+						"gateway": "2001:db8:e7ff:49b1:6ed4:69dc:faa3:23ec"
+					}
+				},
+				{
+					"id": 298,
+					"proto": "802.1q",
+					"role": "upstream",
+					"enabled": true,
+					"mac-address": "02:e2:08:ca:61:c0",
+					"mtu": 2607,
+					"name": "patch-electrical-cowboy",
+					"ipv4": {
+						"addressing": "dhcp",
+						"address": [
+							"172.20.61.13/29",
+							"172.19.155.2/30",
+							"172.27.203.114/28"
+						],
+						"gateway": "172.30.158.139"
+					},
+					"ipv6": {
+						"addressing": "none",
+						"address": [
+							"2001:db8:7af8:9d63:eeb9:1ac2:26c4:6579/119",
+							"2001:db8:4339:9b1d:48bd:58df:cfc6:76fa/54",
+							"2001:db8:c015:d25b:9591:b6b0:ac5d:38a4/86"
+						],
+						"gateway": "2001:db8:f4a7:ed6f:d96:86a2:110e:96e5"
+					}
+				},
+				{
+					"id": 1635,
+					"proto": "802.1q",
+					"role": "downstream",
+					"enabled": true,
+					"mac-address": "02:f2:91:c9:ac:54",
+					"mtu": 7974,
+					"name": "insource-critical-system",
+					"ipv4": {
+						"addressing": "none",
+						"address": [
+							"172.20.167.9/29",
+							"172.19.216.36/5",
+							"172.21.242.221/18"
+						],
+						"gateway": "172.31.69.109"
+					},
+					"ipv6": {
+						"addressing": "dhcpv6",
+						"address": [
+							"2001:db8:fcd3:9ab3:1d70:f99d:5e5f:bc4/122",
+							"2001:db8:8785:48a:83f2:4bc7:460d:4399/101",
+							"2001:db8:fe8a:682d:33ef:8963:2251:3ebe/76"
+						],
+						"gateway": "2001:db8:151a:37b0:ec76:f551:3e39:9ef6"
+					}
+				}
+			],
+			"bridge": {
+				"members": [
+					"link-acoustic-comment",
+					"step-isothermal-application",
+					"paper-radiant-shrink"
+				],
+				"stp": false
+			},
+			"pppoe": {
+				"source-interface": "chat-regional-niche",
+				"username": "patch-radioactive-disconnect",
+				"password": "upload-acoustic-material",
+				"default-route": true
+			},
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"172.26.214.47/22",
+					"172.25.102.69/17",
+					"172.23.53.79/13"
+				],
+				"gateway": "172.22.158.88"
+			},
+			"ipv6": {
+				"addressing": "none",
+				"address": [
+					"2001:db8:3a22:a56:6ef7:1f72:688b:e22c/83",
+					"2001:db8:ccd:98fa:6170:af9a:b7f5:a647/30",
+					"2001:db8:f941:29db:c892:4fa8:e520:a1d1/75"
+				],
+				"gateway": "2001:db8:de9e:1a06:cdaf:b3c3:f6f3:3074"
+			}
+		},
+		{
+			"name": "open-exothermic-material",
+			"type": "pppoe",
+			"role": "downstream",
+			"enabled": true,
+			"mac-address": "02:76:0e:e0:01:3a",
+			"mtu": 6457,
+			"ethernet": {
+				"speed": "10",
+				"duplex": "full",
+				"vlan-tag": "un-tagged",
+				"proxy-arp": {
+					"enable": false
+				},
+				"arp-filter": {
+					"enable": true
+				},
+				"forwarding": {
+					"enable": true
+				}
+			},
+			"vlan": [
+				{
+					"id": 3,
+					"proto": "802.1q",
+					"role": "downstream",
+					"enabled": true,
+					"mac-address": "02:32:6b:fc:c4:13",
+					"mtu": 2132,
+					"name": "insource-volumetric-system",
+					"ipv4": {
+						"addressing": "dhcp",
+						"address": [
+							"172.21.126.143/0",
+							"172.28.181.246/8",
+							"172.16.41.45/24"
+						],
+						"gateway": "172.27.116.107"
+					},
+					"ipv6": {
+						"addressing": "none",
+						"address": [
+							"2001:db8:568c:e397:b608:588:985c:821b/58",
+							"2001:db8:eef1:e98e:c5f:5f8d:1eb0:32dd/108",
+							"2001:db8:8446:babd:1f8:cafc:23b3:4a41/45"
+						],
+						"gateway": "2001:db8:dcb8:bf6a:8354:c7f8:b1fc:6a50"
+					}
+				},
+				{
+					"id": 2294,
+					"proto": "802.1q",
+					"role": "local",
+					"enabled": true,
+					"mac-address": "02:09:f3:4d:12:7b",
+					"mtu": 73,
+					"name": "search-district-buy-in",
+					"ipv4": {
+						"addressing": "dhcp",
+						"address": [
+							"192.168.40.108/22",
+							"172.18.26.61/14",
+							"10.214.134.232/28"
+						],
+						"gateway": "172.29.228.123"
+					},
+					"ipv6": {
+						"addressing": "slaac",
+						"address": [
+							"2001:db8:9431:71f3:e3f:d97e:e005:edba/44",
+							"2001:db8:d033:66da:83c1:a9ef:ec5a:afe9/3",
+							"2001:db8:a4b7:a32e:1f0e:17d1:986b:66bd/17"
+						],
+						"gateway": "2001:db8:d7e9:ab94:2224:d6d1:73bf:5da2"
+					}
+				},
+				{
+					"id": 1105,
+					"proto": "802.1ad",
+					"role": "local",
+					"enabled": true,
+					"mac-address": "02:01:6b:80:40:e9",
+					"mtu": 1029,
+					"name": "bookmark-closed-procedure",
+					"ipv4": {
+						"addressing": "dhcp",
+						"address": [
+							"172.17.167.47/31",
+							"10.234.17.183/3",
+							"172.16.85.63/4"
+						],
+						"gateway": "172.27.34.28"
+					},
+					"ipv6": {
+						"addressing": "none",
+						"address": [
+							"2001:db8:da9:2cc7:bc8:9729:f707:1fb1/56",
+							"2001:db8:af01:eac2:3a67:cdd6:3994:1e0e/78",
+							"2001:db8:384f:a411:88eb:da39:4923:50a2/47"
+						],
+						"gateway": "2001:db8:54f2:c6f8:26ce:c55:5f72:fde"
+					}
+				}
+			],
+			"bridge": {
+				"members": [
+					"insource-alternating-gatekeeper",
+					"noodle-critical-block",
+					"unpack-potential-shrink"
+				],
+				"stp": false
+			},
+			"pppoe": {
+				"source-interface": "compile-progressive-paradigm",
+				"username": "search-electric-resource",
+				"password": "unpack-natural-value",
+				"default-route": true
+			},
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"172.31.59.44/8",
+					"172.28.171.214/19",
+					"172.23.103.119/4"
+				],
+				"gateway": "10.14.119.230"
+			},
+			"ipv6": {
+				"addressing": "slaac",
+				"address": [
+					"2001:db8:88ea:2b33:a87d:dc5e:4a42:ddf3/7",
+					"2001:db8:a2e5:3178:f7f8:33d7:290e:7b34/97",
+					"2001:db8:69c7:4f12:1ebe:ff72:e9e8:c547/82"
+				],
+				"gateway": "2001:db8:e430:7baf:7ae9:3406:b2bb:5d33"
+			}
+		},
+		{
+			"name": "send-resultant-ideation",
+			"type": "dummy",
+			"role": "downstream",
+			"enabled": true,
+			"mac-address": "02:4c:00:7a:8e:f4",
+			"mtu": 7659,
+			"ethernet": {
+				"speed": "1000",
+				"duplex": "auto",
+				"vlan-tag": "tagged",
+				"proxy-arp": {
+					"enable": false
+				},
+				"arp-filter": {
+					"enable": true
+				},
+				"forwarding": {
+					"enable": true
+				}
+			},
+			"vlan": [
+				{
+					"id": 1613,
+					"proto": "802.1ad",
+					"role": "upstream",
+					"enabled": true,
+					"mac-address": "02:4e:41:61:0d:b3",
+					"mtu": 5297,
+					"name": "message-future-process",
+					"ipv4": {
+						"addressing": "static",
+						"address": [
+							"10.128.190.65/30",
+							"172.24.91.23/7",
+							"172.31.136.54/25"
+						],
+						"gateway": "172.20.120.198"
+					},
+					"ipv6": {
+						"addressing": "slaac",
+						"address": [
+							"2001:db8:5f16:4143:3333:1b77:9f50:11e6/71",
+							"2001:db8:c2a4:920b:4c3a:61a8:8d19:aba/1",
+							"2001:db8:e55a:b04f:9c57:91b5:ea66:a565/77"
+						],
+						"gateway": "2001:db8:617e:aaed:b293:f38a:aa98:143c"
+					}
+				},
+				{
+					"id": 2574,
+					"proto": "802.1ad",
+					"role": "downstream",
+					"enabled": true,
+					"mac-address": "02:f4:74:74:27:ec",
+					"mtu": 3700,
+					"name": "task-magnetic-paradigm",
+					"ipv4": {
+						"addressing": "static",
+						"address": [
+							"172.20.16.49/15",
+							"172.21.241.206/12",
+							"172.28.158.214/6"
+						],
+						"gateway": "172.23.184.110"
+					},
+					"ipv6": {
+						"addressing": "none",
+						"address": [
+							"2001:db8:9b9f:1757:fd8b:f313:707f:1477/69",
+							"2001:db8:db8c:ed24:a33f:d8a5:120c:be50/90",
+							"2001:db8:41ae:8cc7:d262:219f:f795:d3a4/57"
+						],
+						"gateway": "2001:db8:7c9:9242:17cc:c2e9:374:372d"
+					}
+				},
+				{
+					"id": 3496,
+					"proto": "802.1ad",
+					"role": "local",
+					"enabled": true,
+					"mac-address": "02:b9:81:e7:44:94",
+					"mtu": 2174,
+					"name": "connect-relative-comment",
+					"ipv4": {
+						"addressing": "static",
+						"address": [
+							"10.152.236.250/16",
+							"172.27.193.209/27",
+							"192.168.48.32/7"
+						],
+						"gateway": "172.26.43.41"
+					},
+					"ipv6": {
+						"addressing": "none",
+						"address": [
+							"2001:db8:2b9:564:b08e:42a1:2da9:c822/30",
+							"2001:db8:6a65:c98d:7efa:9445:6e38:e392/106",
+							"2001:db8:d132:ab01:4dcc:c0f4:44d2:ed06/125"
+						],
+						"gateway": "2001:db8:b247:7836:976b:b1fe:1b32:4974"
+					}
+				}
+			],
+			"bridge": {
+				"members": [
+					"load-district-infomediary",
+					"debug-rectilinear-admin",
+					"generate-customer-portal"
+				],
+				"stp": false
+			},
+			"pppoe": {
+				"source-interface": "access-global-function",
+				"username": "make-absolute-string",
+				"password": "make-optical-buy-in",
+				"default-route": true
+			},
+			"ipv4": {
+				"addressing": "none",
+				"address": [
+					"172.29.214.212/28",
+					"172.16.101.18/1",
+					"172.16.255.141/1"
+				],
+				"gateway": "172.26.182.163"
+			},
+			"ipv6": {
+				"addressing": "static",
+				"address": [
+					"2001:db8:b1d1:8673:4a2b:7363:9e9:f6e3/82",
+					"2001:db8:fb97:872e:ef45:be78:c27a:631c/86",
+					"2001:db8:4298:c3f8:6e6c:74fd:9d0b:31f6/106"
+				],
+				"gateway": "2001:db8:9150:3ef5:f2ee:7af1:7014:cdb3"
+			}
+		}
+	],
+	"routing": {
+		"static": {
+			"ipv4-rules": [
+				{
+					"destination": "192.168.184.62/18",
+					"next-hop": "172.17.63.236",
+					"interface": "vector-corporate-deck",
+					"distance": 101,
+					"action": "reject"
+				},
+				{
+					"destination": "172.28.204.137/11",
+					"next-hop": "172.31.99.98",
+					"interface": "download-primary-gofer",
+					"distance": 32,
+					"action": "accept"
+				},
+				{
+					"destination": "172.21.100.101/16",
+					"next-hop": "172.20.138.165",
+					"interface": "log-achromatic-leadership",
+					"distance": 50,
+					"action": "reject"
+				}
+			],
+			"ipv6-rules": [
+				{
+					"destination": "2001:db8:e124:d3e:f27:c5cf:110a:1ab0/9",
+					"next-hop": "2001:db8:576e:ea32:822a:12d0:56bf:4984",
+					"interface": "search-potential-comment",
+					"distance": 243,
+					"action": "accept"
+				},
+				{
+					"destination": "2001:db8:c637:4aa:a2e0:753:744d:f16a/121",
+					"next-hop": "2001:db8:4a3:333:728a:bf94:cf20:d943",
+					"interface": "send-electric-verbiage",
+					"distance": 161,
+					"action": "blackhole"
+				},
+				{
+					"destination": "2001:db8:31b:534d:44d6:ed4d:d577:57a7/39",
+					"next-hop": "2001:db8:1efb:7f3a:98a9:6ecf:ae7f:6614",
+					"interface": "paper-isochoric-platform",
+					"distance": 65,
+					"action": "accept"
+				}
+			]
+		},
+		"policies": [
+			{
+				"name": "code-binding-potentiality",
+				"interface": "marinate-senior-data",
+				"address-family": "ipv6",
+				"rules": [
+					{
+						"name": "deploy-internal-initiative",
+						"priority": 20369,
+						"match": {
+							"source": {
+								"address": "2001:db8:38a5:463a:db4e:25f3:1bb2:32f5",
+								"port": "1024-65535",
+								"group": "sunset-gravitational-cowboy",
+								"mac-address": "02:af:bd:83:d8:b1"
+							},
+							"destination": {
+								"address": "2001:db8:6c0f:1c2f:6769:69a1:900c:5317",
+								"port": 2345,
+								"group": "search-acoustic-infrastructure"
+							},
+							"protocol": "icmp",
+							"conn-mark": 1511028185,
+							"mark": "11451-11454",
+							"inbound-interface": "share-relative-practice"
+						},
+						"action": {
+							"drop": false,
+							"next-hop": "172.30.4.76",
+							"set-conn-mark": 82581633,
+							"set-mark": 96311035,
+							"set-dscp": 15
+						}
+					},
+					{
+						"name": "make-future-hardball",
+						"priority": 30613,
+						"match": {
+							"source": {
+								"address": "2001:db8:2477:2e10:4d8c:8e18:be1c:a0a4-2001:db8:c46a:9b48:8021:a3cc:adff:528c",
+								"port": "1024-65535",
+								"group": "task-national-dialogue",
+								"mac-address": "02:88:ea:f9:8c:36"
+							},
+							"destination": {
+								"address": "2001:db8:bc31:6aa7:1e11:6704:230f:2ff2",
+								"port": 2345,
+								"group": "log-principal-type"
+							},
+							"protocol": "all",
+							"conn-mark": 1203649368,
+							"mark": "11451-11454",
+							"inbound-interface": "debug-optical-scope"
+						},
+						"action": {
+							"drop": false,
+							"next-hop": "2001:db8:577b:5ec2:7936:c248:c96c:18be",
+							"set-conn-mark": 1653256498,
+							"set-mark": 2110787429,
+							"set-dscp": 41
+						}
+					},
+					{
+						"name": "post-buoyant-community",
+						"priority": 58251,
+						"match": {
+							"source": {
+								"address": "172.17.158.13-172.20.147.95",
+								"port": "1024-65535",
+								"group": "insource-electrical-expertise",
+								"mac-address": "02:4b:0e:4e:50:89"
+							},
+							"destination": {
+								"address": "2001:db8:cfd2:5b7c:7845:8104:6ae1:9f90/58",
+								"port": "1024-65535",
+								"group": "code-lead-application"
+							},
+							"protocol": "tcp",
+							"conn-mark": 98565442,
+							"mark": 11451,
+							"inbound-interface": "productize-radiant-strategy"
+						},
+						"action": {
+							"drop": false,
+							"next-hop": "10.181.64.117",
+							"set-conn-mark": 1396179200,
+							"set-mark": 623514190,
+							"set-dscp": 45
+						}
+					}
+				]
+			},
+			{
+				"name": "scroll-global-backburner",
+				"interface": "open-internal-strategy",
+				"address-family": "ipv6",
+				"rules": [
+					{
+						"name": "resonate-endothermic-synergy",
+						"priority": 12754,
+						"match": {
+							"source": {
+								"address": "2001:db8:4c96:b222:3b9d:a6e9:95c6:38df-2001:db8:9d99:c030:3eb5:8ea8:cc14:22bb",
+								"port": "1024-65535",
+								"group": "debug-dense-process",
+								"mac-address": "02:4a:6e:19:22:41"
+							},
+							"destination": {
+								"address": "172.25.14.122",
+								"port": 2345,
+								"group": "noodle-absolute-model"
+							},
+							"protocol": "tcp",
+							"conn-mark": 103953723,
+							"mark": 11451,
+							"inbound-interface": "build-exothermic-brass"
+						},
+						"action": {
+							"drop": false,
+							"next-hop": "172.30.20.178",
+							"set-conn-mark": 1038203664,
+							"set-mark": 1265984349,
+							"set-dscp": 24
+						}
+					},
+					{
+						"name": "type-atomic-verbiage",
+						"priority": 9616,
+						"match": {
+							"source": {
+								"address": "2001:db8:9e48:ec9c:7c6d:afc2:535c:be29/70",
+								"port": "1024-65535",
+								"group": "send-open-partnership",
+								"mac-address": "02:8f:ec:8b:3e:45"
+							},
+							"destination": {
+								"address": "2001:db8:c601:8b5a:adba:688d:466a:1117-2001:db8:e2:92c4:e8e3:7650:9040:cfef",
+								"port": 2345,
+								"group": "make-magnetic-market"
+							},
+							"protocol": "tcp",
+							"conn-mark": 1423067718,
+							"mark": "11451-11454",
+							"inbound-interface": "visit-exothermic-content"
+						},
+						"action": {
+							"drop": false,
+							"next-hop": "172.17.161.3",
+							"set-conn-mark": 1566419431,
+							"set-mark": 136127242,
+							"set-dscp": 27
+						}
+					},
+					{
+						"name": "flub-resultant-metrics",
+						"priority": 37743,
+						"match": {
+							"source": {
+								"address": "172.24.191.65/27",
+								"port": "1024-65535",
+								"group": "message-principal-content",
+								"mac-address": "02:23:55:24:8f:16"
+							},
+							"destination": {
+								"address": "172.25.26.230/31",
+								"port": 2345,
+								"group": "load-human-scrub"
+							},
+							"protocol": "all",
+							"conn-mark": 220203705,
+							"mark": "11451",
+							"inbound-interface": "resonate-dense-model"
+						},
+						"action": {
+							"drop": false,
+							"next-hop": "2001:db8:aeaa:874d:850e:5e4:945c:308f",
+							"set-conn-mark": 608070919,
+							"set-mark": 703785905,
+							"set-dscp": 3
+						}
+					}
+				]
+			},
+			{
+				"name": "downsize-chromatic-architecture",
+				"interface": "debug-radioactive-infrastructure",
+				"address-family": "ipv6",
+				"rules": [
+					{
+						"name": "log-rectilinear-market",
+						"priority": 631,
+						"match": {
+							"source": {
+								"address": "172.21.228.137-10.164.125.28",
+								"port": 2345,
+								"group": "install-binding-convergence",
+								"mac-address": "02:aa:aa:f2:b2:5b"
+							},
+							"destination": {
+								"address": "172.28.35.50-172.16.216.230",
+								"port": 2345,
+								"group": "step-binding-leadership"
+							},
+							"protocol": "tcp",
+							"conn-mark": 157062401,
+							"mark": "11451",
+							"inbound-interface": "task-principal-solution"
+						},
+						"action": {
+							"drop": false,
+							"next-hop": "172.21.202.245",
+							"set-conn-mark": 338516085,
+							"set-mark": 87825823,
+							"set-dscp": 38
+						}
+					},
+					{
+						"name": "populate-central-ownership",
+						"priority": 51460,
+						"match": {
+							"source": {
+								"address": "172.20.148.151-172.25.247.87",
+								"port": "1024-65535",
+								"group": "make-direct-admin",
+								"mac-address": "02:66:8c:76:4a:90"
+							},
+							"destination": {
+								"address": "2001:db8:845b:7211:dc1e:dcd0:8fb1:1eab/47",
+								"port": 2345,
+								"group": "share-radioactive-mindshare"
+							},
+							"protocol": "all",
+							"conn-mark": 1296786529,
+							"mark": "11451",
+							"inbound-interface": "load-radioactive-report"
+						},
+						"action": {
+							"drop": false,
+							"next-hop": "172.30.101.215",
+							"set-conn-mark": 1178059723,
+							"set-mark": 402389603,
+							"set-dscp": 37
+						}
+					},
+					{
+						"name": "install-quantum-benefit",
+						"priority": 10524,
+						"match": {
+							"source": {
+								"address": "2001:db8:361c:d3b7:eb1f:c5cd:f262:f116-2001:db8:7579:b440:8e7d:2143:4d83:2478",
+								"port": "1024-65535",
+								"group": "step-regional-hardball",
+								"mac-address": "02:53:30:83:b8:08"
+							},
+							"destination": {
+								"address": "2001:db8:2284:a06b:37e9:639a:2a5f:fbf3-2001:db8:5b33:38ae:320f:2eea:23cd:f7dc",
+								"port": "1024-65535",
+								"group": "chat-fundamental-gatekeeper"
+							},
+							"protocol": "tcp",
+							"conn-mark": 1838883599,
+							"mark": 11451,
+							"inbound-interface": "execute-isochoric-content"
+						},
+						"action": {
+							"drop": false,
+							"next-hop": "172.26.105.113",
+							"set-conn-mark": 400757105,
+							"set-mark": 51826284,
+							"set-dscp": 58
+						}
+					}
+				]
+			}
+		],
+		"bgp": {
+			"local-as": 198095325,
+			"router-id": "172.18.241.60",
+			"neighbors": [
+				{
+					"address": "172.22.88.14",
+					"port": 33928,
+					"remote-as": 501831002,
+					"update-source": "scroll-potential-dialogue",
+					"passive": false,
+					"advertisement-interval": 332,
+					"ebgp-multihop": 2009212962,
+					"password": "sunset-kinetic-system",
+					"peer-params": [
+						{
+							"address-family": "ipv4-unicast",
+							"nexthop-self": false,
+							"soft-reconfig": false,
+							"default-originate": false
+						},
+						{
+							"address-family": "ipv6-unicast",
+							"nexthop-self": false,
+							"soft-reconfig": false,
+							"default-originate": false
+						},
+						{
+							"address-family": "ipv4-unicast",
+							"nexthop-self": false,
+							"soft-reconfig": false,
+							"default-originate": false
+						}
+					]
+				},
+				{
+					"address": "172.19.1.103",
+					"port": 48124,
+					"remote-as": 1550301907,
+					"update-source": "evangelize-natural-idea",
+					"passive": false,
+					"advertisement-interval": 596,
+					"ebgp-multihop": 2068909708,
+					"password": "execute-progressive-issue",
+					"peer-params": [
+						{
+							"address-family": "ipv4-unicast",
+							"nexthop-self": false,
+							"soft-reconfig": false,
+							"default-originate": false
+						},
+						{
+							"address-family": "ipv6-multicast",
+							"nexthop-self": false,
+							"soft-reconfig": false,
+							"default-originate": false
+						},
+						{
+							"address-family": "ipv4-unicast",
+							"nexthop-self": false,
+							"soft-reconfig": false,
+							"default-originate": false
+						}
+					]
+				},
+				{
+					"address": "2001:db8:9f62:a9cc:bd87:ca48:9ac8:e5a9",
+					"port": 23742,
+					"remote-as": 1128813470,
+					"update-source": "send-electric-mindshare",
+					"passive": false,
+					"advertisement-interval": 120,
+					"ebgp-multihop": 1501531964,
+					"password": "vector-radioactive-backburner",
+					"peer-params": [
+						{
+							"address-family": "ipv4-multicast",
+							"nexthop-self": false,
+							"soft-reconfig": false,
+							"default-originate": false
+						},
+						{
+							"address-family": "ipv6-unicast",
+							"nexthop-self": false,
+							"soft-reconfig": false,
+							"default-originate": false
+						},
+						{
+							"address-family": "ipv4-multicast",
+							"nexthop-self": false,
+							"soft-reconfig": false,
+							"default-originate": false
+						}
+					]
+				}
+			],
+			"networks": [
+				{
+					"address-family": "ipv6-unicast",
+					"network": "2001:db8:f79e:2036:55f1:bb0e:362f:7969/127"
+				},
+				{
+					"address-family": "ipv4-multicast",
+					"network": "2001:db8:d6d4:1f98:7f65:945b:e9e1:1a2d/113"
+				},
+				{
+					"address-family": "ipv6-multicast",
+					"network": "2001:db8:9c0d:9465:f906:c1ad:23a1:80f9/72"
+				}
+			],
+			"redistribute": [
+				{
+					"address-family": "ipv4-unicast",
+					"connected": false,
+					"kernel": false,
+					"ospf": false,
+					"rip": false,
+					"static": false,
+					"table": false
+				},
+				{
+					"address-family": "ipv4-unicast",
+					"connected": false,
+					"kernel": false,
+					"ospf": false,
+					"rip": false,
+					"static": false,
+					"table": false
+				},
+				{
+					"address-family": "ipv4-unicast",
+					"connected": false,
+					"kernel": false,
+					"ospf": false,
+					"rip": false,
+					"static": false,
+					"table": false
+				}
+			]
+		},
+		"ospf": {
+			"router-id": "172.31.217.201",
+			"default-route-options": {
+				"always-advertise": false,
+				"metric-value": 139614479,
+				"metric-type": "E2"
+			},
+			"areas": [
+				{
+					"area-id": "0",
+					"area-type": "stub",
+					"no-summary": false,
+					"networks": [
+						"172.19.61.117/0",
+						"172.16.34.108/20",
+						"172.26.13.27/2"
+					]
+				},
+				{
+					"area-id": "0.0.0.1",
+					"area-type": "stub",
+					"no-summary": false,
+					"networks": [
+						"172.20.27.123/32",
+						"172.22.17.108/11",
+						"172.31.100.208/13"
+					]
+				},
+				{
+					"area-id": "0.0.0.1",
+					"area-type": "normal",
+					"no-summary": false,
+					"networks": [
+						"172.20.31.61/12",
+						"172.22.182.252/22",
+						"172.17.171.243/20"
+					]
+				}
+			],
+			"interfaces": [
+				{
+					"name": "type-isochoric-market",
+					"area": "marinate-endothermic-number",
+					"cost": 29578,
+					"passive": false,
+					"network-type": "point-to-point",
+					"priority": 9,
+					"authentication": {
+						"type": "md5",
+						"password": "task-gravitational-architecture",
+						"key-id": 41
+					}
+				},
+				{
+					"name": "flub-achromatic-imperative",
+					"area": "ping-fundamental-technology",
+					"cost": 9982,
+					"passive": false,
+					"network-type": "broadcast",
+					"priority": 218,
+					"authentication": {
+						"type": "plaintext",
+						"password": "debug-rectilinear-relationship",
+						"key-id": 241
+					}
+				},
+				{
+					"name": "receive-potential-deck",
+					"area": "paper-direct-resource",
+					"cost": 28514,
+					"passive": false,
+					"network-type": "broadcast",
+					"priority": 23,
+					"authentication": {
+						"type": "md5",
+						"password": "marinate-adiabatic-goldbricker",
+						"key-id": 45
+					}
+				}
+			],
+			"redistribute": {
+				"connected": false,
+				"static": false,
+				"bgp": false
+			}
+		},
+		"ospfv3": {
+			"areas": [
+				{
+					"area-id": "0",
+					"area-type": "nssa",
+					"no-summary": false,
+					"networks": [
+						"2001:db8:faa4:5620:24ba:3c7f:a0ae:de6a/48",
+						"2001:db8:7cc7:1346:b6b8:add:de5b:3f82/37",
+						"2001:db8:ef1c:1d3e:f0a4:189b:2909:9afc/80"
+					]
+				},
+				{
+					"area-id": "0.0.0.1",
+					"area-type": "nssa",
+					"no-summary": false,
+					"networks": [
+						"2001:db8:54ef:ded:e555:c53f:b6f0:7364/44",
+						"2001:db8:8436:6e09:1210:a8f0:aa88:b2be/22",
+						"2001:db8:d548:2f85:9aa1:8c01:3a63:78fd/49"
+					]
+				},
+				{
+					"area-id": "1",
+					"area-type": "stub",
+					"no-summary": false,
+					"networks": [
+						"2001:db8:e8c1:3275:80b4:11ca:cd71:4de6/80",
+						"2001:db8:13c5:a2d5:852c:f91b:6814:3c1c/107",
+						"2001:db8:2404:c053:da88:3614:6943:8510/6"
+					]
+				}
+			],
+			"interfaces": [
+				{
+					"name": "ping-central-item",
+					"area": "onboard-resultant-system",
+					"cost": 25468,
+					"passive": false,
+					"network-type": "point-to-point",
+					"priority": 7,
+					"authentication": {
+						"type": "plaintext",
+						"password": "onboard-adiabatic-convergence",
+						"key-id": 64
+					}
+				},
+				{
+					"name": "chat-absolute-model",
+					"area": "drag-isobaric-runway",
+					"cost": 44453,
+					"passive": false,
+					"network-type": "non-broadcast",
+					"priority": 239,
+					"authentication": {
+						"type": "md5",
+						"password": "close-human-improvement",
+						"key-id": 95
+					}
+				},
+				{
+					"name": "chat-alternating-imperative",
+					"area": "resonate-coherent-function",
+					"cost": 61090,
+					"passive": false,
+					"network-type": "point-to-multipoint",
+					"priority": 73,
+					"authentication": {
+						"type": "md5",
+						"password": "execute-nuclear-parameter",
+						"key-id": 194
+					}
+				}
+			],
+			"redistribute": {
+				"connected": false,
+				"static": false,
+				"bgp": false
+			}
+		},
+		"rip": {
+			"version": "1",
+			"networks": [
+				"172.24.3.217/23",
+				"172.17.186.128/9",
+				"172.24.56.115/5"
+			],
+			"interfaces": [
+				{
+					"name": "noodle-isothermal-linkage",
+					"passive": false
+				},
+				{
+					"name": "patch-mechanical-gofer",
+					"passive": false
+				},
+				{
+					"name": "close-resolving-platform",
+					"passive": false
+				}
+			],
+			"neighbors": [
+				"172.29.107.224",
+				"172.31.122.239",
+				"172.29.201.92"
+			],
+			"redistribute": {
+				"connected": false,
+				"static": false,
+				"babel": false,
+				"bgp": false,
+				"isis": false,
+				"kernel": false,
+				"nhrp": false,
+				"ospf": false
+			}
+		},
+		"ripng": {
+			"networks": [
+				"2001:db8:b5db:2b16:46a9:e340:71aa:9f1a/124",
+				"2001:db8:221e:9ccf:420d:7285:a90c:d30d/24",
+				"2001:db8:b46e:2bd2:c5fd:4a37:32b6:3421/21"
+			],
+			"interfaces": [
+				{
+					"name": "generate-endothermic-sidebar",
+					"passive": false
+				},
+				{
+					"name": "deploy-dynamic-sidebar",
+					"passive": false
+				},
+				{
+					"name": "access-fundamental-functionality",
+					"passive": false
+				}
+			],
+			"redistribute": {
+				"connected": false,
+				"static": false,
+				"babel": false,
+				"bgp": false,
+				"isis": false,
+				"kernel": false,
+				"nhrp": false,
+				"ospf": false
+			}
+		}
+	},
+	"firewall": {
+		"state-policy": {
+			"established": "accept",
+			"related": "drop",
+			"invalid": "drop"
+		},
+		"groups": [
+			{
+				"ipv4-address-groups": [
+					{
+						"name": "productize-latent-mindshare",
+						"members": [
+							"172.17.247.169/15",
+							"172.21.87.17/28",
+							"172.16.221.253/31"
+						]
+					},
+					{
+						"name": "release-dynamic-architecture",
+						"members": [
+							"172.23.63.66/23",
+							"172.23.224.134/2",
+							"172.26.96.77/30"
+						]
+					},
+					{
+						"name": "install-exothermic-comment",
+						"members": [
+							"172.28.6.108/2",
+							"172.16.227.201/6",
+							"172.28.23.138/17"
+						]
+					}
+				],
+				"ipv6-address-groups": [
+					{
+						"name": "surface-primary-language",
+						"members": [
+							"2001:db8:2170:7505:e1aa:de52:b2c7:3392/37",
+							"2001:db8:4d14:41f5:1109:660a:a9a4:e764/38",
+							"2001:db8:13ab:24d0:b735:3477:f51f:118/29"
+						]
+					},
+					{
+						"name": "run-future-kicker",
+						"members": [
+							"2001:db8:801e:6483:76b9:cf75:194f:98de/7",
+							"2001:db8:3ac0:de4:5e44:1912:c0ab:91d6/77",
+							"2001:db8:dbf:d3cb:f8ce:73c9:7d70:e033/120"
+						]
+					},
+					{
+						"name": "sunset-internal-infrastructure",
+						"members": [
+							"2001:db8:c592:fa23:9c46:1bd3:852a:1e3f/60",
+							"2001:db8:549:82c3:7a37:d4be:9c12:1315/84",
+							"2001:db8:d6d2:20f9:af9b:efe5:e1a4:4171/25"
+						]
+					}
+				],
+				"port-groups": [
+					{
+						"name": "browse-achromatic-runway",
+						"members": [
+							"8080-8090",
+							80,
+							"send-potential-capital"
+						]
+					},
+					{
+						"name": "type-district-schema",
+						"members": [
+							80,
+							"8080-8090",
+							"8080-8090"
+						]
+					},
+					{
+						"name": "develop-radiant-deliverable",
+						"members": [
+							80,
+							"8080-8090",
+							"ping-optical-source"
+						]
+					}
+				],
+				"mac-groups": [
+					{
+						"name": "insource-radioactive-kicker",
+						"description": "access-acoustic-idea",
+						"members": [
+							"02:f9:a5:89:26:52",
+							"02:34:4c:1a:e3:a0",
+							"02:74:b5:3a:a2:b2"
+						]
+					},
+					{
+						"name": "step-resolving-material",
+						"description": "ping-natural-coopetition",
+						"members": [
+							"02:5f:28:56:e1:1a",
+							"02:4c:47:b0:b4:58",
+							"02:a9:59:e1:d0:ab"
+						]
+					},
+					{
+						"name": "triangulate-senior-service",
+						"description": "triangulate-rigid-type",
+						"members": [
+							"02:ae:f7:dc:60:0b",
+							"02:2a:58:bc:5b:53",
+							"02:1b:83:a9:fc:9d"
+						]
+					}
+				],
+				"domain-groups": [
+					{
+						"name": "browse-chief-scenario",
+						"description": "onboard-mechanical-kudos",
+						"members": [
+							"unpack-rectilinear-initiative.example.org",
+							"open-principal-scope.example.org",
+							"transition-atomic-float.example.org"
+						]
+					},
+					{
+						"name": "generate-fundamental-innovation",
+						"description": "productize-resultant-pushback",
+						"members": [
+							"release-isobaric-upside.example.org",
+							"click-national-strategy.example.org",
+							"install-binding-initiative.example.org"
+						]
+					},
+					{
+						"name": "visit-legacy-vision",
+						"description": "release-electric-vision",
+						"members": [
+							"message-critical-linkage.example.org",
+							"release-endothermic-niche.example.org",
+							"surface-gravitational-skillset.example.org"
+						]
+					}
+				]
+			},
+			{
+				"ipv4-address-groups": [
+					{
+						"name": "search-magnetic-deliverable",
+						"members": [
+							"172.16.238.199/3",
+							"172.22.92.180/15",
+							"172.21.237.78/12"
+						]
+					},
+					{
+						"name": "resonate-relative-snippet",
+						"members": [
+							"172.22.111.241/1",
+							"172.24.157.204/11",
+							"172.16.74.188/17"
+						]
+					},
+					{
+						"name": "sunset-kinetic-solution",
+						"members": [
+							"172.27.63.145/20",
+							"172.26.41.100/11",
+							"10.76.90.208/24"
+						]
+					}
+				],
+				"ipv6-address-groups": [
+					{
+						"name": "debug-absolute-material",
+						"members": [
+							"2001:db8:947c:80a3:6034:b763:fb32:d9c1/95",
+							"2001:db8:c0ee:f3a8:1de5:ae71:88b:44c2/70",
+							"2001:db8:bcca:ce53:86e9:9e0:622c:dc12/31"
+						]
+					},
+					{
+						"name": "view-critical-pushback",
+						"members": [
+							"2001:db8:c2cc:d167:9d83:5888:33b2:d989/3",
+							"2001:db8:c82e:5a2c:df23:7f91:555e:b8e5/127",
+							"2001:db8:164d:ac8d:3824:c4be:b518:7ce6/32"
+						]
+					},
+					{
+						"name": "transition-nuclear-kicker",
+						"members": [
+							"2001:db8:7bc2:ad65:3f68:5806:21e5:bb75/71",
+							"2001:db8:e4b2:8cdc:293c:3d3a:c08e:2c5/95",
+							"2001:db8:88bd:5cf1:9b4d:84e:b250:5432/101"
+						]
+					}
+				],
+				"port-groups": [
+					{
+						"name": "evangelize-adiabatic-keyword",
+						"members": [
+							"8080-8090",
+							80,
+							"load-optical-procedure"
+						]
+					},
+					{
+						"name": "receive-volumetric-process",
+						"members": [
+							80,
+							"8080-8090",
+							"deploy-isochoric-skill"
+						]
+					},
+					{
+						"name": "drag-adiabatic-initiative",
+						"members": [
+							"8080-8090",
+							80,
+							80
+						]
+					}
+				],
+				"mac-groups": [
+					{
+						"name": "paper-nuclear-type",
+						"description": "paper-resonnt-expertise",
+						"members": [
+							"02:1b:6e:b0:77:45",
+							"02:47:3f:fe:17:5d",
+							"02:79:4d:e3:fb:68"
+						]
+					},
+					{
+						"name": "evangelize-open-technology",
+						"description": "ping-primary-silo",
+						"members": [
+							"02:1f:ea:6c:43:19",
+							"02:ea:b5:97:99:b5",
+							"02:b3:08:65:2a:4d"
+						]
+					},
+					{
+						"name": "sunset-kinetic-innovation",
+						"description": "generate-resolving-process",
+						"members": [
+							"02:11:a9:c0:79:89",
+							"02:f6:ae:41:a4:ea",
+							"02:60:8e:57:a3:a7"
+						]
+					}
+				],
+				"domain-groups": [
+					{
+						"name": "visit-binding-expertise",
+						"description": "surface-direct-partnership",
+						"members": [
+							"install-coherent-silo.example.org",
+							"generate-corporate-gofer.example.org",
+							"paper-latent-comment.example.org"
+						]
+					},
+					{
+						"name": "run-chief-linkage",
+						"description": "transition-adiabatic-scenario",
+						"members": [
+							"surface-global-space.example.org",
+							"load-principal-imperative.example.org",
+							"debug-isochoric-content.example.org"
+						]
+					},
+					{
+						"name": "load-internal-data",
+						"description": "release-isochoric-expertise",
+						"members": [
+							"sunset-kinetic-buy-in.example.org",
+							"vector-primary-convergence.example.org",
+							"type-relative-comment.example.org"
+						]
+					}
+				]
+			},
+			{
+				"ipv4-address-groups": [
+					{
+						"name": "task-progressive-information",
+						"members": [
+							"172.17.77.4/13",
+							"172.27.32.226/25",
+							"172.22.138.0/9"
+						]
+					},
+					{
+						"name": "send-international-dialogue",
+						"members": [
+							"172.16.244.3/1",
+							"172.28.150.184/22",
+							"172.27.229.202/24"
+						]
+					},
+					{
+						"name": "develop-direct-idea",
+						"members": [
+							"172.22.13.90/8",
+							"172.18.167.76/1",
+							"10.55.120.167/24"
+						]
+					}
+				],
+				"ipv6-address-groups": [
+					{
+						"name": "release-dense-paradigm",
+						"members": [
+							"2001:db8:480c:741a:73f8:6ea7:754f:52a0/118",
+							"2001:db8:851a:692c:bbbf:f5e9:d41a:1237/77",
+							"2001:db8:1827:e491:e8f7:b073:86f8:e69e/56"
+						]
+					},
+					{
+						"name": "transition-principal-gofer",
+						"members": [
+							"2001:db8:476:cfe8:2cd:7aa2:d463:d950/4",
+							"2001:db8:1c70:4d6a:8eda:8b17:c2ba:e17b/33",
+							"2001:db8:47d4:4aa7:4e62:3dbd:1ec1:6099/77"
+						]
+					},
+					{
+						"name": "unpack-legacy-convergence",
+						"members": [
+							"2001:db8:e75c:cc22:862c:221c:cc61:649c/62",
+							"2001:db8:d0d7:3484:6f0e:4b79:8e8:485f/3",
+							"2001:db8:2558:95c9:f535:b06f:5883:d6b0/85"
+						]
+					}
+				],
+				"port-groups": [
+					{
+						"name": "productize-corporate-report",
+						"members": [
+							80,
+							"8080-8090",
+							80
+						]
+					},
+					{
+						"name": "upload-rigid-product",
+						"members": [
+							"8080-8090",
+							80,
+							"debug-quantum-niche"
+						]
+					},
+					{
+						"name": "send-international-string",
+						"members": [
+							"8080-8090",
+							80,
+							80
+						]
+					}
+				],
+				"mac-groups": [
+					{
+						"name": "compile-internal-comment",
+						"description": "link-international-backburner",
+						"members": [
+							"02:4d:49:ce:a5:be",
+							"02:e3:bf:cd:8f:c1",
+							"02:06:c9:20:61:30"
+						]
+					},
+					{
+						"name": "evangelize-open-string",
+						"description": "build-dense-scrub",
+						"members": [
+							"02:23:be:2c:4d:25",
+							"02:f4:40:c2:2b:b7",
+							"02:10:74:86:b5:33"
+						]
+					},
+					{
+						"name": "sunset-latent-paradigm",
+						"description": "install-quantum-product",
+						"members": [
+							"02:c1:56:67:f2:f2",
+							"02:85:26:4a:37:e2",
+							"02:6d:f5:0e:ba:1a"
+						]
+					}
+				],
+				"domain-groups": [
+					{
+						"name": "receive-regional-flunky",
+						"description": "address-alternating-keyword",
+						"members": [
+							"unpack-open-product.example.org",
+							"resonate-exothermic-coopetition.example.org",
+							"upload-lead-content.example.org"
+						]
+					},
+					{
+						"name": "download-corporate-line",
+						"description": "code-buoyant-creative",
+						"members": [
+							"evangelize-fundamental-deck.example.org",
+							"download-direct-talent.example.org",
+							"search-buoyant-data.example.org"
+						]
+					},
+					{
+						"name": "click-forward-portal",
+						"description": "evangelize-national-improvement",
+						"members": [
+							"connect-future-functionality.example.org",
+							"build-exothermic-dog.example.org",
+							"unpack-isobaric-literal.example.org"
+						]
+					}
+				]
+			}
+		],
+		"ipv4-rulesets": [
+			{
+				"name": "load-radioactive-ownership",
+				"description": "load-customer-talent",
+				"default-action": "drop",
+				"default-log": false,
+				"rules": [
+					{
+						"rule-number": 21371,
+						"disabled": false,
+						"action": "drop",
+						"protocol": "all",
+						"source": {
+							"address": "172.27.147.67/28",
+							"port": "code-alternating-experience",
+							"mac-address": "02:4b:ab:eb:fe:83",
+							"group": {
+								"address-group": "deploy-exothermic-process",
+								"port-group": "deploy-isochoric-sidebar"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "172.23.154.109/23",
+							"port": "debug-electrical-agreeance",
+							"group": {
+								"address-group": "link-optical-runway",
+								"port-group": "onboard-direct-pushback"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": false,
+							"related": false,
+							"new": true,
+							"invalid": false
+						},
+						"icmp": {
+							"type": "echo-reply",
+							"code": 10980614
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"urg",
+									"fin",
+									"fin"
+								],
+								"not-set": [
+									"urg",
+									"rst",
+									"urg"
+								]
+							}
+						},
+						"limit": {
+							"rate": "downsize-chromatic-metrics",
+							"burst": 1454742066
+						},
+						"log": false
+					},
+					{
+						"rule-number": 32900,
+						"disabled": false,
+						"action": "accept",
+						"protocol": "tcp",
+						"source": {
+							"address": "172.26.241.230/23",
+							"port": "develop-senior-strategy",
+							"mac-address": "02:ef:be:42:a6:ff",
+							"group": {
+								"address-group": "ping-rectilinear-upside",
+								"port-group": "patch-progressive-skill"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "172.21.75.54/4",
+							"port": "link-endothermic-opportunity",
+							"group": {
+								"address-group": "bookmark-binding-ownership",
+								"port-group": "onboard-principal-chain"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": false,
+							"new": true,
+							"invalid": true
+						},
+						"icmp": {
+							"type": "echo-request",
+							"code": 1374213745
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"rst",
+									"ack",
+									"ack"
+								],
+								"not-set": [
+									"urg",
+									"urg",
+									"psh"
+								]
+							}
+						},
+						"limit": {
+							"rate": "visit-coherent-channel",
+							"burst": 145384422
+						},
+						"log": false
+					},
+					{
+						"rule-number": 42204,
+						"disabled": false,
+						"action": "drop",
+						"protocol": "icmp",
+						"source": {
+							"address": "172.24.144.142/16",
+							"port": "click-latent-report",
+							"mac-address": "02:eb:39:1d:a7:11",
+							"group": {
+								"address-group": "type-gravitational-keyword",
+								"port-group": "chat-quantum-vector"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "172.17.42.131/14",
+							"port": "connect-human-buy-in",
+							"group": {
+								"address-group": "code-electrical-object",
+								"port-group": "click-endothermic-product"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": false,
+							"new": false,
+							"invalid": false
+						},
+						"icmp": {
+							"type": "echo-reply",
+							"code": 1012707942
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"fin",
+									"urg",
+									"urg"
+								],
+								"not-set": [
+									"urg",
+									"urg",
+									"urg"
+								]
+							}
+						},
+						"limit": {
+							"rate": "chat-dynamic-benefit",
+							"burst": 1321499110
+						},
+						"log": false
+					}
+				]
+			},
+			{
+				"name": "connect-global-deliverable",
+				"description": "insource-optical-creative",
+				"default-action": "accept",
+				"default-log": false,
+				"rules": [
+					{
+						"rule-number": 15083,
+						"disabled": false,
+						"action": "reject",
+						"protocol": "tcp",
+						"source": {
+							"address": "172.20.253.40/7",
+							"port": "open-electrical-talent",
+							"mac-address": "02:b6:4c:5f:78:b3",
+							"group": {
+								"address-group": "run-senior-disconnect",
+								"port-group": "vector-resultant-model"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "172.20.56.207/32",
+							"port": "deploy-critical-brass",
+							"group": {
+								"address-group": "post-future-integer",
+								"port-group": "connect-volumetric-snippet"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": false,
+							"new": true,
+							"invalid": false
+						},
+						"icmp": {
+							"type": "echo-request",
+							"code": 1099246043
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"ack",
+									"urg",
+									"syn"
+								],
+								"not-set": [
+									"fin",
+									"ack",
+									"rst"
+								]
+							}
+						},
+						"limit": {
+							"rate": "deploy-buoyant-type",
+							"burst": 961122876
+						},
+						"log": false
+					},
+					{
+						"rule-number": 50774,
+						"disabled": false,
+						"action": "accept",
+						"protocol": "tcp",
+						"source": {
+							"address": "172.27.198.188/32",
+							"port": "bookmark-closed-argument",
+							"mac-address": "02:1f:f4:a8:26:ef",
+							"group": {
+								"address-group": "run-relative-dog",
+								"port-group": "address-senior-talent"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "172.18.30.96/8",
+							"port": "download-progressive-flunky",
+							"group": {
+								"address-group": "debug-isothermal-comment",
+								"port-group": "open-resolving-technology"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": false,
+							"new": false,
+							"invalid": true
+						},
+						"icmp": {
+							"type": "echo-request",
+							"code": 388315834
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"ack",
+									"urg",
+									"syn"
+								],
+								"not-set": [
+									"urg",
+									"psh",
+									"psh"
+								]
+							}
+						},
+						"limit": {
+							"rate": "open-lead-resource",
+							"burst": 745755137
+						},
+						"log": false
+					},
+					{
+						"rule-number": 28108,
+						"disabled": false,
+						"action": "drop",
+						"protocol": "all",
+						"source": {
+							"address": "172.24.58.90/17",
+							"port": "productize-lead-convergence",
+							"mac-address": "02:93:f2:5d:28:aa",
+							"group": {
+								"address-group": "generate-brownian-model",
+								"port-group": "log-electrical-dialogue"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "172.20.53.122/25",
+							"port": "visit-corporate-infomediary",
+							"group": {
+								"address-group": "connect-gravitational-infrastructure",
+								"port-group": "chat-electrical-community"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": false,
+							"related": false,
+							"new": true,
+							"invalid": true
+						},
+						"icmp": {
+							"type": "echo-request",
+							"code": 910729611
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"ack",
+									"fin",
+									"syn"
+								],
+								"not-set": [
+									"urg",
+									"psh",
+									"urg"
+								]
+							}
+						},
+						"limit": {
+							"rate": "flub-isochoric-report",
+							"burst": 1457388669
+						},
+						"log": false
+					}
+				]
+			},
+			{
+				"name": "link-adiabatic-infrastructure",
+				"description": "task-kinetic-methodology",
+				"default-action": "drop",
+				"default-log": false,
+				"rules": [
+					{
+						"rule-number": 47810,
+						"disabled": false,
+						"action": "accept",
+						"protocol": "tcp",
+						"source": {
+							"address": "172.28.111.179/26",
+							"port": "ping-dense-talent",
+							"mac-address": "02:99:29:ab:00:f3",
+							"group": {
+								"address-group": "noodle-absolute-float",
+								"port-group": "share-chief-type"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "172.18.183.169/5",
+							"port": "develop-achromatic-partnership",
+							"group": {
+								"address-group": "unpack-radiant-boondoggle",
+								"port-group": "step-binding-initiative"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": false,
+							"related": true,
+							"new": false,
+							"invalid": true
+						},
+						"icmp": {
+							"type": "echo-reply",
+							"code": 1708117276
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"ack",
+									"urg",
+									"psh"
+								],
+								"not-set": [
+									"psh",
+									"rst",
+									"ack"
+								]
+							}
+						},
+						"limit": {
+							"rate": "transition-isobaric-potentiality",
+							"burst": 727110836
+						},
+						"log": false
+					},
+					{
+						"rule-number": 3685,
+						"disabled": false,
+						"action": "drop",
+						"protocol": "all",
+						"source": {
+							"address": "172.16.25.212/28",
+							"port": "noodle-alternating-model",
+							"mac-address": "02:2f:7e:92:86:09",
+							"group": {
+								"address-group": "post-resolving-leadership",
+								"port-group": "marinate-mechanical-potentiality"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "172.24.101.44/0",
+							"port": "generate-regional-capital",
+							"group": {
+								"address-group": "upload-resolving-interface",
+								"port-group": "insource-forward-cowboy"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": false,
+							"related": true,
+							"new": false,
+							"invalid": true
+						},
+						"icmp": {
+							"type": "echo-reply",
+							"code": 468125329
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"ack",
+									"urg",
+									"psh"
+								],
+								"not-set": [
+									"urg",
+									"syn",
+									"psh"
+								]
+							}
+						},
+						"limit": {
+							"rate": "surface-rectilinear-type",
+							"burst": 386380726
+						},
+						"log": false
+					},
+					{
+						"rule-number": 10811,
+						"disabled": false,
+						"action": "drop",
+						"protocol": "all",
+						"source": {
+							"address": "172.19.171.220/3",
+							"port": "task-chief-code",
+							"mac-address": "02:ed:99:96:85:32",
+							"group": {
+								"address-group": "log-binding-application",
+								"port-group": "run-atomic-infrastructure"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "172.17.70.184/9",
+							"port": "access-achromatic-snippet",
+							"group": {
+								"address-group": "receive-brownian-silo",
+								"port-group": "execute-central-string"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": false,
+							"new": true,
+							"invalid": false
+						},
+						"icmp": {
+							"type": "echo-request",
+							"code": 784537956
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"urg",
+									"fin",
+									"ack"
+								],
+								"not-set": [
+									"fin",
+									"rst",
+									"syn"
+								]
+							}
+						},
+						"limit": {
+							"rate": "access-internal-agreeance",
+							"burst": 79021078
+						},
+						"log": false
+					}
+				]
+			}
+		],
+		"ipv6-rulesets": [
+			{
+				"name": "type-internal-innovation",
+				"description": "chat-national-goldbricker",
+				"default-action": "reject",
+				"default-log": false,
+				"rules": [
+					{
+						"rule-number": 23072,
+						"disabled": false,
+						"action": "accept",
+						"protocol": "tcp",
+						"source": {
+							"address": "2001:db8:b0f0:16d6:c1ea:72da:5af6:5f68/93",
+							"port": "generate-chromatic-methodology",
+							"mac-address": "02:3c:2f:45:37:8f",
+							"group": {
+								"address-group": "post-direct-space",
+								"port-group": "step-rigid-paradigm"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "2001:db8:c597:6576:2cf4:7a88:40e4:97ca/56",
+							"port": "share-senior-creative",
+							"group": {
+								"address-group": "develop-principal-result",
+								"port-group": "populate-endothermic-issue"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": false,
+							"related": true,
+							"new": true,
+							"invalid": true
+						},
+						"icmpv6": {
+							"type": "echo-request",
+							"code": 771028840
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"ack",
+									"syn",
+									"rst"
+								],
+								"not-set": [
+									"urg",
+									"ack",
+									"rst"
+								]
+							}
+						},
+						"limit": {
+							"rate": "resonate-alternating-keyword",
+							"burst": 1778719423
+						},
+						"log": false
+					},
+					{
+						"rule-number": 36408,
+						"disabled": false,
+						"action": "drop",
+						"protocol": "all",
+						"source": {
+							"address": "2001:db8:b357:f0d0:9091:e216:63fc:8c22/115",
+							"port": "onboard-principal-system",
+							"mac-address": "02:f6:81:16:c6:ba",
+							"group": {
+								"address-group": "view-adiabatic-resource",
+								"port-group": "insource-rectilinear-creative"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "2001:db8:dc9d:802:ac93:31c6:14ff:d8a4/107",
+							"port": "generate-resolving-channel",
+							"group": {
+								"address-group": "populate-volumetric-market",
+								"port-group": "insource-achromatic-number"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": true,
+							"new": true,
+							"invalid": false
+						},
+						"icmpv6": {
+							"type": "router-solicitation",
+							"code": 1358081696
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"rst",
+									"ack",
+									"fin"
+								],
+								"not-set": [
+									"psh",
+									"fin",
+									"syn"
+								]
+							}
+						},
+						"limit": {
+							"rate": "flub-central-technology",
+							"burst": 1571429580
+						},
+						"log": false
+					},
+					{
+						"rule-number": 42974,
+						"disabled": false,
+						"action": "drop",
+						"protocol": "icmpv6",
+						"source": {
+							"address": "2001:db8:7b1e:d9cd:9b18:290:b77:7ce5/123",
+							"port": "resonate-central-float",
+							"mac-address": "02:6a:c3:dd:e0:e2",
+							"group": {
+								"address-group": "receive-buoyant-imperative",
+								"port-group": "receive-exothermic-idea"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "2001:db8:2435:6e85:9158:6464:cca2:e5ed/4",
+							"port": "make-absolute-snippet",
+							"group": {
+								"address-group": "send-future-scope",
+								"port-group": "log-potential-idea"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": false,
+							"new": false,
+							"invalid": false
+						},
+						"icmpv6": {
+							"type": "neighbor-advertisement",
+							"code": 308331719
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"urg",
+									"ack",
+									"ack"
+								],
+								"not-set": [
+									"syn",
+									"ack",
+									"ack"
+								]
+							}
+						},
+						"limit": {
+							"rate": "step-adiabatic-upside",
+							"burst": 543410368
+						},
+						"log": false
+					}
+				]
+			},
+			{
+				"name": "access-volumetric-runway",
+				"description": "marinate-internal-argument",
+				"default-action": "drop",
+				"default-log": false,
+				"rules": [
+					{
+						"rule-number": 48430,
+						"disabled": false,
+						"action": "reject",
+						"protocol": "udp",
+						"source": {
+							"address": "2001:db8:445:e8f4:c59e:d0a0:d0b5:b369/93",
+							"port": "scroll-quantum-idea",
+							"mac-address": "02:7f:4c:3b:28:fc",
+							"group": {
+								"address-group": "load-critical-mindshare",
+								"port-group": "compile-open-disconnect"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "2001:db8:fa6a:a1b9:c36b:2ef5:fe06:71c1/59",
+							"port": "receive-forward-pivot",
+							"group": {
+								"address-group": "connect-senior-kicker",
+								"port-group": "code-resonnt-line"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": false,
+							"related": true,
+							"new": false,
+							"invalid": false
+						},
+						"icmpv6": {
+							"type": "neighbor-advertisement",
+							"code": 175086639
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"syn",
+									"syn",
+									"psh"
+								],
+								"not-set": [
+									"urg",
+									"ack",
+									"fin"
+								]
+							}
+						},
+						"limit": {
+							"rate": "bookmark-forward-delta",
+							"burst": 1196872228
+						},
+						"log": false
+					},
+					{
+						"rule-number": 28743,
+						"disabled": false,
+						"action": "reject",
+						"protocol": "udp",
+						"source": {
+							"address": "2001:db8:3651:5e26:975b:77ba:4e00:42ca/72",
+							"port": "view-corporate-syntax",
+							"mac-address": "02:52:4f:f1:8e:32",
+							"group": {
+								"address-group": "step-brownian-creative",
+								"port-group": "install-international-channel"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "2001:db8:122:6f65:ec3f:d8dc:5f7:1539/81",
+							"port": "deploy-global-content",
+							"group": {
+								"address-group": "transition-human-number",
+								"port-group": "connect-radioactive-pushback"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": true,
+							"new": false,
+							"invalid": true
+						},
+						"icmpv6": {
+							"type": "echo-request",
+							"code": 320475751
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"ack",
+									"urg",
+									"ack"
+								],
+								"not-set": [
+									"rst",
+									"urg",
+									"psh"
+								]
+							}
+						},
+						"limit": {
+							"rate": "develop-magnetic-solution",
+							"burst": 1468399417
+						},
+						"log": false
+					},
+					{
+						"rule-number": 28764,
+						"disabled": false,
+						"action": "accept",
+						"protocol": "icmpv6",
+						"source": {
+							"address": "2001:db8:1f45:fa00:8316:5d88:fb9e:2f30/42",
+							"port": "send-potential-imperative",
+							"mac-address": "02:26:e3:20:b9:fb",
+							"group": {
+								"address-group": "install-volumetric-alignment",
+								"port-group": "log-acoustic-backburner"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "2001:db8:5a16:eecc:eef6:582d:98b5:e77e/125",
+							"port": "generate-absolute-item",
+							"group": {
+								"address-group": "chat-latent-sidebar",
+								"port-group": "browse-magnetic-improvement"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": false,
+							"related": false,
+							"new": false,
+							"invalid": false
+						},
+						"icmpv6": {
+							"type": "echo-request",
+							"code": 1273122123
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"ack",
+									"psh",
+									"syn"
+								],
+								"not-set": [
+									"psh",
+									"urg",
+									"urg"
+								]
+							}
+						},
+						"limit": {
+							"rate": "step-binding-niche",
+							"burst": 1991343874
+						},
+						"log": false
+					}
+				]
+			},
+			{
+				"name": "drag-chief-functionality",
+				"description": "type-legacy-opportunity",
+				"default-action": "drop",
+				"default-log": false,
+				"rules": [
+					{
+						"rule-number": 51109,
+						"disabled": false,
+						"action": "accept",
+						"protocol": "all",
+						"source": {
+							"address": "2001:db8:7ea5:10a5:975:408a:f268:a62/40",
+							"port": "type-resultant-system",
+							"mac-address": "02:1b:31:66:61:35",
+							"group": {
+								"address-group": "populate-nuclear-argument",
+								"port-group": "link-isobaric-gatekeeper"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "2001:db8:9da0:f446:7953:f4f6:e05f:a7e9/8",
+							"port": "develop-human-line",
+							"group": {
+								"address-group": "post-adiabatic-item",
+								"port-group": "upload-alternating-strategy"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": true,
+							"new": false,
+							"invalid": false
+						},
+						"icmpv6": {
+							"type": "echo-reply",
+							"code": 55420854
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"fin",
+									"urg",
+									"psh"
+								],
+								"not-set": [
+									"ack",
+									"ack",
+									"psh"
+								]
+							}
+						},
+						"limit": {
+							"rate": "message-isochoric-keyword",
+							"burst": 1939557934
+						},
+						"log": false
+					},
+					{
+						"rule-number": 3775,
+						"disabled": false,
+						"action": "drop",
+						"protocol": "tcp",
+						"source": {
+							"address": "2001:db8:96b1:8c6e:4174:2f6e:926a:1a68/51",
+							"port": "unpack-global-ideation",
+							"mac-address": "02:15:9b:7b:ef:20",
+							"group": {
+								"address-group": "browse-acoustic-coopetition",
+								"port-group": "release-electric-experience"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "2001:db8:226c:b099:b6cf:d2fa:72a5:2200/37",
+							"port": "patch-future-delta",
+							"group": {
+								"address-group": "download-atomic-alignment",
+								"port-group": "code-chromatic-schema"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": false,
+							"related": true,
+							"new": true,
+							"invalid": false
+						},
+						"icmpv6": {
+							"type": "echo-request",
+							"code": 890742422
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"fin",
+									"psh",
+									"fin"
+								],
+								"not-set": [
+									"rst",
+									"syn",
+									"psh"
+								]
+							}
+						},
+						"limit": {
+							"rate": "transition-district-solution",
+							"burst": 1571302114
+						},
+						"log": false
+					},
+					{
+						"rule-number": 21132,
+						"disabled": false,
+						"action": "accept",
+						"protocol": "udp",
+						"source": {
+							"address": "2001:db8:69cb:5520:1f06:92c2:5ba5:8353/48",
+							"port": "paper-rigid-float",
+							"mac-address": "02:f5:3f:68:5d:3a",
+							"group": {
+								"address-group": "marinate-optical-dog",
+								"port-group": "populate-nuclear-partnership"
+							},
+							"negate": false
+						},
+						"destination": {
+							"address": "2001:db8:2cc7:4d9b:2214:353d:9427:9e64/84",
+							"port": "browse-atomic-channel",
+							"group": {
+								"address-group": "code-direct-disconnect",
+								"port-group": "receive-senior-benefit"
+							},
+							"negate": false
+						},
+						"state": {
+							"established": true,
+							"related": true,
+							"new": true,
+							"invalid": false
+						},
+						"icmpv6": {
+							"type": "neighbor-advertisement",
+							"code": 960893611
+						},
+						"tcp": {
+							"flags": {
+								"set": [
+									"psh",
+									"psh",
+									"psh"
+								],
+								"not-set": [
+									"fin",
+									"syn",
+									"rst"
+								]
+							}
+						},
+						"limit": {
+							"rate": "patch-critical-bandwidth",
+							"burst": 1670414638
+						},
+						"log": false
+					}
+				]
+			}
+		],
+		"bridge-rulesets": [
+			{
+				"name": "step-radioactive-chain",
+				"default-action": "accept",
+				"default-log": false,
+				"rules": [
+					{
+						"rule-number": 27257,
+						"disabled": false,
+						"action": "accept",
+						"source": {
+							"mac-address": "02:67:37:89:80:db",
+							"mac-group": "build-buoyant-line",
+							"negate": false
+						},
+						"destination": {
+							"mac-address": "02:e2:9f:04:4e:64",
+							"mac-group": "insource-regional-agreeance",
+							"negate": false
+						},
+						"vlan": {
+							"id": 3752,
+							"priority": 4
+						},
+						"ethertype": "arp",
+						"inbound-interface": "flub-kinetic-network",
+						"outbound-interface": "code-relative-source",
+						"log": false
+					},
+					{
+						"rule-number": 46232,
+						"disabled": false,
+						"action": "drop",
+						"source": {
+							"mac-address": "02:cd:7f:d5:59:e6",
+							"mac-group": "connect-mechanical-potentiality",
+							"negate": false
+						},
+						"destination": {
+							"mac-address": "02:e7:6e:c1:0b:50",
+							"mac-group": "message-magnetic-expertise",
+							"negate": false
+						},
+						"vlan": {
+							"id": 1136,
+							"priority": 3
+						},
+						"ethertype": "0x0800",
+						"inbound-interface": "patch-electrical-method",
+						"outbound-interface": "surface-buoyant-channel",
+						"log": false
+					},
+					{
+						"rule-number": 49027,
+						"disabled": false,
+						"action": "accept",
+						"source": {
+							"mac-address": "02:de:b3:e7:ff:80",
+							"mac-group": "transition-customer-name",
+							"negate": false
+						},
+						"destination": {
+							"mac-address": "02:4d:e1:bb:b3:c8",
+							"mac-group": "insource-internal-material",
+							"negate": false
+						},
+						"vlan": {
+							"id": 3652,
+							"priority": 0
+						},
+						"ethertype": "ipv4",
+						"inbound-interface": "open-resolving-sidebar",
+						"outbound-interface": "bookmark-internal-scrub",
+						"log": false
+					}
+				]
+			},
+			{
+				"name": "transition-atomic-talent",
+				"default-action": "accept",
+				"default-log": false,
+				"rules": [
+					{
+						"rule-number": 51650,
+						"disabled": false,
+						"action": "accept",
+						"source": {
+							"mac-address": "02:16:13:3a:16:94",
+							"mac-group": "drag-endothermic-baseline",
+							"negate": false
+						},
+						"destination": {
+							"mac-address": "02:ed:cb:29:a1:94",
+							"mac-group": "message-dense-comment",
+							"negate": false
+						},
+						"vlan": {
+							"id": 988,
+							"priority": 3
+						},
+						"ethertype": "arp",
+						"inbound-interface": "task-endothermic-baseline",
+						"outbound-interface": "triangulate-radioactive-ideation",
+						"log": false
+					},
+					{
+						"rule-number": 48926,
+						"disabled": false,
+						"action": "drop",
+						"source": {
+							"mac-address": "02:a5:fa:dd:f7:10",
+							"mac-group": "insource-electrical-opportunity",
+							"negate": false
+						},
+						"destination": {
+							"mac-address": "02:85:d2:11:f2:bf",
+							"mac-group": "deploy-dense-method",
+							"negate": false
+						},
+						"vlan": {
+							"id": 2576,
+							"priority": 0
+						},
+						"ethertype": "arp",
+						"inbound-interface": "receive-forward-boondoggle",
+						"outbound-interface": "ping-absolute-product",
+						"log": false
+					},
+					{
+						"rule-number": 3420,
+						"disabled": false,
+						"action": "drop",
+						"source": {
+							"mac-address": "02:52:0c:79:d0:b1",
+							"mac-group": "evangelize-national-number",
+							"negate": false
+						},
+						"destination": {
+							"mac-address": "02:84:9e:da:aa:23",
+							"mac-group": "code-future-potentiality",
+							"negate": false
+						},
+						"vlan": {
+							"id": 759,
+							"priority": 2
+						},
+						"ethertype": "ipv6",
+						"inbound-interface": "execute-latent-block",
+						"outbound-interface": "connect-electric-experience",
+						"log": false
+					}
+				]
+			},
+			{
+				"name": "view-endothermic-verbiage",
+				"default-action": "accept",
+				"default-log": false,
+				"rules": [
+					{
+						"rule-number": 43105,
+						"disabled": false,
+						"action": "drop",
+						"source": {
+							"mac-address": "02:d7:45:2b:a7:f6",
+							"mac-group": "resonate-endothermic-pushback",
+							"negate": false
+						},
+						"destination": {
+							"mac-address": "02:22:f3:79:cd:16",
+							"mac-group": "vector-isothermal-scrub",
+							"negate": false
+						},
+						"vlan": {
+							"id": 540,
+							"priority": 1
+						},
+						"ethertype": "ipv4",
+						"inbound-interface": "generate-internal-name",
+						"outbound-interface": "onboard-radiant-hardball",
+						"log": false
+					},
+					{
+						"rule-number": 14512,
+						"disabled": false,
+						"action": "accept",
+						"source": {
+							"mac-address": "02:d1:c5:45:83:9c",
+							"mac-group": "populate-principal-material",
+							"negate": false
+						},
+						"destination": {
+							"mac-address": "02:81:4c:97:20:6f",
+							"mac-group": "connect-chromatic-architecture",
+							"negate": false
+						},
+						"vlan": {
+							"id": 683,
+							"priority": 0
+						},
+						"ethertype": "0x86dd",
+						"inbound-interface": "patch-adiabatic-process",
+						"outbound-interface": "compile-national-verbiage",
+						"log": false
+					},
+					{
+						"rule-number": 53929,
+						"disabled": false,
+						"action": "accept",
+						"source": {
+							"mac-address": "02:17:00:8a:23:d2",
+							"mac-group": "downsize-future-content",
+							"negate": false
+						},
+						"destination": {
+							"mac-address": "02:eb:f4:03:2e:75",
+							"mac-group": "run-global-market",
+							"negate": false
+						},
+						"vlan": {
+							"id": 1962,
+							"priority": 2
+						},
+						"ethertype": "arp",
+						"inbound-interface": "step-national-metrics",
+						"outbound-interface": "marinate-magnetic-channel",
+						"log": false
+					}
+				]
+			}
+		],
+		"zones": [
+			{
+				"name": "load-legacy-solution",
+				"default-action": "accept",
+				"interfaces": [
+					"search-latent-gofer",
+					"upload-primary-leadership",
+					"receive-buoyant-verbiage"
+				],
+				"local-zone": false
+			},
+			{
+				"name": "close-customer-learning",
+				"default-action": "accept",
+				"interfaces": [
+					"view-kinetic-report",
+					"deploy-rigid-silo",
+					"noodle-gravitational-interface"
+				],
+				"local-zone": false
+			},
+			{
+				"name": "code-rigid-content",
+				"default-action": "reject",
+				"interfaces": [
+					"code-dynamic-community",
+					"paper-rectilinear-backburner",
+					"log-adiabatic-result"
+				],
+				"local-zone": false
+			}
+		],
+		"zone-policies": [
+			{
+				"from": "surface-acoustic-name",
+				"to": "post-fundamental-model",
+				"ruleset": "post-potential-infrastructure"
+			},
+			{
+				"from": "populate-electrical-community",
+				"to": "release-direct-language",
+				"ruleset": "bookmark-potential-infrastructure"
+			},
+			{
+				"from": "debug-national-model",
+				"to": "paper-central-creative",
+				"ruleset": "make-primary-empowerment"
+			}
+		]
+	},
+	"nat": {
+		"source-ipv4": [
+			{
+				"rule-number": 1923679676,
+				"outbound-interface": "access-customer-application",
+				"protocol": "icmp",
+				"source": {
+					"address": "172.27.161.239/21",
+					"port": 80,
+					"group": {
+						"address-group": "download-mechanical-pushback",
+						"network-group": "post-chief-type",
+						"port-group": "surface-potential-experience"
+					}
+				},
+				"destination": {
+					"address": "10.181.29.70/0",
+					"port": 80,
+					"group": {
+						"address-group": "build-district-content",
+						"network-group": "type-direct-functionality",
+						"port-group": "connect-dense-sidebar"
+					}
+				},
+				"translation": {
+					"address": "downsize-endothermic-practice",
+					"port": "1024-65535"
+				}
+			},
+			{
+				"rule-number": 2098459245,
+				"outbound-interface": "onboard-human-paradigm",
+				"protocol": "tcp",
+				"source": {
+					"address": "10.203.200.210/2",
+					"port": 80,
+					"group": {
+						"address-group": "chat-adiabatic-kicker",
+						"network-group": "populate-direct-chain",
+						"port-group": "run-potential-material"
+					}
+				},
+				"destination": {
+					"address": "172.21.237.229/26",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "browse-corporate-market",
+						"network-group": "scroll-optical-procedure",
+						"port-group": "run-internal-dog"
+					}
+				},
+				"translation": {
+					"address": "step-potential-improvement",
+					"port": "1024-65535"
+				}
+			},
+			{
+				"rule-number": 1601279815,
+				"outbound-interface": "make-resolving-ideation",
+				"protocol": "tcp",
+				"source": {
+					"address": "172.29.49.135/4",
+					"port": 80,
+					"group": {
+						"address-group": "unpack-district-silo",
+						"network-group": "vector-relative-string",
+						"port-group": "drag-district-solution"
+					}
+				},
+				"destination": {
+					"address": "172.20.82.25/10",
+					"port": 80,
+					"group": {
+						"address-group": "message-brownian-material",
+						"network-group": "address-adiabatic-partnership",
+						"port-group": "make-future-imperative"
+					}
+				},
+				"translation": {
+					"address": "run-international-float",
+					"port": 80
+				}
+			}
+		],
+		"destination-ipv4": [
+			{
+				"rule-number": 209254992,
+				"inbound-interface": "productize-relative-brass",
+				"protocol": "all",
+				"source": {
+					"address": "172.17.197.241/31",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "unpack-forward-relationship",
+						"network-group": "execute-dynamic-infrastructure",
+						"port-group": "chat-buoyant-upside"
+					}
+				},
+				"destination": {
+					"address": "172.20.116.113/13",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "task-isobaric-dialogue",
+						"network-group": "open-electric-application",
+						"port-group": "message-rectilinear-capital"
+					}
+				},
+				"translation": {
+					"address": "172.20.30.10",
+					"port": "1024-65535"
+				}
+			},
+			{
+				"rule-number": 208825502,
+				"inbound-interface": "upload-electrical-convergence",
+				"protocol": "udp",
+				"source": {
+					"address": "172.16.82.28/5",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "vector-radiant-object",
+						"network-group": "log-electric-data",
+						"port-group": "noodle-achromatic-paradigm"
+					}
+				},
+				"destination": {
+					"address": "10.94.201.57/32",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "send-relative-experience",
+						"network-group": "make-progressive-leadership",
+						"port-group": "flub-achromatic-opportunity"
+					}
+				},
+				"translation": {
+					"address": "172.16.65.230",
+					"port": "1024-65535"
+				}
+			},
+			{
+				"rule-number": 678871505,
+				"inbound-interface": "make-nuclear-network",
+				"protocol": "icmp",
+				"source": {
+					"address": "172.24.101.160/5",
+					"port": 80,
+					"group": {
+						"address-group": "marinate-direct-line",
+						"network-group": "download-alternating-linkage",
+						"port-group": "triangulate-isobaric-coopetition"
+					}
+				},
+				"destination": {
+					"address": "172.25.247.12/2",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "receive-future-object",
+						"network-group": "step-optical-goldbricker",
+						"port-group": "deploy-fundamental-empowerment"
+					}
+				},
+				"translation": {
+					"address": "10.98.72.31",
+					"port": 80
+				}
+			}
+		],
+		"source-ipv6": [
+			{
+				"rule-number": 1284308936,
+				"outbound-interface": "triangulate-brownian-baseline",
+				"protocol": "udp",
+				"source": {
+					"prefix": "2001:db8:a7eb:9d1c:b8ca:a7d2:da0:4ec1/19",
+					"port": 80,
+					"group": {
+						"address-group": "resonate-rectilinear-paradigm",
+						"network-group": "flub-open-infomediary",
+						"port-group": "evangelize-direct-pushback"
+					}
+				},
+				"destination": {
+					"prefix": "2001:db8:4269:1fd9:3d63:81cb:2221:1882/23",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "deploy-closed-language",
+						"network-group": "onboard-adiabatic-runway",
+						"port-group": "resonate-gravitational-runway"
+					}
+				},
+				"translation": {
+					"prefix": "2001:db8:7845:3b70:2a0c:8467:9c9d:47f1/121",
+					"port": "1024-65535"
+				}
+			},
+			{
+				"rule-number": 1505314860,
+				"outbound-interface": "search-critical-practice",
+				"protocol": "tcp",
+				"source": {
+					"prefix": "2001:db8:7c34:6642:a7c3:9e55:7ec5:86ee/95",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "connect-senior-literal",
+						"network-group": "evangelize-acoustic-report",
+						"port-group": "surface-senior-benefit"
+					}
+				},
+				"destination": {
+					"prefix": "2001:db8:7c67:d1f4:c8aa:1904:19e5:fc6e/119",
+					"port": 80,
+					"group": {
+						"address-group": "code-national-resource",
+						"network-group": "step-chromatic-dog",
+						"port-group": "load-isobaric-argument"
+					}
+				},
+				"translation": {
+					"prefix": "2001:db8:7f26:3d1a:e991:b0e5:c8c0:c3a1/83",
+					"port": "1024-65535"
+				}
+			},
+			{
+				"rule-number": 105062235,
+				"outbound-interface": "access-alternating-convergence",
+				"protocol": "all",
+				"source": {
+					"prefix": "2001:db8:f7aa:2c48:3187:1190:28b6:7873/94",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "code-absolute-solution",
+						"network-group": "address-chromatic-boondoggle",
+						"port-group": "execute-alternating-metrics"
+					}
+				},
+				"destination": {
+					"prefix": "2001:db8:600a:ea9a:1ba8:28cb:ae3b:6f06/70",
+					"port": 80,
+					"group": {
+						"address-group": "make-free-architecture",
+						"network-group": "visit-optical-deliverable",
+						"port-group": "connect-lead-market"
+					}
+				},
+				"translation": {
+					"prefix": "2001:db8:e28a:5ee:b44e:8579:a6a2:8f19/81",
+					"port": 80
+				}
+			}
+		],
+		"destination-ipv6": [
+			{
+				"rule-number": 1005937785,
+				"inbound-interface": "sunset-global-method",
+				"protocol": "tcp",
+				"source": {
+					"prefix": "2001:db8:2942:eae4:650f:d77e:59ea:e8ff/93",
+					"port": 80,
+					"group": {
+						"address-group": "receive-mechanical-system",
+						"network-group": "browse-latent-market",
+						"port-group": "visit-human-number"
+					}
+				},
+				"destination": {
+					"prefix": "2001:db8:ff97:f3e1:13b5:a639:82fa:8c93/41",
+					"port": 80,
+					"group": {
+						"address-group": "paper-natural-bandwidth",
+						"network-group": "onboard-dynamic-linkage",
+						"port-group": "productize-chromatic-deck"
+					}
+				},
+				"translation": {
+					"prefix": "2001:db8:c60e:38a:ed63:cf1a:58d0:c7b0/41",
+					"port": 80
+				}
+			},
+			{
+				"rule-number": 1255849064,
+				"inbound-interface": "click-kinetic-chain",
+				"protocol": "all",
+				"source": {
+					"prefix": "2001:db8:f3b8:5e59:96f8:76b2:eaec:f67b/97",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "bookmark-coherent-material",
+						"network-group": "flub-radioactive-market",
+						"port-group": "type-international-idea"
+					}
+				},
+				"destination": {
+					"prefix": "2001:db8:62a0:39e8:1c6f:bb70:198:2d25/90",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "type-isothermal-name",
+						"network-group": "message-quantum-goldbricker",
+						"port-group": "drag-senior-capital"
+					}
+				},
+				"translation": {
+					"prefix": "2001:db8:224b:636a:5970:5482:99f8:f5b1/19",
+					"port": "1024-65535"
+				}
+			},
+			{
+				"rule-number": 1662289407,
+				"inbound-interface": "download-resultant-model",
+				"protocol": "all",
+				"source": {
+					"prefix": "2001:db8:c38d:efc3:7633:c525:1ce8:2923/117",
+					"port": 80,
+					"group": {
+						"address-group": "load-buoyant-scrub",
+						"network-group": "ping-alternating-language",
+						"port-group": "access-achromatic-scrub"
+					}
+				},
+				"destination": {
+					"prefix": "2001:db8:8daa:a417:4b2:27a3:99c9:36c/50",
+					"port": "1024-65535",
+					"group": {
+						"address-group": "task-direct-upside",
+						"network-group": "load-isothermal-kicker",
+						"port-group": "step-optical-infrastructure"
+					}
+				},
+				"translation": {
+					"prefix": "2001:db8:d2eb:7042:6fdf:a027:b8f8:aa85/26",
+					"port": 80
+				}
+			}
+		],
+		"nat64": [
+			{
+				"rule-number": 1961660448,
+				"source": {
+					"prefix": "2001:db8:e15b:c25d:4050:6f06:6675:4502/120"
+				},
+				"translation": {
+					"ipv6-prefix": "64:ff9b::/96",
+					"ipv4-pool": {
+						"address": "198.51.100.1",
+						"port-range": 80
+					}
+				}
+			},
+			{
+				"rule-number": 1363728166,
+				"source": {
+					"prefix": "2001:db8:d1da:3029:37b3:2e99:63be:5bcd/80"
+				},
+				"translation": {
+					"ipv6-prefix": "64:ff9b::/96",
+					"ipv4-pool": {
+						"address": "198.51.100.1",
+						"port-range": 80
+					}
+				}
+			},
+			{
+				"rule-number": 592240753,
+				"source": {
+					"prefix": "2001:db8:b54f:5466:8099:6e47:feeb:82d4/53"
+				},
+				"translation": {
+					"ipv6-prefix": "64:ff9b::/96",
+					"ipv4-pool": {
+						"address": "198.51.100.1-198.51.100.10",
+						"port-range": 80
+					}
+				}
+			}
+		]
+	},
+	"pki": {
+		"ca-certs": [
+			{
+				"name": "log-quantum-paradigm",
+				"certificate": "code-central-name",
+				"private-key": "drag-resonnt-methodology"
+			},
+			{
+				"name": "scroll-exothermic-opportunity",
+				"certificate": "type-critical-chain",
+				"private-key": "patch-lead-resource"
+			},
+			{
+				"name": "type-optical-idea",
+				"certificate": "noodle-achromatic-agreeance",
+				"private-key": "sunset-isochoric-vector"
+			}
+		],
+		"certs": [
+			{
+				"name": "downsize-endothermic-resource",
+				"certificate": "triangulate-future-opportunity",
+				"private-key": "productize-critical-baseline"
+			},
+			{
+				"name": "step-kinetic-disconnect",
+				"certificate": "sunset-resolving-alignment",
+				"private-key": "drag-global-hardball"
+			},
+			{
+				"name": "scroll-progressive-procedure",
+				"certificate": "task-natural-linkage",
+				"private-key": "log-adiabatic-agreeance"
+			}
+		],
+		"dh": [
+			{
+				"name": "click-fundamental-kicker",
+				"parameter": "address-absolute-integer"
+			},
+			{
+				"name": "browse-free-goldbricker",
+				"parameter": "type-brownian-linkage"
+			},
+			{
+				"name": "share-radiant-initiative",
+				"parameter": "install-internal-expertise"
+			}
+		]
+	},
+	"vpn": {
+		"ipsec": {
+			"interface": "sunset-international-backburner",
+			"ike-groups": [
+				{
+					"name": "access-dense-ideation",
+					"key-exchange": "ikev2",
+					"lifetime": 2141285388,
+					"proposal": {
+						"encryption": "3des",
+						"hash": "sha512",
+						"dh-group": 21
+					},
+					"dead-peer-detection": {
+						"action": "hold",
+						"interval": 350116968,
+						"timeout": 1514662227
+					},
+					"close-action": "hold"
+				},
+				{
+					"name": "chat-direct-deck",
+					"key-exchange": "ikev1",
+					"lifetime": 1266948864,
+					"proposal": {
+						"encryption": "aes256",
+						"hash": "sha384",
+						"dh-group": 20
+					},
+					"dead-peer-detection": {
+						"action": "none",
+						"interval": 1109651658,
+						"timeout": 395857626
+					},
+					"close-action": "start"
+				},
+				{
+					"name": "step-buoyant-availability",
+					"key-exchange": "ikev2",
+					"lifetime": 378992041,
+					"proposal": {
+						"encryption": "aes256gcm",
+						"hash": "sha256",
+						"dh-group": 16
+					},
+					"dead-peer-detection": {
+						"action": "hold",
+						"interval": 1825422574,
+						"timeout": 1111033747
+					},
+					"close-action": "hold"
+				}
+			],
+			"esp-groups": [
+				{
+					"name": "insource-fundamental-model",
+					"lifetime": 80862949,
+					"mode": "tunnel",
+					"pfs": true,
+					"proposal": {
+						"encryption": "3des",
+						"hash": "sha384"
+					}
+				},
+				{
+					"name": "flub-brownian-integer",
+					"lifetime": 872422605,
+					"mode": "transport",
+					"pfs": true,
+					"proposal": {
+						"encryption": "aes256",
+						"hash": "sha1"
+					}
+				},
+				{
+					"name": "execute-nuclear-market",
+					"lifetime": 1902359330,
+					"mode": "tunnel",
+					"pfs": true,
+					"proposal": {
+						"encryption": "aes128gcm",
+						"hash": "sha1"
+					}
+				}
+			],
+			"authentication": {
+				"id": [
+					"install-chief-verbiage",
+					"develop-relative-opportunity",
+					"surface-magnetic-portal"
+				],
+				"secret": "search-buoyant-coopetition"
+			},
+			"peers": [
+				{
+					"name": "release-dynamic-brass",
+					"local-address": "172.16.40.119",
+					"remote-address": "172.26.68.68",
+					"local-id": "bookmark-human-technology",
+					"remote-id": "flub-mechanical-issue",
+					"ike-group": "downsize-senior-value",
+					"esp-group": "vector-resolving-niche",
+					"connection-type": "trap",
+					"tunnels": [
+						{
+							"local-prefix": "172.25.185.57/8",
+							"remote-prefix": "172.24.130.20/31"
+						},
+						{
+							"local-prefix": "172.18.215.135/27",
+							"remote-prefix": "172.20.118.10/31"
+						},
+						{
+							"local-prefix": "172.24.195.176/10",
+							"remote-prefix": "172.23.34.168/8"
+						}
+					]
+				},
+				{
+					"name": "install-volumetric-deck",
+					"local-address": "172.27.29.102",
+					"remote-address": "172.24.122.142",
+					"local-id": "triangulate-isochoric-function",
+					"remote-id": "close-human-infrastructure",
+					"ike-group": "task-latent-type",
+					"esp-group": "vector-lead-name",
+					"connection-type": "none",
+					"tunnels": [
+						{
+							"local-prefix": "192.168.60.152/29",
+							"remote-prefix": "172.21.40.224/0"
+						},
+						{
+							"local-prefix": "172.28.235.101/25",
+							"remote-prefix": "172.23.76.241/31"
+						},
+						{
+							"local-prefix": "10.231.133.226/11",
+							"remote-prefix": "172.28.23.18/8"
+						}
+					]
+				},
+				{
+					"name": "download-gravitational-synergy",
+					"local-address": "172.23.227.20",
+					"remote-address": "172.18.244.215",
+					"local-id": "upload-relative-skillset",
+					"remote-id": "flub-customer-verbiage",
+					"ike-group": "link-international-runway",
+					"esp-group": "type-closed-block",
+					"connection-type": "trap",
+					"tunnels": [
+						{
+							"local-prefix": "172.31.171.6/3",
+							"remote-prefix": "172.21.190.69/30"
+						},
+						{
+							"local-prefix": "172.16.77.11/19",
+							"remote-prefix": "172.19.143.233/25"
+						},
+						{
+							"local-prefix": "172.18.129.122/14",
+							"remote-prefix": "10.14.187.92/12"
+						}
+					]
+				}
+			]
+		},
+		"openvpn": {
+			"servers": [
+				{
+					"name": "transition-forward-linkage",
+					"mode": "server",
+					"persistent-tunnel": false,
+					"protocol": "tcp",
+					"address": "172.22.134.231",
+					"port": 299,
+					"subnet": "2001:db8:62e6:c289:7b04:613e:bc89:f293/113",
+					"encryption": {
+						"cipher": "aes128gcm",
+						"data-ciphers": [
+							"aes192gcm",
+							"aes256gcm",
+							"aes192"
+						]
+					},
+					"hash": "sha512",
+					"tls": {
+						"ca-cert": "debug-closed-paradigm",
+						"cert": "insource-kinetic-method",
+						"dh": "scroll-alternating-interface"
+					},
+					"topology": "point-to-point",
+					"domain": "open-direct-kudos.example.org",
+					"max-connections": 2438,
+					"name-server": "2001:db8:8386:c120:f121:56d3:2406:b3aa",
+					"clients": [
+						{
+							"address": "172.30.51.107",
+							"subnet": "172.26.115.170/16",
+							"cert": "message-optical-functionality"
+						},
+						{
+							"address": "172.16.60.200",
+							"subnet": "2001:db8:c21f:5b68:c7d8:3ba5:960c:4b5e/106",
+							"cert": "chat-closed-method"
+						},
+						{
+							"address": "2001:db8:740a:a611:ab0a:3875:6b7d:78b8",
+							"subnet": "172.28.98.119/29",
+							"cert": "send-dense-market"
+						}
+					]
+				},
+				{
+					"name": "close-national-verbiage",
+					"mode": "site-to-site",
+					"persistent-tunnel": false,
+					"protocol": "udp",
+					"address": "2001:db8:d8c5:66a6:1107:6ed1:b204:dcc",
+					"port": 25902,
+					"subnet": "172.19.213.64/26",
+					"encryption": {
+						"cipher": "aes256",
+						"data-ciphers": [
+							"aes256gcm",
+							"aes256gcm",
+							"aes192"
+						]
+					},
+					"hash": "sha512",
+					"tls": {
+						"ca-cert": "run-forward-leadership",
+						"cert": "browse-fundamental-resource",
+						"dh": "generate-resultant-backburner"
+					},
+					"topology": "subnet",
+					"domain": "type-future-chain.example.org",
+					"max-connections": 67,
+					"name-server": "2001:db8:df83:df14:7fb4:ed4f:d512:d3ea",
+					"clients": [
+						{
+							"address": "172.22.43.145",
+							"subnet": "2001:db8:30b8:365d:845d:ddd0:6356:6051/23",
+							"cert": "load-human-model"
+						},
+						{
+							"address": "172.31.0.166",
+							"subnet": "2001:db8:7722:6b46:54b9:56a5:4a5a:d46d/3",
+							"cert": "productize-volumetric-baseline"
+						},
+						{
+							"address": "172.17.110.27",
+							"subnet": "2001:db8:3d78:65c1:5ef7:a0cf:c612:1015/42",
+							"cert": "click-potential-strategy"
+						}
+					]
+				},
+				{
+					"name": "connect-isobaric-keyword",
+					"mode": "server",
+					"persistent-tunnel": false,
+					"protocol": "tcp",
+					"address": "192.168.156.125",
+					"port": 35668,
+					"subnet": "172.31.97.79/13",
+					"encryption": {
+						"cipher": "aes256",
+						"data-ciphers": [
+							"none",
+							"aes256gcm",
+							"aes192gcm"
+						]
+					},
+					"hash": "sha256",
+					"tls": {
+						"ca-cert": "deploy-district-coopetition",
+						"cert": "click-district-shrink",
+						"dh": "develop-alternating-creative"
+					},
+					"topology": "point-to-point",
+					"domain": "surface-lead-function.example.org",
+					"max-connections": 905,
+					"name-server": "2001:db8:fbc3:d726:5f5c:1f5f:f2f:33cf",
+					"clients": [
+						{
+							"address": "2001:db8:ef90:681e:cac4:1474:ecdc:3a3c",
+							"subnet": "2001:db8:f2c1:e72d:86c3:579e:34ec:b8dd/65",
+							"cert": "chat-senior-cowboy"
+						},
+						{
+							"address": "172.31.2.135",
+							"subnet": "2001:db8:2366:cd3a:58b1:82c3:ec99:67e1/127",
+							"cert": "load-relative-cowboy"
+						},
+						{
+							"address": "2001:db8:6be5:b8d:5401:86a0:fe4e:3b2e",
+							"subnet": "2001:db8:55ec:701b:c641:227c:5d4a:c0ad/15",
+							"cert": "transition-national-imperative"
+						}
+					]
+				}
+			],
+			"clients": [
+				{
+					"name": "onboard-potential-schema",
+					"interface": "upload-isobaric-application",
+					"authentication": {
+						"username": "close-national-platform",
+						"password": "close-magnetic-verbiage"
+					},
+					"mode": "site-to-site",
+					"encryption": {
+						"cipher": "none",
+						"data-ciphers": [
+							"aes256gcm",
+							"aes128gcm",
+							"aes128"
+						]
+					},
+					"hash": "sha384",
+					"persistent-tunnel": false,
+					"persist-key": false,
+					"remote-host": "2001:db8:f2e0:7353:4c86:62fb:3994:6f02",
+					"remote-port": 54361,
+					"protocol": "udp",
+					"tls": {
+						"ca-cert": "vector-direct-line",
+						"cert": "visit-chief-capital",
+						"private-key": "link-internal-report"
+					}
+				},
+				{
+					"name": "share-senior-runway",
+					"interface": "marinate-lead-infomediary",
+					"authentication": {
+						"username": "downsize-resonnt-language",
+						"password": "productize-isothermal-partnership"
+					},
+					"mode": "client",
+					"encryption": {
+						"cipher": "aes256",
+						"data-ciphers": [
+							"aes256gcm",
+							"none",
+							"aes192"
+						]
+					},
+					"hash": "sha256",
+					"persistent-tunnel": false,
+					"persist-key": false,
+					"remote-host": "2001:db8:5fce:2fa8:9fff:9aa9:cb8:9e2",
+					"remote-port": 3590,
+					"protocol": "udp",
+					"tls": {
+						"ca-cert": "message-closed-architecture",
+						"cert": "chat-resonnt-verbiage",
+						"private-key": "onboard-kinetic-interface"
+					}
+				},
+				{
+					"name": "bookmark-alternating-mindshare",
+					"interface": "install-rigid-silo",
+					"authentication": {
+						"username": "marinate-endothermic-resource",
+						"password": "deploy-resonnt-convergence"
+					},
+					"mode": "site-to-site",
+					"encryption": {
+						"cipher": "aes256",
+						"data-ciphers": [
+							"aes192",
+							"aes192",
+							"aes192gcm"
+						]
+					},
+					"hash": "sha1",
+					"persistent-tunnel": false,
+					"persist-key": false,
+					"remote-host": "172.30.101.38",
+					"remote-port": 13174,
+					"protocol": "tcp",
+					"tls": {
+						"ca-cert": "noodle-exothermic-skill",
+						"cert": "triangulate-resultant-expertise",
+						"private-key": "unpack-senior-hardball"
+					}
+				}
+			]
+		},
+		"wireguard": {
+			"interfaces": [
+				{
+					"name": "compile-resultant-coopetition",
+					"private-key": "message-district-integer",
+					"address": "172.22.47.27",
+					"port": 492215947,
+					"peers": [
+						{
+							"name": "search-isobaric-object",
+							"public-key": "step-potential-code",
+							"allowed-ips": [
+								"192.168.214.253/20",
+								"2001:db8:e1cf:89c9:48b6:c6b4:4b9d:2719/82",
+								"2001:db8:69f8:311a:2716:b599:dc89:a5b7/109"
+							],
+							"endpoint": {
+								"address": "172.28.84.19",
+								"port": 26016
+							},
+							"persistent-keepalive": 475400335
+						},
+						{
+							"name": "vector-forward-metrics",
+							"public-key": "link-radioactive-functionality",
+							"allowed-ips": [
+								"2001:db8:5a15:3252:848b:e3de:7b09:4b3f/6",
+								"172.20.65.27/4",
+								"172.22.14.125/1"
+							],
+							"endpoint": {
+								"address": "2001:db8:d090:8f99:81b6:d920:9968:e392",
+								"port": 5797
+							},
+							"persistent-keepalive": 1432690353
+						},
+						{
+							"name": "paper-resonnt-literal",
+							"public-key": "marinate-potential-bandwidth",
+							"allowed-ips": [
+								"2001:db8:addd:9137:abb3:4fff:a6d:b2f4/80",
+								"2001:db8:e14b:1dcf:3b96:b559:da4c:6213/44",
+								"2001:db8:32a3:1268:b1d3:bc3:abd0:9566/81"
+							],
+							"endpoint": {
+								"address": "172.19.151.239",
+								"port": 15449
+							},
+							"persistent-keepalive": 2061488615
+						}
+					]
+				},
+				{
+					"name": "sunset-principal-learning",
+					"private-key": "drag-magnetic-strategy",
+					"address": "172.29.72.45",
+					"port": 303586782,
+					"peers": [
+						{
+							"name": "debug-isochoric-technology",
+							"public-key": "make-open-name",
+							"allowed-ips": [
+								"192.168.88.142/25",
+								"172.17.5.255/6",
+								"172.24.184.5/31"
+							],
+							"endpoint": {
+								"address": "172.21.97.217",
+								"port": 41597
+							},
+							"persistent-keepalive": 2119604151
+						},
+						{
+							"name": "evangelize-rigid-flunky",
+							"public-key": "search-magnetic-space",
+							"allowed-ips": [
+								"2001:db8:ee17:4896:f1e5:e5ea:4204:daf6/9",
+								"2001:db8:4ff5:e8ea:5a79:96dc:8a8:5a31/38",
+								"172.16.113.226/15"
+							],
+							"endpoint": {
+								"address": "192.168.2.225",
+								"port": 39579
+							},
+							"persistent-keepalive": 1972255354
+						},
+						{
+							"name": "ping-electrical-gofer",
+							"public-key": "downsize-nuclear-vision",
+							"allowed-ips": [
+								"2001:db8:5684:daad:8148:8d8d:2aa2:6a32/34",
+								"172.21.56.95/14",
+								"2001:db8:e611:2fc:ed1b:bfaf:9821:171d/51"
+							],
+							"endpoint": {
+								"address": "2001:db8:98c8:d40b:433:64b1:e1dd:ee28",
+								"port": 55160
+							},
+							"persistent-keepalive": 1733157268
+						}
+					]
+				},
+				{
+					"name": "receive-national-synergy",
+					"private-key": "scroll-senior-issue",
+					"address": "172.30.98.93",
+					"port": 364751553,
+					"peers": [
+						{
+							"name": "sunset-electrical-buy-in",
+							"public-key": "build-dense-verbiage",
+							"allowed-ips": [
+								"172.31.203.221/21",
+								"172.16.69.197/30",
+								"2001:db8:a3c2:502b:de9a:e312:ad6e:c57e/45"
+							],
+							"endpoint": {
+								"address": "2001:db8:6de0:a8f1:7a39:18a1:f47d:ca25",
+								"port": 9914
+							},
+							"persistent-keepalive": 628958745
+						},
+						{
+							"name": "message-acoustic-technology",
+							"public-key": "compile-coherent-resource",
+							"allowed-ips": [
+								"2001:db8:bd41:12b:f304:c487:41f0:d8be/52",
+								"172.23.41.228/25",
+								"192.168.78.66/1"
+							],
+							"endpoint": {
+								"address": "172.18.173.24",
+								"port": 2795
+							},
+							"persistent-keepalive": 236305914
+						},
+						{
+							"name": "type-absolute-mindshare",
+							"public-key": "insource-lead-ideation",
+							"allowed-ips": [
+								"172.25.112.114/14",
+								"172.22.150.161/25",
+								"2001:db8:2e3e:ac7c:d246:c357:5c04:612a/124"
+							],
+							"endpoint": {
+								"address": "2001:db8:e42:fc9b:6c6a:cc3c:c3b0:b39",
+								"port": 42426
+							},
+							"persistent-keepalive": 997862663
+						}
+					]
+				}
+			]
+		}
+	},
+	"high-availability": {
+		"vrrp": {
+			"groups": [
+				{
+					"name": "drag-radioactive-object",
+					"virtual-addresses": [
+						"build-endothermic-niche",
+						"flub-alternating-cowboy",
+						"build-alternating-vector"
+					],
+					"priority": 16,
+					"interface": "install-electric-platform",
+					"vrid": 237,
+					"preempt": true
+				},
+				{
+					"name": "message-kinetic-shrink",
+					"virtual-addresses": [
+						"paper-radiant-vision",
+						"post-lead-baseline",
+						"ping-direct-verbiage"
+					],
+					"priority": 242,
+					"interface": "step-brownian-goldbricker",
+					"vrid": 113,
+					"preempt": true
+				},
+				{
+					"name": "open-rectilinear-convergence",
+					"virtual-addresses": [
+						"transition-resonnt-imperative",
+						"step-rigid-sidebar",
+						"execute-exothermic-runway"
+					],
+					"priority": 34,
+					"interface": "insource-mechanical-content",
+					"vrid": 142,
+					"preempt": true
+				}
+			]
+		},
+		"load-balancing": {
+			"interfaces": [
+				{
+					"name": "debug-senior-space",
+					"weight": 1448024741,
+					"failover-only": false,
+					"health-check": {
+						"target": "visit-open-boondoggle",
+						"interval": 1674455830
+					}
+				},
+				{
+					"name": "transition-alternating-admin",
+					"weight": 808875791,
+					"failover-only": false,
+					"health-check": {
+						"target": "upload-nuclear-object",
+						"interval": 1162501455
+					}
+				},
+				{
+					"name": "ping-brownian-scrub",
+					"weight": 1037071160,
+					"failover-only": false,
+					"health-check": {
+						"target": "drag-direct-talent",
+						"interval": 1716334410
+					}
+				}
+			],
+			"rules": [
+				{
+					"id": 5915,
+					"source": "172.17.91.246/29",
+					"destination": "2001:db8:ebc5:8bc9:8733:5aad:f0d9:b423/72",
+					"inbound-interface": "search-critical-scrub",
+					"wan-interfaces": [
+						"chat-primary-snippet",
+						"surface-coherent-name",
+						"evangelize-gravitational-potentiality"
+					]
+				},
+				{
+					"id": 8008,
+					"source": "2001:db8:311e:343d:670d:2c4a:2f15:3d68/31",
+					"destination": "172.23.206.56/20",
+					"inbound-interface": "downsize-binding-boondoggle",
+					"wan-interfaces": [
+						"execute-mechanical-vector",
+						"access-achromatic-goldbricker",
+						"drag-magnetic-issue"
+					]
+				},
+				{
+					"id": 3221,
+					"source": "172.16.207.134/9",
+					"destination": "2001:db8:ad79:1c37:41d9:eae1:e078:e64b/94",
+					"inbound-interface": "resonate-exothermic-system",
+					"wan-interfaces": [
+						"run-isobaric-solution",
+						"log-magnetic-chain",
+						"resonate-brownian-mindshare"
+					]
+				}
+			]
+		}
+	},
+	"services": {
+		"dhcp-server": {
+			"networks": [
+				{
+					"name": "access-lead-function",
+					"subnets": [
+						{
+							"subnet": "172.23.83.132/27",
+							"default-router": "172.23.163.16",
+							"dns-servers": [
+								"172.30.71.167",
+								"172.26.242.10",
+								"172.23.10.76"
+							],
+							"domain-name": "send-volumetric-ownership",
+							"lease-time": 804378010,
+							"ranges": [
+								{
+									"start": "172.22.185.145",
+									"stop": "172.25.131.12"
+								},
+								{
+									"start": "192.168.67.204",
+									"stop": "10.220.224.3"
+								},
+								{
+									"start": "172.28.135.2",
+									"stop": "172.28.12.232"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "view-rigid-space",
+									"mac-address": "02:ec:ec:bd:86:74",
+									"ip-address": "172.19.23.138"
+								},
+								{
+									"name": "make-buoyant-infrastructure",
+									"mac-address": "02:a2:d9:42:b4:bf",
+									"ip-address": "172.19.148.195"
+								},
+								{
+									"name": "search-nuclear-agreeance",
+									"mac-address": "02:94:d1:0d:84:e8",
+									"ip-address": "172.19.82.212"
+								}
+							]
+						},
+						{
+							"subnet": "172.18.91.163/32",
+							"default-router": "172.22.83.13",
+							"dns-servers": [
+								"192.168.175.156",
+								"172.26.91.42",
+								"172.25.108.18"
+							],
+							"domain-name": "chat-internal-technology",
+							"lease-time": 233491871,
+							"ranges": [
+								{
+									"start": "172.25.157.225",
+									"stop": "172.30.16.140"
+								},
+								{
+									"start": "172.24.18.63",
+									"stop": "172.16.76.163"
+								},
+								{
+									"start": "192.168.63.58",
+									"stop": "172.26.101.85"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "marinate-central-scenario",
+									"mac-address": "02:63:0d:52:02:38",
+									"ip-address": "172.24.227.180"
+								},
+								{
+									"name": "access-mechanical-service",
+									"mac-address": "02:a7:52:6c:88:b7",
+									"ip-address": "172.27.43.230"
+								},
+								{
+									"name": "link-acoustic-baseline",
+									"mac-address": "02:06:85:66:bf:57",
+									"ip-address": "172.28.92.186"
+								}
+							]
+						},
+						{
+							"subnet": "10.188.18.157/23",
+							"default-router": "172.16.254.147",
+							"dns-servers": [
+								"192.168.59.90",
+								"172.28.17.79",
+								"172.28.2.89"
+							],
+							"domain-name": "address-exothermic-portal",
+							"lease-time": 232367481,
+							"ranges": [
+								{
+									"start": "192.168.244.70",
+									"stop": "172.25.32.42"
+								},
+								{
+									"start": "172.18.199.10",
+									"stop": "192.168.157.1"
+								},
+								{
+									"start": "172.17.91.135",
+									"stop": "172.20.214.138"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "drag-optical-community",
+									"mac-address": "02:eb:43:1a:64:62",
+									"ip-address": "172.19.170.221"
+								},
+								{
+									"name": "share-nuclear-pivot",
+									"mac-address": "02:fe:cf:31:f8:94",
+									"ip-address": "172.20.249.133"
+								},
+								{
+									"name": "sunset-regional-material",
+									"mac-address": "02:c2:e3:cd:26:bb",
+									"ip-address": "172.17.163.167"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "address-achromatic-empowerment",
+					"subnets": [
+						{
+							"subnet": "172.28.182.51/27",
+							"default-router": "172.19.176.127",
+							"dns-servers": [
+								"172.26.119.158",
+								"10.35.88.197",
+								"172.18.155.135"
+							],
+							"domain-name": "ping-electric-interface",
+							"lease-time": 1695279128,
+							"ranges": [
+								{
+									"start": "172.26.117.12",
+									"stop": "172.17.97.217"
+								},
+								{
+									"start": "172.19.98.183",
+									"stop": "172.17.54.216"
+								},
+								{
+									"start": "172.20.118.164",
+									"stop": "172.18.252.227"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "triangulate-atomic-mindshare",
+									"mac-address": "02:ff:19:a9:17:6a",
+									"ip-address": "172.23.35.120"
+								},
+								{
+									"name": "unpack-exothermic-service",
+									"mac-address": "02:19:b3:8d:e8:c5",
+									"ip-address": "192.168.193.185"
+								},
+								{
+									"name": "close-rigid-sidebar",
+									"mac-address": "02:d1:59:72:9a:f0",
+									"ip-address": "172.18.117.239"
+								}
+							]
+						},
+						{
+							"subnet": "172.28.6.96/5",
+							"default-router": "172.27.220.175",
+							"dns-servers": [
+								"172.31.200.221",
+								"192.168.163.2",
+								"172.23.115.169"
+							],
+							"domain-name": "load-electric-verbiage",
+							"lease-time": 2030922357,
+							"ranges": [
+								{
+									"start": "172.19.2.82",
+									"stop": "172.24.73.169"
+								},
+								{
+									"start": "172.16.230.33",
+									"stop": "172.20.208.172"
+								},
+								{
+									"start": "172.26.137.180",
+									"stop": "172.17.182.188"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "view-coherent-literal",
+									"mac-address": "02:2c:e0:53:a1:f4",
+									"ip-address": "172.18.244.126"
+								},
+								{
+									"name": "triangulate-critical-goldbricker",
+									"mac-address": "02:e6:0e:5f:68:d1",
+									"ip-address": "172.21.20.70"
+								},
+								{
+									"name": "surface-closed-application",
+									"mac-address": "02:ca:b0:cf:53:da",
+									"ip-address": "172.27.148.7"
+								}
+							]
+						},
+						{
+							"subnet": "172.23.168.9/21",
+							"default-router": "172.24.132.217",
+							"dns-servers": [
+								"172.29.192.189",
+								"10.142.81.61",
+								"172.19.26.219"
+							],
+							"domain-name": "unpack-primary-type",
+							"lease-time": 1527624700,
+							"ranges": [
+								{
+									"start": "10.89.49.141",
+									"stop": "172.25.69.117"
+								},
+								{
+									"start": "172.27.178.165",
+									"stop": "172.25.126.133"
+								},
+								{
+									"start": "172.19.66.26",
+									"stop": "172.23.107.164"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "paper-rigid-network",
+									"mac-address": "02:b3:24:f0:b0:1d",
+									"ip-address": "192.168.225.170"
+								},
+								{
+									"name": "bookmark-optical-convergence",
+									"mac-address": "02:75:d1:57:4b:08",
+									"ip-address": "172.20.208.0"
+								},
+								{
+									"name": "onboard-legacy-practice",
+									"mac-address": "02:e2:86:1f:86:0c",
+									"ip-address": "10.248.191.194"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "make-dense-initiative",
+					"subnets": [
+						{
+							"subnet": "172.19.80.137/32",
+							"default-router": "172.25.141.236",
+							"dns-servers": [
+								"172.29.55.130",
+								"172.22.130.206",
+								"172.24.73.251"
+							],
+							"domain-name": "ping-chromatic-coopetition",
+							"lease-time": 229454342,
+							"ranges": [
+								{
+									"start": "172.18.238.200",
+									"stop": "10.168.147.174"
+								},
+								{
+									"start": "172.18.111.37",
+									"stop": "172.25.17.84"
+								},
+								{
+									"start": "10.214.155.79",
+									"stop": "172.29.105.104"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "execute-lead-cowboy",
+									"mac-address": "02:1a:e4:47:20:5d",
+									"ip-address": "172.27.232.191"
+								},
+								{
+									"name": "build-radioactive-shrink",
+									"mac-address": "02:c2:c1:68:9c:be",
+									"ip-address": "172.22.240.159"
+								},
+								{
+									"name": "click-buoyant-parameter",
+									"mac-address": "02:1e:a3:7a:14:55",
+									"ip-address": "172.16.44.111"
+								}
+							]
+						},
+						{
+							"subnet": "172.29.143.31/11",
+							"default-router": "10.62.8.49",
+							"dns-servers": [
+								"172.19.202.242",
+								"172.25.176.98",
+								"172.18.36.28"
+							],
+							"domain-name": "develop-regional-talent",
+							"lease-time": 1940511663,
+							"ranges": [
+								{
+									"start": "172.19.129.141",
+									"stop": "172.21.79.239"
+								},
+								{
+									"start": "172.17.153.247",
+									"stop": "172.16.255.126"
+								},
+								{
+									"start": "172.30.112.64",
+									"stop": "172.26.162.133"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "make-achromatic-interface",
+									"mac-address": "02:fb:db:26:ab:2a",
+									"ip-address": "172.27.56.165"
+								},
+								{
+									"name": "link-district-silo",
+									"mac-address": "02:f5:2d:0f:42:04",
+									"ip-address": "172.27.192.91"
+								},
+								{
+									"name": "release-exothermic-shrink",
+									"mac-address": "02:52:3d:8b:c2:03",
+									"ip-address": "172.17.188.255"
+								}
+							]
+						},
+						{
+							"subnet": "172.28.170.49/18",
+							"default-router": "172.21.35.105",
+							"dns-servers": [
+								"172.18.94.151",
+								"172.28.155.88",
+								"172.22.47.146"
+							],
+							"domain-name": "open-acoustic-linkage",
+							"lease-time": 40595879,
+							"ranges": [
+								{
+									"start": "172.18.236.99",
+									"stop": "172.21.70.124"
+								},
+								{
+									"start": "172.24.94.252",
+									"stop": "172.26.102.48"
+								},
+								{
+									"start": "172.25.123.199",
+									"stop": "172.24.40.144"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "populate-chromatic-model",
+									"mac-address": "02:9f:f3:f9:46:c6",
+									"ip-address": "172.30.170.153"
+								},
+								{
+									"name": "make-gravitational-pivot",
+									"mac-address": "02:c2:74:fb:b7:3b",
+									"ip-address": "172.16.231.97"
+								},
+								{
+									"name": "receive-endothermic-technology",
+									"mac-address": "02:36:51:89:39:0c",
+									"ip-address": "172.21.113.171"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		"dhcp-relay": {
+			"listen-interfaces": [
+				"code-quantum-kicker",
+				"paper-legacy-niche",
+				"insource-open-item"
+			],
+			"upstream-interfaces": [
+				"view-alternating-deliverable",
+				"triangulate-international-dog",
+				"sunset-coherent-delta"
+			],
+			"servers": [
+				"172.19.79.78",
+				"172.24.159.103",
+				"192.168.19.48"
+			]
+		},
+		"dns": {
+			"domains": [
+				"triangulate-customer-innovation",
+				"sunset-legacy-model",
+				"download-isothermal-argument"
+			],
+			"forwarding-servers": [
+				{
+					"address": "172.17.191.181",
+					"port": 49656
+				},
+				{
+					"address": "2001:db8:cae5:9bb2:6d9e:cfc9:2101:17ec",
+					"port": 33242
+				},
+				{
+					"address": "2001:db8:6a8b:c00e:ca45:4636:3921:2675",
+					"port": 7508
+				}
+			],
+			"allow-from": [
+				"172.17.213.237/22",
+				"2001:db8:9f0e:4f2b:5032:9f4b:adea:1be7/68",
+				"2001:db8:2460:d890:c561:91fe:a859:e663/91"
+			],
+			"listen-addresses": [
+				"172.23.118.14",
+				"2001:db8:c530:7a5:f3a:5304:9eb5:400f",
+				"172.28.201.247"
+			]
+		},
+		"ntp": {
+			"servers": [
+				{
+					"address": "172.18.9.223",
+					"no-select": false,
+					"nts": false,
+					"pool": false,
+					"prefer": false,
+					"ptp": false,
+					"interleave": false
+				},
+				{
+					"address": "172.23.112.68",
+					"no-select": false,
+					"nts": false,
+					"pool": false,
+					"prefer": false,
+					"ptp": false,
+					"interleave": false
+				},
+				{
+					"address": "172.20.83.90",
+					"no-select": false,
+					"nts": false,
+					"pool": false,
+					"prefer": false,
+					"ptp": false,
+					"interleave": false
+				}
+			],
+			"listen-ipv4-address": "172.18.208.172",
+			"listen-ipv6-address": "2001:db8:677d:cedc:6e11:76b7:21e1:cc6",
+			"allow-clients": [
+				"2001:db8:bad3:f176:5290:e6ca:7534:3d85",
+				"172.28.100.4",
+				"172.22.53.226"
+			]
+		},
+		"lldp": {
+			"interfaces": [
+				"generate-isochoric-function",
+				"load-natural-experience",
+				"browse-exothermic-deliverable"
+			],
+			"management-addresses": [
+				"2001:db8:e8f0:e943:fbda:f5b7:a00a:b6ad",
+				"2001:db8:f29b:9d78:5c61:3020:6c:f49e",
+				"172.21.143.118"
+			]
+		},
+		"mdns": {
+			"interfaces": [
+				"generate-radiant-parameter",
+				"resonate-endothermic-issue",
+				"visit-atomic-data"
+			]
+		},
+		"pppoe-server": {
+			"description": "bookmark-fundamental-interface",
+			"auth-mode": "noauth",
+			"interface": "connect-relative-float",
+			"client-ip-pool": {
+				"start": "172.28.240.165",
+				"stop": "172.18.29.21"
+			},
+			"wins-servers": [
+				"2001:db8:f5b3:e72f:45fa:b342:86a5:f8df",
+				"172.31.169.157",
+				"172.31.142.198"
+			],
+			"service-names": [
+				"scroll-electric-baseline",
+				"send-customer-ideation",
+				"make-mechanical-block"
+			],
+			"mtu": 885130106,
+			"local": [
+				{
+					"user": "address-binding-talent",
+					"password": "ping-principal-scope"
+				},
+				{
+					"user": "compile-human-function",
+					"password": "resonate-progressive-silo"
+				},
+				{
+					"user": "chat-human-information",
+					"password": "scroll-electrical-object"
+				}
+			],
+			"radius": {
+				"address": "172.24.149.208",
+				"port": 62492
+			}
+		},
+		"web-proxy": {
+			"default-port": 1146457358,
+			"servers": [
+				{
+					"ip": "172.19.212.24",
+					"port": 27276,
+					"transparent-proxy": true
+				},
+				{
+					"ip": "2001:db8:db7c:f3df:1155:98a6:ee22:c4f8",
+					"port": 942,
+					"transparent-proxy": true
+				},
+				{
+					"ip": "172.25.205.53",
+					"port": 30024,
+					"transparent-proxy": true
+				}
+			],
+			"cache-size": 1439552350,
+			"block-domains": [
+				"insource-rigid-runway.example.org",
+				"browse-resolving-leadership.example.org",
+				"flub-corporate-runway.example.org"
+			],
+			"non-cache-domains": [
+				"onboard-open-integer.example.org",
+				"access-resolving-community.example.org",
+				"link-exothermic-relationship.example.org"
+			]
+		},
+		"tftp-server": {
+			"directory": "send-fundamental-kicker",
+			"listen-address": "2001:db8:cfa6:425c:7c69:cee7:da2a:89e",
+			"allow-upload": false
+		},
+		"igmp-proxy": {
+			"upstream-interface": "make-buoyant-vector",
+			"downstream-interfaces": [
+				"surface-atomic-delta",
+				"search-volumetric-data",
+				"chat-corporate-vision"
+			],
+			"alt-subnets": [
+				"192.168.92.188/22",
+				"172.31.225.46/2",
+				"172.20.171.64/17"
+			]
+		},
+		"traffic-policy": {
+			"shaper": [
+				{
+					"name": "ping-buoyant-dialogue",
+					"bandwidth": "install-coherent-kicker",
+					"classes": [
+						{
+							"id": 1386,
+							"bandwidth": "visit-free-function",
+							"burst": "ping-forward-literal",
+							"ceiling": "open-isothermal-admin",
+							"priority": 4,
+							"queue-type": "fq-codel"
+						},
+						{
+							"id": 2868,
+							"bandwidth": "generate-electric-item",
+							"burst": "vector-internal-report",
+							"ceiling": "make-central-literal",
+							"priority": 1,
+							"queue-type": "fair-queue"
+						},
+						{
+							"id": 1016,
+							"bandwidth": "sunset-rectilinear-backburner",
+							"burst": "debug-acoustic-literal",
+							"ceiling": "develop-future-market",
+							"priority": 1,
+							"queue-type": "fq-codel"
+						}
+					]
+				},
+				{
+					"name": "generate-regional-application",
+					"bandwidth": "vector-isothermal-item",
+					"classes": [
+						{
+							"id": 3268,
+							"bandwidth": "step-mechanical-opportunity",
+							"burst": "log-electrical-community",
+							"ceiling": "message-international-admin",
+							"priority": 6,
+							"queue-type": "drop-tail"
+						},
+						{
+							"id": 3057,
+							"bandwidth": "ping-adiabatic-dog",
+							"burst": "close-brownian-material",
+							"ceiling": "click-fundamental-bandwidth",
+							"priority": 5,
+							"queue-type": "fair-queue"
+						},
+						{
+							"id": 862,
+							"bandwidth": "address-latent-paradigm",
+							"burst": "surface-closed-model",
+							"ceiling": "step-lead-data",
+							"priority": 5,
+							"queue-type": "drop-tail"
+						}
+					]
+				},
+				{
+					"name": "downsize-fundamental-community",
+					"bandwidth": "bookmark-endothermic-benefit",
+					"classes": [
+						{
+							"id": 280,
+							"bandwidth": "chat-mechanical-scrub",
+							"burst": "step-acoustic-creative",
+							"ceiling": "sunset-human-object",
+							"priority": 2,
+							"queue-type": "fair-queue"
+						},
+						{
+							"id": 793,
+							"bandwidth": "build-endothermic-system",
+							"burst": "execute-potential-gofer",
+							"ceiling": "transition-alternating-interface",
+							"priority": 3,
+							"queue-type": "fair-queue"
+						},
+						{
+							"id": 3893,
+							"bandwidth": "browse-buoyant-hardball",
+							"burst": "vector-internal-synergy",
+							"ceiling": "transition-internal-creative",
+							"priority": 2,
+							"queue-type": "fair-queue"
+						}
+					]
+				}
+			]
+		},
+		"snmp": {
+			"listen-addresses": [
+				"2001:db8:e4fa:f1f3:c9c:76f4:a23f:5901",
+				"2001:db8:c00b:4ba7:8a3a:592b:7aa5:b76b",
+				"2001:db8:b431:8c26:f889:6475:7340:f166"
+			],
+			"location": "develop-electrical-technology",
+			"engine-id": "install-open-metrics",
+			"groups": [
+				{
+					"name": "noodle-quantum-kudos",
+					"mode": "rw",
+					"view": "default",
+					"oid": "triangulate-primary-block"
+				},
+				{
+					"name": "search-dynamic-syntax",
+					"mode": "ro",
+					"view": "default",
+					"oid": "resonate-coherent-information"
+				},
+				{
+					"name": "transition-regional-space",
+					"mode": "ro",
+					"view": "default",
+					"oid": "release-adiabatic-innovation"
+				}
+			],
+			"users": [
+				{
+					"name": "access-regional-silo",
+					"group": "download-quantum-boondoggle",
+					"auth": {
+						"encrypted": false,
+						"password": "log-customer-dog",
+						"hash-algo": "sha"
+					},
+					"privacy": {
+						"encrypted": false,
+						"password": "task-natural-silo",
+						"hash-algo": "des"
+					}
+				},
+				{
+					"name": "generate-senior-convergence",
+					"group": "vector-direct-model",
+					"auth": {
+						"encrypted": false,
+						"password": "resonate-latent-technology",
+						"hash-algo": "sha"
+					},
+					"privacy": {
+						"encrypted": false,
+						"password": "make-primary-runway",
+						"hash-algo": "aes"
+					}
+				},
+				{
+					"name": "download-central-linkage",
+					"group": "download-absolute-skill",
+					"auth": {
+						"encrypted": false,
+						"password": "generate-quantum-technology",
+						"hash-algo": "sha"
+					},
+					"privacy": {
+						"encrypted": false,
+						"password": "make-brownian-sidebar",
+						"hash-algo": "aes"
+					}
+				}
+			]
+		},
+		"syslog": {
+			"marker": {
+				"enable": true,
+				"interval": 327475420
+			},
+			"preserve-fqdn": false,
+			"remote-hosts": [
+				{
+					"address": "2001:db8:b2cd:3574:a909:920b:16f9:cdb5",
+					"port": 16942,
+					"protocol": "tcp",
+					"facility": "ntp",
+					"severity": "warning"
+				},
+				{
+					"address": "2001:db8:f1c3:7815:7cbb:32cc:2c85:826a",
+					"port": 29065,
+					"protocol": "tcp",
+					"facility": "local6",
+					"severity": "notice"
+				},
+				{
+					"address": "2001:db8:d128:437a:bf0c:444b:5010:5fdf",
+					"port": 27384,
+					"protocol": "udp",
+					"facility": "auth",
+					"severity": "info"
+				}
+			]
+		},
+		"netflow": {
+			"version": "5",
+			"interfaces": [
+				"view-volumetric-scenario",
+				"link-direct-functionality",
+				"drag-global-product"
+			],
+			"servers": [
+				{
+					"address": "172.28.249.114",
+					"port": 26320
+				},
+				{
+					"address": "192.168.94.228",
+					"port": 32842
+				},
+				{
+					"address": "172.27.209.110",
+					"port": 11512
+				}
+			],
+			"engine-id": 232,
+			"sampling-rate": 1188706705
+		},
+		"sflow": {
+			"agent": {
+				"address": "172.31.137.201",
+				"interface": "log-international-backburner"
+			},
+			"interfaces": [
+				"patch-volumetric-scenario",
+				"browse-electric-potentiality",
+				"sunset-resultant-content"
+			],
+			"sampling-rate": 2091174424,
+			"servers": [
+				{
+					"address": "2001:db8:f6d3:27fc:710d:475a:c95a:d3d0",
+					"port": 15022
+				},
+				{
+					"address": "2001:db8:9672:ae6e:dd23:d003:70ee:65de",
+					"port": 19352
+				},
+				{
+					"address": "172.21.195.233",
+					"port": 3821
+				}
+			],
+			"sample-egress": false
+		}
+	},
+	"metrics": {
+		"statistics": {
+			"interval": 593222039,
+			"types": [
+				"routes",
+				"dhcp-leases",
+				"conntrack"
+			]
+		},
+		"health": {
+			"interval": 2091231224
+		}
+	}
+}

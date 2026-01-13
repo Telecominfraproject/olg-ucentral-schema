@@ -1,0 +1,22 @@
+{
+    "uuid": 1765963982,
+    "interfaces": [
+		{
+			"name": "eth1",
+			"type": "ethernet",
+			"role": "downstream",
+			"enabled": true,
+			"mac-address": "02:61:b2:a2:0b:00",
+			"ethernet": {
+				"speed": "1000",
+				"duplex": "full"
+			},
+			"ipv6": {
+				"addressing": "static",
+				"address": [
+					"2001:db8::1/64"
+				]
+			}
+		}
+    ]
+}
