@@ -30,6 +30,8 @@ items:
         type: string
     ipv4:
       $ref: "https://ucentral.io/state/v1/interface/ipv4/"
+    ipv4_leases:
+      $ref: "https://ucentral.io/state/v1/interface/ipv4-lease/"
     ipv6_addresses:
       $ref: "https://ucentral.io/state/v1/interface/ipv6-address/"
     ipv6_leases:

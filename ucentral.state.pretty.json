@@ -355,6 +355,9 @@
                     "ipv4": {
                         "$ref": "#/$defs/interface.ipv4"
                     },
+                    "ipv4_leases": {
+                        "$ref": "#/$defs/interface.ipv4-lease"
+                    },
                     "ipv6_addresses": {
                         "$ref": "#/$defs/interface.ipv6-address"
                     },
