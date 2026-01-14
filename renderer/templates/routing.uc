@@ -117,20 +117,19 @@ protocols {
                     {% endif %}
 
                     {% if (rule.action): %}
+                action "{{ rule.action }}"
+                    {% endif %}
+
+                    {% if (rule.set): %}
                 set {
-                        {% if (rule.action.drop): %}
-                    action "drop"
-                        {% elif (rule.action.next_hop): %}
-                    next-hop "{{ rule.action.next_hop }}"
+                        {% if (rule.set.conn_mark): %}
+                    connection-mark "{{ rule.set.conn_mark }}"
                         {% endif %}
-                        {% if (rule.action.set_conn_mark): %}
-                    connection-mark "{{ rule.action.set_conn_mark }}"
+                        {% if (rule.set.mark): %}
+                    mark "{{ rule.set.mark }}"
                         {% endif %}
-                        {% if (rule.action.set_mark): %}
-                    mark "{{ rule.action.set_mark }}"
-                        {% endif %}
-                        {% if (rule.action.set_dscp): %}
-                    dscp "{{ rule.action.set_dscp }}"
+                        {% if (rule.set.dscp): %}
+                    dscp "{{ rule.set.dscp }}"
                         {% endif %}
                 }
                     {% endif %}

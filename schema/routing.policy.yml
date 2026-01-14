@@ -112,29 +112,25 @@ properties:
               description: Match traffic arriving on this interface.
               type: string
         action:
-          description: Action for matching traffic. Use either table OR next-hop, not both.
+          description: Action for matching traffic
+          type: string
+          enum:
+            - accept
+            - reject
+            - drop
+        set:
+          description: Set values of connection/packet properties
           type: object
           properties:
-            drop:
-              description: Drop matching packets.
-              type: boolean
-              default: false
-            next-hop:
-              description: Override next-hop directly without specifying a table.
-              type: string
-              format: uc-ip
-            set-conn-mark:
-              description: Set connection mark.
+            conn-mark:
               type: integer
               minimum: 1
               maximum: 2147483647
-            set-mark:
-              description: Set packet mark.
+            mark:
               type: integer
               minimum: 1
               maximum: 2147483647
-            set-dscp:
-              description: Set DSCP value.
+            dscp:
               type: integer
               minimum: 0
               maximum: 63

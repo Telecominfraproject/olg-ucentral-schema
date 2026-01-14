@@ -935,9 +935,6 @@ function instantiateRoutingStaticIpv4(location, value, errors) {
 		if (exists(value, "next-hop")) {
 			obj.next_hop = parseNextHop(location + "/next-hop", value["next-hop"], errors);
 		}
-		else {
-			push(errors, [ location, "is required" ]);
-		}
 
 		function parseInterface(location, value, errors) {
 			if (type(value) != "string")
@@ -1599,41 +1596,27 @@ function instantiateRoutingPolicy(location, value, errors) {
 						}
 
 						function parseAction(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							if (!(value in [ "accept", "reject", "drop" ]))
+								push(errors, [ location, "must be one of \"accept\", \"reject\" or \"drop\"" ]);
+
+							return value;
+						}
+
+						if (exists(value, "action")) {
+							obj.action = parseAction(location + "/action", value["action"], errors);
+						}
+						else {
+							push(errors, [ location, "is required" ]);
+						}
+
+						function parseSet(location, value, errors) {
 							if (type(value) == "object") {
 								let obj = {};
 
-								function parseDrop(location, value, errors) {
-									if (type(value) != "bool")
-										push(errors, [ location, "must be of type boolean" ]);
-
-									return value;
-								}
-
-								if (exists(value, "drop")) {
-									obj.drop = parseDrop(location + "/drop", value["drop"], errors);
-								}
-								else {
-									obj.drop = false;
-								}
-
-								function parseNextHop(location, value, errors) {
-									if (type(value) == "string") {
-										if (!matchUcIp(value))
-											push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
-
-									}
-
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								if (exists(value, "next-hop")) {
-									obj.next_hop = parseNextHop(location + "/next-hop", value["next-hop"], errors);
-								}
-
-								function parseSetConnMark(location, value, errors) {
+								function parseConnMark(location, value, errors) {
 									if (type(value) in [ "int", "double" ]) {
 										if (value > 2147483647)
 											push(errors, [ location, "must be lower than or equal to 2147483647" ]);
@@ -1649,11 +1632,11 @@ function instantiateRoutingPolicy(location, value, errors) {
 									return value;
 								}
 
-								if (exists(value, "set-conn-mark")) {
-									obj.set_conn_mark = parseSetConnMark(location + "/set-conn-mark", value["set-conn-mark"], errors);
+								if (exists(value, "conn-mark")) {
+									obj.conn_mark = parseConnMark(location + "/conn-mark", value["conn-mark"], errors);
 								}
 
-								function parseSetMark(location, value, errors) {
+								function parseMark(location, value, errors) {
 									if (type(value) in [ "int", "double" ]) {
 										if (value > 2147483647)
 											push(errors, [ location, "must be lower than or equal to 2147483647" ]);
@@ -1669,11 +1652,11 @@ function instantiateRoutingPolicy(location, value, errors) {
 									return value;
 								}
 
-								if (exists(value, "set-mark")) {
-									obj.set_mark = parseSetMark(location + "/set-mark", value["set-mark"], errors);
+								if (exists(value, "mark")) {
+									obj.mark = parseMark(location + "/mark", value["mark"], errors);
 								}
 
-								function parseSetDscp(location, value, errors) {
+								function parseDscp(location, value, errors) {
 									if (type(value) in [ "int", "double" ]) {
 										if (value > 63)
 											push(errors, [ location, "must be lower than or equal to 63" ]);
@@ -1689,8 +1672,8 @@ function instantiateRoutingPolicy(location, value, errors) {
 									return value;
 								}
 
-								if (exists(value, "set-dscp")) {
-									obj.set_dscp = parseSetDscp(location + "/set-dscp", value["set-dscp"], errors);
+								if (exists(value, "dscp")) {
+									obj.dscp = parseDscp(location + "/dscp", value["dscp"], errors);
 								}
 
 								return obj;
@@ -1702,11 +1685,8 @@ function instantiateRoutingPolicy(location, value, errors) {
 							return value;
 						}
 
-						if (exists(value, "action")) {
-							obj.action = parseAction(location + "/action", value["action"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
+						if (exists(value, "set")) {
+							obj.set = parseSet(location + "/set", value["set"], errors);
 						}
 
 						return obj;

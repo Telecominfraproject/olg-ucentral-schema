@@ -375,8 +375,7 @@
                 }
             },
             "required": [
-                "destination",
-                "next-hop"
+                "destination"
             ]
         },
         "routing.static.ipv6": {
@@ -554,27 +553,27 @@
                                 }
                             },
                             "action": {
+                                "type": "string",
+                                "enum": [
+                                    "accept",
+                                    "reject",
+                                    "drop"
+                                ]
+                            },
+                            "set": {
                                 "type": "object",
                                 "properties": {
-                                    "drop": {
-                                        "type": "boolean",
-                                        "default": false
-                                    },
-                                    "next-hop": {
-                                        "type": "string",
-                                        "format": "uc-ip"
-                                    },
-                                    "set-conn-mark": {
+                                    "conn-mark": {
                                         "type": "integer",
                                         "minimum": 1,
                                         "maximum": 2147483647
                                     },
-                                    "set-mark": {
+                                    "mark": {
                                         "type": "integer",
                                         "minimum": 1,
                                         "maximum": 2147483647
                                     },
-                                    "set-dscp": {
+                                    "dscp": {
                                         "type": "integer",
                                         "minimum": 0,
                                         "maximum": 63
