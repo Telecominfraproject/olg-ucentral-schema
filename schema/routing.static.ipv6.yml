@@ -26,4 +26,3 @@ properties:
       - blackhole
 required:
   - destination
-  - next-hop

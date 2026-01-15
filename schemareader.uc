@@ -1033,9 +1033,6 @@ function instantiateRoutingStaticIpv6(location, value, errors) {
 		if (exists(value, "next-hop")) {
 			obj.next_hop = parseNextHop(location + "/next-hop", value["next-hop"], errors);
 		}
-		else {
-			push(errors, [ location, "is required" ]);
-		}
 
 		function parseInterface(location, value, errors) {
 			if (type(value) != "string")
@@ -6452,8 +6449,8 @@ function instantiateNatDestinationIpv4(location, value, errors) {
 
 				function parseAddress(location, value, errors) {
 					if (type(value) == "string") {
-						if (!matchIpv4(value))
-							push(errors, [ location, "must be a valid IPv4 address" ]);
+						if (!matchUcCidr4(value))
+							push(errors, [ location, "must be a valid IPv4 CIDR" ]);
 
 					}
 

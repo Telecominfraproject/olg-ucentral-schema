@@ -474,8 +474,7 @@
                                     }
                                 },
                                 "required": [
-                                    "destination",
-                                    "next-hop"
+                                    "destination"
                                 ]
                             }
                         }
@@ -2420,8 +2419,8 @@
                                     "address": {
                                         "description": "Translated destination address.",
                                         "type": "string",
-                                        "format": "ipv4",
-                                        "example": "192.168.1.10"
+                                        "format": "uc-cidr4",
+                                        "example": "192.168.1.0/24"
                                     },
                                     "port": {
                                         "description": "Translated destination port or port range.",
