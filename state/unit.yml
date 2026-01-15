@@ -1,0 +1,57 @@
+type: object
+description:
+  This section describes the current state of the OS running on the device.
+properties:
+  load:
+    type: array
+    description:
+      This array hold 3 values describing the average system load for the last
+      1, 5 and 15 minutes.
+    items:
+      type: number
+  cpu_load:
+    type: array
+    description:
+      This array hold the total and per core load in percentage.
+    items:
+      type: number
+  localtime:
+    type: number
+    description:
+      This property contains the current unix time of the device.
+  memory:
+    type: object
+    description:
+      This section describes the current memory uasge of the device.
+    properties:
+      free:
+        type: number
+        description:
+          The amount of free memory.
+      total:
+        type: number
+        description:
+          The total amount of memory.
+      cached:
+        type: number
+        description:
+          The total amount of cached memory.
+      buffered:
+        type: number
+        description:
+          The total amount of buffered memory.
+  uptime:
+    type: number
+    description:
+      The number of seconds since the unit last booted.
+  temperature:
+    description:
+      The average and maximum thermal reading from the CPU.
+    type: array
+    items:
+      type: number
+  boottime:
+    type: number
+    description:
+      This property contains the current unix time of the device.
+

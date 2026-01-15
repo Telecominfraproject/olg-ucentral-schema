@@ -1,0 +1,45 @@
+$id: https://openwrt.org/ucentral.schema.json
+$schema: http://json-schema.org/draft-07/schema#
+description: OpenWrt uCentral schema
+type: object
+properties:
+  strict:
+    description:
+      The device will reject any configuration that causes warnings if strict mode is enabled.
+    type: boolean
+    default: false
+  uuid:
+    description:
+      The unique ID of the configuration. This is the unix timestamp of when the config was created.
+    type: integer
+  unit:
+    $ref: "https://ucentral.io/schema/v1/unit/"
+  globals:
+    $ref: "https://ucentral.io/schema/v1/globals/"
+  definitions:
+    $ref: "https://ucentral.io/schema/v1/definitions/"
+  ethernet:
+    type: array
+    items:
+      $ref: "https://ucentral.io/schema/v1/ethernet/"
+  switch:
+    $ref: "https://ucentral.io/schema/v1/switch/"
+  radios:
+    type: array
+    items:
+      $ref: "https://ucentral.io/schema/v1/radio/"
+  interfaces:
+    type: array
+    items:
+      $ref: "https://ucentral.io/schema/v1/interface/"
+  services:
+    $ref: "https://ucentral.io/schema/v1/service/"
+  metrics:
+    $ref: "https://ucentral.io/schema/v1/metrics/"
+  config-raw:
+    $ref: "https://ucentral.io/schema/v1/config-raw/"
+  timeouts:
+    $ref: "https://ucentral.io/schema/v1/timeouts/"
+  third-party:
+    type: object
+    additionalProperties: true

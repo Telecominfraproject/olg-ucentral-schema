@@ -1,0 +1,92 @@
+description:
+  This section describes the logical network interfaces of the device.
+  Interfaces as their primary have a role that is upstream, downstream,
+  guest, ....
+type: object
+properties:
+  name:
+    description:
+      This is a free text field, stating the administrative name of the
+      interface. It may contain spaces and special characters.
+    type: string
+    examples:
+    - LAN
+  role:
+    description:
+      The role defines if the interface is upstream or downstream facing.
+    type: string
+    enum:
+    - upstream
+    - downstream
+  isolate-hosts:
+    description:
+      This option makes sure that any traffic leaving this interface is isolated
+      and all local IP ranges are blocked. It essentially enforces "guest network"
+      firewall settings.
+    type: boolean
+  metric:
+    description:
+      The routing metric of this logical interface. Lower values have higher
+      priority.
+    type: integer
+    maximum: 4294967295
+    minimum: 0
+  mtu:
+    description:
+      The MTU of this logical interface.
+    type: integer
+    maximum: 1600
+    minimum: 1280
+  services:
+    description:
+      The services that shall be offered on this logical interface. These are
+      just strings such as "ssh", "lldp", "mdns"
+    type: array
+    items:
+      type: string
+      examples:
+      - ssh
+      - lldp
+  vlan-awareness:
+    description:
+      Setup additional VLANs inside the bridge
+    type: object
+    properties:
+      first:
+        type: integer
+      last:
+        type: integer     
+  ieee8021x-ports:
+    description:
+      The list of physical network devices that shall serve .1x for this interface.
+    type: array
+    items:
+      type: string
+      examples:
+      - LAN1
+      - LAN2
+      - LAN3
+      - LAN4
+      - LAN*
+      - WAN*
+      - "*"
+  vlan:
+    $ref: "https://ucentral.io/schema/v1/interface/vlan/"
+  bridge:
+    $ref: "https://ucentral.io/schema/v1/interface/bridge/"
+  ethernet:
+    type: array
+    items:
+      $ref: "https://ucentral.io/schema/v1/interface/ethernet/"
+  ipv4:
+    $ref: "https://ucentral.io/schema/v1/interface/ipv4/"
+  ipv6:
+    $ref: "https://ucentral.io/schema/v1/interface/ipv6/"
+  broad-band:
+    $ref: "https://ucentral.io/schema/v1/interface/broad-band/"
+  ssids:
+    type: array
+    items:
+      $ref: "https://ucentral.io/schema/v1/interface/ssid/"
+  tunnel:
+    $ref: "https://ucentral.io/schema/v1/interface/tunnel/"

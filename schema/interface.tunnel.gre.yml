@@ -1,0 +1,35 @@
+description:
+  This Object defines the properties of a GRE tunnel.
+type: object
+properties:
+  mtu:
+    description:
+      The maximum transmission unit (MTU) size for the GRE tunnel interface.
+      The default value is 1280 bytes to reflect OpenWRT GRE Package Defaults.
+    type: integer
+    minimum: 68
+    maximum: 1500
+    default: 1280
+  proto:
+    description:
+      This field must be set to gre.
+    type: string
+    const: gre
+  peer-address:
+    description:
+      This is the IP address of the remote host, that the GRE tunnel shall be
+      established with.
+    type: string
+    format: ipv4
+    example: '192.168.100.1'
+  dhcp-healthcheck:
+    description:
+      Healthcheck will probe if the remote peer replies to DHCP discovery without sending
+      an ACK.
+    type: boolean
+    default: false
+  dont-fragment:
+    description:
+       Set “Don't Fragment” flag on encapsulated packets.
+    type: boolean
+    default: false

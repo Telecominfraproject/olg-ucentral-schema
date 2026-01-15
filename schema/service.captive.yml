@@ -1,0 +1,43 @@
+allOf:
+  - oneOf:
+    - $ref: 'https://ucentral.io/schema/v1/service/captive/click/'
+    - $ref: 'https://ucentral.io/schema/v1/service/captive/radius/'
+    - $ref: 'https://ucentral.io/schema/v1/service/captive/credentials/'
+    - $ref: 'https://ucentral.io/schema/v1/service/captive/uam/'
+  - type: object
+    properties:
+      walled-garden-fqdn:
+        description:
+          The list of FQDNs that a non-authenticated client is allowed to connect to.
+        type: array
+        items:
+          type: string
+      walled-garden-ipaddr:
+        description:
+          The list of IP addresses that a non-authenticated client is allowed to connect to.
+        type: array
+        items:
+          type: string
+          format: uc-ip
+      web-root:
+        description:
+          A base64 encoded TAR file with the custom web-root.
+        type: string
+        format: uc-base64
+      web-root-url:
+        description:
+          A URL where the webroot should be downloaded from.
+        type: string
+      web-root-checksum:
+        description:
+          The SHA256 of the file located at web-root-url.
+        type: string
+      idle-timeout:
+        description:
+          How long may a client be idle before getting removed.
+        type: integer
+        default: 600
+      session-timeout:
+        description:
+          How long may a client be idle before getting removed.
+        type: integer
