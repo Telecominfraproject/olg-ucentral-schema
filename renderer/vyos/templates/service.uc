@@ -1,6 +1,5 @@
 {%
 	let lans = [];
-
 	if (type(config.interfaces) == "array") {
 		for (let iface in config.interfaces) {
 			if (iface.role != "downstream")
@@ -45,7 +44,9 @@
 
 						if (range_start)
 							range_stop = add_host(range_start, count - 1);
-
+				
+						let subnet_id = (type(iface.vlan) == "object" && iface.vlan.id) ? int(iface.vlan.id) : (4051 + int(iface.index));
+			
 						if (range_start && range_stop) {
 							push(lans, {
 								name: iface.name || "LAN",
@@ -54,75 +55,13 @@
 								lease_secs,
 								range_start,
 								range_stop,
-								subnet_id: 1
+								subnet_id: subnet_id
 							});
 						}
 					}
 				}
 			}
 
-			//TODO: Created for Applying MDU Settings in VyOS. Modified in uCentral Schema, Need to find way to work with existing schema
-			// ----- VLAN VIFs -----
-			if (type(iface.vif) == "array") {
-				for (let v in iface.vif) {
-					if (type(v.subnet) != "string")
-						continue;
-
-					let parts_v = split_ip_prefix(v.subnet);
-					if (!parts_v)
-						continue;
-
-					let lan_ip_v = parts_v[0];
-
-					let nbv = network_base(v.subnet);
-					if (!nbv)
-						continue;
-
-					let net_ip_prefix_v = nbv[0]; // 192.168.10.0/24
-					let net_ip_v   = nbv[2]; // 192.168.10.0
-
-					let lease_secs_v  = 86400; // default 1d for VLANs, overridable
-					let range_start_v = null;
-					let range_stop_v  = null;
-
-					let dhcp_v = v.dhcp || {};
-
-					let lt_v = (dhcp_v["lease-time"] != null) ? dhcp_v["lease-time"] : dhcp_v["lease_time"];
-					if (lt_v)
-						lease_secs_v = convert_lease_time_to_seconds(lt_v, lease_secs_v);
-
-					let lf_v = (dhcp_v["lease-first"] != null) ? dhcp_v["lease-first"] : dhcp_v["lease_first"];
-					let first_v = lf_v ? int(lf_v) : 10;
-					if (first_v < 1)
-						first_v = 1;
-
-					range_start_v = add_host(net_ip_v, first_v);
-
-					let lc_v = (dhcp_v["lease-count"] != null) ? dhcp_v["lease-count"] : dhcp_v["lease_count"];
-					let count_v = lc_v ? int(lc_v) : 100;
-					if (count_v < 1)
-						count_v = 1;
-
-					if (range_start_v)
-						range_stop_v = add_host(range_start_v, count_v - 1);
-
-					if (!range_start_v || !range_stop_v)
-						continue;
-
-					let vid = v.vlan ? int(v.vlan) : 0;
-					let name = vid ? sprintf("VLAN%d", vid) : (iface.name || "LAN-VIF");
-
-					push(lans, {
-						name,
-						lan_ip:      lan_ip_v,
-						net_ip_prefix:    net_ip_prefix_v,
-						lease_secs:  lease_secs_v,
-						range_start: range_start_v,
-						range_stop:  range_stop_v,
-						subnet_id:   vid ? vid : 0
-					});
-				}
-			}
 		}
 	}
 
