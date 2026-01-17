@@ -72,6 +72,17 @@
                     }
                 }
             }
+        },
+        "dhcp-server": {
+            "type": "object",
+            "properties": {
+                "ipv4-leases": {
+                    "$ref": "#/$defs/dhcp.ipv4-lease"
+                },
+                "ipv6-leases": {
+                    "$ref": "#/$defs/dhcp.ipv6-lease"
+                }
+            }
         }
     },
     "$defs": {
@@ -154,31 +165,6 @@
                 }
             }
         },
-        "interface.ipv4-lease": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "description": "This section describes an IPv4 lease that we have served",
-                "properties": {
-                    "address": {
-                        "type": "string",
-                        "description": "The IPv4 that has been assigned to the networking client."
-                    },
-                    "assigned": {
-                        "type": "string",
-                        "description": "The unix time stamp when this lease was assigned."
-                    },
-                    "hostname": {
-                        "type": "string",
-                        "description": "The hostname that the client included in his request."
-                    },
-                    "mac": {
-                        "type": "string",
-                        "description": "The MAC address of the client that this lease was assigned to."
-                    }
-                }
-            }
-        },
         "interface.ipv4": {
             "type": "object",
             "properties": {
@@ -197,9 +183,6 @@
                 "dhcp_server": {
                     "type": "string",
                     "description": "The IPv4 address of the DHCPv4 server that assigned the active lease."
-                },
-                "leases": {
-                    "$ref": "#/$defs/interface.ipv4-lease"
                 }
             }
         },
@@ -216,27 +199,6 @@
                     "valid": {
                         "type": "number",
                         "description": "How much longer this delegation is valid for."
-                    }
-                }
-            }
-        },
-        "interface.ipv6-lease": {
-            "type": "array",
-            "description": null,
-            "items": {
-                "type": "object",
-                "description": "This section describes an IPv6 lease that we have served.",
-                "properties": {
-                    "addresses": {
-                        "type": "array",
-                        "description": "A list of all IPv6 addresses that were assigned to this host.",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "hostname": {
-                        "type": "string",
-                        "description": "The hostname that the client sent in its solicit message."
                     }
                 }
             }
@@ -355,14 +317,8 @@
                     "ipv4": {
                         "$ref": "#/$defs/interface.ipv4"
                     },
-                    "ipv4_leases": {
-                        "$ref": "#/$defs/interface.ipv4-lease"
-                    },
                     "ipv6_addresses": {
                         "$ref": "#/$defs/interface.ipv6-address"
-                    },
-                    "ipv6_leases": {
-                        "$ref": "#/$defs/interface.ipv6-lease"
                     },
                     "clients": {
                         "$ref": "#/$defs/interface.clients"
@@ -470,6 +426,52 @@
                 },
                 "delta_counters": {
                     "$ref": "#/$defs/interface.counter"
+                }
+            }
+        },
+        "dhcp.ipv4-lease": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "This section describes an IPv4 lease that we have served",
+                "properties": {
+                    "address": {
+                        "type": "string",
+                        "description": "The IPv4 that has been assigned to the networking client."
+                    },
+                    "assigned": {
+                        "type": "string",
+                        "description": "The unix time stamp when this lease was assigned."
+                    },
+                    "hostname": {
+                        "type": "string",
+                        "description": "The hostname that the client included in his request."
+                    },
+                    "mac": {
+                        "type": "string",
+                        "description": "The MAC address of the client that this lease was assigned to."
+                    }
+                }
+            }
+        },
+        "dhcp.ipv6-lease": {
+            "type": "array",
+            "description": null,
+            "items": {
+                "type": "object",
+                "description": "This section describes an IPv6 lease that we have served.",
+                "properties": {
+                    "addresses": {
+                        "type": "array",
+                        "description": "A list of all IPv6 addresses that were assigned to this host.",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "hostname": {
+                        "type": "string",
+                        "description": "The hostname that the client sent in its solicit message."
+                    }
                 }
             }
         }

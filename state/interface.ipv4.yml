@@ -17,5 +17,3 @@ properties:
     type: string
     description:
       The IPv4 address of the DHCPv4 server that assigned the active lease.
-  leases:
-    $ref: "https://ucentral.io/state/v1/interface/ipv4-lease/"

@@ -50,3 +50,11 @@ properties:
         patternProperties:
           "^(eth|lan|wan)[0-9]*$":
             $ref: "https://ucentral.io/state/v1/link-state/"
+  dhcp-server:
+    type: object
+    properties:
+      ipv4-leases:
+        $ref: "https://ucentral.io/state/v1/dhcp/ipv4-lease/"
+      ipv6-leases:
+        $ref: "https://ucentral.io/state/v1/dhcp/ipv6-lease/"
+      
