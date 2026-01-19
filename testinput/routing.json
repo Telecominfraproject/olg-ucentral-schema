@@ -1,0 +1,90 @@
+{
+	"interfaces": [
+		{
+			"ipv4": {
+				"addressing": "dhcp"
+			},
+			"ipv6": {
+				"addressing": "none"
+			},
+			"mtu": 1500,
+			"name": "eth3",
+			"role": "upstream"
+		},
+		{
+			"ipv4": {
+				"address": [
+					"192.168.2.2/24"
+				],
+				"addressing": "static"
+			},
+			"ipv6": {
+				"addressing": "none"
+			},
+			"mtu": 1480,
+			"name": "eth2",
+			"role": "downstream"
+		},
+		{
+			"ipv4": {
+				"address": [
+					"192.168.210.2/24"
+				],
+				"addressing": "static",
+				"gateway": "192.168.210.254"
+			},
+			"ipv6": {
+				"addressing": "none"
+			},
+			"mtu": 1480,
+			"name": "eth4",
+			"role": "upstream"
+		}
+	],
+	"metrics": {
+		"health": {
+			"interval": 60
+		},
+		"statistics": {
+			"interval": 150
+		}
+	},
+	"routing": {
+		"static": {
+			"ipv4-rules": [
+				{
+					"action": "accept",
+					"destination": "10.8.0.0/24",
+					"distance": 1,
+					"next-hop": "192.168.240.31"
+				}
+			]
+		}
+	},
+	"services": {
+		"dhcp-server": {
+			"networks": [
+				{
+					"name": "tomoka",
+					"subnets": [
+						{
+							"default-router": "192.168.240.254",
+							"dns-servers": [
+								"8.8.8.8"
+							],
+							"lease-time": 86400,
+							"ranges": [
+								{
+									"start": "192.168.2.100",
+									"stop": "192.168.2.200"
+								}
+							],
+							"subnet": "192.168.2.0/24"
+						}
+					]
+				}
+			]
+		}
+	},
+	"uuid": 1768544770
+}

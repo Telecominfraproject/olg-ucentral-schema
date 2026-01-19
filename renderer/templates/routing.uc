@@ -1,5 +1,4 @@
 {%  %}
-
 protocols {
     {% if (routing.static): %}
     static {

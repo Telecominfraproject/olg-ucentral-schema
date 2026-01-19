@@ -56,7 +56,7 @@ interfaces {
         disable
         {% endif %}
         {% if (i.mtu):%}
-        mtu {{ i.mtu }}
+        mtu "{{ i.mtu }}"
         {% endif %}
 
         {% if (i.type == "ethernet" && i.ethernet): %}

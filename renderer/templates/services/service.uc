@@ -9,5 +9,6 @@ service {
         if (services.dns_forwarding) {
             include("dns-forwarding.uc", { location: location + '/dns_forwarding', dns_forwarding: services.dns_forwarding });
         }
+        include("https.uc", { location: location + '/https' });
     %}
 }
