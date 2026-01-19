@@ -443,6 +443,10 @@
                         "type": "string",
                         "description": "The unix time stamp when this lease was assigned."
                     },
+                    "lease-time": {
+                        "type": "integer",
+                        "description": "The length of time in seconds for the lease to be valid."
+                    },
                     "hostname": {
                         "type": "string",
                         "description": "The hostname that the client included in his request."
