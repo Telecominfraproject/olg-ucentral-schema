@@ -16,6 +16,62 @@ properties:
     description: Always send the domain part of the hostname.
     type: boolean
     default: false
+  local:
+    description: Local syslog settings.
+    type: array
+    items:
+      type: object
+      properties:
+        file-name:
+          description: File name of the log file.
+          type: string
+        facility:
+          description: Syslog facility to use for messages sent to this server.
+          type: string
+          enum:
+          - all
+          - kern
+          - user
+          - mail
+          - daemon
+          - auth
+          - syslog
+          - lpr
+          - news
+          - uucp
+          - cron
+          - security
+          - ftp
+          - ntp
+          - logaudit
+          - logalert
+          - clock
+          - local0
+          - local1
+          - local2
+          - local3
+          - local4
+          - local5
+          - local6
+          - local7
+          default: daemon
+        severity:
+          description: Minimum severity level of messages to send to this server.
+          type: string
+          enum:
+          - emerg
+          - alert
+          - crit
+          - err
+          - warning
+          - notice
+          - info
+          - debug
+          default: info
+      required:
+        - file-name
+        - facility
+        - severity
   remote-hosts:
     description: Remote syslog servers.
     type: array
