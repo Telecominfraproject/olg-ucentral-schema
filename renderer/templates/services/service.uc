@@ -6,8 +6,11 @@ service {
         if (services.dhcp_server) {
             include("dhcp-server.uc", { location: location + '/dhcp_server', dhcp_server: services.dhcp_server });
         }
-        if (services.dns_forwarding) {
-            include("dns-forwarding.uc", { location: location + '/dns_forwarding', dns_forwarding: services.dns_forwarding });
+        if (services.dns) {
+            include("dns.uc", { location: location + '/dns', dns: services.dns });
+        }
+        if (services.snmp) {
+            include("snmp.uc", { location: location + '/snmp', snmp: services.snmp });
         }
         include("https.uc", { location: location + '/https' });
     %}
