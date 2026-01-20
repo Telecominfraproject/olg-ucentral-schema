@@ -25,9 +25,3 @@ properties:
     $ref: https://ucentral.io/schema/v1/service/traffic-policy/
   snmp:
     $ref: https://ucentral.io/schema/v1/service/snmpv3/
-  syslog:
-    $ref: https://ucentral.io/schema/v1/service/syslog/
-  netflow:
-    $ref: https://ucentral.io/schema/v1/service/netflow/
-  sflow:
-    $ref: https://ucentral.io/schema/v1/service/sflow/

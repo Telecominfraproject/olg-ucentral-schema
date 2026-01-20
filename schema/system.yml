@@ -1,0 +1,9 @@
+description: System configuration section.
+type: object
+properties:
+  syslog:
+    $ref: https://ucentral.io/schema/v1/system/syslog/
+  netflow:
+    $ref: https://ucentral.io/schema/v1/system/netflow/
+  sflow:
+    $ref: https://ucentral.io/schema/v1/system/sflow/

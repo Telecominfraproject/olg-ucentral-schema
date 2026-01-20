@@ -29,5 +29,7 @@ properties:
     $ref: "https://ucentral.io/schema/v1/high-availability/"
   services:
     $ref: "https://ucentral.io/schema/v1/service/"
+  system:
+    $ref: "https://ucentral.io/schema/v1/system/"
   metrics:
     $ref: "https://ucentral.io/schema/v1/metrics/"
