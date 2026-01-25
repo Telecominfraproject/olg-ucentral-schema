@@ -22,9 +22,6 @@ properties:
     items:
       type: object
       properties:
-        file-name:
-          description: File name of the log file.
-          type: string
         facility:
           description: Syslog facility to use for messages sent to this server.
           type: string
@@ -69,7 +66,6 @@ properties:
           - debug
           default: info
       required:
-        - file-name
         - facility
         - severity
   remote-hosts:
