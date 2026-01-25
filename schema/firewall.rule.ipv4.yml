@@ -43,6 +43,9 @@ properties:
           address-group:
             description: Reference to IPv4 address group.
             type: string
+          network-group:
+            description: Reference to IPv4 network group.
+            type: string
           port-group:
             type: string
       negate:
@@ -63,6 +66,9 @@ properties:
         properties:
           address-group:
             description: Reference to IPv4 address group.
+            type: string
+          network-group:
+            description: Reference to IPv4 network group.
             type: string
           port-group:
             type: string

@@ -2,6 +2,26 @@ description: Firewall address, port, and MAC groups for reuse in rules.
 type: object
 properties:
   ipv4-address-groups:
+    description: Groups of IPv4 addresses.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          description: Group name for reference in IPv4 rules.
+          type: string
+        members:
+          description: IPv4 addresses.
+          type: array
+          items:
+            type: string
+            anyOf:
+              - format: ipv4
+              - format: uc-ip4range
+      required:
+        - name
+        - members
+  ipv4-network-groups:
     description: Groups of IPv4 networks.
     type: array
     items:
@@ -21,6 +41,26 @@ properties:
         - name
         - members
   ipv6-address-groups:
+    description: Groups of IPv6 addresses.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          description: Group name for reference in IPv6 rules.
+          type: string
+        members:
+          description: IPv6 addresses.
+          type: array
+          items:
+            type: string
+            anyOf:
+              - format: ipv6
+              - format: uc-ip6range
+      required:
+        - name
+        - members
+  ipv6-network-groups:
     description: Groups of IPv6 networks.
     type: array
     items:
