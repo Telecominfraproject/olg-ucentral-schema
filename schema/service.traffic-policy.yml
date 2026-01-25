@@ -13,6 +13,9 @@ properties:
           description: Available bandwidth.
           type: string
           example: 100mbit
+        outbound-interface:
+          description: Egress interface to apply this traffic shaper
+          type: string
         classes:
           type: array
           items:
@@ -26,6 +29,66 @@ properties:
                 description: Guarantee bandwidth (in percentage) of the class.
                 type: string
                 example: 40%
+              match:
+                description: Matching rules for this class.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      description: Name of the matching rule
+                      type: string
+                    source:
+                      description: Source matching criteria.
+                      type: object
+                      properties:
+                        address:
+                          description: Source address or network (CIDR).
+                          type: string
+                          anyOf:
+                            - format: uc-cidr
+                            - format: uc-ip
+                        port:
+                          description: Source port or range.
+                          type:
+                            - integer
+                            - string
+                          format: uc-portrange
+                          examples:
+                            - 2345
+                            - 1024-65535
+                    destination:
+                      description: Destination matching criteria.
+                      type: object
+                      properties:
+                        address:
+                          description: Destination address or network (CIDR).
+                          type: string
+                          anyOf:
+                            - format: uc-cidr
+                            - format: uc-ip
+                        port:
+                          description: Destination port or range.
+                          type:
+                            - integer
+                            - string
+                          format: uc-portrange
+                          examples:
+                            - 2345
+                            - 1024-65535
+                    protocol:
+                      description:
+                        IP protocol to match.
+                        Use "all" for all protocols and "tcp_udp" for both TCP and UDP.
+                      type: string
+                      examples:
+                      - tcp
+                      - tcp_udp
+                      - icmp
+                      - all
+                    inbound-interface:
+                      description: Match traffic arriving on this interface.
+                      type: string
               burst:
                 description: Size of token bucket (in bytes), which will be available to be sent at ceiling speed.
                 type: string
