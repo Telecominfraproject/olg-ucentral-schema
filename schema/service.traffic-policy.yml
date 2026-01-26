@@ -13,9 +13,6 @@ properties:
           description: Available bandwidth.
           type: string
           example: 100mbit
-        outbound-interface:
-          description: Egress interface to apply this traffic shaper
-          type: string
         classes:
           type: array
           items:
@@ -43,11 +40,11 @@ properties:
                       type: object
                       properties:
                         address:
-                          description: Source address or network (CIDR).
+                          description: Source IPv4 address or network (CIDR).
                           type: string
                           anyOf:
-                            - format: uc-cidr
-                            - format: uc-ip
+                            - format: ipv4
+                            - format: uc-cidr4
                         port:
                           description: Source port or range.
                           type:
@@ -65,8 +62,8 @@ properties:
                           description: Destination address or network (CIDR).
                           type: string
                           anyOf:
-                            - format: uc-cidr
-                            - format: uc-ip
+                            - format: ipv4
+                            - format: uc-cidr4
                         port:
                           description: Destination port or range.
                           type:
@@ -101,8 +98,7 @@ properties:
                 description: Priority for usage of available bandwidth once guarantees have been met. The lower the priority number, the higher the priority.
                 type: integer
                 minimum: 0
-                maximum: 7
-                default: 0
+                maximum: 20
               queue-type:
                 type: string
                 enum:
@@ -112,7 +108,32 @@ properties:
                 default: fq-codel
             required:
             - id
+            - priority
             - bandwidth
+        default:
+          type: object
+          properties:
+            bandwidth:
+              description: Guarantee bandwidth (in percentage) of the class.
+              type: string
+              example: 40%
+            burst:
+              description: Size of token bucket (in bytes), which will be available to be sent at ceiling speed.
+              type: string
+              example: 15Kb
+            ceiling:
+              description: Maximum speed possible for this class. Default is bandwidth value.
+              type: string
+              example: 100mbit
+            queue-type:
+              type: string
+              enum:
+              - fq-codel
+              - fair-queue
+              - drop-tail
+              default: fq-codel
+          required:
+          - bandwidth
       required:
       - name
       - bandwidth
