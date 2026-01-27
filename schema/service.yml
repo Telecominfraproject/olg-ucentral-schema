@@ -21,7 +21,5 @@ properties:
     $ref: https://ucentral.io/schema/v1/service/tftp-server/
   igmp-proxy:
     $ref: https://ucentral.io/schema/v1/service/igmp-proxy/
-  traffic-policy:
-    $ref: https://ucentral.io/schema/v1/service/traffic-policy/
   snmp:
     $ref: https://ucentral.io/schema/v1/service/snmpv3/

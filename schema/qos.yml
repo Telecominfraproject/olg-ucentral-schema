@@ -23,9 +23,11 @@ properties:
                 minimum: 2
                 maximum: 4095
               bandwidth:
-                description: Guarantee bandwidth (in percentage) of the class.
+                description: Guarantee bandwidth of the class.
                 type: string
-                example: 40%
+                example:
+                 - 40%
+                 - 100mbit
               match:
                 description: Matching rules for this class.
                 type: array
@@ -79,10 +81,10 @@ properties:
                         Use "all" for all protocols and "tcp_udp" for both TCP and UDP.
                       type: string
                       examples:
-                      - tcp
-                      - tcp_udp
-                      - icmp
-                      - all
+                        - tcp
+                        - tcp_udp
+                        - icmp
+                        - all
                     inbound-interface:
                       description: Match traffic arriving on this interface.
                       type: string
