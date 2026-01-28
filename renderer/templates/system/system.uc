@@ -10,4 +10,9 @@ system {
             include("syslog.uc", { location: location + '/syslog', syslog: system.syslog });
         }
     %}
+    {% if (system.name_server): %}
+        {% for (let server in system.name-server): %}
+    name-server {{ server }}
+        {% endfor %}
+    {% endif %}
 }

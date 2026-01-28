@@ -7,3 +7,8 @@ properties:
     $ref: https://ucentral.io/schema/v1/system/netflow/
   sflow:
     $ref: https://ucentral.io/schema/v1/system/sflow/
+  name-server:
+    type: array
+    items:
+      type: string
+      format: uc-ip
