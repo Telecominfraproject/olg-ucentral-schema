@@ -27,6 +27,9 @@
         "nat": {
             "$ref": "#/$defs/nat"
         },
+        "qos": {
+            "$ref": "#/$defs/qos"
+        },
         "pki": {
             "$ref": "#/$defs/pki"
         },
@@ -38,6 +41,9 @@
         },
         "services": {
             "$ref": "#/$defs/service"
+        },
+        "system": {
+            "$ref": "#/$defs/system"
         },
         "metrics": {
             "$ref": "#/$defs/metrics"
@@ -342,6 +348,9 @@
                 },
                 "ipv6": {
                     "$ref": "#/$defs/interface.ipv6"
+                },
+                "qos-policy": {
+                    "type": "string"
                 }
             }
         },
@@ -1233,6 +1242,35 @@
                                 "type": "array",
                                 "items": {
                                     "type": "string",
+                                    "anyOf": [
+                                        {
+                                            "format": "ipv4"
+                                        },
+                                        {
+                                            "format": "uc-ip4range"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "members"
+                        ]
+                    }
+                },
+                "ipv4-network-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
                                     "format": "uc-cidr4",
                                     "example": "192.168.1.0/24"
                                 }
@@ -1245,6 +1283,35 @@
                     }
                 },
                 "ipv6-address-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "anyOf": [
+                                        {
+                                            "format": "ipv6"
+                                        },
+                                        {
+                                            "format": "uc-ip6range"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "members"
+                        ]
+                    }
+                },
+                "ipv6-network-groups": {
                     "type": "array",
                     "items": {
                         "type": "object",
@@ -1393,6 +1460,9 @@
                                 "address-group": {
                                     "type": "string"
                                 },
+                                "network-group": {
+                                    "type": "string"
+                                },
                                 "port-group": {
                                     "type": "string"
                                 }
@@ -1419,6 +1489,9 @@
                             "type": "object",
                             "properties": {
                                 "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
                                     "type": "string"
                                 },
                                 "port-group": {
@@ -1605,6 +1678,9 @@
                                 "address-group": {
                                     "type": "string"
                                 },
+                                "network-group": {
+                                    "type": "string"
+                                },
                                 "port-group": {
                                     "type": "string"
                                 }
@@ -1631,6 +1707,9 @@
                             "type": "object",
                             "properties": {
                                 "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
                                     "type": "string"
                                 },
                                 "port-group": {
@@ -2559,6 +2638,183 @@
                 }
             }
         },
+        "qos": {
+            "type": "object",
+            "properties": {
+                "shaper": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "bandwidth": {
+                                "type": "string",
+                                "example": "100mbit"
+                            },
+                            "classes": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "minimum": 2,
+                                            "maximum": 4095
+                                        },
+                                        "bandwidth": {
+                                            "type": "string",
+                                            "example": [
+                                                "40%",
+                                                "100mbit"
+                                            ]
+                                        },
+                                        "match": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "source": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "address": {
+                                                                "type": "string",
+                                                                "anyOf": [
+                                                                    {
+                                                                        "format": "ipv4"
+                                                                    },
+                                                                    {
+                                                                        "format": "uc-cidr4"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "port": {
+                                                                "type": [
+                                                                    "integer",
+                                                                    "string"
+                                                                ],
+                                                                "format": "uc-portrange",
+                                                                "examples": [
+                                                                    2345,
+                                                                    "1024-65535"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "destination": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "address": {
+                                                                "type": "string",
+                                                                "anyOf": [
+                                                                    {
+                                                                        "format": "ipv4"
+                                                                    },
+                                                                    {
+                                                                        "format": "uc-cidr4"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "port": {
+                                                                "type": [
+                                                                    "integer",
+                                                                    "string"
+                                                                ],
+                                                                "format": "uc-portrange",
+                                                                "examples": [
+                                                                    2345,
+                                                                    "1024-65535"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "protocol": {
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "tcp",
+                                                            "tcp_udp",
+                                                            "icmp",
+                                                            "all"
+                                                        ]
+                                                    },
+                                                    "inbound-interface": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "burst": {
+                                            "type": "string",
+                                            "example": "15Kb"
+                                        },
+                                        "ceiling": {
+                                            "type": "string",
+                                            "example": "100mbit"
+                                        },
+                                        "priority": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 20
+                                        },
+                                        "queue-type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "fq-codel",
+                                                "fair-queue",
+                                                "drop-tail"
+                                            ],
+                                            "default": "fq-codel"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "priority",
+                                        "bandwidth"
+                                    ]
+                                }
+                            },
+                            "default": {
+                                "type": "object",
+                                "properties": {
+                                    "bandwidth": {
+                                        "type": "string",
+                                        "example": "40%"
+                                    },
+                                    "burst": {
+                                        "type": "string",
+                                        "example": "15Kb"
+                                    },
+                                    "ceiling": {
+                                        "type": "string",
+                                        "example": "100mbit"
+                                    },
+                                    "queue-type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "fq-codel",
+                                            "fair-queue",
+                                            "drop-tail"
+                                        ],
+                                        "default": "fq-codel"
+                                    }
+                                },
+                                "required": [
+                                    "bandwidth"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "bandwidth"
+                        ]
+                    }
+                }
+            }
+        },
         "pki": {
             "type": "object",
             "properties": {
@@ -3163,10 +3419,12 @@
                             },
                             "address": {
                                 "type": "string",
-                                "format": "uc-ip"
+                                "format": "uc-cidr"
                             },
                             "port": {
-                                "type": "integer"
+                                "type": "integer",
+                                "maximum": 65535,
+                                "default": 51820
                             },
                             "peers": {
                                 "type": "array",
@@ -3784,74 +4042,6 @@
                 }
             }
         },
-        "service.traffic-policy": {
-            "type": "object",
-            "properties": {
-                "shaper": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "bandwidth": {
-                                "type": "string",
-                                "example": "100mbit"
-                            },
-                            "classes": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "minimum": 2,
-                                            "maximum": 4095
-                                        },
-                                        "bandwidth": {
-                                            "type": "string",
-                                            "example": "40%"
-                                        },
-                                        "burst": {
-                                            "type": "string",
-                                            "example": "15Kb"
-                                        },
-                                        "ceiling": {
-                                            "type": "string",
-                                            "example": "100mbit"
-                                        },
-                                        "priority": {
-                                            "type": "integer",
-                                            "minimum": 0,
-                                            "maximum": 7,
-                                            "default": 0
-                                        },
-                                        "queue-type": {
-                                            "type": "string",
-                                            "enum": [
-                                                "fq-codel",
-                                                "fair-queue",
-                                                "drop-tail"
-                                            ],
-                                            "default": "fq-codel"
-                                        }
-                                    },
-                                    "required": [
-                                        "id",
-                                        "bandwidth"
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "bandwidth"
-                        ]
-                    }
-                }
-            }
-        },
         "service.snmpv3": {
             "type": "object",
             "properties": {
@@ -3950,7 +4140,45 @@
                 }
             }
         },
-        "service.syslog": {
+        "service": {
+            "type": "object",
+            "properties": {
+                "dhcp-server": {
+                    "$ref": "#/$defs/service.dhcp-server"
+                },
+                "dhcp-relay": {
+                    "$ref": "#/$defs/service.dhcp-relay"
+                },
+                "dns": {
+                    "$ref": "#/$defs/service.dns"
+                },
+                "ntp": {
+                    "$ref": "#/$defs/service.ntp"
+                },
+                "lldp": {
+                    "$ref": "#/$defs/service.lldp"
+                },
+                "mdns": {
+                    "$ref": "#/$defs/service.mdns"
+                },
+                "pppoe-server": {
+                    "$ref": "#/$defs/service.pppoe-server"
+                },
+                "web-proxy": {
+                    "$ref": "#/$defs/service.web-proxy"
+                },
+                "tftp-server": {
+                    "$ref": "#/$defs/service.tftp-server"
+                },
+                "igmp-proxy": {
+                    "$ref": "#/$defs/service.igmp-proxy"
+                },
+                "snmp": {
+                    "$ref": "#/$defs/service.snmpv3"
+                }
+            }
+        },
+        "system.syslog": {
             "type": "object",
             "properties": {
                 "marker": {
@@ -3970,6 +4198,63 @@
                 "preserve-fqdn": {
                     "type": "boolean",
                     "default": false
+                },
+                "local": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "facility": {
+                                "type": "string",
+                                "enum": [
+                                    "all",
+                                    "kern",
+                                    "user",
+                                    "mail",
+                                    "daemon",
+                                    "auth",
+                                    "syslog",
+                                    "lpr",
+                                    "news",
+                                    "uucp",
+                                    "cron",
+                                    "security",
+                                    "ftp",
+                                    "ntp",
+                                    "logaudit",
+                                    "logalert",
+                                    "clock",
+                                    "local0",
+                                    "local1",
+                                    "local2",
+                                    "local3",
+                                    "local4",
+                                    "local5",
+                                    "local6",
+                                    "local7"
+                                ],
+                                "default": "daemon"
+                            },
+                            "severity": {
+                                "type": "string",
+                                "enum": [
+                                    "emerg",
+                                    "alert",
+                                    "crit",
+                                    "err",
+                                    "warning",
+                                    "notice",
+                                    "info",
+                                    "debug"
+                                ],
+                                "default": "info"
+                            }
+                        },
+                        "required": [
+                            "facility",
+                            "severity"
+                        ]
+                    }
                 },
                 "remote-hosts": {
                     "type": "array",
@@ -4048,7 +4333,7 @@
                 }
             }
         },
-        "service.netflow": {
+        "system.netflow": {
             "type": "object",
             "properties": {
                 "version": {
@@ -4096,7 +4381,7 @@
                 }
             }
         },
-        "service.sflow": {
+        "system.sflow": {
             "type": "object",
             "properties": {
                 "agent": {
@@ -4150,53 +4435,17 @@
                 }
             }
         },
-        "service": {
+        "system": {
             "type": "object",
             "properties": {
-                "dhcp-server": {
-                    "$ref": "#/$defs/service.dhcp-server"
-                },
-                "dhcp-relay": {
-                    "$ref": "#/$defs/service.dhcp-relay"
-                },
-                "dns": {
-                    "$ref": "#/$defs/service.dns"
-                },
-                "ntp": {
-                    "$ref": "#/$defs/service.ntp"
-                },
-                "lldp": {
-                    "$ref": "#/$defs/service.lldp"
-                },
-                "mdns": {
-                    "$ref": "#/$defs/service.mdns"
-                },
-                "pppoe-server": {
-                    "$ref": "#/$defs/service.pppoe-server"
-                },
-                "web-proxy": {
-                    "$ref": "#/$defs/service.web-proxy"
-                },
-                "tftp-server": {
-                    "$ref": "#/$defs/service.tftp-server"
-                },
-                "igmp-proxy": {
-                    "$ref": "#/$defs/service.igmp-proxy"
-                },
-                "traffic-policy": {
-                    "$ref": "#/$defs/service.traffic-policy"
-                },
-                "snmp": {
-                    "$ref": "#/$defs/service.snmpv3"
-                },
                 "syslog": {
-                    "$ref": "#/$defs/service.syslog"
+                    "$ref": "#/$defs/system.syslog"
                 },
                 "netflow": {
-                    "$ref": "#/$defs/service.netflow"
+                    "$ref": "#/$defs/system.netflow"
                 },
                 "sflow": {
-                    "$ref": "#/$defs/service.sflow"
+                    "$ref": "#/$defs/system.sflow"
                 }
             }
         },

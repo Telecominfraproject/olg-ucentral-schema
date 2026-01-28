@@ -1,0 +1,114 @@
+{
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "upstream"
+        },
+        {
+            "ipv4": {
+                "address": [
+                    "192.168.1.1/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream"
+        }
+    ],
+    "metrics": {
+        "health": {
+            "interval": 60
+        },
+        "statistics": {
+            "interval": 150
+        }
+    },
+    "routing": {
+        "static": {
+            "ipv4-rules": [
+                {
+                    "action": "reject",
+                    "destination": "192.168.2.0/24",
+                    "distance": 1
+                }
+            ]
+        },
+        "policies": [
+            {
+				"name": "woowee1",
+				"interface": "eth0",
+				"address-family": "ipv4",
+				"rules": [
+					{
+						"name": "heehaa",
+						"priority": 283,
+						"match": {
+							"source": {
+								"address": "192.168.1.0/24",
+								"port": 2345
+							},
+							"destination": {
+								"address": "8.8.8.8/32"
+							},
+							"protocol": "tcp"
+						},
+						"action": "reject"
+					}
+				]
+			}
+        ]
+    },
+    "services": {
+        "dhcp-server": {
+            "networks": [
+                {
+                    "name": "test",
+                    "subnets": [
+                        {
+                            "default-router": "192.168.1.1",
+                            "dns-servers": [
+                                "192.168.1.1"
+                            ],
+                            "lease-time": 86400,
+                            "ranges": [
+                                {
+                                    "start": "192.168.1.100",
+                                    "stop": "192.168.1.200"
+                                }
+                            ],
+                            "subnet": "192.168.1.0/24"
+                        }
+                    ]
+                }
+            ]
+        },
+        "dns": {
+            "allow-from": [
+                "192.168.1.0/24"
+            ],
+            "forwarding-servers": [
+                {
+                    "address": "8.8.8.8"
+                },
+                {
+                    "address": "1.1.1.1"
+                }
+            ],
+            "listen-addresses": [
+                "192.168.1.1"
+            ]
+        }
+    },
+    "uuid": 1768813304
+}

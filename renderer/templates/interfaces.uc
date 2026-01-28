@@ -1,5 +1,6 @@
 {%
 let bridge_c = 0, pppoe_c = 0, dummy_c = 0;
+let wg_c = 0, peer_c = 0;
 let iface_mapping = {}, iface_vlan_mapping = {};
 function getIfaceName(type, name) {
     let iface_temp;
@@ -182,4 +183,46 @@ interfaces {
         {% endif %}
     }
     {% endfor %}
+
+    {% if (vpn): %}
+        {% if (vpn.wireguard): %}
+            {% for (let i in vpn.wireguard.interfaces): %}
+    wireguard wg{{ wg_c++ }} {
+                {% if (i.name): %}
+        description "{{ i.name }}"
+                {% endif %}
+        private-key "{{ i.private_key }}"
+        address "{{ i.address }}"
+                {% if (i.port): %}
+        port "{{ i.port }}"
+                {% else %}
+        port "51820"
+                {% endif %}
+                {% if (i.peers && length(i.peers)): %}
+                {% for (let p in i.peers): %}
+        peer peer{{ peer_c++ }} {
+            public-key "{{ p.public_key }}"
+                    {% if (p.name): %}
+            description "{{ p.name }}"
+                    {% endif %}
+                    {% for (let a in p.allowed_ips): %}
+            allowed-ips "{{ a }}"
+                    {% endfor %}
+                    {% if (p.persistent_keepalive): %}
+            persistent-keepalive "{{ p.persistent_keepalive }}"
+                    {% endif %}
+                    {% if (p.preshared_key): %}
+            preshared-key "{{ p.preshared_key }}"
+                    {% endif %}
+                    {% if (p.endpoint): %}
+            address "{{ p.endpoint.address }}"
+            port "{{ p.endpoint.port }}"
+                    {% endif %}
+        }
+                {% endfor %}
+                {% endif %}
+    }
+            {% endfor %}
+        {% endif %}
+    {% endif %}
 }

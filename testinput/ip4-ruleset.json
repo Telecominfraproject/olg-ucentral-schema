@@ -1,0 +1,75 @@
+{
+    "uuid": 777777777,
+    "firewall": {
+        "zones": [
+            {
+				"name": "LOCAL",
+				"default-action": "accept",
+				"local-zone": true
+			},
+            {
+				"name": "WAN",
+				"default-action": "accept",
+                "interfaces": [
+                    "eth0"
+                ]
+			},
+            {
+				"name": "LAN",
+				"default-action": "accept",
+                "interfaces": [
+                    "eth1"
+                ]
+			}
+        ],
+        "ipv4-rulesets": [
+            {
+                "name": "r1",
+                "description": "drag-resolving-information",
+                "default-action": "accept",
+                "default-log": false,
+                "rules": [
+                    {
+                        "rule-number": 283,
+                        "action": "drop",
+                        "protocol": "icmp",
+                        "source": {
+                            "address": "192.168.0.0/24"
+                        }
+                    },
+                    {
+                        "rule-number": 284,
+                        "action": "accept",
+                        "protocol": "icmp",
+                        "source": {
+                            "address": "192.168.2.0/24"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "r2",
+                "description": "drag-resolving-information",
+                "default-action": "accept",
+                "default-log": false,
+                "rules": [
+                    {
+                        "rule-number": 285,
+                        "action": "drop",
+                        "protocol": "icmp",
+                        "destination": {
+                            "address": "8.8.8.8/32"
+                        }
+                    }
+                ]
+            }
+        ],
+        "zone-policies": [
+			{
+				"from": "LAN",
+				"to": "WAN",
+				"ruleset": "r2"
+			}
+        ]
+    }
+}

@@ -385,6 +385,10 @@
                                 "format": "ipv6"
                             }
                         }
+                    },
+                    "qos-policy": {
+                        "description": "Name of the QoS policy to apply on this interface.",
+                        "type": "string"
                     }
                 }
             }
@@ -1373,6 +1377,38 @@
                         "type": "object",
                         "properties": {
                             "ipv4-address-groups": {
+                                "description": "Groups of IPv4 addresses.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Group name for reference in IPv4 rules.",
+                                            "type": "string"
+                                        },
+                                        "members": {
+                                            "description": "IPv4 addresses.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "anyOf": [
+                                                    {
+                                                        "format": "ipv4"
+                                                    },
+                                                    {
+                                                        "format": "uc-ip4range"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "members"
+                                    ]
+                                }
+                            },
+                            "ipv4-network-groups": {
                                 "description": "Groups of IPv4 networks.",
                                 "type": "array",
                                 "items": {
@@ -1399,6 +1435,38 @@
                                 }
                             },
                             "ipv6-address-groups": {
+                                "description": "Groups of IPv6 addresses.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Group name for reference in IPv6 rules.",
+                                            "type": "string"
+                                        },
+                                        "members": {
+                                            "description": "IPv6 addresses.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "anyOf": [
+                                                    {
+                                                        "format": "ipv6"
+                                                    },
+                                                    {
+                                                        "format": "uc-ip6range"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "members"
+                                    ]
+                                }
+                            },
+                            "ipv6-network-groups": {
                                 "description": "Groups of IPv6 networks.",
                                 "type": "array",
                                 "items": {
@@ -1600,6 +1668,10 @@
                                                             "description": "Reference to IPv4 address group.",
                                                             "type": "string"
                                                         },
+                                                        "network-group": {
+                                                            "description": "Reference to IPv4 network group.",
+                                                            "type": "string"
+                                                        },
                                                         "port-group": {
                                                             "type": "string"
                                                         }
@@ -1628,6 +1700,10 @@
                                                     "properties": {
                                                         "address-group": {
                                                             "description": "Reference to IPv4 address group.",
+                                                            "type": "string"
+                                                        },
+                                                        "network-group": {
+                                                            "description": "Reference to IPv4 network group.",
                                                             "type": "string"
                                                         },
                                                         "port-group": {
@@ -1825,6 +1901,10 @@
                                                             "description": "Reference to IPv6 address group.",
                                                             "type": "string"
                                                         },
+                                                        "network-group": {
+                                                            "description": "Reference to IPv6 network group.",
+                                                            "type": "string"
+                                                        },
                                                         "port-group": {
                                                             "type": "string"
                                                         }
@@ -1853,6 +1933,10 @@
                                                     "properties": {
                                                         "address-group": {
                                                             "description": "Reference to IPv6 address group.",
+                                                            "type": "string"
+                                                        },
+                                                        "network-group": {
+                                                            "description": "Reference to IPv6 network group.",
                                                             "type": "string"
                                                         },
                                                         "port-group": {
@@ -2779,6 +2863,203 @@
                 }
             }
         },
+        "qos": {
+            "description": "Traffic policing configuration (shaping, rate limiting, priority-based queues).",
+            "type": "object",
+            "properties": {
+                "shaper": {
+                    "description": "Traffic shaper policies for bandwidth management.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "bandwidth": {
+                                "description": "Available bandwidth.",
+                                "type": "string",
+                                "example": "100mbit"
+                            },
+                            "classes": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "minimum": 2,
+                                            "maximum": 4095
+                                        },
+                                        "bandwidth": {
+                                            "description": "Guarantee bandwidth of the class.",
+                                            "type": "string",
+                                            "example": [
+                                                "40%",
+                                                "100mbit"
+                                            ]
+                                        },
+                                        "match": {
+                                            "description": "Matching rules for this class.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "description": "Name of the matching rule",
+                                                        "type": "string"
+                                                    },
+                                                    "source": {
+                                                        "description": "Source matching criteria.",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "address": {
+                                                                "description": "Source IPv4 address or network (CIDR).",
+                                                                "type": "string",
+                                                                "anyOf": [
+                                                                    {
+                                                                        "format": "ipv4"
+                                                                    },
+                                                                    {
+                                                                        "format": "uc-cidr4"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "port": {
+                                                                "description": "Source port or range.",
+                                                                "type": [
+                                                                    "integer",
+                                                                    "string"
+                                                                ],
+                                                                "format": "uc-portrange",
+                                                                "examples": [
+                                                                    2345,
+                                                                    "1024-65535"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "destination": {
+                                                        "description": "Destination matching criteria.",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "address": {
+                                                                "description": "Destination address or network (CIDR).",
+                                                                "type": "string",
+                                                                "anyOf": [
+                                                                    {
+                                                                        "format": "ipv4"
+                                                                    },
+                                                                    {
+                                                                        "format": "uc-cidr4"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "port": {
+                                                                "description": "Destination port or range.",
+                                                                "type": [
+                                                                    "integer",
+                                                                    "string"
+                                                                ],
+                                                                "format": "uc-portrange",
+                                                                "examples": [
+                                                                    2345,
+                                                                    "1024-65535"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "protocol": {
+                                                        "description": "IP protocol to match. Use \"all\" for all protocols and \"tcp_udp\" for both TCP and UDP.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "tcp",
+                                                            "tcp_udp",
+                                                            "icmp",
+                                                            "all"
+                                                        ]
+                                                    },
+                                                    "inbound-interface": {
+                                                        "description": "Match traffic arriving on this interface.",
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "burst": {
+                                            "description": "Size of token bucket (in bytes), which will be available to be sent at ceiling speed.",
+                                            "type": "string",
+                                            "example": "15Kb"
+                                        },
+                                        "ceiling": {
+                                            "description": "Maximum speed possible for this class. Default is bandwidth value.",
+                                            "type": "string",
+                                            "example": "100mbit"
+                                        },
+                                        "priority": {
+                                            "description": "Priority for usage of available bandwidth once guarantees have been met. The lower the priority number, the higher the priority.",
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 20
+                                        },
+                                        "queue-type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "fq-codel",
+                                                "fair-queue",
+                                                "drop-tail"
+                                            ],
+                                            "default": "fq-codel"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "priority",
+                                        "bandwidth"
+                                    ]
+                                }
+                            },
+                            "default": {
+                                "type": "object",
+                                "properties": {
+                                    "bandwidth": {
+                                        "description": "Guarantee bandwidth (in percentage) of the class.",
+                                        "type": "string",
+                                        "example": "40%"
+                                    },
+                                    "burst": {
+                                        "description": "Size of token bucket (in bytes), which will be available to be sent at ceiling speed.",
+                                        "type": "string",
+                                        "example": "15Kb"
+                                    },
+                                    "ceiling": {
+                                        "description": "Maximum speed possible for this class. Default is bandwidth value.",
+                                        "type": "string",
+                                        "example": "100mbit"
+                                    },
+                                    "queue-type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "fq-codel",
+                                            "fair-queue",
+                                            "drop-tail"
+                                        ],
+                                        "default": "fq-codel"
+                                    }
+                                },
+                                "required": [
+                                    "bandwidth"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "bandwidth"
+                        ]
+                    }
+                }
+            }
+        },
         "pki": {
             "description": "PKI certificates.",
             "type": "object",
@@ -3469,11 +3750,13 @@
                                     "address": {
                                         "description": "IP address assigned to the WireGuard interface.",
                                         "type": "string",
-                                        "format": "uc-ip"
+                                        "format": "uc-cidr"
                                     },
                                     "port": {
                                         "description": "UDP port for WireGuard to listen on.",
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "maximum": 65535,
+                                        "default": 51820
                                     },
                                     "peers": {
                                         "description": "List of peers for this WireGuard interface.",
@@ -4158,81 +4441,6 @@
                         }
                     }
                 },
-                "traffic-policy": {
-                    "description": "Traffic policing configuration (shaping, rate limiting, priority-based queues).",
-                    "type": "object",
-                    "properties": {
-                        "shaper": {
-                            "description": "Traffic shaper policies for bandwidth management.",
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "bandwidth": {
-                                        "description": "Available bandwidth.",
-                                        "type": "string",
-                                        "example": "100mbit"
-                                    },
-                                    "classes": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "minimum": 2,
-                                                    "maximum": 4095
-                                                },
-                                                "bandwidth": {
-                                                    "description": "Guarantee bandwidth (in percentage) of the class.",
-                                                    "type": "string",
-                                                    "example": "40%"
-                                                },
-                                                "burst": {
-                                                    "description": "Size of token bucket (in bytes), which will be available to be sent at ceiling speed.",
-                                                    "type": "string",
-                                                    "example": "15Kb"
-                                                },
-                                                "ceiling": {
-                                                    "description": "Maximum speed possible for this class. Default is bandwidth value.",
-                                                    "type": "string",
-                                                    "example": "100mbit"
-                                                },
-                                                "priority": {
-                                                    "description": "Priority for usage of available bandwidth once guarantees have been met. The lower the priority number, the higher the priority.",
-                                                    "type": "integer",
-                                                    "minimum": 0,
-                                                    "maximum": 7,
-                                                    "default": 0
-                                                },
-                                                "queue-type": {
-                                                    "type": "string",
-                                                    "enum": [
-                                                        "fq-codel",
-                                                        "fair-queue",
-                                                        "drop-tail"
-                                                    ],
-                                                    "default": "fq-codel"
-                                                }
-                                            },
-                                            "required": [
-                                                "id",
-                                                "bandwidth"
-                                            ]
-                                        }
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "bandwidth"
-                                ]
-                            }
-                        }
-                    }
-                },
                 "snmp": {
                     "description": "SNMPv3 configuration.",
                     "type": "object",
@@ -4334,7 +4542,13 @@
                             }
                         }
                     }
-                },
+                }
+            }
+        },
+        "system": {
+            "description": "System configuration section.",
+            "type": "object",
+            "properties": {
                 "syslog": {
                     "description": "Syslog configuration.",
                     "type": "object",
@@ -4358,6 +4572,66 @@
                             "description": "Always send the domain part of the hostname.",
                             "type": "boolean",
                             "default": false
+                        },
+                        "local": {
+                            "description": "Local syslog settings.",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "facility": {
+                                        "description": "Syslog facility to use for messages sent to this server.",
+                                        "type": "string",
+                                        "enum": [
+                                            "all",
+                                            "kern",
+                                            "user",
+                                            "mail",
+                                            "daemon",
+                                            "auth",
+                                            "syslog",
+                                            "lpr",
+                                            "news",
+                                            "uucp",
+                                            "cron",
+                                            "security",
+                                            "ftp",
+                                            "ntp",
+                                            "logaudit",
+                                            "logalert",
+                                            "clock",
+                                            "local0",
+                                            "local1",
+                                            "local2",
+                                            "local3",
+                                            "local4",
+                                            "local5",
+                                            "local6",
+                                            "local7"
+                                        ],
+                                        "default": "daemon"
+                                    },
+                                    "severity": {
+                                        "description": "Minimum severity level of messages to send to this server.",
+                                        "type": "string",
+                                        "enum": [
+                                            "emerg",
+                                            "alert",
+                                            "crit",
+                                            "err",
+                                            "warning",
+                                            "notice",
+                                            "info",
+                                            "debug"
+                                        ],
+                                        "default": "info"
+                                    }
+                                },
+                                "required": [
+                                    "facility",
+                                    "severity"
+                                ]
+                            }
                         },
                         "remote-hosts": {
                             "description": "Remote syslog servers.",

@@ -1,0 +1,25 @@
+{
+    "uuid": 88888888,
+    "vpn": {
+        "wireguard": {
+            "interfaces": [
+                {
+                    "name": "router wg interface",
+                    "private-key": "EHV6dmt0euk0xaDBY//zxtkXktpLs+XikPSXDbzyo0Q=",
+                    "address": "10.7.66.254/24",
+                    "port": 51820,
+                    "peers": [
+                        {
+                            "name": "peer1",
+                            "public-key": "YOKJ+tmZ5KuFK9B8n/qISs3ZCp89nC0PTO158ClQSho=",
+                            "allowed-ips": [
+                                "10.7.66.1/32"
+                            ],
+                            "persistent-keepalive": 21
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

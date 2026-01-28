@@ -15,10 +15,12 @@ properties:
         address:
           description: IP address assigned to the WireGuard interface.
           type: string
-          format: uc-ip
+          format: uc-cidr
         port:
           description: UDP port for WireGuard to listen on.
           type: integer
+          maximum: 65535
+          default: 51820
         peers:
           description: List of peers for this WireGuard interface.
           type: array

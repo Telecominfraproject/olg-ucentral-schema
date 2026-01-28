@@ -1,0 +1,37 @@
+{
+    "services": {
+        "snmp": {
+			"listen-addresses": [
+				"2001:db8:e4fa:f1f3:c9c:76f4:a23f:5901",
+				"2001:db8:c00b:4ba7:8a3a:592b:7aa5:b76b",
+				"2001:db8:b431:8c26:f889:6475:7340:f166"
+			],
+			"location": "develop-electrical-technology",
+			"engine-id": "install-open-metrics",
+			"groups": [
+				{
+					"name": "noodle-quantum-kudos",
+					"mode": "rw",
+					"view": "default",
+					"oid": "triangulate-primary-block"
+				}
+			],
+			"users": [
+				{
+					"name": "access-regional-silo",
+					"group": "download-quantum-boondoggle",
+					"auth": {
+						"encrypted": false,
+						"password": "log-customer-dog",
+						"hash-algo": "sha"
+					},
+					"privacy": {
+						"encrypted": false,
+						"password": "task-natural-silo",
+						"hash-algo": "des"
+					}
+				}
+			]
+		}
+    }
+}
