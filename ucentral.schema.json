@@ -2030,7 +2030,8 @@
                             "type": "string",
                             "enum": [
                                 "accept",
-                                "drop"
+                                "drop",
+                                "reject"
                             ],
                             "default": "accept"
                         },
@@ -2038,7 +2039,8 @@
                             "type": "string",
                             "enum": [
                                 "accept",
-                                "drop"
+                                "drop",
+                                "reject"
                             ],
                             "default": "accept"
                         },
@@ -2046,7 +2048,8 @@
                             "type": "string",
                             "enum": [
                                 "accept",
-                                "drop"
+                                "drop",
+                                "reject"
                             ],
                             "default": "drop"
                         }
@@ -4446,6 +4449,13 @@
                 },
                 "sflow": {
                     "$ref": "#/$defs/system.sflow"
+                },
+                "name-server": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uc-ip"
+                    }
                 }
             }
         },

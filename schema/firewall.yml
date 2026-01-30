@@ -10,18 +10,21 @@ properties:
         enum:
         - accept
         - drop
+        - reject
         default: accept
       related:
         type: string
         enum:
         - accept
         - drop
+        - reject
         default: accept
       invalid:
         type: string
         enum:
         - accept
         - drop
+        - reject
         default: drop
   groups:
     type: array

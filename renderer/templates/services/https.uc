@@ -12,8 +12,6 @@
             ca-certificate "vyosca"
             certificate "vyoscert2"
         }
-        allow-client {
-            address "127.0.0.1"
-        }
+        listen-address "127.0.0.1"
         enable-http-redirect
     }

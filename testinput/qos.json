@@ -1,0 +1,46 @@
+{
+    "uuid": 999998763,
+	"qos": {
+		"shaper": [
+			{
+				"name": "shaper1",
+				"bandwidth": "10%",
+				"classes": [
+					{
+						"id": 2830,
+						"bandwidth": "20%",
+						"match": [
+							{
+								"name": "match1",
+								"source": {
+									"address": "192.168.0.0/24",
+									"port": 2345
+								},
+								"protocol": "tcp_udp",
+								"inbound-interface": "eth1"
+							},
+							{
+								"name": "match2",
+								"destination": {
+									"address": "8.8.8.8/32"
+								},
+								"protocol": "icmp",
+								"inbound-interface": "eth0"
+							}
+						],
+						"burst": "50%",
+						"ceiling": "80%",
+						"priority": 8,
+						"queue-type": "fq-codel"
+					}
+				],
+				"default": {
+					"bandwidth": "40%",
+					"burst": "60%",
+					"ceiling": "70%",
+					"queue-type": "fair-queue"
+				}
+			}
+        ]
+    }
+}

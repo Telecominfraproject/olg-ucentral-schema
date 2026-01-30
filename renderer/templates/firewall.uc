@@ -314,6 +314,85 @@ firewall {
     {% endfor %}
     }
 {% endif %}
+{% if (length(firewall.bridge_rulesets)): %}
+    bridge {
+    {% for (let ruleset in firewall.bridge_rulesets): %}
+        {% rule_m[ruleset.name] = rule_c; %}
+        name rule{{ rule_c++ }} {
+        {% if (ruleset.description): %}
+            description "{{ ruleset.description }}"
+        {% endif %}
+        {% if (ruleset.default_action): %}
+            default-action "{{ ruleset.default_action }}"
+        {% endif %}
+        {% if (ruleset.default_log): %}
+            default-log
+        {% endif %}
+
+        {% for (let rule in ruleset.rules): %}
+            rule {{ rule.rule_number }} {
+            {% if (rule.disabled): %}
+                disable
+            {% endif %}
+                action "{{ rule.action }}"
+            {% if (rule.log): %}
+                log
+            {% endif %}
+
+            {% if (rule.source): %}
+                source {
+                {% if (rule.source.mac_address): %}
+                    mac-address "{{ rule.source.mac_address }}"
+                {% endif %}
+                {% if (rule.source.mac_group): %}
+                    mac-group "{{ rule.source.mac_group }}"
+                {% endif %}
+                {% if (rule.source.negate): %}
+                    negate
+                {% endif %}
+                }
+            {% endif %}
+
+            {% if (rule.destination): %}
+                destination {
+                {% if (rule.destination.mac_address): %}
+                    mac-address "{{ rule.destination.mac_address }}"
+                {% endif %}
+                {% if (rule.destination.mac_group): %}
+                    mac-group "{{ rule.destination.mac_group }}"
+                {% endif %}
+                {% if (rule.destination.negate): %}
+                    negate
+                {% endif %}
+                }
+            {% endif %}
+
+            {% if (rule.vlan): %}
+                vlan {
+                {% if (rule.vlan.id): %}
+                    id {{ rule.vlan.id }}
+                {% endif %}
+                {% if (rule.vlan.priority): %}
+                    priority {{ rule.vlan.priority }}
+                {% endif %}
+                }
+            {% endif %}
+
+            {% if (rule.ethertype): %}
+                ethertype "{{ rule.ethertype }}"
+            {% endif %}
+            {% if (rule.inbound_interface): %}
+                inbound-interface "{{ rule.inbound_interface }}"
+            {% endif %}
+            {% if (rule.outbound_interface): %}
+                outbound-interface "{{ rule.outbound_interface }}"
+            {% endif %}
+            }
+        {% endfor %}
+        }
+    {% endfor %}
+    }
+{% endif %}
 {% if (length(firewall.zones)): %}
     {% for (let z in firewall.zones): %}
     zone {{ z.name }} {

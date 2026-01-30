@@ -1348,7 +1348,8 @@
                             "type": "string",
                             "enum": [
                                 "accept",
-                                "drop"
+                                "drop",
+                                "reject"
                             ],
                             "default": "accept"
                         },
@@ -1356,7 +1357,8 @@
                             "type": "string",
                             "enum": [
                                 "accept",
-                                "drop"
+                                "drop",
+                                "reject"
                             ],
                             "default": "accept"
                         },
@@ -1364,7 +1366,8 @@
                             "type": "string",
                             "enum": [
                                 "accept",
-                                "drop"
+                                "drop",
+                                "reject"
                             ],
                             "default": "drop"
                         }
@@ -4831,6 +4834,13 @@
                             "type": "boolean",
                             "default": false
                         }
+                    }
+                },
+                "name-server": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uc-ip"
                     }
                 }
             }

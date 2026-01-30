@@ -1,4 +1,39 @@
 {
+    "firewall": {
+        "state-policy": {
+            "established": {
+                "action": "accept"
+            },
+            "invalid": {
+                "action": "drop"
+            },
+            "related": {
+                "action": "accept"
+            }
+        },
+        "zones": [
+            {
+                "default-action": "drop",
+                "interfaces": [
+                    "eth0",
+                    "eth1"
+                ],
+                "name": "wan"
+            },
+            {
+                "default-action": "accept",
+                "interfaces": [
+                    "eth4"
+                ],
+                "name": "lan"
+            },
+            {
+                "default-action": "drop",
+                "local-zone": true,
+                "name": "local"
+            }
+        ]
+    },
     "interfaces": [
         {
             "ipv4": {
@@ -13,16 +48,30 @@
         },
         {
             "ipv4": {
-                "address": [
-                    "192.168.1.1/24"
-                ],
-                "addressing": "static"
+                "addressing": "dhcp"
             },
             "ipv6": {
                 "addressing": "none"
             },
             "mtu": 1500,
             "name": "eth1",
+            "role": "upstream"
+        },
+        {
+            "ipv4": {
+                "address": [
+                    "192.168.8.1/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "address": [
+                    "2001:db8::1/64"
+                ],
+                "addressing": "static"
+            },
+            "mtu": 1500,
+            "name": "eth4",
             "role": "downstream"
         }
     ],
@@ -34,81 +83,50 @@
             "interval": 150
         }
     },
-    "routing": {
-        "static": {
-            "ipv4-rules": [
-                {
-                    "action": "reject",
-                    "destination": "192.168.2.0/24",
-                    "distance": 1
-                }
-            ]
-        },
-        "policies": [
+    "qos": {
+        "shaper": [
             {
-				"name": "woowee1",
-				"interface": "eth0",
-				"address-family": "ipv4",
-				"rules": [
-					{
-						"name": "heehaa",
-						"priority": 283,
-						"match": {
-							"source": {
-								"address": "192.168.1.0/24",
-								"port": 2345
-							},
-							"destination": {
-								"address": "8.8.8.8/32"
-							},
-							"protocol": "tcp"
-						},
-						"action": "reject"
-					}
-				]
-			}
+                "bandwidth": "1000mbit",
+                "classes": [
+                    {
+                        "bandwidth": "100mbit",
+                        "id": 10,
+                        "match": [
+                            {
+                                "destination": {
+                                    "address": "0.0.0.0/0"
+                                },
+                                "name": "test",
+                                "protocol": "tcp",
+                                "source": {
+                                    "address": "192.168.1.0/24"
+                                }
+                            }
+                        ],
+                        "priority": 10
+                    }
+                ],
+                "default": {
+                    "bandwidth": "100mbit"
+                },
+                "name": "wan-shaper"
+            }
         ]
     },
     "services": {
-        "dhcp-server": {
-            "networks": [
+        "syslog": {
+            "local": [
                 {
-                    "name": "test",
-                    "subnets": [
-                        {
-                            "default-router": "192.168.1.1",
-                            "dns-servers": [
-                                "192.168.1.1"
-                            ],
-                            "lease-time": 86400,
-                            "ranges": [
-                                {
-                                    "start": "192.168.1.100",
-                                    "stop": "192.168.1.200"
-                                }
-                            ],
-                            "subnet": "192.168.1.0/24"
-                        }
-                    ]
-                }
-            ]
-        },
-        "dns": {
-            "allow-from": [
-                "192.168.1.0/24"
-            ],
-            "forwarding-servers": [
-                {
-                    "address": "8.8.8.8"
-                },
-                {
-                    "address": "1.1.1.1"
+                    "facility": "all",
+                    "severity": "info"
                 }
             ],
-            "listen-addresses": [
-                "192.168.1.1"
-            ]
+            "marker": {
+                "enable": true,
+                "interval": 1200
+            },
+            "preserve-fqdn": false
         }
     },
-    "uuid": 1768813304
+    "uuid": 1769672157
 }

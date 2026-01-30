@@ -6043,8 +6043,8 @@ function instantiateFirewall(location, value, errors) {
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
 
-					if (!(value in [ "accept", "drop" ]))
-						push(errors, [ location, "must be one of \"accept\" or \"drop\"" ]);
+					if (!(value in [ "accept", "drop", "reject" ]))
+						push(errors, [ location, "must be one of \"accept\", \"drop\" or \"reject\"" ]);
 
 					return value;
 				}
@@ -6060,8 +6060,8 @@ function instantiateFirewall(location, value, errors) {
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
 
-					if (!(value in [ "accept", "drop" ]))
-						push(errors, [ location, "must be one of \"accept\" or \"drop\"" ]);
+					if (!(value in [ "accept", "drop", "reject" ]))
+						push(errors, [ location, "must be one of \"accept\", \"drop\" or \"reject\"" ]);
 
 					return value;
 				}
@@ -6077,8 +6077,8 @@ function instantiateFirewall(location, value, errors) {
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
 
-					if (!(value in [ "accept", "drop" ]))
-						push(errors, [ location, "must be one of \"accept\" or \"drop\"" ]);
+					if (!(value in [ "accept", "drop", "reject" ]))
+						push(errors, [ location, "must be one of \"accept\", \"drop\" or \"reject\"" ]);
 
 					return value;
 				}
@@ -12919,6 +12919,34 @@ function instantiateSystem(location, value, errors) {
 
 		if (exists(value, "sflow")) {
 			obj.sflow = instantiateSystemSflow(location + "/sflow", value["sflow"], errors);
+		}
+
+		function parseNameServer(location, value, errors) {
+			if (type(value) == "array") {
+				function parseItem(location, value, errors) {
+					if (type(value) == "string") {
+						if (!matchUcIp(value))
+							push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+					}
+
+					if (type(value) != "string")
+						push(errors, [ location, "must be of type string" ]);
+
+					return value;
+				}
+
+				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
+
+			return value;
+		}
+
+		if (exists(value, "name-server")) {
+			obj.name_server = parseNameServer(location + "/name-server", value["name-server"], errors);
 		}
 
 		return obj;

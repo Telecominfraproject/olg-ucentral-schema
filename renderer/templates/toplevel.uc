@@ -63,6 +63,10 @@
 		include("firewall.uc", { location: '/firewall', firewall: state.firewall });
 	}
 
+	if (state.qos) {
+		include("qos.uc", { location: '/qos', qos: state.qos });
+	}
+
 	if (!state.pki) {
 		state.pki = {};
 	}
