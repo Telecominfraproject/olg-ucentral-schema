@@ -10,7 +10,7 @@
         }
         certificates {
             ca-certificate "vyosca"
-            certificate "vyoscert2"
+            certificate "vyoscert"
         }
         listen-address "127.0.0.1"
         enable-http-redirect

@@ -3,5 +3,7 @@ type: object
 properties:
   vrrp:
     $ref: https://ucentral.io/schema/v1/high-availability/vrrp/
+  virtual-server:
+    $ref: https://ucentral.io/schema/v1/high-availability/virtual-server/
   load-balancing:
     $ref: https://ucentral.io/schema/v1/high-availability/load-balancing/

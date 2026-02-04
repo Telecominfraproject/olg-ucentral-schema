@@ -43,34 +43,38 @@
 			continue;
 		upstream = interface;
 	}
-
-    if (state.interfaces || state.vpn) {
-        include("interfaces.uc", { location: '/interfaces', interfaces: state.interfaces, vpn: state.vpn ? state.vpn : {} });
-	}
-
-	if (state.routing) {
-		include("routing.uc", { location: '/routing', routing: state.routing });
-		if (state.routing.policies) {
-			include("policy.uc", { location: '/policy', policies: state.routing.policies });
-		}
-	}
-
-	if (state.nat) {
-		include("nat.uc", { location: '/nat', nat: state.nat });
-	}
-
+	
 	if (state.firewall) {
 		include("firewall.uc", { location: '/firewall', firewall: state.firewall });
 	}
 
-	if (state.qos) {
-		include("qos.uc", { location: '/qos', qos: state.qos });
+	if (state.high_availability) {
+		include("high-availability/ha.uc", { location: '/high_availability', ha: state.high_availability})
+	}
+
+    if (state.interfaces || state.vpn) {
+        include("interfaces.uc", { location: '/interfaces', interfaces: state.interfaces, vpn: state.vpn ? state.vpn : {} });
+	}
+	
+	if (state.nat) {
+		include("nat.uc", { location: '/nat', nat: state.nat });
 	}
 
 	if (!state.pki) {
 		state.pki = {};
 	}
 	include("pki.uc", { location: '/pki', services: state.pki });
+
+	if (state.routing) {
+		if (state.routing.policies) {
+			include("policy.uc", { location: '/policy', policies: state.routing.policies });
+		}
+		include("routing.uc", { location: '/routing', routing: state.routing });
+	}
+
+	if (state.qos) {
+		include("qos.uc", { location: '/qos', qos: state.qos });
+	}
 
 	if (!state.services) {
 		state.services = {};

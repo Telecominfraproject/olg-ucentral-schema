@@ -1,0 +1,44 @@
+description: VRRP configuration.
+type: object
+properties:
+  groups:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        virtual-address:
+          type: string
+          format: uc-ip
+        virtual-port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        real-server:
+          type: array
+          items:
+            type: object
+            properties:
+              address:
+                type: string
+                format: uc-ip
+              port:
+                type: integer
+                minimum: 1
+                maximum: 65535
+              health-check:
+                type: string
+                enum: [script]
+              script:
+                type: string
+        algorithm:
+          type: string
+          enum: [round-robin, weighted-round-robin, least-connection, weighted-least-connection, source-hashing, destination-hashing, locality-based-least-connection]
+        forward-method:
+          type: string
+          enum: [nat, direct, tunnel]
+      required:
+      - name
+      - algorithm
+      - forward-method

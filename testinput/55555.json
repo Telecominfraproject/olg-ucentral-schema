@@ -1,0 +1,89 @@
+{
+        "firewall":     {
+                "ipv4-rulesets":        [{
+                                "default-action":       "drop",
+                                "name": "lan-local-ipv4",
+                                "rules":        [{
+                                                "action":       "accept",
+                                                "destination":  {
+                                                        "address":      "192.168.0.1"
+                                                },
+                                                "rule-number":  100,
+                                                "source":       {
+                                                        "address":      "192.168.0.88"
+                                                }
+                                        }]
+                        }, {
+                                "default-action":       "drop",
+                                "name": "local-lan-ipv4",
+                                "rules":        [{
+                                                "action":       "accept",
+                                                "destination":  {
+                                                        "address":      "192.168.0.88"
+                                                },
+                                                "rule-number":  100,
+                                                "source":       {
+                                                        "address":      "192.168.0.1"
+                                                }
+                                        }]
+                        }],
+                "state-policy": {
+                        "established":  "accept",
+                        "invalid":      "drop",
+                        "related":      "accept"
+                },
+                "zone-policies":        [{
+                                "from": "lan",
+                                "ruleset":      "lan-local-ipv4",
+                                "to":   "local"
+                        }, {
+                                "from": "local",
+                                "ruleset":      "local-lan-ipv4",
+                                "to":   "lan"
+                        }],
+                "zones":        [{
+                                "default-action":       "drop",
+                                "interfaces":   ["eth0"],
+                                "name": "wan"
+                        }, {
+                                "default-action":       "accept",
+                                "interfaces":   ["eth1"],
+                                "name": "lan"
+                        }, {
+                                "default-action":       "drop",
+                                "local-zone":   true,
+                                "name": "local"
+                        }]
+        },
+        "interfaces":   [{
+                        "ipv4": {
+                                "addressing":   "dhcp"
+                        },
+                        "ipv6": {
+                                "addressing":   "none"
+                        },
+                        "mtu":  1500,
+                        "name": "eth0",
+                        "role": "upstream"
+                }, {
+                        "ipv4": {
+                                "address":      ["192.168.0.1/24"],
+                                "addressing":   "static"
+                        },
+                        "ipv6": {
+                                "addressing":   "none"
+                        },
+                        "mtu":  1500,
+                        "name": "eth1",
+                        "role": "downstream"
+                }],
+        "metrics":      {
+                "health":       {
+                        "interval":     60
+                },
+                "statistics":   {
+                        "interval":     150
+                }
+        },
+        "uuid": 1769931790
+}

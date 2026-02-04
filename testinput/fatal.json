@@ -1,10 +1,35 @@
 {
     "firewall": {
+        "ipv4-rulesets": [
+            {
+                "default-action": "drop",
+                "name": "lan-wan-ipv4",
+                "rules": [
+                    {
+                        "action": "accept",
+                        "destination": {
+                            "address": "192.168.0.1"
+                        },
+                        "rule-number": 100,
+                        "source": {
+                            "address": "192.168.0.88"
+                        }
+                    }
+                ]
+            }
+        ],
         "state-policy": {
             "established": "accept",
             "invalid": "drop",
             "related": "accept"
         },
+        "zone-policies": [
+            {
+                "from": "lan",
+                "ruleset": "lan-wan-ipv4",
+                "to": "wan"
+            }
+        ],
         "zones": [
             {
                 "default-action": "drop",
@@ -16,8 +41,7 @@
             {
                 "default-action": "accept",
                 "interfaces": [
-                    "eth1",
-                    "eth4"
+                    "eth1"
                 ],
                 "name": "lan"
             },
@@ -53,20 +77,6 @@
             "mtu": 1500,
             "name": "eth1",
             "role": "downstream"
-        },
-        {
-            "ipv4": {
-                "address": [
-                    "192.168.8.1/24"
-                ],
-                "addressing": "static"
-            },
-            "ipv6": {
-                "addressing": "none"
-            },
-            "mtu": 1500,
-            "name": "eth4",
-            "role": "downstream"
         }
     ],
     "metrics": {
@@ -77,5 +87,5 @@
             "interval": 150
         }
     },
-    "uuid": 1769767092
+    "uuid": 1769917709
 }

@@ -1,6 +1,6 @@
     sflow {
 {% if (sflow.agent): %}
-        agent-address "{{ sflow.agent }}"
+        agent-address "{{ sflow.agent.address }}"
     {% if (sflow.agent.interface): %}
         agent-interface "{{ sflow.agent.interface }}"
     {% endif %}

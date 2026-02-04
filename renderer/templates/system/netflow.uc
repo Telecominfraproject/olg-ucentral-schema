@@ -1,7 +1,7 @@
     flow-accounting {
         netflow {
 {% for (let i in netflow.interfaces): %}
-            interface eth0
+            interface "{{ i }}"
 {% endfor %}
 {% for (let s in netflow.servers): %}
             server {{ s.address }} {

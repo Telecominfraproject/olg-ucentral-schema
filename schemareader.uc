@@ -4341,8 +4341,8 @@ function instantiateFirewallRuleIpv4(location, value, errors) {
 
 				function parseAddress(location, value, errors) {
 					if (type(value) == "string") {
-						if (!matchUcCidr4(value))
-							push(errors, [ location, "must be a valid IPv4 CIDR" ]);
+						if (!matchUcIp(value))
+							push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
 
 					}
 
@@ -4467,8 +4467,8 @@ function instantiateFirewallRuleIpv4(location, value, errors) {
 
 				function parseAddress(location, value, errors) {
 					if (type(value) == "string") {
-						if (!matchUcCidr4(value))
-							push(errors, [ location, "must be a valid IPv4 CIDR" ]);
+						if (!matchUcIp(value))
+							push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
 
 					}
 

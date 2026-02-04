@@ -1,0 +1,25 @@
+    global-options {
+        state-policy {
+            established {
+{% if (firewall.state_policy && firewall.state_policy.established): %}
+                action "{{ firewall.state_policy.established }}"
+{% else %}
+                action "accept"
+{% endif %}
+            }
+            invalid {
+{% if (firewall.state_policy && firewall.state_policy.invalid): %}
+                action "{{ firewall.state_policy.invalid }}"
+{% else %}
+                action "drop"
+{% endif %}
+            }
+            related {
+{% if (firewall.state_policy && firewall.state_policy.related): %}
+                action "{{ firewall.state_policy.related }}"
+{% else %}
+                action "accept"
+{% endif %}
+            }
+        }
+    }

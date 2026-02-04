@@ -123,6 +123,7 @@ interfaces {
             address "{{ j }}"
                         {% endfor %}
                     {% elif (i.ipv6.addressing == "dhcpv6"): %}
+            address "dhcpv6"
             dhcpv6-options {
 
             }
@@ -162,6 +163,7 @@ interfaces {
         address "{{ j }}"
                 {% endfor %}
             {% elif (i.ipv6.addressing == "dhcpv6"): %}
+        address "dhcpv6"
         dhcpv6-options {
 
         }
