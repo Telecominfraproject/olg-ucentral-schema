@@ -1,4 +1,4 @@
-{}
+{% for (let v in lb.): %}
     virtual-server 192.168.240.100 {
         address 192.168.240.100
         algorithm source-hashing
@@ -11,3 +11,4 @@
             port 80
         }
     }
+{% endfor %}

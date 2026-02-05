@@ -49,5 +49,4 @@ properties:
       required:
       - id
       - inbound-interface
-      - wan-interface
-
+      - wan-interfaces

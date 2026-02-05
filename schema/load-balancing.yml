@@ -1,0 +1,7 @@
+description: Load balancing configuration section.
+type: object
+properties:
+  haproxy:
+    $ref: https://ucentral.io/schema/v1/load-balancing/haproxy/
+  wan-lb:
+    $ref: https://ucentral.io/schema/v1/load-balancing/wan-lb/

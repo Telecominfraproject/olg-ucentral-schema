@@ -1,0 +1,66 @@
+description: haproxy configuration.
+type: object
+properties:
+  services:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        listen-address:
+          type: string
+          format: uc-ip
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        protocol:
+          type: string
+          enum: [http, tcp]
+        backend:
+          type: string
+      required:
+      - name
+      - listen-address
+      - port
+      - protocol
+      - backend
+  backends:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        balance:
+          type: string
+          enum: [round-robin, least-connection, source-address]
+        protocol:
+          type: string
+          enum: [http, tcp]
+        address:
+          type: string
+          format: uc-ip
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+      required:
+      - name
+      - servers
+      - protocol
+      - address
+      - port
+  global-parameters:
+    type: object
+    properties:
+      max-connections:
+        type: integer
+        default: 2000
+      tls-version-min:
+        type: string
+        enum: [1.2, 1.3]
+required:
+- backends
+- services

@@ -11,27 +11,29 @@ properties:
     $ref: "https://ucentral.io/schema/v1/unit/"
   globals:
     $ref: "https://ucentral.io/schema/v1/globals/"
+  firewall:
+    $ref: "https://ucentral.io/schema/v1/firewall/"
+  high-availability:
+    $ref: "https://ucentral.io/schema/v1/high-availability/"
   interfaces:
     type: array
     items:
       $ref: "https://ucentral.io/schema/v1/interface/"
-  routing:
-    $ref: "https://ucentral.io/schema/v1/routing/"
-  firewall:
-    $ref: "https://ucentral.io/schema/v1/firewall/"
+  load-balancing:
+    $ref: "https://ucentral.io/schema/v1/load-balancing/"
   nat:
     $ref: "https://ucentral.io/schema/v1/nat/"
-  qos:
-    $ref: "https://ucentral.io/schema/v1/qos/"
   pki:
     $ref: "https://ucentral.io/schema/v1/pki/"
-  vpn:
-    $ref: "https://ucentral.io/schema/v1/vpn/"
-  high-availability:
-    $ref: "https://ucentral.io/schema/v1/high-availability/"
+  routing:
+    $ref: "https://ucentral.io/schema/v1/routing/"
+  qos:
+    $ref: "https://ucentral.io/schema/v1/qos/"
   services:
     $ref: "https://ucentral.io/schema/v1/service/"
   system:
     $ref: "https://ucentral.io/schema/v1/system/"
+  vpn:
+    $ref: "https://ucentral.io/schema/v1/vpn/"
   metrics:
     $ref: "https://ucentral.io/schema/v1/metrics/"

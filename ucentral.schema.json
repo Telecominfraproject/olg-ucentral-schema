@@ -12,38 +12,41 @@
         "globals": {
             "$ref": "#/$defs/globals"
         },
+        "firewall": {
+            "$ref": "#/$defs/firewall"
+        },
+        "high-availability": {
+            "$ref": "#/$defs/high-availability"
+        },
         "interfaces": {
             "type": "array",
             "items": {
                 "$ref": "#/$defs/interface"
             }
         },
-        "routing": {
-            "$ref": "#/$defs/routing"
-        },
-        "firewall": {
-            "$ref": "#/$defs/firewall"
+        "load-balancing": {
+            "$ref": "#/$defs/load-balancing"
         },
         "nat": {
             "$ref": "#/$defs/nat"
         },
-        "qos": {
-            "$ref": "#/$defs/qos"
-        },
         "pki": {
             "$ref": "#/$defs/pki"
         },
-        "vpn": {
-            "$ref": "#/$defs/vpn"
+        "routing": {
+            "$ref": "#/$defs/routing"
         },
-        "high-availability": {
-            "$ref": "#/$defs/high-availability"
+        "qos": {
+            "$ref": "#/$defs/qos"
         },
         "services": {
             "$ref": "#/$defs/service"
         },
         "system": {
             "$ref": "#/$defs/system"
+        },
+        "vpn": {
+            "$ref": "#/$defs/vpn"
         },
         "metrics": {
             "$ref": "#/$defs/metrics"
@@ -86,6 +89,1005 @@
                     "type": "string",
                     "format": "hostname",
                     "example": "example.local"
+                }
+            }
+        },
+        "firewall.groups": {
+            "type": "object",
+            "properties": {
+                "ipv4-address-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "anyOf": [
+                                        {
+                                            "format": "ipv4"
+                                        },
+                                        {
+                                            "format": "uc-ip4range"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "members"
+                        ]
+                    }
+                },
+                "ipv4-network-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "format": "uc-cidr4",
+                                    "example": "192.168.1.0/24"
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "members"
+                        ]
+                    }
+                },
+                "ipv6-address-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "anyOf": [
+                                        {
+                                            "format": "ipv6"
+                                        },
+                                        {
+                                            "format": "uc-ip6range"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "members"
+                        ]
+                    }
+                },
+                "ipv6-network-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "format": "uc-cidr6",
+                                    "example": "2001:db8::/32"
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "members"
+                        ]
+                    }
+                },
+                "port-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": [
+                                        "integer",
+                                        "string"
+                                    ],
+                                    "examples": [
+                                        80,
+                                        "8080-8090"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "members"
+                        ]
+                    }
+                },
+                "mac-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "format": "uc-mac",
+                                    "example": "98:e7:9a:27:fe:49"
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "members"
+                        ]
+                    }
+                },
+                "domain-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "format": "hostname"
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "members"
+                        ]
+                    }
+                }
+            }
+        },
+        "firewall.rule.ipv4": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535
+                },
+                "disabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop",
+                        "reject"
+                    ]
+                },
+                "protocol": {
+                    "type": "string",
+                    "examples": [
+                        "tcp",
+                        "udp",
+                        "icmp",
+                        "all"
+                    ]
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "format": "uc-ip",
+                            "example": "192.168.1.87"
+                        },
+                        "port": {
+                            "type": "string"
+                        },
+                        "mac-address": {
+                            "type": "string",
+                            "format": "uc-mac",
+                            "example": "98:e7:9a:27:fe:49"
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "negate": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "destination": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "format": "uc-ip",
+                            "example": "10.0.0.1"
+                        },
+                        "port": {
+                            "type": "string"
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "negate": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "state": {
+                    "type": "object",
+                    "properties": {
+                        "established": {
+                            "type": "boolean"
+                        },
+                        "related": {
+                            "type": "boolean"
+                        },
+                        "new": {
+                            "type": "boolean"
+                        },
+                        "invalid": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "icmp": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "examples": [
+                                "echo-request",
+                                "echo-reply",
+                                "destination-unreachable"
+                            ]
+                        },
+                        "code": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "tcp": {
+                    "type": "object",
+                    "properties": {
+                        "flags": {
+                            "type": "object",
+                            "properties": {
+                                "set": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "syn",
+                                            "ack",
+                                            "fin",
+                                            "rst",
+                                            "urg",
+                                            "psh"
+                                        ]
+                                    }
+                                },
+                                "not-set": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "syn",
+                                            "ack",
+                                            "fin",
+                                            "rst",
+                                            "urg",
+                                            "psh"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "limit": {
+                    "type": "object",
+                    "properties": {
+                        "rate": {
+                            "type": "string"
+                        },
+                        "burst": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "log": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "required": [
+                "rule-number",
+                "action"
+            ]
+        },
+        "firewall.ruleset.ipv4": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "default-action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop",
+                        "reject"
+                    ],
+                    "default": "drop"
+                },
+                "default-log": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.rule.ipv4"
+                    }
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "firewall.rule.ipv6": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535
+                },
+                "disabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop",
+                        "reject"
+                    ]
+                },
+                "protocol": {
+                    "type": "string",
+                    "examples": [
+                        "tcp",
+                        "udp",
+                        "icmpv6",
+                        "all"
+                    ]
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "example": "2001:db8::/32"
+                        },
+                        "port": {
+                            "type": "string"
+                        },
+                        "mac-address": {
+                            "type": "string",
+                            "format": "uc-mac",
+                            "example": "98:e7:9a:27:fe:49"
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "negate": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "destination": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "example": "2001:db8::/32"
+                        },
+                        "port": {
+                            "type": "string"
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "negate": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "state": {
+                    "type": "object",
+                    "properties": {
+                        "established": {
+                            "type": "boolean"
+                        },
+                        "related": {
+                            "type": "boolean"
+                        },
+                        "new": {
+                            "type": "boolean"
+                        },
+                        "invalid": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "icmpv6": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "examples": [
+                                "echo-request",
+                                "echo-reply",
+                                "neighbor-solicitation",
+                                "neighbor-advertisement",
+                                "router-solicitation",
+                                "router-advertisement"
+                            ]
+                        },
+                        "code": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "tcp": {
+                    "type": "object",
+                    "properties": {
+                        "flags": {
+                            "type": "object",
+                            "properties": {
+                                "set": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "syn",
+                                            "ack",
+                                            "fin",
+                                            "rst",
+                                            "urg",
+                                            "psh"
+                                        ]
+                                    }
+                                },
+                                "not-set": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "syn",
+                                            "ack",
+                                            "fin",
+                                            "rst",
+                                            "urg",
+                                            "psh"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "limit": {
+                    "type": "object",
+                    "properties": {
+                        "rate": {
+                            "type": "string"
+                        },
+                        "burst": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "log": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "required": [
+                "rule-number",
+                "action"
+            ]
+        },
+        "firewall.ruleset.ipv6": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "default-action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop",
+                        "reject"
+                    ],
+                    "default": "drop"
+                },
+                "default-log": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.rule.ipv6"
+                    }
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "firewall.rule.bridge": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535
+                },
+                "disabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop"
+                    ]
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "mac-address": {
+                            "type": "string",
+                            "format": "uc-mac",
+                            "example": "98:e7:9a:27:fe:49"
+                        },
+                        "mac-group": {
+                            "type": "string"
+                        },
+                        "negate": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "destination": {
+                    "type": "object",
+                    "properties": {
+                        "mac-address": {
+                            "type": "string",
+                            "format": "uc-mac",
+                            "example": "98:e7:9a:27:fe:49"
+                        },
+                        "mac-group": {
+                            "type": "string"
+                        },
+                        "negate": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "vlan": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 4094
+                        },
+                        "priority": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 7
+                        }
+                    }
+                },
+                "ethertype": {
+                    "type": "string",
+                    "examples": [
+                        "ipv4",
+                        "ipv6",
+                        "arp",
+                        "0x0800",
+                        "0x86dd"
+                    ]
+                },
+                "inbound-interface": {
+                    "type": "string"
+                },
+                "outbound-interface": {
+                    "type": "string"
+                },
+                "log": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "required": [
+                "rule-number",
+                "action"
+            ]
+        },
+        "firewall.ruleset.bridge": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "default-action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop"
+                    ],
+                    "default": "drop"
+                },
+                "default-log": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.rule.bridge"
+                    }
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "firewall.zone": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "default-action": {
+                    "type": "string",
+                    "enum": [
+                        "accept",
+                        "drop",
+                        "reject"
+                    ],
+                    "default": "drop"
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "local-zone": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "firewall.zone-policy": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "ruleset": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "from",
+                "to",
+                "ruleset"
+            ]
+        },
+        "firewall": {
+            "type": "object",
+            "properties": {
+                "state-policy": {
+                    "type": "object",
+                    "properties": {
+                        "established": {
+                            "type": "string",
+                            "enum": [
+                                "accept",
+                                "drop",
+                                "reject"
+                            ],
+                            "default": "accept"
+                        },
+                        "related": {
+                            "type": "string",
+                            "enum": [
+                                "accept",
+                                "drop",
+                                "reject"
+                            ],
+                            "default": "accept"
+                        },
+                        "invalid": {
+                            "type": "string",
+                            "enum": [
+                                "accept",
+                                "drop",
+                                "reject"
+                            ],
+                            "default": "drop"
+                        }
+                    }
+                },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.groups"
+                    }
+                },
+                "ipv4-rulesets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.ruleset.ipv4"
+                    }
+                },
+                "ipv6-rulesets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.ruleset.ipv6"
+                    }
+                },
+                "bridge-rulesets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.ruleset.bridge"
+                    }
+                },
+                "zones": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.zone"
+                    }
+                },
+                "zone-policies": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/firewall.zone-policy"
+                    }
+                }
+            }
+        },
+        "high-availability.vrrp": {
+            "type": "object",
+            "properties": {
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "virtual-addresses": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "priority": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 255,
+                                "default": 100
+                            },
+                            "interface": {
+                                "type": "string"
+                            },
+                            "vrid": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 255
+                            },
+                            "preempt": {
+                                "type": "boolean",
+                                "default": true
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "interface",
+                            "vrid",
+                            "virtual-addresses"
+                        ]
+                    }
+                }
+            }
+        },
+        "high-availability.virtual-server": {
+            "type": "object",
+            "properties": {
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "virtual-address": {
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
+                            "virtual-port": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 65535
+                            },
+                            "real-server": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "address": {
+                                            "type": "string",
+                                            "format": "uc-ip"
+                                        },
+                                        "port": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 65535
+                                        },
+                                        "health-check": {
+                                            "type": "string",
+                                            "enum": [
+                                                "script"
+                                            ]
+                                        },
+                                        "script": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "algorithm": {
+                                "type": "string",
+                                "enum": [
+                                    "round-robin",
+                                    "weighted-round-robin",
+                                    "least-connection",
+                                    "weighted-least-connection",
+                                    "source-hashing",
+                                    "destination-hashing",
+                                    "locality-based-least-connection"
+                                ]
+                            },
+                            "forward-method": {
+                                "type": "string",
+                                "enum": [
+                                    "nat",
+                                    "direct",
+                                    "tunnel"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "algorithm",
+                            "forward-method"
+                        ]
+                    }
+                }
+            }
+        },
+        "high-availability": {
+            "type": "object",
+            "properties": {
+                "vrrp": {
+                    "$ref": "#/$defs/high-availability.vrrp"
+                },
+                "virtual-server": {
+                    "$ref": "#/$defs/high-availability.virtual-server"
                 }
             }
         },
@@ -351,6 +1353,805 @@
                 },
                 "qos-policy": {
                     "type": "string"
+                }
+            }
+        },
+        "load-balancing.haproxy": {
+            "type": "object",
+            "properties": {
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "listen-address": {
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 65535
+                            },
+                            "protocol": {
+                                "type": "string",
+                                "enum": [
+                                    "http",
+                                    "tcp"
+                                ]
+                            },
+                            "backend": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "listen-address",
+                            "port",
+                            "protocol",
+                            "backend"
+                        ]
+                    }
+                },
+                "backends": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "balance": {
+                                "type": "string",
+                                "enum": [
+                                    "round-robin",
+                                    "least-connection",
+                                    "source-address"
+                                ]
+                            },
+                            "protocol": {
+                                "type": "string",
+                                "enum": [
+                                    "http",
+                                    "tcp"
+                                ]
+                            },
+                            "address": {
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 65535
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "servers",
+                            "protocol",
+                            "address",
+                            "port"
+                        ]
+                    }
+                },
+                "global-parameters": {
+                    "type": "object",
+                    "properties": {
+                        "max-connections": {
+                            "type": "integer",
+                            "default": 2000
+                        },
+                        "tls-version-min": {
+                            "type": "string",
+                            "enum": [
+                                1.2,
+                                1.3
+                            ]
+                        }
+                    }
+                }
+            },
+            "required": [
+                "backends",
+                "services"
+            ]
+        },
+        "load-balancing.wan-lb": {
+            "type": "object",
+            "properties": {
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "weight": {
+                                "type": "integer",
+                                "default": 1
+                            },
+                            "failover-only": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "health-check": {
+                                "type": "object",
+                                "properties": {
+                                    "target": {
+                                        "type": "string"
+                                    },
+                                    "interval": {
+                                        "type": "integer",
+                                        "default": 5
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9999
+                            },
+                            "source": {
+                                "type": "string",
+                                "format": "uc-cidr"
+                            },
+                            "destination": {
+                                "type": "string",
+                                "format": "uc-cidr"
+                            },
+                            "inbound-interface": {
+                                "type": "string"
+                            },
+                            "wan-interfaces": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "inbound-interface",
+                            "wan-interfaces"
+                        ]
+                    }
+                }
+            }
+        },
+        "load-balancing": {
+            "type": "object",
+            "properties": {
+                "haproxy": {
+                    "$ref": "#/$defs/load-balancing.haproxy"
+                },
+                "wan-lb": {
+                    "$ref": "#/$defs/load-balancing.wan-lb"
+                }
+            }
+        },
+        "nat.source.ipv4": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "outbound-interface": {
+                    "type": "string"
+                },
+                "protocol": {
+                    "type": "string",
+                    "examples": [
+                        "tcp",
+                        "udp",
+                        "icmp",
+                        "all"
+                    ]
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "destination": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "translation": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        }
+                    }
+                }
+            },
+            "required": [
+                "rule-number"
+            ]
+        },
+        "nat.destination.ipv4": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "inbound-interface": {
+                    "type": "string"
+                },
+                "protocol": {
+                    "type": "string",
+                    "examples": [
+                        "tcp",
+                        "udp",
+                        "icmp",
+                        "all"
+                    ]
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "destination": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "translation": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "format": "uc-cidr4",
+                            "example": "192.168.1.0/24"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        }
+                    }
+                }
+            },
+            "required": [
+                "rule-number"
+            ]
+        },
+        "nat.source.ipv6": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "outbound-interface": {
+                    "type": "string"
+                },
+                "protocol": {
+                    "type": "string",
+                    "examples": [
+                        "tcp",
+                        "udp",
+                        "icmpv6",
+                        "all"
+                    ]
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "prefix": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "example": "2001:db8:1::/64"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "destination": {
+                    "type": "object",
+                    "properties": {
+                        "prefix": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "example": "2001:db8:2::/64"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "translation": {
+                    "type": "object",
+                    "properties": {
+                        "prefix": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "example": "2001:db8:a::/64"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        }
+                    }
+                }
+            },
+            "required": [
+                "rule-number"
+            ]
+        },
+        "nat.destination.ipv6": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "inbound-interface": {
+                    "type": "string"
+                },
+                "protocol": {
+                    "type": "string",
+                    "examples": [
+                        "tcp",
+                        "udp",
+                        "icmpv6",
+                        "all"
+                    ]
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "prefix": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "example": "2001:db8:1::/64"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "destination": {
+                    "type": "object",
+                    "properties": {
+                        "prefix": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "example": "2001:db8:2::/64"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        },
+                        "group": {
+                            "type": "object",
+                            "properties": {
+                                "address-group": {
+                                    "type": "string"
+                                },
+                                "network-group": {
+                                    "type": "string"
+                                },
+                                "port-group": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "translation": {
+                    "type": "object",
+                    "properties": {
+                        "prefix": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "example": "2001:db8:a::/64"
+                        },
+                        "port": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
+                        }
+                    }
+                }
+            },
+            "required": [
+                "rule-number"
+            ]
+        },
+        "nat.nat64": {
+            "type": "object",
+            "properties": {
+                "rule-number": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "source": {
+                    "type": "object",
+                    "properties": {
+                        "prefix": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "example": "2001:db8:1::/64"
+                        }
+                    }
+                },
+                "translation": {
+                    "type": "object",
+                    "properties": {
+                        "ipv6-prefix": {
+                            "type": "string",
+                            "format": "uc-cidr6",
+                            "default": "64:ff9b::/96"
+                        },
+                        "ipv4-pool": {
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "type": "string",
+                                    "examples": [
+                                        "198.51.100.1",
+                                        "198.51.100.1-198.51.100.10"
+                                    ]
+                                },
+                                "port-range": {
+                                    "type": [
+                                        "integer",
+                                        "string"
+                                    ],
+                                    "format": "uc-portrange",
+                                    "examples": [
+                                        80,
+                                        "1024-65535"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "required": [
+                "rule-number"
+            ]
+        },
+        "nat": {
+            "type": "object",
+            "properties": {
+                "source-ipv4": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/nat.source.ipv4"
+                    }
+                },
+                "destination-ipv4": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/nat.destination.ipv4"
+                    }
+                },
+                "source-ipv6": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/nat.source.ipv6"
+                    }
+                },
+                "destination-ipv6": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/nat.destination.ipv6"
+                    }
+                },
+                "nat64": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/nat.nat64"
+                    }
+                }
+            }
+        },
+        "pki": {
+            "type": "object",
+            "properties": {
+                "ca-certs": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "certificate": {
+                                "type": "string"
+                            },
+                            "private-key": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "certs": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "certificate": {
+                                "type": "string"
+                            },
+                            "private-key": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "dh": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "parameter": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
                 }
             }
         },
@@ -1227,1420 +3028,6 @@
                 }
             }
         },
-        "firewall.groups": {
-            "type": "object",
-            "properties": {
-                "ipv4-address-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "anyOf": [
-                                        {
-                                            "format": "ipv4"
-                                        },
-                                        {
-                                            "format": "uc-ip4range"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "ipv4-network-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "format": "uc-cidr4",
-                                    "example": "192.168.1.0/24"
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "ipv6-address-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "anyOf": [
-                                        {
-                                            "format": "ipv6"
-                                        },
-                                        {
-                                            "format": "uc-ip6range"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "ipv6-network-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "format": "uc-cidr6",
-                                    "example": "2001:db8::/32"
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "port-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": [
-                                        "integer",
-                                        "string"
-                                    ],
-                                    "examples": [
-                                        80,
-                                        "8080-8090"
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "mac-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "format": "uc-mac",
-                                    "example": "98:e7:9a:27:fe:49"
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "domain-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "format": "hostname"
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                }
-            }
-        },
-        "firewall.rule.ipv4": {
-            "type": "object",
-            "properties": {
-                "rule-number": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 65535
-                },
-                "disabled": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "action": {
-                    "type": "string",
-                    "enum": [
-                        "accept",
-                        "drop",
-                        "reject"
-                    ]
-                },
-                "protocol": {
-                    "type": "string",
-                    "examples": [
-                        "tcp",
-                        "udp",
-                        "icmp",
-                        "all"
-                    ]
-                },
-                "source": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string",
-                            "format": "uc-ip",
-                            "example": "192.168.1.87"
-                        },
-                        "port": {
-                            "type": "string"
-                        },
-                        "mac-address": {
-                            "type": "string",
-                            "format": "uc-mac",
-                            "example": "98:e7:9a:27:fe:49"
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    }
-                },
-                "destination": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string",
-                            "format": "uc-ip",
-                            "example": "10.0.0.1"
-                        },
-                        "port": {
-                            "type": "string"
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    }
-                },
-                "state": {
-                    "type": "object",
-                    "properties": {
-                        "established": {
-                            "type": "boolean"
-                        },
-                        "related": {
-                            "type": "boolean"
-                        },
-                        "new": {
-                            "type": "boolean"
-                        },
-                        "invalid": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "icmp": {
-                    "type": "object",
-                    "properties": {
-                        "type": {
-                            "type": "string",
-                            "examples": [
-                                "echo-request",
-                                "echo-reply",
-                                "destination-unreachable"
-                            ]
-                        },
-                        "code": {
-                            "type": "integer"
-                        }
-                    }
-                },
-                "tcp": {
-                    "type": "object",
-                    "properties": {
-                        "flags": {
-                            "type": "object",
-                            "properties": {
-                                "set": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "enum": [
-                                            "syn",
-                                            "ack",
-                                            "fin",
-                                            "rst",
-                                            "urg",
-                                            "psh"
-                                        ]
-                                    }
-                                },
-                                "not-set": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "enum": [
-                                            "syn",
-                                            "ack",
-                                            "fin",
-                                            "rst",
-                                            "urg",
-                                            "psh"
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "limit": {
-                    "type": "object",
-                    "properties": {
-                        "rate": {
-                            "type": "string"
-                        },
-                        "burst": {
-                            "type": "integer"
-                        }
-                    }
-                },
-                "log": {
-                    "type": "boolean",
-                    "default": false
-                }
-            },
-            "required": [
-                "rule-number",
-                "action"
-            ]
-        },
-        "firewall.ruleset.ipv4": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "default-action": {
-                    "type": "string",
-                    "enum": [
-                        "accept",
-                        "drop",
-                        "reject"
-                    ],
-                    "default": "drop"
-                },
-                "default-log": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "rules": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.rule.ipv4"
-                    }
-                }
-            },
-            "required": [
-                "name"
-            ]
-        },
-        "firewall.rule.ipv6": {
-            "type": "object",
-            "properties": {
-                "rule-number": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 65535
-                },
-                "disabled": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "action": {
-                    "type": "string",
-                    "enum": [
-                        "accept",
-                        "drop",
-                        "reject"
-                    ]
-                },
-                "protocol": {
-                    "type": "string",
-                    "examples": [
-                        "tcp",
-                        "udp",
-                        "icmpv6",
-                        "all"
-                    ]
-                },
-                "source": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "example": "2001:db8::/32"
-                        },
-                        "port": {
-                            "type": "string"
-                        },
-                        "mac-address": {
-                            "type": "string",
-                            "format": "uc-mac",
-                            "example": "98:e7:9a:27:fe:49"
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    }
-                },
-                "destination": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "example": "2001:db8::/32"
-                        },
-                        "port": {
-                            "type": "string"
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    }
-                },
-                "state": {
-                    "type": "object",
-                    "properties": {
-                        "established": {
-                            "type": "boolean"
-                        },
-                        "related": {
-                            "type": "boolean"
-                        },
-                        "new": {
-                            "type": "boolean"
-                        },
-                        "invalid": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "icmpv6": {
-                    "type": "object",
-                    "properties": {
-                        "type": {
-                            "type": "string",
-                            "examples": [
-                                "echo-request",
-                                "echo-reply",
-                                "neighbor-solicitation",
-                                "neighbor-advertisement",
-                                "router-solicitation",
-                                "router-advertisement"
-                            ]
-                        },
-                        "code": {
-                            "type": "integer"
-                        }
-                    }
-                },
-                "tcp": {
-                    "type": "object",
-                    "properties": {
-                        "flags": {
-                            "type": "object",
-                            "properties": {
-                                "set": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "enum": [
-                                            "syn",
-                                            "ack",
-                                            "fin",
-                                            "rst",
-                                            "urg",
-                                            "psh"
-                                        ]
-                                    }
-                                },
-                                "not-set": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "enum": [
-                                            "syn",
-                                            "ack",
-                                            "fin",
-                                            "rst",
-                                            "urg",
-                                            "psh"
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "limit": {
-                    "type": "object",
-                    "properties": {
-                        "rate": {
-                            "type": "string"
-                        },
-                        "burst": {
-                            "type": "integer"
-                        }
-                    }
-                },
-                "log": {
-                    "type": "boolean",
-                    "default": false
-                }
-            },
-            "required": [
-                "rule-number",
-                "action"
-            ]
-        },
-        "firewall.ruleset.ipv6": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "default-action": {
-                    "type": "string",
-                    "enum": [
-                        "accept",
-                        "drop",
-                        "reject"
-                    ],
-                    "default": "drop"
-                },
-                "default-log": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "rules": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.rule.ipv6"
-                    }
-                }
-            },
-            "required": [
-                "name"
-            ]
-        },
-        "firewall.rule.bridge": {
-            "type": "object",
-            "properties": {
-                "rule-number": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 65535
-                },
-                "disabled": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "action": {
-                    "type": "string",
-                    "enum": [
-                        "accept",
-                        "drop"
-                    ]
-                },
-                "source": {
-                    "type": "object",
-                    "properties": {
-                        "mac-address": {
-                            "type": "string",
-                            "format": "uc-mac",
-                            "example": "98:e7:9a:27:fe:49"
-                        },
-                        "mac-group": {
-                            "type": "string"
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    }
-                },
-                "destination": {
-                    "type": "object",
-                    "properties": {
-                        "mac-address": {
-                            "type": "string",
-                            "format": "uc-mac",
-                            "example": "98:e7:9a:27:fe:49"
-                        },
-                        "mac-group": {
-                            "type": "string"
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    }
-                },
-                "vlan": {
-                    "type": "object",
-                    "properties": {
-                        "id": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 4094
-                        },
-                        "priority": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 7
-                        }
-                    }
-                },
-                "ethertype": {
-                    "type": "string",
-                    "examples": [
-                        "ipv4",
-                        "ipv6",
-                        "arp",
-                        "0x0800",
-                        "0x86dd"
-                    ]
-                },
-                "inbound-interface": {
-                    "type": "string"
-                },
-                "outbound-interface": {
-                    "type": "string"
-                },
-                "log": {
-                    "type": "boolean",
-                    "default": false
-                }
-            },
-            "required": [
-                "rule-number",
-                "action"
-            ]
-        },
-        "firewall.ruleset.bridge": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "default-action": {
-                    "type": "string",
-                    "enum": [
-                        "accept",
-                        "drop"
-                    ],
-                    "default": "drop"
-                },
-                "default-log": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "rules": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.rule.bridge"
-                    }
-                }
-            },
-            "required": [
-                "name"
-            ]
-        },
-        "firewall.zone": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "default-action": {
-                    "type": "string",
-                    "enum": [
-                        "accept",
-                        "drop",
-                        "reject"
-                    ],
-                    "default": "drop"
-                },
-                "interfaces": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "local-zone": {
-                    "type": "boolean",
-                    "default": false
-                }
-            },
-            "required": [
-                "name"
-            ]
-        },
-        "firewall.zone-policy": {
-            "type": "object",
-            "properties": {
-                "from": {
-                    "type": "string"
-                },
-                "to": {
-                    "type": "string"
-                },
-                "ruleset": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "from",
-                "to",
-                "ruleset"
-            ]
-        },
-        "firewall": {
-            "type": "object",
-            "properties": {
-                "state-policy": {
-                    "type": "object",
-                    "properties": {
-                        "established": {
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "drop",
-                                "reject"
-                            ],
-                            "default": "accept"
-                        },
-                        "related": {
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "drop",
-                                "reject"
-                            ],
-                            "default": "accept"
-                        },
-                        "invalid": {
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "drop",
-                                "reject"
-                            ],
-                            "default": "drop"
-                        }
-                    }
-                },
-                "groups": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.groups"
-                    }
-                },
-                "ipv4-rulesets": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.ruleset.ipv4"
-                    }
-                },
-                "ipv6-rulesets": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.ruleset.ipv6"
-                    }
-                },
-                "bridge-rulesets": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.ruleset.bridge"
-                    }
-                },
-                "zones": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.zone"
-                    }
-                },
-                "zone-policies": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.zone-policy"
-                    }
-                }
-            }
-        },
-        "nat.source.ipv4": {
-            "type": "object",
-            "properties": {
-                "rule-number": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "outbound-interface": {
-                    "type": "string"
-                },
-                "protocol": {
-                    "type": "string",
-                    "examples": [
-                        "tcp",
-                        "udp",
-                        "icmp",
-                        "all"
-                    ]
-                },
-                "source": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string",
-                            "format": "uc-cidr4",
-                            "example": "192.168.1.0/24"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                },
-                "destination": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string",
-                            "format": "uc-cidr4",
-                            "example": "192.168.1.0/24"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                },
-                "translation": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        }
-                    }
-                }
-            },
-            "required": [
-                "rule-number"
-            ]
-        },
-        "nat.destination.ipv4": {
-            "type": "object",
-            "properties": {
-                "rule-number": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "inbound-interface": {
-                    "type": "string"
-                },
-                "protocol": {
-                    "type": "string",
-                    "examples": [
-                        "tcp",
-                        "udp",
-                        "icmp",
-                        "all"
-                    ]
-                },
-                "source": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string",
-                            "format": "uc-cidr4",
-                            "example": "192.168.1.0/24"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                },
-                "destination": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string",
-                            "format": "uc-cidr4",
-                            "example": "192.168.1.0/24"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                },
-                "translation": {
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "type": "string",
-                            "format": "uc-cidr4",
-                            "example": "192.168.1.0/24"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        }
-                    }
-                }
-            },
-            "required": [
-                "rule-number"
-            ]
-        },
-        "nat.source.ipv6": {
-            "type": "object",
-            "properties": {
-                "rule-number": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "outbound-interface": {
-                    "type": "string"
-                },
-                "protocol": {
-                    "type": "string",
-                    "examples": [
-                        "tcp",
-                        "udp",
-                        "icmpv6",
-                        "all"
-                    ]
-                },
-                "source": {
-                    "type": "object",
-                    "properties": {
-                        "prefix": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "example": "2001:db8:1::/64"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                },
-                "destination": {
-                    "type": "object",
-                    "properties": {
-                        "prefix": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "example": "2001:db8:2::/64"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                },
-                "translation": {
-                    "type": "object",
-                    "properties": {
-                        "prefix": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "example": "2001:db8:a::/64"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        }
-                    }
-                }
-            },
-            "required": [
-                "rule-number"
-            ]
-        },
-        "nat.destination.ipv6": {
-            "type": "object",
-            "properties": {
-                "rule-number": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "inbound-interface": {
-                    "type": "string"
-                },
-                "protocol": {
-                    "type": "string",
-                    "examples": [
-                        "tcp",
-                        "udp",
-                        "icmpv6",
-                        "all"
-                    ]
-                },
-                "source": {
-                    "type": "object",
-                    "properties": {
-                        "prefix": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "example": "2001:db8:1::/64"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                },
-                "destination": {
-                    "type": "object",
-                    "properties": {
-                        "prefix": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "example": "2001:db8:2::/64"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        },
-                        "group": {
-                            "type": "object",
-                            "properties": {
-                                "address-group": {
-                                    "type": "string"
-                                },
-                                "network-group": {
-                                    "type": "string"
-                                },
-                                "port-group": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                },
-                "translation": {
-                    "type": "object",
-                    "properties": {
-                        "prefix": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "example": "2001:db8:a::/64"
-                        },
-                        "port": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "uc-portrange",
-                            "examples": [
-                                80,
-                                "1024-65535"
-                            ]
-                        }
-                    }
-                }
-            },
-            "required": [
-                "rule-number"
-            ]
-        },
-        "nat.nat64": {
-            "type": "object",
-            "properties": {
-                "rule-number": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "source": {
-                    "type": "object",
-                    "properties": {
-                        "prefix": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "example": "2001:db8:1::/64"
-                        }
-                    }
-                },
-                "translation": {
-                    "type": "object",
-                    "properties": {
-                        "ipv6-prefix": {
-                            "type": "string",
-                            "format": "uc-cidr6",
-                            "default": "64:ff9b::/96"
-                        },
-                        "ipv4-pool": {
-                            "type": "object",
-                            "properties": {
-                                "address": {
-                                    "type": "string",
-                                    "examples": [
-                                        "198.51.100.1",
-                                        "198.51.100.1-198.51.100.10"
-                                    ]
-                                },
-                                "port-range": {
-                                    "type": [
-                                        "integer",
-                                        "string"
-                                    ],
-                                    "format": "uc-portrange",
-                                    "examples": [
-                                        80,
-                                        "1024-65535"
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "required": [
-                "rule-number"
-            ]
-        },
-        "nat": {
-            "type": "object",
-            "properties": {
-                "source-ipv4": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/nat.source.ipv4"
-                    }
-                },
-                "destination-ipv4": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/nat.destination.ipv4"
-                    }
-                },
-                "source-ipv6": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/nat.source.ipv6"
-                    }
-                },
-                "destination-ipv6": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/nat.destination.ipv6"
-                    }
-                },
-                "nat64": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/nat.nat64"
-                    }
-                }
-            }
-        },
         "qos": {
             "type": "object",
             "properties": {
@@ -2815,817 +3202,6 @@
                             "bandwidth"
                         ]
                     }
-                }
-            }
-        },
-        "pki": {
-            "type": "object",
-            "properties": {
-                "ca-certs": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "certificate": {
-                                "type": "string"
-                            },
-                            "private-key": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "name"
-                        ]
-                    }
-                },
-                "certs": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "certificate": {
-                                "type": "string"
-                            },
-                            "private-key": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "name"
-                        ]
-                    }
-                },
-                "dh": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "parameter": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "name"
-                        ]
-                    }
-                }
-            }
-        },
-        "vpn.ipsec": {
-            "type": "object",
-            "properties": {
-                "interface": {
-                    "type": "string"
-                },
-                "ike-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "key-exchange": {
-                                "type": "string",
-                                "enum": [
-                                    "ikev1",
-                                    "ikev2"
-                                ],
-                                "default": "ikev2"
-                            },
-                            "lifetime": {
-                                "type": "integer",
-                                "default": 28800
-                            },
-                            "proposal": {
-                                "type": "object",
-                                "properties": {
-                                    "encryption": {
-                                        "type": "string",
-                                        "enum": [
-                                            "aes128",
-                                            "aes256",
-                                            "aes128gcm",
-                                            "aes256gcm",
-                                            "3des"
-                                        ]
-                                    },
-                                    "hash": {
-                                        "type": "string",
-                                        "enum": [
-                                            "sha1",
-                                            "sha256",
-                                            "sha384",
-                                            "sha512"
-                                        ]
-                                    },
-                                    "dh-group": {
-                                        "type": "integer",
-                                        "enum": [
-                                            2,
-                                            14,
-                                            15,
-                                            16,
-                                            19,
-                                            20,
-                                            21
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "encryption",
-                                    "hash",
-                                    "dh-group"
-                                ]
-                            },
-                            "dead-peer-detection": {
-                                "type": "object",
-                                "properties": {
-                                    "action": {
-                                        "type": "string",
-                                        "enum": [
-                                            "restart",
-                                            "clear",
-                                            "hold",
-                                            "none"
-                                        ]
-                                    },
-                                    "interval": {
-                                        "type": "integer",
-                                        "default": 30
-                                    },
-                                    "timeout": {
-                                        "type": "integer",
-                                        "default": 120
-                                    }
-                                }
-                            },
-                            "close-action": {
-                                "type": "string",
-                                "enum": [
-                                    "none",
-                                    "start",
-                                    "hold"
-                                ],
-                                "default": "none"
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "proposal"
-                        ]
-                    }
-                },
-                "esp-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "lifetime": {
-                                "type": "integer",
-                                "default": 3600
-                            },
-                            "mode": {
-                                "type": "string",
-                                "enum": [
-                                    "tunnel",
-                                    "transport"
-                                ],
-                                "default": "tunnel"
-                            },
-                            "pfs": {
-                                "type": "boolean",
-                                "default": true
-                            },
-                            "proposal": {
-                                "type": "object",
-                                "properties": {
-                                    "encryption": {
-                                        "type": "string",
-                                        "enum": [
-                                            "aes128",
-                                            "aes256",
-                                            "aes128gcm",
-                                            "aes256gcm",
-                                            "3des"
-                                        ]
-                                    },
-                                    "hash": {
-                                        "type": "string",
-                                        "enum": [
-                                            "sha1",
-                                            "sha256",
-                                            "sha384",
-                                            "sha512"
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "encryption",
-                                    "hash"
-                                ]
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "proposal"
-                        ]
-                    }
-                },
-                "authentication": {
-                    "type": "object",
-                    "properties": {
-                        "id": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "secret": {
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "id",
-                        "secret"
-                    ]
-                },
-                "peers": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "local-address": {
-                                "type": "string",
-                                "format": "ipv4"
-                            },
-                            "remote-address": {
-                                "type": "string",
-                                "format": "ipv4"
-                            },
-                            "local-id": {
-                                "type": "string"
-                            },
-                            "remote-id": {
-                                "type": "string"
-                            },
-                            "ike-group": {
-                                "type": "string"
-                            },
-                            "esp-group": {
-                                "type": "string"
-                            },
-                            "connection-type": {
-                                "type": "string",
-                                "enum": [
-                                    "initiate",
-                                    "none",
-                                    "trap"
-                                ],
-                                "default": "none"
-                            },
-                            "tunnels": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "local-prefix": {
-                                            "type": "string",
-                                            "format": "uc-cidr4"
-                                        },
-                                        "remote-prefix": {
-                                            "type": "string",
-                                            "format": "uc-cidr4"
-                                        }
-                                    },
-                                    "required": [
-                                        "local-prefix",
-                                        "remote-prefix"
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "local-address",
-                            "remote-address",
-                            "ike-group",
-                            "esp-group",
-                            "tunnels"
-                        ]
-                    }
-                }
-            },
-            "required": [
-                "interface",
-                "ike-groups",
-                "esp-groups",
-                "authentication",
-                "peers"
-            ]
-        },
-        "vpn.openvpn": {
-            "type": "object",
-            "properties": {
-                "servers": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "mode": {
-                                "type": "string",
-                                "enum": [
-                                    "site-to-site",
-                                    "server"
-                                ]
-                            },
-                            "persistent-tunnel": {
-                                "type": "boolean",
-                                "default": false
-                            },
-                            "protocol": {
-                                "type": "string",
-                                "enum": [
-                                    "udp",
-                                    "tcp"
-                                ],
-                                "default": "udp"
-                            },
-                            "address": {
-                                "type": "string",
-                                "format": "uc-ip"
-                            },
-                            "port": {
-                                "type": "integer",
-                                "maximum": 65535,
-                                "default": 1194
-                            },
-                            "subnet": {
-                                "type": "string",
-                                "format": "uc-cidr"
-                            },
-                            "encryption": {
-                                "type": "object",
-                                "properties": {
-                                    "cipher": {
-                                        "type": "string",
-                                        "enum": [
-                                            "none",
-                                            "3des",
-                                            "aes128",
-                                            "aes128gcm",
-                                            "aes192",
-                                            "aes192gcm",
-                                            "aes256",
-                                            "aes256gcm"
-                                        ]
-                                    },
-                                    "data-ciphers": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string",
-                                            "enum": [
-                                                "none",
-                                                "3des",
-                                                "aes128",
-                                                "aes128gcm",
-                                                "aes192",
-                                                "aes192gcm",
-                                                "aes256",
-                                                "aes256gcm"
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
-                            "hash": {
-                                "type": "string",
-                                "enum": [
-                                    "md5",
-                                    "sha1",
-                                    "sha256",
-                                    "sha384",
-                                    "sha512"
-                                ]
-                            },
-                            "tls": {
-                                "type": "object",
-                                "properties": {
-                                    "ca-cert": {
-                                        "type": "string"
-                                    },
-                                    "cert": {
-                                        "type": "string"
-                                    },
-                                    "dh": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "topology": {
-                                "type": "string",
-                                "enum": [
-                                    "subnet",
-                                    "point-to-point"
-                                ]
-                            },
-                            "domain": {
-                                "type": "string",
-                                "format": "hostname"
-                            },
-                            "max-connections": {
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 4096
-                            },
-                            "name-server": {
-                                "type": "string",
-                                "format": "uc-ip"
-                            },
-                            "clients": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "address": {
-                                            "type": "string",
-                                            "format": "uc-ip"
-                                        },
-                                        "subnet": {
-                                            "type": "string",
-                                            "format": "uc-cidr"
-                                        },
-                                        "cert": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "required": [
-                            "name"
-                        ]
-                    }
-                },
-                "clients": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "interface": {
-                                "type": "string"
-                            },
-                            "authentication": {
-                                "type": "object",
-                                "properties": {
-                                    "username": {
-                                        "type": "string"
-                                    },
-                                    "password": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "mode": {
-                                "type": "string",
-                                "enum": [
-                                    "site-to-site",
-                                    "client"
-                                ]
-                            },
-                            "encryption": {
-                                "type": "object",
-                                "properties": {
-                                    "cipher": {
-                                        "type": "string",
-                                        "enum": [
-                                            "none",
-                                            "3des",
-                                            "aes128",
-                                            "aes128gcm",
-                                            "aes192",
-                                            "aes192gcm",
-                                            "aes256",
-                                            "aes256gcm"
-                                        ]
-                                    },
-                                    "data-ciphers": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string",
-                                            "enum": [
-                                                "none",
-                                                "3des",
-                                                "aes128",
-                                                "aes128gcm",
-                                                "aes192",
-                                                "aes192gcm",
-                                                "aes256",
-                                                "aes256gcm"
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
-                            "hash": {
-                                "type": "string",
-                                "enum": [
-                                    "md5",
-                                    "sha1",
-                                    "sha256",
-                                    "sha384",
-                                    "sha512"
-                                ]
-                            },
-                            "persistent-tunnel": {
-                                "type": "boolean",
-                                "default": false
-                            },
-                            "persist-key": {
-                                "type": "boolean",
-                                "default": false
-                            },
-                            "remote-host": {
-                                "type": "string",
-                                "format": "uc-ip"
-                            },
-                            "remote-port": {
-                                "type": "integer",
-                                "maximum": 65535,
-                                "default": 1194
-                            },
-                            "protocol": {
-                                "type": "string",
-                                "enum": [
-                                    "udp",
-                                    "tcp"
-                                ],
-                                "default": "udp"
-                            },
-                            "tls": {
-                                "type": "object",
-                                "properties": {
-                                    "ca-cert": {
-                                        "type": "string"
-                                    },
-                                    "cert": {
-                                        "type": "string"
-                                    },
-                                    "private-key": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "remote-host"
-                        ]
-                    }
-                }
-            }
-        },
-        "vpn.wireguard": {
-            "type": "object",
-            "properties": {
-                "interfaces": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "private-key": {
-                                "type": "string"
-                            },
-                            "address": {
-                                "type": "string",
-                                "format": "uc-cidr"
-                            },
-                            "port": {
-                                "type": "integer",
-                                "maximum": 65535,
-                                "default": 51820
-                            },
-                            "peers": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "public-key": {
-                                            "type": "string"
-                                        },
-                                        "allowed-ips": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "format": "uc-cidr"
-                                            }
-                                        },
-                                        "endpoint": {
-                                            "type": "object",
-                                            "properties": {
-                                                "address": {
-                                                    "type": "string",
-                                                    "format": "uc-ip"
-                                                },
-                                                "port": {
-                                                    "type": "integer",
-                                                    "maximum": 65535,
-                                                    "default": 51820
-                                                }
-                                            },
-                                            "required": [
-                                                "address"
-                                            ]
-                                        },
-                                        "persistent-keepalive": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "required": [
-                                        "name",
-                                        "public-key",
-                                        "allowed-ips"
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "private-key"
-                        ]
-                    }
-                }
-            }
-        },
-        "vpn": {
-            "type": "object",
-            "properties": {
-                "ipsec": {
-                    "$ref": "#/$defs/vpn.ipsec"
-                },
-                "openvpn": {
-                    "$ref": "#/$defs/vpn.openvpn"
-                },
-                "wireguard": {
-                    "$ref": "#/$defs/vpn.wireguard"
-                }
-            }
-        },
-        "high-availability.vrrp": {
-            "type": "object",
-            "properties": {
-                "groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "virtual-addresses": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            },
-                            "priority": {
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 255,
-                                "default": 100
-                            },
-                            "interface": {
-                                "type": "string"
-                            },
-                            "vrid": {
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 255
-                            },
-                            "preempt": {
-                                "type": "boolean",
-                                "default": true
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "interface",
-                            "vrid",
-                            "virtual-addresses"
-                        ]
-                    }
-                }
-            }
-        },
-        "high-availability.load-balancing": {
-            "type": "object",
-            "properties": {
-                "interfaces": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "weight": {
-                                "type": "integer",
-                                "default": 1
-                            },
-                            "failover-only": {
-                                "type": "boolean",
-                                "default": false
-                            },
-                            "health-check": {
-                                "type": "object",
-                                "properties": {
-                                    "target": {
-                                        "type": "string"
-                                    },
-                                    "interval": {
-                                        "type": "integer",
-                                        "default": 5
-                                    }
-                                }
-                            }
-                        },
-                        "required": [
-                            "name"
-                        ]
-                    }
-                },
-                "rules": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 9999
-                            },
-                            "source": {
-                                "type": "string",
-                                "format": "uc-cidr"
-                            },
-                            "destination": {
-                                "type": "string",
-                                "format": "uc-cidr"
-                            },
-                            "inbound-interface": {
-                                "type": "string"
-                            },
-                            "wan-interfaces": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "required": [
-                            "id",
-                            "inbound-interface",
-                            "wan-interface"
-                        ]
-                    }
-                }
-            }
-        },
-        "high-availability": {
-            "type": "object",
-            "properties": {
-                "vrrp": {
-                    "$ref": "#/$defs/high-availability.vrrp"
-                },
-                "load-balancing": {
-                    "$ref": "#/$defs/high-availability.load-balancing"
                 }
             }
         },
@@ -4456,6 +4032,624 @@
                         "type": "string",
                         "format": "uc-ip"
                     }
+                }
+            }
+        },
+        "vpn.ipsec": {
+            "type": "object",
+            "properties": {
+                "interface": {
+                    "type": "string"
+                },
+                "ike-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "key-exchange": {
+                                "type": "string",
+                                "enum": [
+                                    "ikev1",
+                                    "ikev2"
+                                ],
+                                "default": "ikev2"
+                            },
+                            "lifetime": {
+                                "type": "integer",
+                                "default": 28800
+                            },
+                            "proposal": {
+                                "type": "object",
+                                "properties": {
+                                    "encryption": {
+                                        "type": "string",
+                                        "enum": [
+                                            "aes128",
+                                            "aes256",
+                                            "aes128gcm",
+                                            "aes256gcm",
+                                            "3des"
+                                        ]
+                                    },
+                                    "hash": {
+                                        "type": "string",
+                                        "enum": [
+                                            "sha1",
+                                            "sha256",
+                                            "sha384",
+                                            "sha512"
+                                        ]
+                                    },
+                                    "dh-group": {
+                                        "type": "integer",
+                                        "enum": [
+                                            2,
+                                            14,
+                                            15,
+                                            16,
+                                            19,
+                                            20,
+                                            21
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "encryption",
+                                    "hash",
+                                    "dh-group"
+                                ]
+                            },
+                            "dead-peer-detection": {
+                                "type": "object",
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "enum": [
+                                            "restart",
+                                            "clear",
+                                            "hold",
+                                            "none"
+                                        ]
+                                    },
+                                    "interval": {
+                                        "type": "integer",
+                                        "default": 30
+                                    },
+                                    "timeout": {
+                                        "type": "integer",
+                                        "default": 120
+                                    }
+                                }
+                            },
+                            "close-action": {
+                                "type": "string",
+                                "enum": [
+                                    "none",
+                                    "start",
+                                    "hold"
+                                ],
+                                "default": "none"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "proposal"
+                        ]
+                    }
+                },
+                "esp-groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "lifetime": {
+                                "type": "integer",
+                                "default": 3600
+                            },
+                            "mode": {
+                                "type": "string",
+                                "enum": [
+                                    "tunnel",
+                                    "transport"
+                                ],
+                                "default": "tunnel"
+                            },
+                            "pfs": {
+                                "type": "boolean",
+                                "default": true
+                            },
+                            "proposal": {
+                                "type": "object",
+                                "properties": {
+                                    "encryption": {
+                                        "type": "string",
+                                        "enum": [
+                                            "aes128",
+                                            "aes256",
+                                            "aes128gcm",
+                                            "aes256gcm",
+                                            "3des"
+                                        ]
+                                    },
+                                    "hash": {
+                                        "type": "string",
+                                        "enum": [
+                                            "sha1",
+                                            "sha256",
+                                            "sha384",
+                                            "sha512"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "encryption",
+                                    "hash"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "proposal"
+                        ]
+                    }
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "secret": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "secret"
+                    ]
+                },
+                "peers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "local-address": {
+                                "type": "string",
+                                "format": "ipv4"
+                            },
+                            "remote-address": {
+                                "type": "string",
+                                "format": "ipv4"
+                            },
+                            "local-id": {
+                                "type": "string"
+                            },
+                            "remote-id": {
+                                "type": "string"
+                            },
+                            "ike-group": {
+                                "type": "string"
+                            },
+                            "esp-group": {
+                                "type": "string"
+                            },
+                            "connection-type": {
+                                "type": "string",
+                                "enum": [
+                                    "initiate",
+                                    "none",
+                                    "trap"
+                                ],
+                                "default": "none"
+                            },
+                            "tunnels": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "local-prefix": {
+                                            "type": "string",
+                                            "format": "uc-cidr4"
+                                        },
+                                        "remote-prefix": {
+                                            "type": "string",
+                                            "format": "uc-cidr4"
+                                        }
+                                    },
+                                    "required": [
+                                        "local-prefix",
+                                        "remote-prefix"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "local-address",
+                            "remote-address",
+                            "ike-group",
+                            "esp-group",
+                            "tunnels"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "interface",
+                "ike-groups",
+                "esp-groups",
+                "authentication",
+                "peers"
+            ]
+        },
+        "vpn.openvpn": {
+            "type": "object",
+            "properties": {
+                "servers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "mode": {
+                                "type": "string",
+                                "enum": [
+                                    "site-to-site",
+                                    "server"
+                                ]
+                            },
+                            "persistent-tunnel": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "protocol": {
+                                "type": "string",
+                                "enum": [
+                                    "udp",
+                                    "tcp"
+                                ],
+                                "default": "udp"
+                            },
+                            "address": {
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "maximum": 65535,
+                                "default": 1194
+                            },
+                            "subnet": {
+                                "type": "string",
+                                "format": "uc-cidr"
+                            },
+                            "encryption": {
+                                "type": "object",
+                                "properties": {
+                                    "cipher": {
+                                        "type": "string",
+                                        "enum": [
+                                            "none",
+                                            "3des",
+                                            "aes128",
+                                            "aes128gcm",
+                                            "aes192",
+                                            "aes192gcm",
+                                            "aes256",
+                                            "aes256gcm"
+                                        ]
+                                    },
+                                    "data-ciphers": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "none",
+                                                "3des",
+                                                "aes128",
+                                                "aes128gcm",
+                                                "aes192",
+                                                "aes192gcm",
+                                                "aes256",
+                                                "aes256gcm"
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "hash": {
+                                "type": "string",
+                                "enum": [
+                                    "md5",
+                                    "sha1",
+                                    "sha256",
+                                    "sha384",
+                                    "sha512"
+                                ]
+                            },
+                            "tls": {
+                                "type": "object",
+                                "properties": {
+                                    "ca-cert": {
+                                        "type": "string"
+                                    },
+                                    "cert": {
+                                        "type": "string"
+                                    },
+                                    "dh": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "topology": {
+                                "type": "string",
+                                "enum": [
+                                    "subnet",
+                                    "point-to-point"
+                                ]
+                            },
+                            "domain": {
+                                "type": "string",
+                                "format": "hostname"
+                            },
+                            "max-connections": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 4096
+                            },
+                            "name-server": {
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
+                            "clients": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "address": {
+                                            "type": "string",
+                                            "format": "uc-ip"
+                                        },
+                                        "subnet": {
+                                            "type": "string",
+                                            "format": "uc-cidr"
+                                        },
+                                        "cert": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                },
+                "clients": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "interface": {
+                                "type": "string"
+                            },
+                            "authentication": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "mode": {
+                                "type": "string",
+                                "enum": [
+                                    "site-to-site",
+                                    "client"
+                                ]
+                            },
+                            "encryption": {
+                                "type": "object",
+                                "properties": {
+                                    "cipher": {
+                                        "type": "string",
+                                        "enum": [
+                                            "none",
+                                            "3des",
+                                            "aes128",
+                                            "aes128gcm",
+                                            "aes192",
+                                            "aes192gcm",
+                                            "aes256",
+                                            "aes256gcm"
+                                        ]
+                                    },
+                                    "data-ciphers": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "none",
+                                                "3des",
+                                                "aes128",
+                                                "aes128gcm",
+                                                "aes192",
+                                                "aes192gcm",
+                                                "aes256",
+                                                "aes256gcm"
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "hash": {
+                                "type": "string",
+                                "enum": [
+                                    "md5",
+                                    "sha1",
+                                    "sha256",
+                                    "sha384",
+                                    "sha512"
+                                ]
+                            },
+                            "persistent-tunnel": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "persist-key": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "remote-host": {
+                                "type": "string",
+                                "format": "uc-ip"
+                            },
+                            "remote-port": {
+                                "type": "integer",
+                                "maximum": 65535,
+                                "default": 1194
+                            },
+                            "protocol": {
+                                "type": "string",
+                                "enum": [
+                                    "udp",
+                                    "tcp"
+                                ],
+                                "default": "udp"
+                            },
+                            "tls": {
+                                "type": "object",
+                                "properties": {
+                                    "ca-cert": {
+                                        "type": "string"
+                                    },
+                                    "cert": {
+                                        "type": "string"
+                                    },
+                                    "private-key": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "remote-host"
+                        ]
+                    }
+                }
+            }
+        },
+        "vpn.wireguard": {
+            "type": "object",
+            "properties": {
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "private-key": {
+                                "type": "string"
+                            },
+                            "address": {
+                                "type": "string",
+                                "format": "uc-cidr"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "maximum": 65535,
+                                "default": 51820
+                            },
+                            "peers": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "public-key": {
+                                            "type": "string"
+                                        },
+                                        "allowed-ips": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "format": "uc-cidr"
+                                            }
+                                        },
+                                        "endpoint": {
+                                            "type": "object",
+                                            "properties": {
+                                                "address": {
+                                                    "type": "string",
+                                                    "format": "uc-ip"
+                                                },
+                                                "port": {
+                                                    "type": "integer",
+                                                    "maximum": 65535,
+                                                    "default": 51820
+                                                }
+                                            },
+                                            "required": [
+                                                "address"
+                                            ]
+                                        },
+                                        "persistent-keepalive": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "public-key",
+                                        "allowed-ips"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "private-key"
+                        ]
+                    }
+                }
+            }
+        },
+        "vpn": {
+            "type": "object",
+            "properties": {
+                "ipsec": {
+                    "$ref": "#/$defs/vpn.ipsec"
+                },
+                "openvpn": {
+                    "$ref": "#/$defs/vpn.openvpn"
+                },
+                "wireguard": {
+                    "$ref": "#/$defs/vpn.wireguard"
                 }
             }
         },

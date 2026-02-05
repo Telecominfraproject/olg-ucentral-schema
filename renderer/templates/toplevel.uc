@@ -49,11 +49,15 @@
 	}
 
 	if (state.high_availability) {
-		include("high-availability/ha.uc", { location: '/high_availability', ha: state.high_availability})
+		include("high-availability/high-availability.uc", { location: '/high_availability', ha: state.high_availability})
 	}
 
     if (state.interfaces || state.vpn) {
         include("interfaces.uc", { location: '/interfaces', interfaces: state.interfaces, vpn: state.vpn ? state.vpn : {} });
+	}
+
+	if (state.load_balancing) {
+		include("load_balancing/load_balancing.uc", { location: '/load_balancing', lb: state.load_balancing });
 	}
 	
 	if (state.nat) {
