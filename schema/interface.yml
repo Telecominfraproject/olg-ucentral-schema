@@ -50,6 +50,3 @@ properties:
     $ref: https://ucentral.io/schema/v1/interface/ipv4/
   ipv6:
     $ref: https://ucentral.io/schema/v1/interface/ipv6/
-  qos-policy:
-    description: Name of the QoS policy to apply on this interface.
-    type: string

@@ -139,3 +139,14 @@ properties:
       required:
       - name
       - bandwidth
+  interfaces:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          description: Name of the interface to apply QoS policy
+          type: string
+        policy:
+          description: Name of the QoS policy (e.g. shaper) to apply on this interface
+          type: string
