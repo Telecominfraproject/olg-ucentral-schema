@@ -1,0 +1,39 @@
+{
+    "uuid": 11111111,
+    "load-balancing": {
+        "wan-lb": {
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "failure-count": 4,
+                    "health-check": {
+                        "target": "dhcp"
+                    }
+                },
+                {
+                    "name": "eth1",
+                    "failure-count": 4,
+                    "health-check": {
+                        "target": "dhcp"
+                    }
+                }
+            ],
+            "rules": [
+                {
+                    "id": 1,
+                    "inbound-interface": "eth4",
+                    "wan-interfaces": [
+                        {
+                            "name": "eth0",
+                            "weight": 1
+                        },
+                        {
+                            "name": "eth1",
+                            "weight": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

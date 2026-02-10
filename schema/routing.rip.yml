@@ -16,15 +16,11 @@ properties:
   interfaces:
     type: array
     items:
-      type: object
-      properties:
-        name:
-          type: string
-        passive:
-          type: boolean
-          default: false
-      required:
-      - name
+      type: string
+  passive-interfaces:
+    type: array
+    items:
+      type: string
   neighbors:
     description: Neighbors to advertise with unicast
     type: array

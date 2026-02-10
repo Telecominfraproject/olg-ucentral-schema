@@ -13,18 +13,6 @@
  * 2. Adding global header/footer content
  * 3. Custom orchestration if needed
  *
- * Template Discovery:
- *   The renderer scans templates/ for *.uc files and maps them to state:
- *   - interfaces.uc -> state.interfaces -> interfaces.vyos
- *   - routing.uc    -> state.routing    -> routing.vyos
- *   - firewall.uc   -> state.firewall   -> firewall.vyos
- *   - nat.uc        -> state.nat        -> nat.vyos
- *   - vpn.uc        -> state.vpn        -> vpn.vyos
- *   - services.uc   -> state.services   -> services.vyos
- *   - pki.uc        -> state.pki        -> pki.vyos
- *   - high-availability.uc -> state.high-availability -> high-availability.vyos
- *   - unit.uc       -> state.unit       -> unit.vyos
- *   - globals.uc    -> state.globals    -> globals.vyos
  *
  */
 
@@ -37,11 +25,12 @@
 		return;
 	}
 
-    let upstream;
+	// upstream interface
+    let up_i = [];
 	for (let i, interface in state.interfaces) {
 		if (interface.role != 'upstream')
 			continue;
-		upstream = interface;
+		push(up_i, interface);
 	}
 	
 	if (state.firewall) {
@@ -57,7 +46,7 @@
 	}
 
 	if (state.load_balancing) {
-		include("load_balancing/load_balancing.uc", { location: '/load_balancing', lb: state.load_balancing });
+		include("load-balancing/load-balancing.uc", { location: '/load_balancing', lb: state.load_balancing });
 	}
 	
 	if (state.nat) {
@@ -69,9 +58,11 @@
 	}
 	include("pki.uc", { location: '/pki', services: state.pki });
 
-	if (state.routing) {
-		if (state.routing.policies) {
-			include("policy.uc", { location: '/policy', policies: state.routing.policies });
+	if (state.routing || length(up_i) ) {
+		state.routing = state.routing || {};
+		if ( length(up_i) || state.routing.policies) {
+			state.routing.policies = state.routing.policies || [];
+			include("policy.uc", { location: '/policy', policies: state.routing.policies, upstreams: up_i });
 		}
 		include("routing.uc", { location: '/routing', routing: state.routing });
 	}

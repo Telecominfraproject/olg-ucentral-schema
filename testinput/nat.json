@@ -7,7 +7,7 @@
 				"outbound-interface": "eth3",
 				"protocol": "tcp",
 				"source": {
-					"address": "192.168.240.32/32",
+					"address": "192.168.240.0/24",
 					"port": 80
 				},
 				"destination": {

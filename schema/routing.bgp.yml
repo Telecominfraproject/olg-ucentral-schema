@@ -75,6 +75,7 @@ properties:
       required:
       - address
       - remote-as
+      - peer-params
   networks:
     description: Networks to advertise.
     type: array
@@ -94,38 +95,5 @@ properties:
       required:
       - address-family
       - network
-  redistribute:
-    description: Route redistribution.
-    type: array
-    items:
-      type: object
-      properties:
-        address-family:
-          type: string
-          enum:
-          - ipv4-unicast
-          - ipv6-unicast
-          - ipv4-multicast
-          - ipv6-multicast
-        connected:
-          type: boolean
-          default: false
-        kernel:
-          type: boolean
-          default: false
-        ospf:
-          type: boolean
-          default: false
-        rip:
-          type: boolean
-          default: false
-        static:
-          type: boolean
-          default: false
-        table:
-          type: boolean
-          default: false
-      required:
-      - address-family
 required:
 - local-as

@@ -79,7 +79,7 @@ properties:
       prefix:
         description: Translated source IPv6 prefix.
         type: string
-        format: uc-cidr6
+        format: uc-ip
         example: 2001:db8:a::/64
       port:
         description: Translated source port or port range.

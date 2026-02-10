@@ -997,7 +997,8 @@
                                     "virtual-addresses": {
                                         "type": "array",
                                         "items": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "format": "uc-cidr"
                                         }
                                     },
                                     "priority": {
@@ -1439,10 +1440,6 @@
                                 "format": "ipv6"
                             }
                         }
-                    },
-                    "qos-policy": {
-                        "description": "Name of the QoS policy to apply on this interface.",
-                        "type": "string"
                     }
                 }
             }
@@ -1568,9 +1565,17 @@
                                     "name": {
                                         "type": "string"
                                     },
-                                    "weight": {
+                                    "failure-count": {
                                         "type": "integer",
-                                        "default": 1
+                                        "default": 1,
+                                        "minimum": 1,
+                                        "maximum": 10
+                                    },
+                                    "success-count": {
+                                        "type": "integer",
+                                        "default": 1,
+                                        "minimum": 1,
+                                        "maximum": 10
                                     },
                                     "failover-only": {
                                         "type": "boolean",
@@ -1580,18 +1585,22 @@
                                         "type": "object",
                                         "properties": {
                                             "target": {
-                                                "description": "IP to ping for health check.",
+                                                "description": "Outbound interface nexthop address. Can be 'DHCP or IPv4 address'",
                                                 "type": "string"
                                             },
                                             "interval": {
                                                 "type": "integer",
                                                 "default": 5
                                             }
-                                        }
+                                        },
+                                        "required": [
+                                            "target"
+                                        ]
                                     }
                                 },
                                 "required": [
-                                    "name"
+                                    "name",
+                                    "health-check"
                                 ]
                             }
                         },
@@ -1619,7 +1628,20 @@
                                     "wan-interfaces": {
                                         "type": "array",
                                         "items": {
-                                            "type": "string"
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "description": "name of the upstream interface",
+                                                    "type": "string"
+                                                },
+                                                "weight": {
+                                                    "description": "weight of this interface",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "required": [
+                                                "name"
+                                            ]
                                         }
                                     }
                                 },
@@ -1881,8 +1903,8 @@
                                     "address": {
                                         "description": "Translated destination address.",
                                         "type": "string",
-                                        "format": "uc-cidr4",
-                                        "example": "192.168.1.0/24"
+                                        "format": "uc-ip",
+                                        "example": "192.168.1.88"
                                     },
                                     "port": {
                                         "description": "Translated destination port or port range.",
@@ -2015,7 +2037,7 @@
                                     "prefix": {
                                         "description": "Translated source IPv6 prefix.",
                                         "type": "string",
-                                        "format": "uc-cidr6",
+                                        "format": "uc-ip",
                                         "example": "2001:db8:a::/64"
                                     },
                                     "port": {
@@ -2110,7 +2132,7 @@
                                     "prefix": {
                                         "description": "Original destination IPv6 prefix.",
                                         "type": "string",
-                                        "format": "uc-cidr6",
+                                        "format": "uc-ip",
                                         "example": "2001:db8:2::/64"
                                     },
                                     "port": {
@@ -2695,7 +2717,8 @@
                                 },
                                 "required": [
                                     "address",
-                                    "remote-as"
+                                    "remote-as",
+                                    "peer-params"
                                 ]
                             }
                         },
@@ -2722,51 +2745,6 @@
                                 "required": [
                                     "address-family",
                                     "network"
-                                ]
-                            }
-                        },
-                        "redistribute": {
-                            "description": "Route redistribution.",
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "address-family": {
-                                        "type": "string",
-                                        "enum": [
-                                            "ipv4-unicast",
-                                            "ipv6-unicast",
-                                            "ipv4-multicast",
-                                            "ipv6-multicast"
-                                        ]
-                                    },
-                                    "connected": {
-                                        "type": "boolean",
-                                        "default": false
-                                    },
-                                    "kernel": {
-                                        "type": "boolean",
-                                        "default": false
-                                    },
-                                    "ospf": {
-                                        "type": "boolean",
-                                        "default": false
-                                    },
-                                    "rip": {
-                                        "type": "boolean",
-                                        "default": false
-                                    },
-                                    "static": {
-                                        "type": "boolean",
-                                        "default": false
-                                    },
-                                    "table": {
-                                        "type": "boolean",
-                                        "default": false
-                                    }
-                                },
-                                "required": [
-                                    "address-family"
                                 ]
                             }
                         }
@@ -3115,19 +3093,13 @@
                         "interfaces": {
                             "type": "array",
                             "items": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "passive": {
-                                        "type": "boolean",
-                                        "default": false
-                                    }
-                                },
-                                "required": [
-                                    "name"
-                                ]
+                                "type": "string"
+                            }
+                        },
+                        "passive-interfaces": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
                             }
                         },
                         "neighbors": {
@@ -3441,6 +3413,22 @@
                             "name",
                             "bandwidth"
                         ]
+                    }
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name of the interface to apply QoS policy",
+                                "type": "string"
+                            },
+                            "policy": {
+                                "description": "Name of the QoS policy (e.g. shaper) to apply on this interface",
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }

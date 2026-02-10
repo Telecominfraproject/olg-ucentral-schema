@@ -8,9 +8,16 @@ properties:
       properties:
         name:
           type: string
-        weight:
+        failure-count:
           type: integer
           default: 1
+          minimum: 1
+          maximum: 10
+        success-count:
+          type: integer
+          default: 1
+          minimum: 1
+          maximum: 10
         failover-only:
           type: boolean
           default: false
@@ -18,13 +25,16 @@ properties:
           type: object
           properties:
             target:
-              description: IP to ping for health check.
+              description: Outbound interface nexthop address. Can be 'DHCP or IPv4 address'
               type: string
             interval:
               type: integer
               default: 5
+          required:
+          - target
       required:
       - name
+      - health-check
   rules:
     type: array
     items:
@@ -45,7 +55,16 @@ properties:
         wan-interfaces:
           type: array
           items:
-            type: string
+            type: object
+            properties:
+              name:
+                description: name of the upstream interface
+                type: string
+              weight:
+                description: weight of this interface
+                type: integer
+            required:
+            - name
       required:
       - id
       - inbound-interface

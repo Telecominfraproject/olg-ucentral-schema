@@ -1,5 +1,20 @@
-{% if (length(policies)): %}
+{% if (length(policies) || length(upstreams)): %}
 policy {
+    {% for (let up in upstreams): %}
+        {% if (up.ipv4 && up.ipv4.addressing == "static"): %}
+    route 0.0.0.0/0 {
+        next-hop {{ up.ipv4.gateway }} {
+        }
+    }
+        {% endif %}
+        {% if (up.ipv6 && up.ipv6.addressing == "static"): %}
+    route6 ::/0 {
+        next-hop {{ up.ipv6.gateway }} {
+        }
+    }
+        {% endif %}
+    {% endfor %}
+
     {% for (let policy in policies): %}
         {% if (policy.address_family == "ipv4"): %}
     route {{ policy.name }} {

@@ -51,7 +51,7 @@ properties:
       prefix:
         description: Original destination IPv6 prefix.
         type: string
-        format: uc-cidr6
+        format: uc-ip
         example: 2001:db8:2::/64
       port:
         description: Original destination port or port range.

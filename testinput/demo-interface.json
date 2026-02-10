@@ -1,0 +1,34 @@
+{
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "static",
+                "address": [
+                    "192.168.240.34/24"
+                ],
+                "gateway": "192.168.240.254"
+            },
+            "ipv6": {
+                "addressing": "dhcpv6"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "upstream"
+        },
+        {
+            "ipv4": {
+                "addressing": "static",
+                "address": [
+                    "192.168.0.1/24"
+                ]
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream"
+        }
+    ],
+    "uuid": 88888888
+}

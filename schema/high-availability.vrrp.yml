@@ -12,6 +12,7 @@ properties:
           type: array
           items:
             type: string
+            format: uc-cidr
         priority:
           type: integer
           minimum: 1
