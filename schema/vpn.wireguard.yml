@@ -1,4 +1,5 @@
-description: WireGuard VPN configuration.
+description:
+  This Object defines the properties of a wireguard-overlay.
 type: object
 properties:
   interfaces:
@@ -7,59 +8,82 @@ properties:
     items:
       type: object
       properties:
-        name:
+        proto:
+          description:
+            This field must be set to wireguard-overlay.
           type: string
+          const: wireguard-overlay
         private-key:
-          description: Private key for this WireGuard interface.
+          description:
+            The private key of the device. This key is used to lookup the host entry
+            inside the config.
           type: string
-        address:
-          description: IP address assigned to the WireGuard interface.
-          type: string
-          format: uc-cidr
-        port:
-          description: UDP port for WireGuard to listen on.
+        peer-port:
+          description:
+            The network port that shall be used to establish the wireguard tunnel.
           type: integer
           maximum: 65535
-          default: 51820
-        peers:
-          description: List of peers for this WireGuard interface.
+          minimum: 1
+          default: 3456
+        peer-exchange-port:
+          description:
+            The network port that shall be used to exchange peer data inside the tunnel.
+          type: integer
+          maximum: 65535
+          minimum: 1
+          default: 3458
+        root-node:
+          description:
+            The descritption of the root node of the overlay.
+          type: object
+          properties:
+            key:
+              description:
+                The public key of the host.
+              type: string
+            endpoint:
+              description:
+                The public IP of the host (optional).
+              type: string
+              format: uc-ip
+            ipaddr:
+              description:
+                The list of private IPs that a host is reachable on inside the overlay.
+              type: array
+              items:
+                type: string
+                format: uc-cidr
+        hosts:
+          description:
+            The list of all known hosts inside the overlay.
           type: array
           items:
             type: object
             properties:
               name:
+                description:
+                  The unique name of the host.
                 type: string
-              public-key:
-                description: Public key of the peer.
+              key:
+                description:
+                  The public key of the host.
                 type: string
-              allowed-ips:
-                description: List of IP ranges allowed through this peer.
+              endpoint:
+                description:
+                  The public IP of the host (optional).
+                type: string
+                format: uc-ip
+              subnet:
+                description:
+                  The list of subnets that shall be routed to this host.
                 type: array
                 items:
                   type: string
                   format: uc-cidr
-              endpoint:
-                description: Peer endpoint.
-                type: object
-                properties:
-                  address:
-                    description: IP address of the peer endpoint.
-                    type: string
-                    format: uc-ip
-                  port:
-                    description: UDP port of the peer endpoint.
-                    type: integer
-                    maximum: 65535
-                    default: 51820
-                required:
-                - address
-              persistent-keepalive:
-                description: Interval (in seconds) for sending keepalive packets to maintain NAT mappings.
-                type: integer
-            required:
-            - name
-            - public-key
-            - allowed-ips
-      required:
-      - name
-      - private-key
+              ipaddr:
+                description:
+                  The list of private IPs that a host is reachable on inside the overlay.
+                type: array
+                items:
+                  type: string
+                  format: uc-ip

@@ -29,7 +29,7 @@ properties:
             encryption:
               description: Encryption algorithm for IKE SA.
               type: string
-              enum: [aes128, aes256, aes128gcm, aes256gcm, 3des]
+              enum: [aes128, aes256, aes128ccm128, aes256ccm128, aes256gcm128, aes128gcm128, 3des]
             hash:
               description: Hash algorithm for IKE SA integrity.
               type: string
@@ -37,7 +37,7 @@ properties:
             dh-group:
               description: Diffie-Hellman group number for key exchange.
               type: integer
-              enum: [2, 14, 15, 16, 19, 20, 21]
+              enum: [1, 2, 5, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
           required: [encryption, hash, dh-group]
         dead-peer-detection:
           description: Dead Peer Detection (DPD) settings.
@@ -90,7 +90,7 @@ properties:
             encryption:
               description: Encryption algorithm for ESP SA.
               type: string
-              enum: [aes128, aes256, aes128gcm, aes256gcm, 3des]
+              enum: [aes128, aes256, aes128ccm128, aes256ccm128, aes256gcm128, aes128gcm128, 3des]
             hash:
               description: Hash algorithm for ESP SA integrity.
               type: string
@@ -110,7 +110,7 @@ properties:
         description: Pre-shared key secret.
         type: string
     required: [id, secret]
-  peers:
+  remote-access:
     description: IPsec peer configurations.
     type: array
     items:
@@ -144,31 +144,40 @@ properties:
           type: string
           enum: [initiate, none, trap]
           default: none
-        tunnels:
-          description: Policy-based tunnels (traffic selectors).
-          type: array
-          items:
-            type: object
-            properties:
-              local-prefix:
-                description: Local subnet for this tunnel.
-                type: string
-                format: uc-cidr4
-              remote-prefix:
-                description: Remote subnet for this tunnel.
-                type: string
-                format: uc-cidr4
-            required: [local-prefix, remote-prefix]
+        ca-cert:
+          description: Name of ca certificate stored in vyos pki
+          type: string
+        server-cert:
+          description: Name of server certificate stored in vyos pki
+          type: string
+        dhcp-interface:
+          description: DHCP interface supplying next-hop IP address
+          type: string
+        pool:
+          description: IP address pool
+          type: string
       required:
         - name
-        - local-address
-        - remote-address
         - ike-group
         - esp-group
-        - tunnels
+  pools:
+    description: IP address pool.
+    type: array
+    items:
+      type: object
+      properties:
+        name: 
+          description: Name of this IP address pool
+          type: string
+        prefix:
+          description: IP range in CIDR
+          type: string
+          format: uc-cidr
+        name-server:
+          description: Name server for client
+          type: string
+          format: uc-ip
 required:
-  - interface
   - ike-groups
   - esp-groups
-  - authentication
-  - peers
+  - pools

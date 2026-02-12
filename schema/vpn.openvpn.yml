@@ -45,29 +45,13 @@ properties:
             cipher:
               description: Standard data encryption algorithm.
               type: string
-              enum:
-              - none
-              - 3des
-              - aes128
-              - aes128gcm
-              - aes192
-              - aes192gcm
-              - aes256
-              - aes256gcm
+              enum: [none, 3des, aes128, aes128gcm, aes192, aes192gcm, aes256, aes256gcm]
             data-ciphers:
               description: Cipher negotiation list for data channel encryption.
               type: array
               items:
                 type: string
-                enum:
-                - none
-                - 3des
-                - aes128
-                - aes128gcm
-                - aes192
-                - aes192gcm
-                - aes256
-                - aes256gcm
+                enum: [none, 3des, aes128, aes128gcm, aes192, aes192gcm, aes256, aes256gcm]
         hash:
           description: Hash algorithm for HMAC authentication.
           type: string
@@ -77,6 +61,11 @@ properties:
           - sha256
           - sha384
           - sha512
+        protocol:
+          description: Protocol for this interface
+          type: string
+          enum: [udp, tcp-passive, tcp-active]
+          default: udp
         tls:
           description: TLS certificate configuration.
           type: object
@@ -128,6 +117,9 @@ properties:
                 type: string
       required:
       - name
+      - mode
+      - address
+      - encryption
   clients:
     description: OpenVPN client instances.
     type: array
