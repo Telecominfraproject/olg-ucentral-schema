@@ -1,0 +1,33 @@
+{
+    "uuid": 456456456456456,
+    "vpn": {
+        "openvpn": {
+            "servers": [
+                {
+                    "name": "vpn1",
+                    "mode": "server",
+					"persistent-tunnel": false,
+					"protocol": "udp",
+                    "address": "10.2.2.2",
+                    "encryption": {
+                        "data-ciphers": [
+                            "3des", "aes128gcm"
+                        ]
+                    },
+                    "tls": {
+                        "ca-cert": "mumicert",
+                        "cert": "umicert",
+                        "dh": "woowee"
+                    },
+                    "name-server": "8.8.8.8",
+                    "clients": [
+                        {
+                            "address": "192.168.0.8",
+                            "subnet": "10.0.0.0/8"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

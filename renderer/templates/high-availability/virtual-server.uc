@@ -1,4 +1,4 @@
-{% for (let v in lb.): %}
+{% for (let v in servers): %}
     virtual-server 192.168.240.100 {
         address 192.168.240.100
         algorithm source-hashing

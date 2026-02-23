@@ -1,5 +1,5 @@
 {%
-let bridge_c = 0, pppoe_c = 0, dummy_c = 0;
+let bridge_c = 0, pppoe_c = 0, dummy_c = 0, vtun_c = 0, client_c = 0;
 let wg_c = 0, peer_c = 0;
 let iface_mapping = {}, iface_vlan_mapping = {};
 function getIfaceName(type, name) {
@@ -194,20 +194,24 @@ interfaces {
         description "{{ i.name }}"
                 {% endif %}
         private-key "{{ i.private_key }}"
-        address "{{ i.address }}"
+                {% if (i.root_node.ipaddr): %}
+                    {% for (let ip in i.root_node.ipaddr): %}
+        address "{{ ip }}"
+                    {% endfor %}
+                {% endif %}
                 {% if (i.port): %}
-        port "{{ i.port }}"
+        port "{{ i.peer_port }}"
                 {% else %}
         port "51820"
                 {% endif %}
-                {% if (i.peers && length(i.peers)): %}
-                {% for (let p in i.peers): %}
+                {% if (i.hosts && length(i.hosts)): %}
+                {% for (let p in i.hosts): %}
         peer peer{{ peer_c++ }} {
-            public-key "{{ p.public_key }}"
+            public-key "{{ p.key }}"
                     {% if (p.name): %}
             description "{{ p.name }}"
                     {% endif %}
-                    {% for (let a in p.allowed_ips): %}
+                    {% for (let a in p.subnet): %}
             allowed-ips "{{ a }}"
                     {% endfor %}
                     {% if (p.persistent_keepalive): %}
@@ -217,12 +221,64 @@ interfaces {
             preshared-key "{{ p.preshared_key }}"
                     {% endif %}
                     {% if (p.endpoint): %}
-            address "{{ p.endpoint.address }}"
+            address "{{ p.endpoint }}"
+                    {% endif %}
+                    {% if (p.port): %}
             port "{{ p.endpoint.port }}"
                     {% endif %}
         }
                 {% endfor %}
                 {% endif %}
+    }
+            {% endfor %}
+        {% endif %}
+        {% if (vpn.openvpn): %}
+            {% for (let ov in vpn.openvpn.servers): %}
+    openvpn vtun{{ vtun_c++ }} {
+        encryption {
+                {% for (let cipher in ov.encryption.data_ciphers): %}
+            data-ciphers "{{ cipher }}"
+                {% endfor %}
+                {% if (ov.encryption.cipher): %}
+            cipher "{{ ov.encryption.cipher }}"
+                {% endif %}
+        }
+                {% if (ov.hash): %}
+        hash "{{ ov.hash }}"
+                {% endif %}
+        local-host "{{ ov.address }}"
+        local-port "{{ ov.port }}"
+        mode "{{ ov.mode }}"
+                {% if (!ov.persistent_tunnel): %}
+        persistent-tunnel
+                {% endif %}
+        protocol "{{ ov.protocol }}"
+        server {
+                {% for (let c in ov.clients): %}
+            client client{{ client_c++ }} {
+                ip "{{ c.address }}"
+                subnet "{{ c.subnet }}"
+            }
+                {% endfor %}
+                {% if (ov.domain): %}
+            domain-name "{{ ov.domain }}"
+                {% endif %}
+                {% if (ov.max_connections): %}
+            max-connections "{{ ov.max_connections }}"
+                {% endif %}
+            name-server "{{ ov.name_server }}"
+                {% if (ov.subnet): %}
+            subnet "{{ ov.subnet }}"
+                {% endif %}
+                {% if (ov.topology): %}
+            topology "{{ ov.topology }}"
+                {% endif %}
+        }
+        tls {
+            ca-certificate "{{ ov.tls.ca_cert }}"
+            certificate "{{ ov.tls.cert }}"
+            dh-params "{{ ov.tls.dh }}"
+        }
     }
             {% endfor %}
         {% endif %}

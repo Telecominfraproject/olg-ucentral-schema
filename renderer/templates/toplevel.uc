@@ -58,13 +58,22 @@
 	}
 	include("pki.uc", { location: '/pki', services: state.pki });
 
-	if (state.routing || length(up_i) ) {
+	if (state.routing || length(up_i) || (state.services && state.services.igmp_proxy) ) {
 		state.routing = state.routing || {};
-		if ( length(up_i) || state.routing.policies) {
+		if (state.routing.policies) {
 			state.routing.policies = state.routing.policies || [];
-			include("policy.uc", { location: '/policy', policies: state.routing.policies, upstreams: up_i });
+			include("policy.uc", { location: '/policy', policies: state.routing.policies });
 		}
-		include("routing.uc", { location: '/routing', routing: state.routing });
+		state.services = state.services || {};
+		include(
+			"routing.uc", 
+			{ 
+				location: '/routing', 
+				routing: state.routing,
+				igmp_proxy: state.services.igmp_proxy || {},
+				upstreams: up_i,
+			}
+		);
 	}
 
 	if (state.qos) {
@@ -80,6 +89,10 @@
 		state.system = {};
 	}
 	include("system/system.uc", { location: '/system', system: state.system });
+
+	if (state.vpn) {
+		include("vpn/vpn.uc", { location: '/vpn', vpn: state.vpn });
+	}
 %}
 
 // Warning: Do not remove the following line.

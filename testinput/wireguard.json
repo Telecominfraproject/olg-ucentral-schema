@@ -1,0 +1,33 @@
+{
+    "uuid": 123456789,
+    "vpn": {
+        "wireguard": {
+			"interfaces": [
+				{
+					"proto": "wireguard-overlay",
+					"private-key": "oOIip2BDMXaq5hT+SGN6uDFlLnY4vwWOVLH4sHc7yVg=",
+					"peer-port": 51820,
+					"peer-exchange-port": 18955,
+					"root-node": {
+						"key": "post-alternating-material",
+						"endpoint": "172.24.242.126",
+						"ipaddr": [
+							"192.168.88.254/24"
+						]
+					},
+					"hosts": [
+						{
+							"name": "generate-customer-snippet",
+							"key": "PmApz8u2iWWRhyjH7LYW4HJRzw/sPaOsQNE4WzC8FAA=",
+							"endpoint": "1.2.3.4",
+							"subnet": [
+                                "192.168.88.1/32",
+                                "10.0.0.0/8"
+							]
+						}
+					]
+				}
+            ]
+        }
+    }
+}

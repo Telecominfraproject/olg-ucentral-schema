@@ -4,31 +4,9 @@
 		"source-ipv4": [
 			{
 				"rule-number": 283,
-				"outbound-interface": "eth3",
-				"protocol": "tcp",
-				"source": {
-					"address": "192.168.240.0/24",
-					"port": 80
-				},
-				"destination": {
-					"address": "10.2.3.0/24"
-				},
+				"outbound-interface": "eth0",
 				"translation": {
 					"address": "masquerade"
-				}
-			}
-		],
-		"destination-ipv4": [
-			{
-				"rule-number": 765,
-				"inbound-interface": "eth4",
-				"protocol": "all",
-				"destination": {
-					"port": "3389-8888"
-				},
-				"translation": {
-					"address": "10.55.65.54",
-					"port": "999"
 				}
 			}
 		]

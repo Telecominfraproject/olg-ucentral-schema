@@ -3,7 +3,7 @@ load-balancing {
         if (lb.wan_lb) {
             include("wan.uc", { location: location + '/wan_lb', wan: lb.wan_lb });
         }
-        if(lb.haproxy) {
+        if (lb.haproxy) {
             include("haproxy.uc", { location: location + '/haproxy', haproxy: lb.haproxy });
         }
     %}

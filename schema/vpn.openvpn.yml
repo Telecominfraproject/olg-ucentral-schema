@@ -1,225 +1,233 @@
 description: OpenVPN configuration.
 type: object
 properties:
-  servers:
-    description: OpenVPN server instances.
+  interfaces:
     type: array
     items:
       type: object
       properties:
         name:
+          description: Name of the OpenVPN interface
           type: string
         mode:
-          description: Operating mode of the OpenVPN server.
           type: string
           enum:
-          - site-to-site
-          - server
+            - site-to-site
+            - server
+            - client
+        protocol:
+          type: string
+          enum:
+            - udp
+            - tcp-passive
+            - tcp-active
+          default: udp
         persistent-tunnel:
           description: Keep the tunnel interface open across restarts.
           type: boolean
           default: false
-        protocol:
-          type: string
-          enum:
-          - udp
-          - tcp
-          default: udp
-        address:
-          description: Local IP address for the OpenVPN server to bind to.
-          type: string
-          format: uc-ip
-        port:
-          description: Port number for the OpenVPN server to listen on.
-          type: integer
-          maximum: 65535
-          default: 1194
-        subnet:
-          # description: Client address pool for assigning IP addresses to clients.
-          type: string
-          format: uc-cidr
-        encryption:
-          description: Encryption settings for the VPN connection.
+        site-to-site:
+          description: Configuration for site-to-site mode
           type: object
           properties:
-            cipher:
-              description: Standard data encryption algorithm.
+            local-address:
               type: string
-              enum: [none, 3des, aes128, aes128gcm, aes192, aes192gcm, aes256, aes256gcm]
-            data-ciphers:
-              description: Cipher negotiation list for data channel encryption.
-              type: array
-              items:
-                type: string
-                enum: [none, 3des, aes128, aes128gcm, aes192, aes192gcm, aes256, aes256gcm]
-        hash:
-          description: Hash algorithm for HMAC authentication.
-          type: string
-          enum:
-          - md5
-          - sha1
-          - sha256
-          - sha384
-          - sha512
-        protocol:
-          description: Protocol for this interface
-          type: string
-          enum: [udp, tcp-passive, tcp-active]
-          default: udp
-        tls:
-          description: TLS certificate configuration.
+              format: uc-ip
+            local-port:
+              type: integer
+              maximum: 65535
+            remote-address:
+              type: string
+              format: uc-ip
+            remote-port:
+              type: integer
+              maximum: 65535
+            tls:
+              type: object
+              properties:
+                cert:
+                  type: string
+                peer-fingerprint:
+                  type: string
+                role:
+                  type: string
+                  enum:
+                    - active
+                    - passive
+              required:
+                - role
+          required:
+            - local-address
+            - remote-address
+        server:
+          description: Configuration for server mode
           type: object
           properties:
-            ca-cert:
-              description: Name of the CA certificate.
+            listen-address:
+              description: Local IP address for the OpenVPN server to bind to.
               type: string
-            cert:
-              description: Name of the server certificate.
+              format: uc-ip
+            listen-port:
+              description: Port number for the OpenVPN server to listen on.
+              type: integer
+              maximum: 65535
+              default: 1194
+            subnet:
+              description: Client address pool for assigning IP addresses to clients.
               type: string
-            dh:
-              description: Name of the Diffie-Hellman parameter.
-              type: string
-        topology:
-          description: Virtual network topology for client addressing.
-          type: string
-          enum:
-          - subnet
-          - point-to-point
-        domain:
-          description: DNS domain to push to clients.
-          type: string
-          format: hostname
-        max-connections:
-          description: Maximum number of concurrent client connections.
-          type: integer
-          minimum: 1
-          maximum: 4096
-        name-server:
-          description: DNS server address to push to clients.
-          type: string
-          format: uc-ip
-        clients:
-          description: Static client configurations.
-          type: array
-          items:
-            type: object
-            properties:
-              address:
-                description: Fixed IP address assigned to this client.
-                type: string
-                format: uc-ip
-              subnet:
-                description: Subnet routed through this client.
-                type: string
-                format: uc-cidr
-              cert:
-                description: Name of the client certificate.
-                type: string
-      required:
-      - name
-      - mode
-      - address
-      - encryption
-  clients:
-    description: OpenVPN client instances.
-    type: array
-    items:
-      type: object
-      properties:
-        name:
-          type: string
-        interface:
-          description: Network interface to use for the VPN connection.
-          type: string
-        authentication:
-          description: Username and password authentication credentials.
-          type: object
-          properties:
-            username:
-              type: string
-            password:
-              type: string
-        mode:
-          description: Operating mode of the OpenVPN client.
-          type: string
-          enum:
-          - site-to-site
-          - client
-        encryption:
-          description: Encryption settings for the VPN connection.
-          type: object
-          properties:
-            cipher:
-              description: Standard data encryption algorithm.
+              format: uc-cidr
+            encryption:
+              description: Encryption settings for the VPN connection.
+              type: object
+              properties:
+                cipher:
+                  description: Standard data encryption algorithm.
+                  type: string
+                  enum: [none, 3des, aes128, aes128gcm, aes192, aes192gcm, aes256, aes256gcm]
+                data-ciphers:
+                  description: Cipher negotiation list for data channel encryption.
+                  type: array
+                  items:
+                    type: string
+                    enum: [none, 3des, aes128, aes128gcm, aes192, aes192gcm, aes256, aes256gcm]
+            hash:
+              description: Hash algorithm for HMAC authentication.
               type: string
               enum:
-              - none
-              - 3des
-              - aes128
-              - aes128gcm
-              - aes192
-              - aes192gcm
-              - aes256
-              - aes256gcm
-            data-ciphers:
-              description: Cipher negotiation list for data channel encryption.
+              - md5
+              - sha1
+              - sha256
+              - sha384
+              - sha512
+            tls:
+              description: TLS certificate configuration.
+              type: object
+              properties:
+                ca-cert:
+                  description: Name of the CA certificate.
+                  type: string
+                cert:
+                  description: Name of the server certificate.
+                  type: string
+                dh:
+                  description: Name of the Diffie-Hellman parameter.
+                  type: string
+            topology:
+              description: Virtual network topology for client addressing.
+              type: string
+              enum:
+                - subnet
+                - point-to-point
+              default: subnet
+            domain:
+              description: DNS domain to push to clients.
+              type: string
+              format: hostname
+            max-connections:
+              description: Maximum number of concurrent client connections.
+              type: integer
+              minimum: 1
+              maximum: 4096
+            name-server:
+              description: DNS server address to push to clients.
+              type: string
+              format: uc-ip
+            clients:
+              description: Static client configurations.
               type: array
               items:
-                type: string
-                enum:
-                - none
-                - 3des
-                - aes128
-                - aes128gcm
-                - aes192
-                - aes192gcm
-                - aes256
-                - aes256gcm
-        hash:
-          description: Hash algorithm for HMAC authentication.
-          type: string
-          enum:
-          - md5
-          - sha1
-          - sha256
-          - sha384
-          - sha512
-        persistent-tunnel:
-          description: Keep the tunnel interface open across restarts.
-          type: boolean
-          default: false
-        persist-key:
-          description: Preserve key material across restarts.
-          type: boolean
-          default: false
-        remote-host:
-          description: IP address or hostname of the remote OpenVPN server.
-          type: string
-          format: uc-ip
-        remote-port:
-          description: Port number of the remote OpenVPN server.
-          type: integer
-          maximum: 65535
-          default: 1194
-        protocol:
-          type: string
-          enum:
-          - udp
-          - tcp
-          default: udp
-        tls:
-          description: TLS certificate configuration.
+                type: object
+                properties:
+                  address:
+                    description: Fixed IP address assigned to this client.
+                    type: string
+                    format: uc-ip
+                  subnet:
+                    description: Subnet routed through this client.
+                    type: string
+                    format: uc-cidr
+          required:
+            - listen-address
+            - encryption
+        client:
+          description: Configuration for client mode
           type: object
           properties:
-            ca-cert:
-              description: Name of the CA certificate.
+            server-address:
+              description: IP address or hostname of the remote OpenVPN server.
               type: string
-            cert:
-              description: Name of the client certificate.
+              format: uc-ip
+            server-port:
+              description: Port number of the remote OpenVPN server.
+              type: integer
+              maximum: 65535
+              default: 1194
+            authentication:
+              description: Username and password authentication credentials.
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+            encryption:
+              description: Encryption settings for the VPN connection.
+              type: object
+              properties:
+                cipher:
+                  description: Standard data encryption algorithm.
+                  type: string
+                  enum:
+                  - none
+                  - 3des
+                  - aes128
+                  - aes128gcm
+                  - aes192
+                  - aes192gcm
+                  - aes256
+                  - aes256gcm
+                data-ciphers:
+                  description: Cipher negotiation list for data channel encryption.
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - none
+                    - 3des
+                    - aes128
+                    - aes128gcm
+                    - aes192
+                    - aes192gcm
+                    - aes256
+                    - aes256gcm
+            hash:
+              description: Hash algorithm for HMAC authentication.
               type: string
-            private-key:
-              description: Name of the private key.
-              type: string
+              enum:
+              - md5
+              - sha1
+              - sha256
+              - sha384
+              - sha512
+            persist-key:
+              description: Preserve key material across restarts.
+              type: boolean
+              default: false
+            tls:
+              description: TLS certificate configuration.
+              type: object
+              properties:
+                ca-cert:
+                  description: Name of the CA certificate.
+                  type: string
+                cert:
+                  description: Name of the client certificate.
+                  type: string
+                private-key:
+                  description: Name of the private key.
+                  type: string
+          required:
+            - server-address
       required:
-      - name
-      - remote-host
+        - name
+        - mode

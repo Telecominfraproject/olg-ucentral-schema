@@ -1,0 +1,65 @@
+description: WireGuard VPN configuration.
+type: object
+properties:
+  interfaces:
+    description: WireGuard interfaces.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        private-key:
+          description: Private key for this WireGuard interface.
+          type: string
+        address:
+          description: IP address assigned to the WireGuard interface.
+          type: string
+          format: uc-cidr
+        port:
+          description: UDP port for WireGuard to listen on.
+          type: integer
+          maximum: 65535
+          default: 51820
+        peers:
+          description: List of peers for this WireGuard interface.
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              public-key:
+                description: Public key of the peer.
+                type: string
+              allowed-ips:
+                description: List of IP ranges allowed through this peer.
+                type: array
+                items:
+                  type: string
+                  format: uc-cidr
+              endpoint:
+                description: Peer endpoint.
+                type: object
+                properties:
+                  address:
+                    description: IP address of the peer endpoint.
+                    type: string
+                    format: uc-ip
+                  port:
+                    description: UDP port of the peer endpoint.
+                    type: integer
+                    maximum: 65535
+                    default: 51820
+                required:
+                - address
+              persistent-keepalive:
+                description: Interval (in seconds) for sending keepalive packets to maintain NAT mappings.
+                type: integer
+            required:
+            - name
+            - public-key
+            - allowed-ips
+      required:
+      - name
+      - private-key

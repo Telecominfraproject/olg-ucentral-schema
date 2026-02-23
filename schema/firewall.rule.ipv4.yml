@@ -27,10 +27,16 @@ properties:
     type: object
     properties:
       address:
-        description: IPv4 address or network (CIDR notation).
+        description: Source IPv4 address or network.
         type: string
-        format: uc-ip
-        example: 192.168.1.87
+        anyOf:
+          - format: uc-fw-ipv4
+          - format: uc-fw-cidr4
+          - format: uc-fw-ip4range
+        examples:
+          - "!192.168.0.9"
+          - "10.28.3.0/24"
+          - "!10.76.5.98-10.76.5.187"
       port:
         type: string
       mac-address:
@@ -55,10 +61,12 @@ properties:
     type: object
     properties:
       address:
-        description: IPv4 network (CIDR notation).
+        description: Destination IPv4 address or network.
         type: string
-        format: uc-ip
-        example: 10.0.0.1
+        anyOf:
+          - format: uc-fw-ipv4
+          - format: uc-fw-cidr4
+          - format: uc-fw-ip4range
       port:
         type: string
       group:

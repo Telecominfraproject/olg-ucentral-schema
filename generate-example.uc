@@ -225,6 +225,42 @@ function random_value(kind, minLength, maxLength) {
 	case 'uc-ip6range':
 		return random_ip6addr() + '-' + random_ip6addr();
 
+	case 'uc-fw-ipv4':
+		switch (math.rand() % 2) {
+		case 0: return '!' + random_ip4addr();
+		case 1: return random_ip4addr();
+		}
+	
+	case 'uc-fw-ipv6':
+		switch (math.rand() % 2) {
+		case 0: return '!' + random_ip6addr();
+		case 1: return random_ip6addr();
+		}
+
+	case 'uc-fw-cidr4':
+		switch (math.rand() % 2) {
+		case 0: return sprintf('!%s/%d', random_ip4addr(), math.rand() % 33);
+		case 1: return sprintf('%s/%d', random_ip4addr(), math.rand() % 33);
+		}
+	
+	case 'uc-fw-cidr6':
+		switch (math.rand() % 2) {
+		case 0: return sprintf('!%s/%d', random_ip6addr(), math.rand() % 129);
+		case 1: return sprintf('%s/%d', random_ip6addr(), math.rand() % 129);
+		}
+	
+	case 'uc-fw-ip4range':
+		switch (math.rand() % 2) {
+		case 0: return sprintf('!%s-%s', random_ip4addr(), random_ip4addr());
+		case 1: return sprintf('%s-%s', random_ip4addr(), random_ip4addr());
+		}
+
+	case 'uc-fw-ip6range':
+		switch (math.rand() % 2) {
+		case 0: return sprintf('!%s-%s', random_ip6addr(), random_ip6addr());
+		case 1: return sprintf('%s-%s', random_ip6addr(), random_ip6addr());
+		}
+
 	default:
 		if (minLength <= 15 && maxLength >= 20)
 			return random_phrase(minLength, maxLength);

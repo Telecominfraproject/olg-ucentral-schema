@@ -5,6 +5,7 @@ properties:
     description: Rule number for ordering (lower numbers processed first).
     type: integer
     minimum: 1
+    maximum: 999999
   inbound-interface:
     description: Inbound interface for NAT.
     type: string

@@ -1,6 +1,6 @@
 type: object
 description:
-  A list of all LLDP peers that this logical interface is connected to.
+  The link state of a physical interface.
 properties:
   carrier:
     type: boolean

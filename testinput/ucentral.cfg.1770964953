@@ -1,0 +1,82 @@
+{
+	"firewall":	{
+		"ipv4-rulesets":	[{
+				"default-action":	"accept",
+				"name":	"lan-wan-ipv4",
+				"rules":	[{
+						"action":	"accept",
+						"destination":	{
+							"address":	"8.8.8.8"
+						},
+						"rule-number":	100,
+						"source":	{
+							"address":	"192.168.4.1-192.168.4.200"
+						}
+					}]
+			}],
+		"zone-policies":	[{
+				"from":	"lan",
+				"ruleset":	"lan-wan-ipv4",
+				"to":	"wan"
+			}],
+		"zones":	[{
+				"default-action":	"accept",
+				"interfaces":	["eth0"],
+				"name":	"wan"
+			}, {
+				"default-action":	"accept",
+				"interfaces":	["eth1"],
+				"name":	"lan"
+			}, {
+				"default-action":	"accept",
+				"local-zone":	true,
+				"name":	"local"
+			}]
+	},
+	"interfaces":	[{
+			"ipv4":	{
+				"address":	["192.168.240.31/24"],
+				"addressing":	"static",
+				"gateway":	"192.168.240.254"
+			},
+			"ipv6":	{
+				"addressing":	"none"
+			},
+			"mtu":	1500,
+			"name":	"eth0",
+			"role":	"upstream"
+		}, {
+			"ipv4":	{
+				"address":	["192.168.2.1/24"],
+				"addressing":	"static"
+			},
+			"ipv6":	{
+				"addressing":	"none"
+			},
+			"mtu":	1500,
+			"name":	"eth1",
+			"role":	"downstream"
+		}],
+	"metrics":	{
+		"health":	{
+			"interval":	60
+		},
+		"statistics":	{
+			"interval":	150
+		}
+	},
+	"system":	{
+		"syslog":	{
+			"local":	[{
+					"facility":	"all",
+					"severity":	"info"
+				}],
+			"marker":	{
+				"enable":	true,
+				"interval":	1200
+			},
+			"preserve-fqdn":	false
+		}
+	},
+	"uuid":	1770964953
+}

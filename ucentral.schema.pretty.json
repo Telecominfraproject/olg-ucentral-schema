@@ -348,10 +348,19 @@
                     "type": "object",
                     "properties": {
                         "address": {
-                            "description": "IPv4 address or network (CIDR notation).",
+                            "description": "Source IPv4 address or network.",
                             "type": "string",
-                            "format": "uc-ip",
-                            "example": "192.168.1.87"
+                            "anyOf": [
+                                {
+                                    "format": "uc-fw-ipv4"
+                                },
+                                {
+                                    "format": "uc-fw-cidr4"
+                                },
+                                {
+                                    "format": "uc-fw-ip4range"
+                                }
+                            ]
                         },
                         "port": {
                             "type": "string"
@@ -387,10 +396,19 @@
                     "type": "object",
                     "properties": {
                         "address": {
-                            "description": "IPv4 network (CIDR notation).",
+                            "description": "Destination IPv4 address or network.",
                             "type": "string",
-                            "format": "uc-ip",
-                            "example": "10.0.0.1"
+                            "anyOf": [
+                                {
+                                    "format": "uc-fw-ipv4"
+                                },
+                                {
+                                    "format": "uc-fw-cidr4"
+                                },
+                                {
+                                    "format": "uc-fw-ip4range"
+                                }
+                            ]
                         },
                         "port": {
                             "type": "string"
@@ -1840,7 +1858,8 @@
                 "rule-number": {
                     "description": "Rule number for ordering (lower numbers processed first).",
                     "type": "integer",
-                    "minimum": 1
+                    "minimum": 1,
+                    "maximum": 999999
                 },
                 "inbound-interface": {
                     "description": "Inbound interface for NAT.",
@@ -3139,13 +3158,16 @@
                 "interfaces": {
                     "type": "array",
                     "items": {
-                        "type": "string"
-                    }
-                },
-                "passive-interfaces": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "passive": {
+                                "type": "boolean",
+                                "default": false
+                            }
+                        }
                     }
                 },
                 "neighbors": {
@@ -4457,9 +4479,12 @@
             "description": "IPsec VPN configuration.",
             "type": "object",
             "properties": {
-                "interface": {
+                "interfaces": {
                     "description": "Interface facing the remote peer.",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "ike-groups": {
                     "description": "IKE (Phase 1) group definitions.",
@@ -4495,8 +4520,10 @@
                                         "enum": [
                                             "aes128",
                                             "aes256",
-                                            "aes128gcm",
-                                            "aes256gcm",
+                                            "aes128ccm128",
+                                            "aes256ccm128",
+                                            "aes256gcm128",
+                                            "aes128gcm128",
                                             "3des"
                                         ]
                                     },
@@ -4514,13 +4541,27 @@
                                         "description": "Diffie-Hellman group number for key exchange.",
                                         "type": "integer",
                                         "enum": [
+                                            1,
                                             2,
+                                            5,
                                             14,
                                             15,
                                             16,
+                                            17,
+                                            18,
                                             19,
                                             20,
-                                            21
+                                            21,
+                                            22,
+                                            23,
+                                            24,
+                                            25,
+                                            26,
+                                            27,
+                                            28,
+                                            29,
+                                            30,
+                                            31
                                         ]
                                     }
                                 },
@@ -4612,8 +4653,10 @@
                                         "enum": [
                                             "aes128",
                                             "aes256",
-                                            "aes128gcm",
-                                            "aes256gcm",
+                                            "aes128ccm128",
+                                            "aes256ccm128",
+                                            "aes256gcm128",
+                                            "aes128gcm128",
                                             "3des"
                                         ]
                                     },
@@ -4661,7 +4704,7 @@
                         "secret"
                     ]
                 },
-                "peers": {
+                "remote-access": {
                     "description": "IPsec peer configurations.",
                     "type": "array",
                     "items": {
@@ -4707,356 +4750,392 @@
                                 ],
                                 "default": "none"
                             },
-                            "tunnels": {
-                                "description": "Policy-based tunnels (traffic selectors).",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "local-prefix": {
-                                            "description": "Local subnet for this tunnel.",
-                                            "type": "string",
-                                            "format": "uc-cidr4"
-                                        },
-                                        "remote-prefix": {
-                                            "description": "Remote subnet for this tunnel.",
-                                            "type": "string",
-                                            "format": "uc-cidr4"
-                                        }
-                                    },
-                                    "required": [
-                                        "local-prefix",
-                                        "remote-prefix"
-                                    ]
-                                }
+                            "ca-cert": {
+                                "description": "Name of ca certificate stored in vyos pki",
+                                "type": "string"
+                            },
+                            "server-cert": {
+                                "description": "Name of server certificate stored in vyos pki",
+                                "type": "string"
+                            },
+                            "dhcp-interface": {
+                                "description": "DHCP interface supplying next-hop IP address",
+                                "type": "string"
+                            },
+                            "pool": {
+                                "description": "IP address pool",
+                                "type": "string"
                             }
                         },
                         "required": [
                             "name",
-                            "local-address",
-                            "remote-address",
                             "ike-group",
-                            "esp-group",
-                            "tunnels"
+                            "esp-group"
                         ]
+                    }
+                },
+                "pools": {
+                    "description": "IP address pool.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name of this IP address pool",
+                                "type": "string"
+                            },
+                            "prefix": {
+                                "description": "IP range in CIDR",
+                                "type": "string",
+                                "format": "uc-cidr"
+                            },
+                            "name-server": {
+                                "description": "Name server for client",
+                                "type": "string",
+                                "format": "uc-ip"
+                            }
+                        }
                     }
                 }
             },
             "required": [
-                "interface",
                 "ike-groups",
                 "esp-groups",
-                "authentication",
-                "peers"
+                "pools"
             ]
         },
         "vpn.openvpn": {
             "description": "OpenVPN configuration.",
             "type": "object",
             "properties": {
-                "servers": {
-                    "description": "OpenVPN server instances.",
+                "interfaces": {
                     "type": "array",
                     "items": {
                         "type": "object",
                         "properties": {
                             "name": {
+                                "description": "Name of the OpenVPN interface",
                                 "type": "string"
                             },
                             "mode": {
-                                "description": "Operating mode of the OpenVPN server.",
                                 "type": "string",
                                 "enum": [
                                     "site-to-site",
-                                    "server"
-                                ]
-                            },
-                            "persistent-tunnel": {
-                                "description": "Keep the tunnel interface open across restarts.",
-                                "type": "boolean",
-                                "default": false
-                            },
-                            "protocol": {
-                                "type": "string",
-                                "enum": [
-                                    "udp",
-                                    "tcp"
-                                ],
-                                "default": "udp"
-                            },
-                            "address": {
-                                "description": "Local IP address for the OpenVPN server to bind to.",
-                                "type": "string",
-                                "format": "uc-ip"
-                            },
-                            "port": {
-                                "description": "Port number for the OpenVPN server to listen on.",
-                                "type": "integer",
-                                "maximum": 65535,
-                                "default": 1194
-                            },
-                            "subnet": {
-                                "type": "string",
-                                "format": "uc-cidr"
-                            },
-                            "encryption": {
-                                "description": "Encryption settings for the VPN connection.",
-                                "type": "object",
-                                "properties": {
-                                    "cipher": {
-                                        "description": "Standard data encryption algorithm.",
-                                        "type": "string",
-                                        "enum": [
-                                            "none",
-                                            "3des",
-                                            "aes128",
-                                            "aes128gcm",
-                                            "aes192",
-                                            "aes192gcm",
-                                            "aes256",
-                                            "aes256gcm"
-                                        ]
-                                    },
-                                    "data-ciphers": {
-                                        "description": "Cipher negotiation list for data channel encryption.",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string",
-                                            "enum": [
-                                                "none",
-                                                "3des",
-                                                "aes128",
-                                                "aes128gcm",
-                                                "aes192",
-                                                "aes192gcm",
-                                                "aes256",
-                                                "aes256gcm"
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
-                            "hash": {
-                                "description": "Hash algorithm for HMAC authentication.",
-                                "type": "string",
-                                "enum": [
-                                    "md5",
-                                    "sha1",
-                                    "sha256",
-                                    "sha384",
-                                    "sha512"
-                                ]
-                            },
-                            "tls": {
-                                "description": "TLS certificate configuration.",
-                                "type": "object",
-                                "properties": {
-                                    "ca-cert": {
-                                        "description": "Name of the CA certificate.",
-                                        "type": "string"
-                                    },
-                                    "cert": {
-                                        "description": "Name of the server certificate.",
-                                        "type": "string"
-                                    },
-                                    "dh": {
-                                        "description": "Name of the Diffie-Hellman parameter.",
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "topology": {
-                                "description": "Virtual network topology for client addressing.",
-                                "type": "string",
-                                "enum": [
-                                    "subnet",
-                                    "point-to-point"
-                                ]
-                            },
-                            "domain": {
-                                "description": "DNS domain to push to clients.",
-                                "type": "string",
-                                "format": "hostname"
-                            },
-                            "max-connections": {
-                                "description": "Maximum number of concurrent client connections.",
-                                "type": "integer",
-                                "minimum": 1,
-                                "maximum": 4096
-                            },
-                            "name-server": {
-                                "description": "DNS server address to push to clients.",
-                                "type": "string",
-                                "format": "uc-ip"
-                            },
-                            "clients": {
-                                "description": "Static client configurations.",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "address": {
-                                            "description": "Fixed IP address assigned to this client.",
-                                            "type": "string",
-                                            "format": "uc-ip"
-                                        },
-                                        "subnet": {
-                                            "description": "Subnet routed through this client.",
-                                            "type": "string",
-                                            "format": "uc-cidr"
-                                        },
-                                        "cert": {
-                                            "description": "Name of the client certificate.",
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "required": [
-                            "name"
-                        ]
-                    }
-                },
-                "clients": {
-                    "description": "OpenVPN client instances.",
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "interface": {
-                                "description": "Network interface to use for the VPN connection.",
-                                "type": "string"
-                            },
-                            "authentication": {
-                                "description": "Username and password authentication credentials.",
-                                "type": "object",
-                                "properties": {
-                                    "username": {
-                                        "type": "string"
-                                    },
-                                    "password": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "mode": {
-                                "description": "Operating mode of the OpenVPN client.",
-                                "type": "string",
-                                "enum": [
-                                    "site-to-site",
+                                    "server",
                                     "client"
                                 ]
                             },
-                            "encryption": {
-                                "description": "Encryption settings for the VPN connection.",
-                                "type": "object",
-                                "properties": {
-                                    "cipher": {
-                                        "description": "Standard data encryption algorithm.",
-                                        "type": "string",
-                                        "enum": [
-                                            "none",
-                                            "3des",
-                                            "aes128",
-                                            "aes128gcm",
-                                            "aes192",
-                                            "aes192gcm",
-                                            "aes256",
-                                            "aes256gcm"
-                                        ]
-                                    },
-                                    "data-ciphers": {
-                                        "description": "Cipher negotiation list for data channel encryption.",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string",
-                                            "enum": [
-                                                "none",
-                                                "3des",
-                                                "aes128",
-                                                "aes128gcm",
-                                                "aes192",
-                                                "aes192gcm",
-                                                "aes256",
-                                                "aes256gcm"
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
-                            "hash": {
-                                "description": "Hash algorithm for HMAC authentication.",
+                            "protocol": {
                                 "type": "string",
                                 "enum": [
-                                    "md5",
-                                    "sha1",
-                                    "sha256",
-                                    "sha384",
-                                    "sha512"
-                                ]
+                                    "udp",
+                                    "tcp-passive",
+                                    "tcp-active"
+                                ],
+                                "default": "udp"
                             },
                             "persistent-tunnel": {
                                 "description": "Keep the tunnel interface open across restarts.",
                                 "type": "boolean",
                                 "default": false
                             },
-                            "persist-key": {
-                                "description": "Preserve key material across restarts.",
-                                "type": "boolean",
-                                "default": false
-                            },
-                            "remote-host": {
-                                "description": "IP address or hostname of the remote OpenVPN server.",
-                                "type": "string",
-                                "format": "uc-ip"
-                            },
-                            "remote-port": {
-                                "description": "Port number of the remote OpenVPN server.",
-                                "type": "integer",
-                                "maximum": 65535,
-                                "default": 1194
-                            },
-                            "protocol": {
-                                "type": "string",
-                                "enum": [
-                                    "udp",
-                                    "tcp"
-                                ],
-                                "default": "udp"
-                            },
-                            "tls": {
-                                "description": "TLS certificate configuration.",
+                            "site-to-site": {
+                                "description": "Configuration for site-to-site mode",
                                 "type": "object",
                                 "properties": {
-                                    "ca-cert": {
-                                        "description": "Name of the CA certificate.",
-                                        "type": "string"
+                                    "local-address": {
+                                        "type": "string",
+                                        "format": "uc-ip"
                                     },
-                                    "cert": {
-                                        "description": "Name of the client certificate.",
-                                        "type": "string"
+                                    "local-port": {
+                                        "type": "integer",
+                                        "maximum": 65535
                                     },
-                                    "private-key": {
-                                        "description": "Name of the private key.",
-                                        "type": "string"
+                                    "remote-address": {
+                                        "type": "string",
+                                        "format": "uc-ip"
+                                    },
+                                    "remote-port": {
+                                        "type": "integer",
+                                        "maximum": 65535
+                                    },
+                                    "tls": {
+                                        "type": "object",
+                                        "properties": {
+                                            "cert": {
+                                                "type": "string"
+                                            },
+                                            "peer-fingerprint": {
+                                                "type": "string"
+                                            },
+                                            "role": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "active",
+                                                    "passive"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "role"
+                                        ]
                                     }
-                                }
+                                },
+                                "required": [
+                                    "local-address",
+                                    "remote-address"
+                                ]
+                            },
+                            "server": {
+                                "description": "Configuration for server mode",
+                                "type": "object",
+                                "properties": {
+                                    "listen-address": {
+                                        "description": "Local IP address for the OpenVPN server to bind to.",
+                                        "type": "string",
+                                        "format": "uc-ip"
+                                    },
+                                    "listen-port": {
+                                        "description": "Port number for the OpenVPN server to listen on.",
+                                        "type": "integer",
+                                        "maximum": 65535,
+                                        "default": 1194
+                                    },
+                                    "subnet": {
+                                        "description": "Client address pool for assigning IP addresses to clients.",
+                                        "type": "string",
+                                        "format": "uc-cidr"
+                                    },
+                                    "encryption": {
+                                        "description": "Encryption settings for the VPN connection.",
+                                        "type": "object",
+                                        "properties": {
+                                            "cipher": {
+                                                "description": "Standard data encryption algorithm.",
+                                                "type": "string",
+                                                "enum": [
+                                                    "none",
+                                                    "3des",
+                                                    "aes128",
+                                                    "aes128gcm",
+                                                    "aes192",
+                                                    "aes192gcm",
+                                                    "aes256",
+                                                    "aes256gcm"
+                                                ]
+                                            },
+                                            "data-ciphers": {
+                                                "description": "Cipher negotiation list for data channel encryption.",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "none",
+                                                        "3des",
+                                                        "aes128",
+                                                        "aes128gcm",
+                                                        "aes192",
+                                                        "aes192gcm",
+                                                        "aes256",
+                                                        "aes256gcm"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "hash": {
+                                        "description": "Hash algorithm for HMAC authentication.",
+                                        "type": "string",
+                                        "enum": [
+                                            "md5",
+                                            "sha1",
+                                            "sha256",
+                                            "sha384",
+                                            "sha512"
+                                        ]
+                                    },
+                                    "tls": {
+                                        "description": "TLS certificate configuration.",
+                                        "type": "object",
+                                        "properties": {
+                                            "ca-cert": {
+                                                "description": "Name of the CA certificate.",
+                                                "type": "string"
+                                            },
+                                            "cert": {
+                                                "description": "Name of the server certificate.",
+                                                "type": "string"
+                                            },
+                                            "dh": {
+                                                "description": "Name of the Diffie-Hellman parameter.",
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "topology": {
+                                        "description": "Virtual network topology for client addressing.",
+                                        "type": "string",
+                                        "enum": [
+                                            "subnet",
+                                            "point-to-point"
+                                        ],
+                                        "default": "subnet"
+                                    },
+                                    "domain": {
+                                        "description": "DNS domain to push to clients.",
+                                        "type": "string",
+                                        "format": "hostname"
+                                    },
+                                    "max-connections": {
+                                        "description": "Maximum number of concurrent client connections.",
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 4096
+                                    },
+                                    "name-server": {
+                                        "description": "DNS server address to push to clients.",
+                                        "type": "string",
+                                        "format": "uc-ip"
+                                    },
+                                    "clients": {
+                                        "description": "Static client configurations.",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "address": {
+                                                    "description": "Fixed IP address assigned to this client.",
+                                                    "type": "string",
+                                                    "format": "uc-ip"
+                                                },
+                                                "subnet": {
+                                                    "description": "Subnet routed through this client.",
+                                                    "type": "string",
+                                                    "format": "uc-cidr"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "listen-address",
+                                    "encryption"
+                                ]
+                            },
+                            "client": {
+                                "description": "Configuration for client mode",
+                                "type": "object",
+                                "properties": {
+                                    "server-address": {
+                                        "description": "IP address or hostname of the remote OpenVPN server.",
+                                        "type": "string",
+                                        "format": "uc-ip"
+                                    },
+                                    "server-port": {
+                                        "description": "Port number of the remote OpenVPN server.",
+                                        "type": "integer",
+                                        "maximum": 65535,
+                                        "default": 1194
+                                    },
+                                    "authentication": {
+                                        "description": "Username and password authentication credentials.",
+                                        "type": "object",
+                                        "properties": {
+                                            "username": {
+                                                "type": "string"
+                                            },
+                                            "password": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "encryption": {
+                                        "description": "Encryption settings for the VPN connection.",
+                                        "type": "object",
+                                        "properties": {
+                                            "cipher": {
+                                                "description": "Standard data encryption algorithm.",
+                                                "type": "string",
+                                                "enum": [
+                                                    "none",
+                                                    "3des",
+                                                    "aes128",
+                                                    "aes128gcm",
+                                                    "aes192",
+                                                    "aes192gcm",
+                                                    "aes256",
+                                                    "aes256gcm"
+                                                ]
+                                            },
+                                            "data-ciphers": {
+                                                "description": "Cipher negotiation list for data channel encryption.",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "none",
+                                                        "3des",
+                                                        "aes128",
+                                                        "aes128gcm",
+                                                        "aes192",
+                                                        "aes192gcm",
+                                                        "aes256",
+                                                        "aes256gcm"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "hash": {
+                                        "description": "Hash algorithm for HMAC authentication.",
+                                        "type": "string",
+                                        "enum": [
+                                            "md5",
+                                            "sha1",
+                                            "sha256",
+                                            "sha384",
+                                            "sha512"
+                                        ]
+                                    },
+                                    "persist-key": {
+                                        "description": "Preserve key material across restarts.",
+                                        "type": "boolean",
+                                        "default": false
+                                    },
+                                    "tls": {
+                                        "description": "TLS certificate configuration.",
+                                        "type": "object",
+                                        "properties": {
+                                            "ca-cert": {
+                                                "description": "Name of the CA certificate.",
+                                                "type": "string"
+                                            },
+                                            "cert": {
+                                                "description": "Name of the client certificate.",
+                                                "type": "string"
+                                            },
+                                            "private-key": {
+                                                "description": "Name of the private key.",
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "server-address"
+                                ]
                             }
                         },
                         "required": [
                             "name",
-                            "remote-host"
+                            "mode"
                         ]
                     }
                 }
             }
         },
         "vpn.wireguard": {
-            "description": "WireGuard VPN configuration.",
+            "description": "This Object defines the properties of a wireguard-overlay.",
             "type": "object",
             "properties": {
                 "interfaces": {
@@ -5065,82 +5144,91 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "name": {
-                                "type": "string"
+                            "proto": {
+                                "description": "This field must be set to wireguard-overlay.",
+                                "type": "string",
+                                "const": "wireguard-overlay"
                             },
                             "private-key": {
-                                "description": "Private key for this WireGuard interface.",
+                                "description": "The private key of the device. This key is used to lookup the host entry inside the config.",
                                 "type": "string"
                             },
-                            "address": {
-                                "description": "IP address assigned to the WireGuard interface.",
-                                "type": "string",
-                                "format": "uc-cidr"
-                            },
-                            "port": {
-                                "description": "UDP port for WireGuard to listen on.",
+                            "peer-port": {
+                                "description": "The network port that shall be used to establish the wireguard tunnel.",
                                 "type": "integer",
                                 "maximum": 65535,
-                                "default": 51820
+                                "minimum": 1,
+                                "default": 3456
                             },
-                            "peers": {
-                                "description": "List of peers for this WireGuard interface.",
+                            "peer-exchange-port": {
+                                "description": "The network port that shall be used to exchange peer data inside the tunnel.",
+                                "type": "integer",
+                                "maximum": 65535,
+                                "minimum": 1,
+                                "default": 3458
+                            },
+                            "root-node": {
+                                "description": "The descritption of the root node of the overlay.",
+                                "type": "object",
+                                "properties": {
+                                    "key": {
+                                        "description": "The public key of the host.",
+                                        "type": "string"
+                                    },
+                                    "endpoint": {
+                                        "description": "The public IP of the host (optional).",
+                                        "type": "string",
+                                        "format": "uc-ip"
+                                    },
+                                    "ipaddr": {
+                                        "description": "The list of private IPs that a host is reachable on inside the overlay.",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uc-cidr"
+                                        }
+                                    }
+                                }
+                            },
+                            "hosts": {
+                                "description": "The list of all known hosts inside the overlay.",
                                 "type": "array",
                                 "items": {
                                     "type": "object",
                                     "properties": {
                                         "name": {
+                                            "description": "The unique name of the host.",
                                             "type": "string"
                                         },
-                                        "public-key": {
-                                            "description": "Public key of the peer.",
+                                        "key": {
+                                            "description": "The public key of the host.",
                                             "type": "string"
                                         },
-                                        "allowed-ips": {
-                                            "description": "List of IP ranges allowed through this peer.",
+                                        "endpoint": {
+                                            "description": "The public IP of the host (optional).",
+                                            "type": "string",
+                                            "format": "uc-ip"
+                                        },
+                                        "subnet": {
+                                            "description": "The list of subnets that shall be routed to this host.",
                                             "type": "array",
                                             "items": {
                                                 "type": "string",
                                                 "format": "uc-cidr"
                                             }
                                         },
-                                        "endpoint": {
-                                            "description": "Peer endpoint.",
-                                            "type": "object",
-                                            "properties": {
-                                                "address": {
-                                                    "description": "IP address of the peer endpoint.",
-                                                    "type": "string",
-                                                    "format": "uc-ip"
-                                                },
-                                                "port": {
-                                                    "description": "UDP port of the peer endpoint.",
-                                                    "type": "integer",
-                                                    "maximum": 65535,
-                                                    "default": 51820
-                                                }
-                                            },
-                                            "required": [
-                                                "address"
-                                            ]
-                                        },
-                                        "persistent-keepalive": {
-                                            "description": "Interval (in seconds) for sending keepalive packets to maintain NAT mappings.",
-                                            "type": "integer"
+                                        "ipaddr": {
+                                            "description": "The list of private IPs that a host is reachable on inside the overlay.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "format": "uc-ip"
+                                            }
                                         }
-                                    },
-                                    "required": [
-                                        "name",
-                                        "public-key",
-                                        "allowed-ips"
-                                    ]
+                                    }
                                 }
                             }
-                        },
-                        "required": [
-                            "name",
-                            "private-key"
-                        ]
+                        }
                     }
                 }
             }

@@ -171,6 +171,48 @@ let GeneratorProto = {
 				'let labels = split(m[1], ".");',
 				'return (length(filter(labels, label => !match(label, /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])$/))) == 0 && length(labels) > 0);'
 			]
+		},
+		"uc-fw-ipv4": {
+			"desc": "IPv4 address, but accept negation",
+			"code": [
+				'let m = match(value, /^!{0,1}([0-9.]+)$/);',
+				'return m ? (length(iptoarr(m[1])) == 4) : false;'
+			]
+		},
+		"uc-fw-ipv6": {
+			"desc": "IPv6 address, but accept negation",
+			"code": [
+				'let m = match(value, /^!{0,1}([0-9a-fA-F:.]+)$/);',
+				'return m ? length(iptoarr(m[1])) == 16 : false;'
+			]
+		},
+		"uc-fw-cidr4": {
+			"desc": "IPv4 CIDR, but accepts negation.",
+			"code": [
+				'let m = match(value, /^!{0,1}([0-9.]+)\\/([0-9]+)$/);',
+				'return m ? ((length(iptoarr(m[1])) == 4) && +m[2] <= 32) : false;'
+			]
+		},
+		"uc-fw-cidr6": {
+			"desc": "IPv6 CIDR, but accepts negation.",
+			"code": [
+				'let m = match(value, /^!{0,1}([0-9a-fA-F:.]+)\\/([0-9a-fA-F:.]+)$/);',
+				'return m ? (length(iptoarr(m[1])) == 16 && +m[2] <= 128) : false;'
+			]
+		},
+		"uc-fw-ip4range": {
+			"desc": "IPv4 range, but accepts negation",
+			"code": [
+				'let m = match(value, /^!{0,1}([0-9.]+)-([0-9.]+)$/);',
+				'return m ? (length(iptoarr(m[1])) == 4) && (length(iptoarr(m[2])) == 4) : false;'
+			]
+		},
+		"uc-fw-ip6range": {
+			"desc": "IPv6 range, but accepts negation",
+			"code": [
+				'let m = match(value, /^!{0,1}([0-9a-fA-F:]+)-([0-9a-fA-F:]+)$/);',
+				'return m ? (length(iptoarr(m[1])) == 16 && length(iptoarr(m[2])) == 16) : false;'
+			]
 		}
 	},
 

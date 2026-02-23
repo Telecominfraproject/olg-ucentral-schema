@@ -1,8 +1,8 @@
 {% let name_c = 0, name_m = {}; %}
 high-availability {
     {%
-        if (ha.load_balancing) {
-            include("load-balancing.uc", { location: location + '/load_balancing', lb: ha.load_balancing });
+        if (ha.virtual_servers) {
+            include("virtual-server.uc", { location: location + '/virtual_server', servers: ha.virtual_servers });
         }
     %}
 

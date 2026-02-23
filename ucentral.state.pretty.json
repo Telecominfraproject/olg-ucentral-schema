@@ -403,7 +403,7 @@
         },
         "link-state": {
             "type": "object",
-            "description": "A list of all LLDP peers that this logical interface is connected to.",
+            "description": "The link state of a physical interface.",
             "properties": {
                 "carrier": {
                     "type": "boolean",

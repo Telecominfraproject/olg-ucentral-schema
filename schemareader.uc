@@ -94,6 +94,36 @@ function matchUri(value) {
 	return (length(filter(labels, label => !match(label, /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])$/))) == 0 && length(labels) > 0);
 }
 
+function matchUcFwIpv4(value) {
+	let m = match(value, /^!{0,1}([0-9.]+)$/);
+	return m ? (length(iptoarr(m[1])) == 4) : false;
+}
+
+function matchUcFwIpv6(value) {
+	let m = match(value, /^!{0,1}([0-9a-fA-F:.]+)$/);
+	return m ? length(iptoarr(m[1])) == 16 : false;
+}
+
+function matchUcFwCidr4(value) {
+	let m = match(value, /^!{0,1}([0-9.]+)\/([0-9]+)$/);
+	return m ? ((length(iptoarr(m[1])) == 4) && +m[2] <= 32) : false;
+}
+
+function matchUcFwCidr6(value) {
+	let m = match(value, /^!{0,1}([0-9a-fA-F:.]+)\/([0-9a-fA-F:.]+)$/);
+	return m ? (length(iptoarr(m[1])) == 16 && +m[2] <= 128) : false;
+}
+
+function matchUcFwIp4range(value) {
+	let m = match(value, /^!{0,1}([0-9.]+)-([0-9.]+)$/);
+	return m ? (length(iptoarr(m[1])) == 4) && (length(iptoarr(m[2])) == 4) : false;
+}
+
+function matchUcFwIp6range(value) {
+	let m = match(value, /^!{0,1}([0-9a-fA-F:]+)-([0-9a-fA-F:]+)$/);
+	return m ? (length(iptoarr(m[1])) == 16 && length(iptoarr(m[2])) == 16) : false;
+}
+
 function instantiateUnit(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
@@ -926,11 +956,89 @@ function instantiateFirewallRuleIpv4(location, value, errors) {
 				let obj = {};
 
 				function parseAddress(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchUcIp(value))
-							push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+					function parseVariant0(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIpv4(value))
+								push(errors, [ location, "must be a valid IPv4 address, but accept negation" ]);
 
+						}
+
+						return value;
 					}
+
+					function parseVariant1(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwCidr4(value))
+								push(errors, [ location, "must be a valid IPv4 CIDR, but accepts negation." ]);
+
+						}
+
+						return value;
+					}
+
+					function parseVariant2(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIp4range(value))
+								push(errors, [ location, "must be a valid IPv4 range, but accepts negation" ]);
+
+						}
+
+						return value;
+					}
+
+					let success = 0, tryval, tryerr, vvalue = null, verrors = [];
+
+					tryerr = [];
+					tryval = parseVariant0(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant1(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant2(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					if (success == 0) {
+						if (length(verrors))
+							push(errors, [ location, "must match at least one of the following constraints:\n" + join("\n- or -\n", verrors) ]);
+						else
+							push(errors, [ location, "must match only one variant" ]);
+						return null;
+					}
+
+					value = vvalue;
 
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
@@ -1052,11 +1160,89 @@ function instantiateFirewallRuleIpv4(location, value, errors) {
 				let obj = {};
 
 				function parseAddress(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchUcIp(value))
-							push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+					function parseVariant0(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIpv4(value))
+								push(errors, [ location, "must be a valid IPv4 address, but accept negation" ]);
 
+						}
+
+						return value;
 					}
+
+					function parseVariant1(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwCidr4(value))
+								push(errors, [ location, "must be a valid IPv4 CIDR, but accepts negation." ]);
+
+						}
+
+						return value;
+					}
+
+					function parseVariant2(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIp4range(value))
+								push(errors, [ location, "must be a valid IPv4 range, but accepts negation" ]);
+
+						}
+
+						return value;
+					}
+
+					let success = 0, tryval, tryerr, vvalue = null, verrors = [];
+
+					tryerr = [];
+					tryval = parseVariant0(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant1(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant2(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					if (success == 0) {
+						if (length(verrors))
+							push(errors, [ location, "must match at least one of the following constraints:\n" + join("\n- or -\n", verrors) ]);
+						else
+							push(errors, [ location, "must match only one variant" ]);
+						return null;
+					}
+
+					value = vvalue;
 
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
@@ -4819,6 +5005,9 @@ function instantiateNatDestinationIpv4(location, value, errors) {
 
 		function parseRuleNumber(location, value, errors) {
 			if (type(value) in [ "int", "double" ]) {
+				if (value > 999999)
+					push(errors, [ location, "must be lower than or equal to 999999" ]);
+
 				if (value < 1)
 					push(errors, [ location, "must be bigger than or equal to 1" ]);
 
@@ -8214,8 +8403,39 @@ function instantiateRoutingRip(location, value, errors) {
 		function parseInterfaces(location, value, errors) {
 			if (type(value) == "array") {
 				function parseItem(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
+					if (type(value) == "object") {
+						let obj = {};
+
+						function parseName(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						if (exists(value, "name")) {
+							obj.name = parseName(location + "/name", value["name"], errors);
+						}
+
+						function parsePassive(location, value, errors) {
+							if (type(value) != "bool")
+								push(errors, [ location, "must be of type boolean" ]);
+
+							return value;
+						}
+
+						if (exists(value, "passive")) {
+							obj.passive = parsePassive(location + "/passive", value["passive"], errors);
+						}
+						else {
+							obj.passive = false;
+						}
+
+						return obj;
+					}
+
+					if (type(value) != "object")
+						push(errors, [ location, "must be of type object" ]);
 
 					return value;
 				}
@@ -8231,28 +8451,6 @@ function instantiateRoutingRip(location, value, errors) {
 
 		if (exists(value, "interfaces")) {
 			obj.interfaces = parseInterfaces(location + "/interfaces", value["interfaces"], errors);
-		}
-
-		function parsePassiveInterfaces(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "passive-interfaces")) {
-			obj.passive_interfaces = parsePassiveInterfaces(location + "/passive-interfaces", value["passive-interfaces"], errors);
 		}
 
 		function parseNeighbors(location, value, errors) {
@@ -11786,18 +11984,26 @@ function instantiateVpnIpsec(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
 
-		function parseInterface(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
+		function parseInterfaces(location, value, errors) {
+			if (type(value) == "array") {
+				function parseItem(location, value, errors) {
+					if (type(value) != "string")
+						push(errors, [ location, "must be of type string" ]);
+
+					return value;
+				}
+
+				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
 
 			return value;
 		}
 
-		if (exists(value, "interface")) {
-			obj.interface = parseInterface(location + "/interface", value["interface"], errors);
-		}
-		else {
-			push(errors, [ location, "is required" ]);
+		if (exists(value, "interfaces")) {
+			obj.interfaces = parseInterfaces(location + "/interfaces", value["interfaces"], errors);
 		}
 
 		function parseIkeGroups(location, value, errors) {
@@ -11859,8 +12065,8 @@ function instantiateVpnIpsec(location, value, errors) {
 									if (type(value) != "string")
 										push(errors, [ location, "must be of type string" ]);
 
-									if (!(value in [ "aes128", "aes256", "aes128gcm", "aes256gcm", "3des" ]))
-										push(errors, [ location, "must be one of \"aes128\", \"aes256\", \"aes128gcm\", \"aes256gcm\" or \"3des\"" ]);
+									if (!(value in [ "aes128", "aes256", "aes128ccm128", "aes256ccm128", "aes256gcm128", "aes128gcm128", "3des" ]))
+										push(errors, [ location, "must be one of \"aes128\", \"aes256\", \"aes128ccm128\", \"aes256ccm128\", \"aes256gcm128\", \"aes128gcm128\" or \"3des\"" ]);
 
 									return value;
 								}
@@ -11893,8 +12099,8 @@ function instantiateVpnIpsec(location, value, errors) {
 									if (type(value) != "int")
 										push(errors, [ location, "must be of type integer" ]);
 
-									if (!(value in [ 2, 14, 15, 16, 19, 20, 21 ]))
-										push(errors, [ location, "must be one of 2, 14, 15, 16, 19, 20 or 21" ]);
+									if (!(value in [ 1, 2, 5, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]))
+										push(errors, [ location, "must be one of 1, 2, 5, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 or 31" ]);
 
 									return value;
 								}
@@ -12096,8 +12302,8 @@ function instantiateVpnIpsec(location, value, errors) {
 									if (type(value) != "string")
 										push(errors, [ location, "must be of type string" ]);
 
-									if (!(value in [ "aes128", "aes256", "aes128gcm", "aes256gcm", "3des" ]))
-										push(errors, [ location, "must be one of \"aes128\", \"aes256\", \"aes128gcm\", \"aes256gcm\" or \"3des\"" ]);
+									if (!(value in [ "aes128", "aes256", "aes128ccm128", "aes256ccm128", "aes256gcm128", "aes128gcm128", "3des" ]))
+										push(errors, [ location, "must be one of \"aes128\", \"aes256\", \"aes128ccm128\", \"aes256ccm128\", \"aes256gcm128\", \"aes128gcm128\" or \"3des\"" ]);
 
 									return value;
 								}
@@ -12222,11 +12428,8 @@ function instantiateVpnIpsec(location, value, errors) {
 		if (exists(value, "authentication")) {
 			obj.authentication = parseAuthentication(location + "/authentication", value["authentication"], errors);
 		}
-		else {
-			push(errors, [ location, "is required" ]);
-		}
 
-		function parsePeers(location, value, errors) {
+		function parseRemoteAccess(location, value, errors) {
 			if (type(value) == "array") {
 				function parseItem(location, value, errors) {
 					if (type(value) == "object") {
@@ -12262,9 +12465,6 @@ function instantiateVpnIpsec(location, value, errors) {
 						if (exists(value, "local-address")) {
 							obj.local_address = parseLocalAddress(location + "/local-address", value["local-address"], errors);
 						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
 
 						function parseRemoteAddress(location, value, errors) {
 							if (type(value) == "string") {
@@ -12281,9 +12481,6 @@ function instantiateVpnIpsec(location, value, errors) {
 
 						if (exists(value, "remote-address")) {
 							obj.remote_address = parseRemoteAddress(location + "/remote-address", value["remote-address"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
 						}
 
 						function parseLocalId(location, value, errors) {
@@ -12353,75 +12550,48 @@ function instantiateVpnIpsec(location, value, errors) {
 							obj.connection_type = "none";
 						}
 
-						function parseTunnels(location, value, errors) {
-							if (type(value) == "array") {
-								function parseItem(location, value, errors) {
-									if (type(value) == "object") {
-										let obj = {};
-
-										function parseLocalPrefix(location, value, errors) {
-											if (type(value) == "string") {
-												if (!matchUcCidr4(value))
-													push(errors, [ location, "must be a valid IPv4 CIDR" ]);
-
-											}
-
-											if (type(value) != "string")
-												push(errors, [ location, "must be of type string" ]);
-
-											return value;
-										}
-
-										if (exists(value, "local-prefix")) {
-											obj.local_prefix = parseLocalPrefix(location + "/local-prefix", value["local-prefix"], errors);
-										}
-										else {
-											push(errors, [ location, "is required" ]);
-										}
-
-										function parseRemotePrefix(location, value, errors) {
-											if (type(value) == "string") {
-												if (!matchUcCidr4(value))
-													push(errors, [ location, "must be a valid IPv4 CIDR" ]);
-
-											}
-
-											if (type(value) != "string")
-												push(errors, [ location, "must be of type string" ]);
-
-											return value;
-										}
-
-										if (exists(value, "remote-prefix")) {
-											obj.remote_prefix = parseRemotePrefix(location + "/remote-prefix", value["remote-prefix"], errors);
-										}
-										else {
-											push(errors, [ location, "is required" ]);
-										}
-
-										return obj;
-									}
-
-									if (type(value) != "object")
-										push(errors, [ location, "must be of type object" ]);
-
-									return value;
-								}
-
-								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-							}
-
-							if (type(value) != "array")
-								push(errors, [ location, "must be of type array" ]);
+						function parseCaCert(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
 
 							return value;
 						}
 
-						if (exists(value, "tunnels")) {
-							obj.tunnels = parseTunnels(location + "/tunnels", value["tunnels"], errors);
+						if (exists(value, "ca-cert")) {
+							obj.ca_cert = parseCaCert(location + "/ca-cert", value["ca-cert"], errors);
 						}
-						else {
-							push(errors, [ location, "is required" ]);
+
+						function parseServerCert(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						if (exists(value, "server-cert")) {
+							obj.server_cert = parseServerCert(location + "/server-cert", value["server-cert"], errors);
+						}
+
+						function parseDhcpInterface(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						if (exists(value, "dhcp-interface")) {
+							obj.dhcp_interface = parseDhcpInterface(location + "/dhcp-interface", value["dhcp-interface"], errors);
+						}
+
+						function parsePool(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						if (exists(value, "pool")) {
+							obj.pool = parsePool(location + "/pool", value["pool"], errors);
 						}
 
 						return obj;
@@ -12442,27 +12612,11 @@ function instantiateVpnIpsec(location, value, errors) {
 			return value;
 		}
 
-		if (exists(value, "peers")) {
-			obj.peers = parsePeers(location + "/peers", value["peers"], errors);
-		}
-		else {
-			push(errors, [ location, "is required" ]);
+		if (exists(value, "remote-access")) {
+			obj.remote_access = parseRemoteAccess(location + "/remote-access", value["remote-access"], errors);
 		}
 
-		return obj;
-	}
-
-	if (type(value) != "object")
-		push(errors, [ location, "must be of type object" ]);
-
-	return value;
-}
-
-function instantiateVpnOpenvpn(location, value, errors) {
-	if (type(value) == "object") {
-		let obj = {};
-
-		function parseServers(location, value, errors) {
+		function parsePools(location, value, errors) {
 			if (type(value) == "array") {
 				function parseItem(location, value, errors) {
 					if (type(value) == "object") {
@@ -12478,93 +12632,8 @@ function instantiateVpnOpenvpn(location, value, errors) {
 						if (exists(value, "name")) {
 							obj.name = parseName(location + "/name", value["name"], errors);
 						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
 
-						function parseMode(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							if (!(value in [ "site-to-site", "server" ]))
-								push(errors, [ location, "must be one of \"site-to-site\" or \"server\"" ]);
-
-							return value;
-						}
-
-						if (exists(value, "mode")) {
-							obj.mode = parseMode(location + "/mode", value["mode"], errors);
-						}
-
-						function parsePersistentTunnel(location, value, errors) {
-							if (type(value) != "bool")
-								push(errors, [ location, "must be of type boolean" ]);
-
-							return value;
-						}
-
-						if (exists(value, "persistent-tunnel")) {
-							obj.persistent_tunnel = parsePersistentTunnel(location + "/persistent-tunnel", value["persistent-tunnel"], errors);
-						}
-						else {
-							obj.persistent_tunnel = false;
-						}
-
-						function parseProtocol(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							if (!(value in [ "udp", "tcp" ]))
-								push(errors, [ location, "must be one of \"udp\" or \"tcp\"" ]);
-
-							return value;
-						}
-
-						if (exists(value, "protocol")) {
-							obj.protocol = parseProtocol(location + "/protocol", value["protocol"], errors);
-						}
-						else {
-							obj.protocol = "udp";
-						}
-
-						function parseAddress(location, value, errors) {
-							if (type(value) == "string") {
-								if (!matchUcIp(value))
-									push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
-
-							}
-
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "address")) {
-							obj.address = parseAddress(location + "/address", value["address"], errors);
-						}
-
-						function parsePort(location, value, errors) {
-							if (type(value) in [ "int", "double" ]) {
-								if (value > 65535)
-									push(errors, [ location, "must be lower than or equal to 65535" ]);
-
-							}
-
-							if (type(value) != "int")
-								push(errors, [ location, "must be of type integer" ]);
-
-							return value;
-						}
-
-						if (exists(value, "port")) {
-							obj.port = parsePort(location + "/port", value["port"], errors);
-						}
-						else {
-							obj.port = 1194;
-						}
-
-						function parseSubnet(location, value, errors) {
+						function parsePrefix(location, value, errors) {
 							if (type(value) == "string") {
 								if (!matchUcCidr(value))
 									push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
@@ -12577,179 +12646,8 @@ function instantiateVpnOpenvpn(location, value, errors) {
 							return value;
 						}
 
-						if (exists(value, "subnet")) {
-							obj.subnet = parseSubnet(location + "/subnet", value["subnet"], errors);
-						}
-
-						function parseEncryption(location, value, errors) {
-							if (type(value) == "object") {
-								let obj = {};
-
-								function parseCipher(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									if (!(value in [ "none", "3des", "aes128", "aes128gcm", "aes192", "aes192gcm", "aes256", "aes256gcm" ]))
-										push(errors, [ location, "must be one of \"none\", \"3des\", \"aes128\", \"aes128gcm\", \"aes192\", \"aes192gcm\", \"aes256\" or \"aes256gcm\"" ]);
-
-									return value;
-								}
-
-								if (exists(value, "cipher")) {
-									obj.cipher = parseCipher(location + "/cipher", value["cipher"], errors);
-								}
-
-								function parseDataCiphers(location, value, errors) {
-									if (type(value) == "array") {
-										function parseItem(location, value, errors) {
-											if (type(value) != "string")
-												push(errors, [ location, "must be of type string" ]);
-
-											if (!(value in [ "none", "3des", "aes128", "aes128gcm", "aes192", "aes192gcm", "aes256", "aes256gcm" ]))
-												push(errors, [ location, "must be one of \"none\", \"3des\", \"aes128\", \"aes128gcm\", \"aes192\", \"aes192gcm\", \"aes256\" or \"aes256gcm\"" ]);
-
-											return value;
-										}
-
-										return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-									}
-
-									if (type(value) != "array")
-										push(errors, [ location, "must be of type array" ]);
-
-									return value;
-								}
-
-								if (exists(value, "data-ciphers")) {
-									obj.data_ciphers = parseDataCiphers(location + "/data-ciphers", value["data-ciphers"], errors);
-								}
-
-								return obj;
-							}
-
-							if (type(value) != "object")
-								push(errors, [ location, "must be of type object" ]);
-
-							return value;
-						}
-
-						if (exists(value, "encryption")) {
-							obj.encryption = parseEncryption(location + "/encryption", value["encryption"], errors);
-						}
-
-						function parseHash(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							if (!(value in [ "md5", "sha1", "sha256", "sha384", "sha512" ]))
-								push(errors, [ location, "must be one of \"md5\", \"sha1\", \"sha256\", \"sha384\" or \"sha512\"" ]);
-
-							return value;
-						}
-
-						if (exists(value, "hash")) {
-							obj.hash = parseHash(location + "/hash", value["hash"], errors);
-						}
-
-						function parseTls(location, value, errors) {
-							if (type(value) == "object") {
-								let obj = {};
-
-								function parseCaCert(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								if (exists(value, "ca-cert")) {
-									obj.ca_cert = parseCaCert(location + "/ca-cert", value["ca-cert"], errors);
-								}
-
-								function parseCert(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								if (exists(value, "cert")) {
-									obj.cert = parseCert(location + "/cert", value["cert"], errors);
-								}
-
-								function parseDh(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								if (exists(value, "dh")) {
-									obj.dh = parseDh(location + "/dh", value["dh"], errors);
-								}
-
-								return obj;
-							}
-
-							if (type(value) != "object")
-								push(errors, [ location, "must be of type object" ]);
-
-							return value;
-						}
-
-						if (exists(value, "tls")) {
-							obj.tls = parseTls(location + "/tls", value["tls"], errors);
-						}
-
-						function parseTopology(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							if (!(value in [ "subnet", "point-to-point" ]))
-								push(errors, [ location, "must be one of \"subnet\" or \"point-to-point\"" ]);
-
-							return value;
-						}
-
-						if (exists(value, "topology")) {
-							obj.topology = parseTopology(location + "/topology", value["topology"], errors);
-						}
-
-						function parseDomain(location, value, errors) {
-							if (type(value) == "string") {
-								if (!matchHostname(value))
-									push(errors, [ location, "must be a valid hostname" ]);
-
-							}
-
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "domain")) {
-							obj.domain = parseDomain(location + "/domain", value["domain"], errors);
-						}
-
-						function parseMaxConnections(location, value, errors) {
-							if (type(value) in [ "int", "double" ]) {
-								if (value > 4096)
-									push(errors, [ location, "must be lower than or equal to 4096" ]);
-
-								if (value < 1)
-									push(errors, [ location, "must be bigger than or equal to 1" ]);
-
-							}
-
-							if (type(value) != "int")
-								push(errors, [ location, "must be of type integer" ]);
-
-							return value;
-						}
-
-						if (exists(value, "max-connections")) {
-							obj.max_connections = parseMaxConnections(location + "/max-connections", value["max-connections"], errors);
+						if (exists(value, "prefix")) {
+							obj.prefix = parsePrefix(location + "/prefix", value["prefix"], errors);
 						}
 
 						function parseNameServer(location, value, errors) {
@@ -12769,79 +12667,6 @@ function instantiateVpnOpenvpn(location, value, errors) {
 							obj.name_server = parseNameServer(location + "/name-server", value["name-server"], errors);
 						}
 
-						function parseClients(location, value, errors) {
-							if (type(value) == "array") {
-								function parseItem(location, value, errors) {
-									if (type(value) == "object") {
-										let obj = {};
-
-										function parseAddress(location, value, errors) {
-											if (type(value) == "string") {
-												if (!matchUcIp(value))
-													push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
-
-											}
-
-											if (type(value) != "string")
-												push(errors, [ location, "must be of type string" ]);
-
-											return value;
-										}
-
-										if (exists(value, "address")) {
-											obj.address = parseAddress(location + "/address", value["address"], errors);
-										}
-
-										function parseSubnet(location, value, errors) {
-											if (type(value) == "string") {
-												if (!matchUcCidr(value))
-													push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
-
-											}
-
-											if (type(value) != "string")
-												push(errors, [ location, "must be of type string" ]);
-
-											return value;
-										}
-
-										if (exists(value, "subnet")) {
-											obj.subnet = parseSubnet(location + "/subnet", value["subnet"], errors);
-										}
-
-										function parseCert(location, value, errors) {
-											if (type(value) != "string")
-												push(errors, [ location, "must be of type string" ]);
-
-											return value;
-										}
-
-										if (exists(value, "cert")) {
-											obj.cert = parseCert(location + "/cert", value["cert"], errors);
-										}
-
-										return obj;
-									}
-
-									if (type(value) != "object")
-										push(errors, [ location, "must be of type object" ]);
-
-									return value;
-								}
-
-								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-							}
-
-							if (type(value) != "array")
-								push(errors, [ location, "must be of type array" ]);
-
-							return value;
-						}
-
-						if (exists(value, "clients")) {
-							obj.clients = parseClients(location + "/clients", value["clients"], errors);
-						}
-
 						return obj;
 					}
 
@@ -12860,319 +12685,11 @@ function instantiateVpnOpenvpn(location, value, errors) {
 			return value;
 		}
 
-		if (exists(value, "servers")) {
-			obj.servers = parseServers(location + "/servers", value["servers"], errors);
+		if (exists(value, "pools")) {
+			obj.pools = parsePools(location + "/pools", value["pools"], errors);
 		}
-
-		function parseClients(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseInterface(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "interface")) {
-							obj.interface = parseInterface(location + "/interface", value["interface"], errors);
-						}
-
-						function parseAuthentication(location, value, errors) {
-							if (type(value) == "object") {
-								let obj = {};
-
-								function parseUsername(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								if (exists(value, "username")) {
-									obj.username = parseUsername(location + "/username", value["username"], errors);
-								}
-
-								function parsePassword(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								if (exists(value, "password")) {
-									obj.password = parsePassword(location + "/password", value["password"], errors);
-								}
-
-								return obj;
-							}
-
-							if (type(value) != "object")
-								push(errors, [ location, "must be of type object" ]);
-
-							return value;
-						}
-
-						if (exists(value, "authentication")) {
-							obj.authentication = parseAuthentication(location + "/authentication", value["authentication"], errors);
-						}
-
-						function parseMode(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							if (!(value in [ "site-to-site", "client" ]))
-								push(errors, [ location, "must be one of \"site-to-site\" or \"client\"" ]);
-
-							return value;
-						}
-
-						if (exists(value, "mode")) {
-							obj.mode = parseMode(location + "/mode", value["mode"], errors);
-						}
-
-						function parseEncryption(location, value, errors) {
-							if (type(value) == "object") {
-								let obj = {};
-
-								function parseCipher(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									if (!(value in [ "none", "3des", "aes128", "aes128gcm", "aes192", "aes192gcm", "aes256", "aes256gcm" ]))
-										push(errors, [ location, "must be one of \"none\", \"3des\", \"aes128\", \"aes128gcm\", \"aes192\", \"aes192gcm\", \"aes256\" or \"aes256gcm\"" ]);
-
-									return value;
-								}
-
-								if (exists(value, "cipher")) {
-									obj.cipher = parseCipher(location + "/cipher", value["cipher"], errors);
-								}
-
-								function parseDataCiphers(location, value, errors) {
-									if (type(value) == "array") {
-										function parseItem(location, value, errors) {
-											if (type(value) != "string")
-												push(errors, [ location, "must be of type string" ]);
-
-											if (!(value in [ "none", "3des", "aes128", "aes128gcm", "aes192", "aes192gcm", "aes256", "aes256gcm" ]))
-												push(errors, [ location, "must be one of \"none\", \"3des\", \"aes128\", \"aes128gcm\", \"aes192\", \"aes192gcm\", \"aes256\" or \"aes256gcm\"" ]);
-
-											return value;
-										}
-
-										return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-									}
-
-									if (type(value) != "array")
-										push(errors, [ location, "must be of type array" ]);
-
-									return value;
-								}
-
-								if (exists(value, "data-ciphers")) {
-									obj.data_ciphers = parseDataCiphers(location + "/data-ciphers", value["data-ciphers"], errors);
-								}
-
-								return obj;
-							}
-
-							if (type(value) != "object")
-								push(errors, [ location, "must be of type object" ]);
-
-							return value;
-						}
-
-						if (exists(value, "encryption")) {
-							obj.encryption = parseEncryption(location + "/encryption", value["encryption"], errors);
-						}
-
-						function parseHash(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							if (!(value in [ "md5", "sha1", "sha256", "sha384", "sha512" ]))
-								push(errors, [ location, "must be one of \"md5\", \"sha1\", \"sha256\", \"sha384\" or \"sha512\"" ]);
-
-							return value;
-						}
-
-						if (exists(value, "hash")) {
-							obj.hash = parseHash(location + "/hash", value["hash"], errors);
-						}
-
-						function parsePersistentTunnel(location, value, errors) {
-							if (type(value) != "bool")
-								push(errors, [ location, "must be of type boolean" ]);
-
-							return value;
-						}
-
-						if (exists(value, "persistent-tunnel")) {
-							obj.persistent_tunnel = parsePersistentTunnel(location + "/persistent-tunnel", value["persistent-tunnel"], errors);
-						}
-						else {
-							obj.persistent_tunnel = false;
-						}
-
-						function parsePersistKey(location, value, errors) {
-							if (type(value) != "bool")
-								push(errors, [ location, "must be of type boolean" ]);
-
-							return value;
-						}
-
-						if (exists(value, "persist-key")) {
-							obj.persist_key = parsePersistKey(location + "/persist-key", value["persist-key"], errors);
-						}
-						else {
-							obj.persist_key = false;
-						}
-
-						function parseRemoteHost(location, value, errors) {
-							if (type(value) == "string") {
-								if (!matchUcIp(value))
-									push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
-
-							}
-
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "remote-host")) {
-							obj.remote_host = parseRemoteHost(location + "/remote-host", value["remote-host"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseRemotePort(location, value, errors) {
-							if (type(value) in [ "int", "double" ]) {
-								if (value > 65535)
-									push(errors, [ location, "must be lower than or equal to 65535" ]);
-
-							}
-
-							if (type(value) != "int")
-								push(errors, [ location, "must be of type integer" ]);
-
-							return value;
-						}
-
-						if (exists(value, "remote-port")) {
-							obj.remote_port = parseRemotePort(location + "/remote-port", value["remote-port"], errors);
-						}
-						else {
-							obj.remote_port = 1194;
-						}
-
-						function parseProtocol(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							if (!(value in [ "udp", "tcp" ]))
-								push(errors, [ location, "must be one of \"udp\" or \"tcp\"" ]);
-
-							return value;
-						}
-
-						if (exists(value, "protocol")) {
-							obj.protocol = parseProtocol(location + "/protocol", value["protocol"], errors);
-						}
-						else {
-							obj.protocol = "udp";
-						}
-
-						function parseTls(location, value, errors) {
-							if (type(value) == "object") {
-								let obj = {};
-
-								function parseCaCert(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								if (exists(value, "ca-cert")) {
-									obj.ca_cert = parseCaCert(location + "/ca-cert", value["ca-cert"], errors);
-								}
-
-								function parseCert(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								if (exists(value, "cert")) {
-									obj.cert = parseCert(location + "/cert", value["cert"], errors);
-								}
-
-								function parsePrivateKey(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								if (exists(value, "private-key")) {
-									obj.private_key = parsePrivateKey(location + "/private-key", value["private-key"], errors);
-								}
-
-								return obj;
-							}
-
-							if (type(value) != "object")
-								push(errors, [ location, "must be of type object" ]);
-
-							return value;
-						}
-
-						if (exists(value, "tls")) {
-							obj.tls = parseTls(location + "/tls", value["tls"], errors);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "clients")) {
-			obj.clients = parseClients(location + "/clients", value["clients"], errors);
+		else {
+			push(errors, [ location, "is required" ]);
 		}
 
 		return obj;
@@ -13184,7 +12701,7 @@ function instantiateVpnOpenvpn(location, value, errors) {
 	return value;
 }
 
-function instantiateVpnWireguard(location, value, errors) {
+function instantiateVpnOpenvpn(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
 
@@ -13208,6 +12725,816 @@ function instantiateVpnWireguard(location, value, errors) {
 							push(errors, [ location, "is required" ]);
 						}
 
+						function parseMode(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							if (!(value in [ "site-to-site", "server", "client" ]))
+								push(errors, [ location, "must be one of \"site-to-site\", \"server\" or \"client\"" ]);
+
+							return value;
+						}
+
+						if (exists(value, "mode")) {
+							obj.mode = parseMode(location + "/mode", value["mode"], errors);
+						}
+						else {
+							push(errors, [ location, "is required" ]);
+						}
+
+						function parseProtocol(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							if (!(value in [ "udp", "tcp-passive", "tcp-active" ]))
+								push(errors, [ location, "must be one of \"udp\", \"tcp-passive\" or \"tcp-active\"" ]);
+
+							return value;
+						}
+
+						if (exists(value, "protocol")) {
+							obj.protocol = parseProtocol(location + "/protocol", value["protocol"], errors);
+						}
+						else {
+							obj.protocol = "udp";
+						}
+
+						function parsePersistentTunnel(location, value, errors) {
+							if (type(value) != "bool")
+								push(errors, [ location, "must be of type boolean" ]);
+
+							return value;
+						}
+
+						if (exists(value, "persistent-tunnel")) {
+							obj.persistent_tunnel = parsePersistentTunnel(location + "/persistent-tunnel", value["persistent-tunnel"], errors);
+						}
+						else {
+							obj.persistent_tunnel = false;
+						}
+
+						function parseSiteToSite(location, value, errors) {
+							if (type(value) == "object") {
+								let obj = {};
+
+								function parseLocalAddress(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchUcIp(value))
+											push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "local-address")) {
+									obj.local_address = parseLocalAddress(location + "/local-address", value["local-address"], errors);
+								}
+								else {
+									push(errors, [ location, "is required" ]);
+								}
+
+								function parseLocalPort(location, value, errors) {
+									if (type(value) in [ "int", "double" ]) {
+										if (value > 65535)
+											push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+									}
+
+									if (type(value) != "int")
+										push(errors, [ location, "must be of type integer" ]);
+
+									return value;
+								}
+
+								if (exists(value, "local-port")) {
+									obj.local_port = parseLocalPort(location + "/local-port", value["local-port"], errors);
+								}
+
+								function parseRemoteAddress(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchUcIp(value))
+											push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "remote-address")) {
+									obj.remote_address = parseRemoteAddress(location + "/remote-address", value["remote-address"], errors);
+								}
+								else {
+									push(errors, [ location, "is required" ]);
+								}
+
+								function parseRemotePort(location, value, errors) {
+									if (type(value) in [ "int", "double" ]) {
+										if (value > 65535)
+											push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+									}
+
+									if (type(value) != "int")
+										push(errors, [ location, "must be of type integer" ]);
+
+									return value;
+								}
+
+								if (exists(value, "remote-port")) {
+									obj.remote_port = parseRemotePort(location + "/remote-port", value["remote-port"], errors);
+								}
+
+								function parseTls(location, value, errors) {
+									if (type(value) == "object") {
+										let obj = {};
+
+										function parseCert(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "cert")) {
+											obj.cert = parseCert(location + "/cert", value["cert"], errors);
+										}
+
+										function parsePeerFingerprint(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "peer-fingerprint")) {
+											obj.peer_fingerprint = parsePeerFingerprint(location + "/peer-fingerprint", value["peer-fingerprint"], errors);
+										}
+
+										function parseRole(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											if (!(value in [ "active", "passive" ]))
+												push(errors, [ location, "must be one of \"active\" or \"passive\"" ]);
+
+											return value;
+										}
+
+										if (exists(value, "role")) {
+											obj.role = parseRole(location + "/role", value["role"], errors);
+										}
+										else {
+											push(errors, [ location, "is required" ]);
+										}
+
+										return obj;
+									}
+
+									if (type(value) != "object")
+										push(errors, [ location, "must be of type object" ]);
+
+									return value;
+								}
+
+								if (exists(value, "tls")) {
+									obj.tls = parseTls(location + "/tls", value["tls"], errors);
+								}
+
+								return obj;
+							}
+
+							if (type(value) != "object")
+								push(errors, [ location, "must be of type object" ]);
+
+							return value;
+						}
+
+						if (exists(value, "site-to-site")) {
+							obj.site_to_site = parseSiteToSite(location + "/site-to-site", value["site-to-site"], errors);
+						}
+
+						function parseServer(location, value, errors) {
+							if (type(value) == "object") {
+								let obj = {};
+
+								function parseListenAddress(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchUcIp(value))
+											push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "listen-address")) {
+									obj.listen_address = parseListenAddress(location + "/listen-address", value["listen-address"], errors);
+								}
+								else {
+									push(errors, [ location, "is required" ]);
+								}
+
+								function parseListenPort(location, value, errors) {
+									if (type(value) in [ "int", "double" ]) {
+										if (value > 65535)
+											push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+									}
+
+									if (type(value) != "int")
+										push(errors, [ location, "must be of type integer" ]);
+
+									return value;
+								}
+
+								if (exists(value, "listen-port")) {
+									obj.listen_port = parseListenPort(location + "/listen-port", value["listen-port"], errors);
+								}
+								else {
+									obj.listen_port = 1194;
+								}
+
+								function parseSubnet(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchUcCidr(value))
+											push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "subnet")) {
+									obj.subnet = parseSubnet(location + "/subnet", value["subnet"], errors);
+								}
+
+								function parseEncryption(location, value, errors) {
+									if (type(value) == "object") {
+										let obj = {};
+
+										function parseCipher(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											if (!(value in [ "none", "3des", "aes128", "aes128gcm", "aes192", "aes192gcm", "aes256", "aes256gcm" ]))
+												push(errors, [ location, "must be one of \"none\", \"3des\", \"aes128\", \"aes128gcm\", \"aes192\", \"aes192gcm\", \"aes256\" or \"aes256gcm\"" ]);
+
+											return value;
+										}
+
+										if (exists(value, "cipher")) {
+											obj.cipher = parseCipher(location + "/cipher", value["cipher"], errors);
+										}
+
+										function parseDataCiphers(location, value, errors) {
+											if (type(value) == "array") {
+												function parseItem(location, value, errors) {
+													if (type(value) != "string")
+														push(errors, [ location, "must be of type string" ]);
+
+													if (!(value in [ "none", "3des", "aes128", "aes128gcm", "aes192", "aes192gcm", "aes256", "aes256gcm" ]))
+														push(errors, [ location, "must be one of \"none\", \"3des\", \"aes128\", \"aes128gcm\", \"aes192\", \"aes192gcm\", \"aes256\" or \"aes256gcm\"" ]);
+
+													return value;
+												}
+
+												return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+											}
+
+											if (type(value) != "array")
+												push(errors, [ location, "must be of type array" ]);
+
+											return value;
+										}
+
+										if (exists(value, "data-ciphers")) {
+											obj.data_ciphers = parseDataCiphers(location + "/data-ciphers", value["data-ciphers"], errors);
+										}
+
+										return obj;
+									}
+
+									if (type(value) != "object")
+										push(errors, [ location, "must be of type object" ]);
+
+									return value;
+								}
+
+								if (exists(value, "encryption")) {
+									obj.encryption = parseEncryption(location + "/encryption", value["encryption"], errors);
+								}
+								else {
+									push(errors, [ location, "is required" ]);
+								}
+
+								function parseHash(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									if (!(value in [ "md5", "sha1", "sha256", "sha384", "sha512" ]))
+										push(errors, [ location, "must be one of \"md5\", \"sha1\", \"sha256\", \"sha384\" or \"sha512\"" ]);
+
+									return value;
+								}
+
+								if (exists(value, "hash")) {
+									obj.hash = parseHash(location + "/hash", value["hash"], errors);
+								}
+
+								function parseTls(location, value, errors) {
+									if (type(value) == "object") {
+										let obj = {};
+
+										function parseCaCert(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "ca-cert")) {
+											obj.ca_cert = parseCaCert(location + "/ca-cert", value["ca-cert"], errors);
+										}
+
+										function parseCert(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "cert")) {
+											obj.cert = parseCert(location + "/cert", value["cert"], errors);
+										}
+
+										function parseDh(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "dh")) {
+											obj.dh = parseDh(location + "/dh", value["dh"], errors);
+										}
+
+										return obj;
+									}
+
+									if (type(value) != "object")
+										push(errors, [ location, "must be of type object" ]);
+
+									return value;
+								}
+
+								if (exists(value, "tls")) {
+									obj.tls = parseTls(location + "/tls", value["tls"], errors);
+								}
+
+								function parseTopology(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									if (!(value in [ "subnet", "point-to-point" ]))
+										push(errors, [ location, "must be one of \"subnet\" or \"point-to-point\"" ]);
+
+									return value;
+								}
+
+								if (exists(value, "topology")) {
+									obj.topology = parseTopology(location + "/topology", value["topology"], errors);
+								}
+								else {
+									obj.topology = "subnet";
+								}
+
+								function parseDomain(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchHostname(value))
+											push(errors, [ location, "must be a valid hostname" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "domain")) {
+									obj.domain = parseDomain(location + "/domain", value["domain"], errors);
+								}
+
+								function parseMaxConnections(location, value, errors) {
+									if (type(value) in [ "int", "double" ]) {
+										if (value > 4096)
+											push(errors, [ location, "must be lower than or equal to 4096" ]);
+
+										if (value < 1)
+											push(errors, [ location, "must be bigger than or equal to 1" ]);
+
+									}
+
+									if (type(value) != "int")
+										push(errors, [ location, "must be of type integer" ]);
+
+									return value;
+								}
+
+								if (exists(value, "max-connections")) {
+									obj.max_connections = parseMaxConnections(location + "/max-connections", value["max-connections"], errors);
+								}
+
+								function parseNameServer(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchUcIp(value))
+											push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "name-server")) {
+									obj.name_server = parseNameServer(location + "/name-server", value["name-server"], errors);
+								}
+
+								function parseClients(location, value, errors) {
+									if (type(value) == "array") {
+										function parseItem(location, value, errors) {
+											if (type(value) == "object") {
+												let obj = {};
+
+												function parseAddress(location, value, errors) {
+													if (type(value) == "string") {
+														if (!matchUcIp(value))
+															push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+													}
+
+													if (type(value) != "string")
+														push(errors, [ location, "must be of type string" ]);
+
+													return value;
+												}
+
+												if (exists(value, "address")) {
+													obj.address = parseAddress(location + "/address", value["address"], errors);
+												}
+
+												function parseSubnet(location, value, errors) {
+													if (type(value) == "string") {
+														if (!matchUcCidr(value))
+															push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
+
+													}
+
+													if (type(value) != "string")
+														push(errors, [ location, "must be of type string" ]);
+
+													return value;
+												}
+
+												if (exists(value, "subnet")) {
+													obj.subnet = parseSubnet(location + "/subnet", value["subnet"], errors);
+												}
+
+												return obj;
+											}
+
+											if (type(value) != "object")
+												push(errors, [ location, "must be of type object" ]);
+
+											return value;
+										}
+
+										return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+									}
+
+									if (type(value) != "array")
+										push(errors, [ location, "must be of type array" ]);
+
+									return value;
+								}
+
+								if (exists(value, "clients")) {
+									obj.clients = parseClients(location + "/clients", value["clients"], errors);
+								}
+
+								return obj;
+							}
+
+							if (type(value) != "object")
+								push(errors, [ location, "must be of type object" ]);
+
+							return value;
+						}
+
+						if (exists(value, "server")) {
+							obj.server = parseServer(location + "/server", value["server"], errors);
+						}
+
+						function parseClient(location, value, errors) {
+							if (type(value) == "object") {
+								let obj = {};
+
+								function parseServerAddress(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchUcIp(value))
+											push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "server-address")) {
+									obj.server_address = parseServerAddress(location + "/server-address", value["server-address"], errors);
+								}
+								else {
+									push(errors, [ location, "is required" ]);
+								}
+
+								function parseServerPort(location, value, errors) {
+									if (type(value) in [ "int", "double" ]) {
+										if (value > 65535)
+											push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+									}
+
+									if (type(value) != "int")
+										push(errors, [ location, "must be of type integer" ]);
+
+									return value;
+								}
+
+								if (exists(value, "server-port")) {
+									obj.server_port = parseServerPort(location + "/server-port", value["server-port"], errors);
+								}
+								else {
+									obj.server_port = 1194;
+								}
+
+								function parseAuthentication(location, value, errors) {
+									if (type(value) == "object") {
+										let obj = {};
+
+										function parseUsername(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "username")) {
+											obj.username = parseUsername(location + "/username", value["username"], errors);
+										}
+
+										function parsePassword(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "password")) {
+											obj.password = parsePassword(location + "/password", value["password"], errors);
+										}
+
+										return obj;
+									}
+
+									if (type(value) != "object")
+										push(errors, [ location, "must be of type object" ]);
+
+									return value;
+								}
+
+								if (exists(value, "authentication")) {
+									obj.authentication = parseAuthentication(location + "/authentication", value["authentication"], errors);
+								}
+
+								function parseEncryption(location, value, errors) {
+									if (type(value) == "object") {
+										let obj = {};
+
+										function parseCipher(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											if (!(value in [ "none", "3des", "aes128", "aes128gcm", "aes192", "aes192gcm", "aes256", "aes256gcm" ]))
+												push(errors, [ location, "must be one of \"none\", \"3des\", \"aes128\", \"aes128gcm\", \"aes192\", \"aes192gcm\", \"aes256\" or \"aes256gcm\"" ]);
+
+											return value;
+										}
+
+										if (exists(value, "cipher")) {
+											obj.cipher = parseCipher(location + "/cipher", value["cipher"], errors);
+										}
+
+										function parseDataCiphers(location, value, errors) {
+											if (type(value) == "array") {
+												function parseItem(location, value, errors) {
+													if (type(value) != "string")
+														push(errors, [ location, "must be of type string" ]);
+
+													if (!(value in [ "none", "3des", "aes128", "aes128gcm", "aes192", "aes192gcm", "aes256", "aes256gcm" ]))
+														push(errors, [ location, "must be one of \"none\", \"3des\", \"aes128\", \"aes128gcm\", \"aes192\", \"aes192gcm\", \"aes256\" or \"aes256gcm\"" ]);
+
+													return value;
+												}
+
+												return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+											}
+
+											if (type(value) != "array")
+												push(errors, [ location, "must be of type array" ]);
+
+											return value;
+										}
+
+										if (exists(value, "data-ciphers")) {
+											obj.data_ciphers = parseDataCiphers(location + "/data-ciphers", value["data-ciphers"], errors);
+										}
+
+										return obj;
+									}
+
+									if (type(value) != "object")
+										push(errors, [ location, "must be of type object" ]);
+
+									return value;
+								}
+
+								if (exists(value, "encryption")) {
+									obj.encryption = parseEncryption(location + "/encryption", value["encryption"], errors);
+								}
+
+								function parseHash(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									if (!(value in [ "md5", "sha1", "sha256", "sha384", "sha512" ]))
+										push(errors, [ location, "must be one of \"md5\", \"sha1\", \"sha256\", \"sha384\" or \"sha512\"" ]);
+
+									return value;
+								}
+
+								if (exists(value, "hash")) {
+									obj.hash = parseHash(location + "/hash", value["hash"], errors);
+								}
+
+								function parsePersistKey(location, value, errors) {
+									if (type(value) != "bool")
+										push(errors, [ location, "must be of type boolean" ]);
+
+									return value;
+								}
+
+								if (exists(value, "persist-key")) {
+									obj.persist_key = parsePersistKey(location + "/persist-key", value["persist-key"], errors);
+								}
+								else {
+									obj.persist_key = false;
+								}
+
+								function parseTls(location, value, errors) {
+									if (type(value) == "object") {
+										let obj = {};
+
+										function parseCaCert(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "ca-cert")) {
+											obj.ca_cert = parseCaCert(location + "/ca-cert", value["ca-cert"], errors);
+										}
+
+										function parseCert(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "cert")) {
+											obj.cert = parseCert(location + "/cert", value["cert"], errors);
+										}
+
+										function parsePrivateKey(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "private-key")) {
+											obj.private_key = parsePrivateKey(location + "/private-key", value["private-key"], errors);
+										}
+
+										return obj;
+									}
+
+									if (type(value) != "object")
+										push(errors, [ location, "must be of type object" ]);
+
+									return value;
+								}
+
+								if (exists(value, "tls")) {
+									obj.tls = parseTls(location + "/tls", value["tls"], errors);
+								}
+
+								return obj;
+							}
+
+							if (type(value) != "object")
+								push(errors, [ location, "must be of type object" ]);
+
+							return value;
+						}
+
+						if (exists(value, "client")) {
+							obj.client = parseClient(location + "/client", value["client"], errors);
+						}
+
+						return obj;
+					}
+
+					if (type(value) != "object")
+						push(errors, [ location, "must be of type object" ]);
+
+					return value;
+				}
+
+				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
+
+			return value;
+		}
+
+		if (exists(value, "interfaces")) {
+			obj.interfaces = parseInterfaces(location + "/interfaces", value["interfaces"], errors);
+		}
+
+		return obj;
+	}
+
+	if (type(value) != "object")
+		push(errors, [ location, "must be of type object" ]);
+
+	return value;
+}
+
+function instantiateVpnWireguard(location, value, errors) {
+	if (type(value) == "object") {
+		let obj = {};
+
+		function parseInterfaces(location, value, errors) {
+			if (type(value) == "array") {
+				function parseItem(location, value, errors) {
+					if (type(value) == "object") {
+						let obj = {};
+
+						function parseProto(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							if (value != "wireguard-overlay")
+								push(errors, [ location, "must have value \"wireguard-overlay\"" ]);
+
+							return value;
+						}
+
+						if (exists(value, "proto")) {
+							obj.proto = parseProto(location + "/proto", value["proto"], errors);
+						}
+
 						function parsePrivateKey(location, value, errors) {
 							if (type(value) != "string")
 								push(errors, [ location, "must be of type string" ]);
@@ -13218,31 +13545,14 @@ function instantiateVpnWireguard(location, value, errors) {
 						if (exists(value, "private-key")) {
 							obj.private_key = parsePrivateKey(location + "/private-key", value["private-key"], errors);
 						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
 
-						function parseAddress(location, value, errors) {
-							if (type(value) == "string") {
-								if (!matchUcCidr(value))
-									push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
-
-							}
-
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "address")) {
-							obj.address = parseAddress(location + "/address", value["address"], errors);
-						}
-
-						function parsePort(location, value, errors) {
+						function parsePeerPort(location, value, errors) {
 							if (type(value) in [ "int", "double" ]) {
 								if (value > 65535)
 									push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+								if (value < 1)
+									push(errors, [ location, "must be bigger than or equal to 1" ]);
 
 							}
 
@@ -13252,14 +13562,110 @@ function instantiateVpnWireguard(location, value, errors) {
 							return value;
 						}
 
-						if (exists(value, "port")) {
-							obj.port = parsePort(location + "/port", value["port"], errors);
+						if (exists(value, "peer-port")) {
+							obj.peer_port = parsePeerPort(location + "/peer-port", value["peer-port"], errors);
 						}
 						else {
-							obj.port = 51820;
+							obj.peer_port = 3456;
 						}
 
-						function parsePeers(location, value, errors) {
+						function parsePeerExchangePort(location, value, errors) {
+							if (type(value) in [ "int", "double" ]) {
+								if (value > 65535)
+									push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+								if (value < 1)
+									push(errors, [ location, "must be bigger than or equal to 1" ]);
+
+							}
+
+							if (type(value) != "int")
+								push(errors, [ location, "must be of type integer" ]);
+
+							return value;
+						}
+
+						if (exists(value, "peer-exchange-port")) {
+							obj.peer_exchange_port = parsePeerExchangePort(location + "/peer-exchange-port", value["peer-exchange-port"], errors);
+						}
+						else {
+							obj.peer_exchange_port = 3458;
+						}
+
+						function parseRootNode(location, value, errors) {
+							if (type(value) == "object") {
+								let obj = {};
+
+								function parseKey(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "key")) {
+									obj.key = parseKey(location + "/key", value["key"], errors);
+								}
+
+								function parseEndpoint(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchUcIp(value))
+											push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "endpoint")) {
+									obj.endpoint = parseEndpoint(location + "/endpoint", value["endpoint"], errors);
+								}
+
+								function parseIpaddr(location, value, errors) {
+									if (type(value) == "array") {
+										function parseItem(location, value, errors) {
+											if (type(value) == "string") {
+												if (!matchUcCidr(value))
+													push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
+
+											}
+
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+									}
+
+									if (type(value) != "array")
+										push(errors, [ location, "must be of type array" ]);
+
+									return value;
+								}
+
+								if (exists(value, "ipaddr")) {
+									obj.ipaddr = parseIpaddr(location + "/ipaddr", value["ipaddr"], errors);
+								}
+
+								return obj;
+							}
+
+							if (type(value) != "object")
+								push(errors, [ location, "must be of type object" ]);
+
+							return value;
+						}
+
+						if (exists(value, "root-node")) {
+							obj.root_node = parseRootNode(location + "/root-node", value["root-node"], errors);
+						}
+
+						function parseHosts(location, value, errors) {
 							if (type(value) == "array") {
 								function parseItem(location, value, errors) {
 									if (type(value) == "object") {
@@ -13275,25 +13681,36 @@ function instantiateVpnWireguard(location, value, errors) {
 										if (exists(value, "name")) {
 											obj.name = parseName(location + "/name", value["name"], errors);
 										}
-										else {
-											push(errors, [ location, "is required" ]);
-										}
 
-										function parsePublicKey(location, value, errors) {
+										function parseKey(location, value, errors) {
 											if (type(value) != "string")
 												push(errors, [ location, "must be of type string" ]);
 
 											return value;
 										}
 
-										if (exists(value, "public-key")) {
-											obj.public_key = parsePublicKey(location + "/public-key", value["public-key"], errors);
-										}
-										else {
-											push(errors, [ location, "is required" ]);
+										if (exists(value, "key")) {
+											obj.key = parseKey(location + "/key", value["key"], errors);
 										}
 
-										function parseAllowedIps(location, value, errors) {
+										function parseEndpoint(location, value, errors) {
+											if (type(value) == "string") {
+												if (!matchUcIp(value))
+													push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+											}
+
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "endpoint")) {
+											obj.endpoint = parseEndpoint(location + "/endpoint", value["endpoint"], errors);
+										}
+
+										function parseSubnet(location, value, errors) {
 											if (type(value) == "array") {
 												function parseItem(location, value, errors) {
 													if (type(value) == "string") {
@@ -13317,18 +13734,13 @@ function instantiateVpnWireguard(location, value, errors) {
 											return value;
 										}
 
-										if (exists(value, "allowed-ips")) {
-											obj.allowed_ips = parseAllowedIps(location + "/allowed-ips", value["allowed-ips"], errors);
-										}
-										else {
-											push(errors, [ location, "is required" ]);
+										if (exists(value, "subnet")) {
+											obj.subnet = parseSubnet(location + "/subnet", value["subnet"], errors);
 										}
 
-										function parseEndpoint(location, value, errors) {
-											if (type(value) == "object") {
-												let obj = {};
-
-												function parseAddress(location, value, errors) {
+										function parseIpaddr(location, value, errors) {
+											if (type(value) == "array") {
+												function parseItem(location, value, errors) {
 													if (type(value) == "string") {
 														if (!matchUcIp(value))
 															push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
@@ -13341,55 +13753,17 @@ function instantiateVpnWireguard(location, value, errors) {
 													return value;
 												}
 
-												if (exists(value, "address")) {
-													obj.address = parseAddress(location + "/address", value["address"], errors);
-												}
-												else {
-													push(errors, [ location, "is required" ]);
-												}
-
-												function parsePort(location, value, errors) {
-													if (type(value) in [ "int", "double" ]) {
-														if (value > 65535)
-															push(errors, [ location, "must be lower than or equal to 65535" ]);
-
-													}
-
-													if (type(value) != "int")
-														push(errors, [ location, "must be of type integer" ]);
-
-													return value;
-												}
-
-												if (exists(value, "port")) {
-													obj.port = parsePort(location + "/port", value["port"], errors);
-												}
-												else {
-													obj.port = 51820;
-												}
-
-												return obj;
+												return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
 											}
 
-											if (type(value) != "object")
-												push(errors, [ location, "must be of type object" ]);
+											if (type(value) != "array")
+												push(errors, [ location, "must be of type array" ]);
 
 											return value;
 										}
 
-										if (exists(value, "endpoint")) {
-											obj.endpoint = parseEndpoint(location + "/endpoint", value["endpoint"], errors);
-										}
-
-										function parsePersistentKeepalive(location, value, errors) {
-											if (type(value) != "int")
-												push(errors, [ location, "must be of type integer" ]);
-
-											return value;
-										}
-
-										if (exists(value, "persistent-keepalive")) {
-											obj.persistent_keepalive = parsePersistentKeepalive(location + "/persistent-keepalive", value["persistent-keepalive"], errors);
+										if (exists(value, "ipaddr")) {
+											obj.ipaddr = parseIpaddr(location + "/ipaddr", value["ipaddr"], errors);
 										}
 
 										return obj;
@@ -13410,8 +13784,8 @@ function instantiateVpnWireguard(location, value, errors) {
 							return value;
 						}
 
-						if (exists(value, "peers")) {
-							obj.peers = parsePeers(location + "/peers", value["peers"], errors);
+						if (exists(value, "hosts")) {
+							obj.hosts = parseHosts(location + "/hosts", value["hosts"], errors);
 						}
 
 						return obj;

@@ -1,0 +1,16 @@
+{
+	"uuid": 1765963993,
+    "services": {
+		"igmp-proxy": {
+            "upstream-interface": "eth0",
+            "downstream-interfaces": [
+                "eth1",
+                "eth2"
+            ],
+            "alt-subnets": [
+                "10.0.0.0/8",
+                "192.168.0.0/16"
+            ]
+        }
+    }
+}
