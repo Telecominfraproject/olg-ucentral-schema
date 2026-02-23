@@ -65,17 +65,67 @@ try {
 		if (!state) {
 			error = 2;
 		} else {
-			let op_arg = {};
+			// Generate VyOS config in curly-brace format
 			let vyos_config_payload = vyos.vyos_render(state);
-			op_arg.string = vyos_config_payload;
+			printf("DEBUG: Generated VyOS config (%d bytes)\n", length(vyos_config_payload));
 
-			let op = "load";
-			let rc = vyos_api.vyos_api_call(op_arg, op, host, key);
+			// Save generated config for debugging
+			let config_file = fs.open("/tmp/vyos-generated-config.txt", "w");
+			if (config_file) {
+				config_file.write(vyos_config_payload);
+				config_file.close();
+				printf("DEBUG: Config saved to /tmp/vyos-generated-config.txt\n");
+			}
 
-			if (rc != '') rc = json(rc);
+			// Apply configuration using merge approach
+			let apply_result = vyos.vyos_apply_config_merge(vyos_config_payload, host, key);
 
-			if (rc != '' && rc.success == false)
+			if (!apply_result) {
+				printf("ERROR: Failed to apply VyOS configuration\n");
 				error = 1;
+			} else {
+				printf("INFO: VyOS configuration applied successfully\n");
+				error = 0;
+			}
+
+			// Update UCI state config with intervals from uCentral config
+			let uci = require("uci").cursor();
+			let stats_interval = state.metrics?.statistics?.interval || 600;
+			let health_interval = state.metrics?.health?.interval || 120;
+
+			// Enforce 60-second minimum per schema
+			if (stats_interval < 60) stats_interval = 60;
+			if (health_interval < 60) health_interval = 60;
+
+			uci.set("state", "stats", "stats");
+			uci.set("state", "stats", "interval", "" + stats_interval);
+			uci.set("state", "health", "health");
+			uci.set("state", "health", "interval", "" + health_interval);
+			uci.commit("state");
+
+			// Reload state daemon to pick up new intervals
+			ubus.call("state", "reload");
+
+			// Update symlink for successful applications (error 0 or 1)
+			if (!custom_config) {
+				// Prevent symlink loop: don't create symlink if source is the symlink itself
+				if (ARGV[0] != '/etc/ucentral/ucentral.active') {
+					fs.unlink('/etc/ucentral/ucentral.active');
+					fs.symlink(ARGV[0], '/etc/ucentral/ucentral.active');
+				}
+
+				// Clean up old config files, keeping only the 5 most recent
+				let cfgs = [];
+				for (let k, v in fs.lsdir('/etc/ucentral/'))
+					if (wildcard(v, 'ucentral.cfg.1*', true))
+						push(cfgs, v);
+
+				cfgs = sort(cfgs);
+				while (length(cfgs) >= 5) {
+					fs.unlink('/etc/ucentral/' + cfgs[0]);
+					shift(cfgs);
+				}
+			}
 		}
 
 	} else {

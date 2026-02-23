@@ -3,159 +3,124 @@ push(REQUIRE_SEARCH_PATH,
 	"/usr/lib/ucode/*.so",
 	"/usr/share/ucentral/*.uc");
 
-let ubus = require("ubus");
 let fs = require("fs");
-let default_config = {
-	country: 'US'
-};
-let boardfile = fs.open("/etc/board.json", "r");
-let board = json(boardfile.read("all"));
-boardfile.close();
-let restrictfile = fs.open("/etc/ucentral/restrictions.json", "r");
+let vyos_api = require("vyos.https_server_api");
 
-capa = {
-	'secure-rtty': true,
-	'default-config': true,
-};
-if (restrictfile) {
-	capa.restrictions = json(restrictfile.read("all")) || {};
-	let pipe = fs.popen('fw_printenv developer');
-	let developer = replace(pipe.read("all"), '\n', '');
-	pipe.close();
-	if (developer == 'developer=1')
-		capa.developer = true;
-	else
-		capa.developer = false;
-}
-
+// Read version files (same as AP pattern)
 let version = json(fs.readfile('/etc/ucentral/version.json') || '{}');
 let schema = json(fs.readfile('/etc/ucentral/schema.json') || '{}');
-let version_vendor = json(fs.readfile('/etc/ucentral/version.vendor.json') || '{}');
-let schema_vendor = json(fs.readfile('/etc/ucentral/schema.vendor.json') || '{}');
 
-if (length(version_vendor))
-	version.vendor = version_vendor;
+// Read existing capabilities for fallback (WAN/LAN interface roles)
+let old_caps = json(fs.readfile('/etc/ucentral/capabilities.json') || '{}');
 
-if (length(schema_vendor))
-	schema.vendor = schema_vendor;
-
-ctx = ubus.connect();
-
-if (board.wifi?.country) {
-	let countries = split(board.wifi.country, ' ');
-	default_config.country = countries[0];
-	capa.country_codes = countries;
-} 
-
-if (fs.stat('/tmp/squashfs')) {
-	let pipe = fs.popen('fw_printenv -n country');
-	let country = replace(pipe.read("all"), '\n', '');
-	pipe.close();
-	if (country)
-		default_config.country = country;
-	else
-		system('fw_setenv country ' + default_config.country); 
-	fs.writefile('/etc/ucentral/ucentral.defaults', default_config);
-} else {
-	if (!fs.stat('/certificates/ucentral.defaults')) {
-		fs.writefile('/certificates/ucentral.defaults', default_config);
+// Initialize capabilities with static/fallback values
+let capabilities = {
+	"secure-rtty": true,
+	"compatible": "vyos-olg",
+	"model": "VyOS OLG Gateway",
+	"platform": "olg",
+	"firmware": "VyOS 2025.12.13-0020-rolling",
+	"hostname": "vyos",
+	"version": {
+		"olg": version,
+		"schema": schema
+	},
+	"network": {
+		"wan": old_caps?.network?.wan || ["eth0"],
+		"lan": old_caps?.network?.lan || ["eth1"]
+	},
+	"macaddr": {
+		"wan": "",
+		"lan": ""
+	},
+	"label_macaddr": "",
+	"interfaces": {
+		"ethernet": []
+	},
+	"hardware_offload": {
+		"gro": false,
+		"gso": false,
+		"sg": false,
+		"tso": false
+	},
+	"services": {
+		"https_api": false,
+		"ssh": false,
+		"ntp": false,
+		"dns_forwarding": false,
+		"dhcp_server": false
 	}
-	if (fs.stat('/certificates/ucentral.defaults')) {
-		let defaults = fs.readfile('/certificates/ucentral.defaults');
-		if (json(defaults))
-			default_config = json(defaults);
-	}
-	fs.writefile('/etc/ucentral/ucentral.defaults', default_config);
-}
-capa.country = default_config.country || 'US';
-
-let wifi = require("wifi.phy");
-
-capa.compatible = replace(board.model.id, ',', '_');
-capa.model = board.model.name;
-
-capa.version = {
-	'ap': version,
-	schema
 };
 
-if (board.bridge && board.bridge.name == "switch")
-	capa.platform = "switch";
-else if (length(wifi))
-	capa.platform = "ap";
-else
-	capa.platform = "unknown";
+// Try to query VyOS for dynamic data
+try {
+	// Read VyOS connection info
+	let vyos_info = json(fs.readfile('/etc/ucentral/vyos-info.json') || '{}');
 
-if (board.switch) {
-	capa.switch = [];
-	capa.switch_ports = {};
-	for (let name, s in board.switch) {
-		for (let role in s.roles) {
-			let netdev;
-			let device = { name, lan: [], wan: [] };
-			let ports = split(role.ports, ' ');
-			for (let p in s.ports) {
-				if (!('' + p.num in ports))
-					continue;
-				if (p.device) {
-					netdev = p.device;
-					device.port = p.num;
-				} else if (device[p.role]) {
-					push(device[p.role], p.num)
+	if (vyos_info.host && vyos_info.key) {
+		// Query VyOS for full configuration in JSON format
+		let response = vyos_api.vyos_api_call(
+			{ path: ["configuration", "json"] },
+			"show",
+			vyos_info.host,
+			vyos_info.key
+		);
+
+		let config = json(response);
+
+		if (config && config.success && config.data) {
+			// data is a JSON string, parse it again
+			let data = json(config.data);
+
+			// Extract hostname
+			if (data.system && data.system["host-name"]) {
+				capabilities.hostname = data.system["host-name"];
+			}
+
+			// Extract ethernet interfaces
+			if (data.interfaces && data.interfaces.ethernet) {
+				capabilities.interfaces.ethernet = keys(data.interfaces.ethernet);
+
+				// Extract MAC addresses
+				let wan_if = capabilities.network.wan[0] || "eth0";
+				let lan_if = capabilities.network.lan[0] || "eth1";
+
+				if (data.interfaces.ethernet[wan_if] && data.interfaces.ethernet[wan_if]["hw-id"]) {
+					capabilities.macaddr.wan = data.interfaces.ethernet[wan_if]["hw-id"];
+					capabilities.label_macaddr = data.interfaces.ethernet[wan_if]["hw-id"];
+				}
+
+				if (data.interfaces.ethernet[lan_if] && data.interfaces.ethernet[lan_if]["hw-id"]) {
+					capabilities.macaddr.lan = data.interfaces.ethernet[lan_if]["hw-id"];
+				}
+
+				// Extract hardware offload capabilities (from any interface that has it)
+				for (let ifname in data.interfaces.ethernet) {
+					let iface = data.interfaces.ethernet[ifname];
+					if (iface.offload) {
+						capabilities.hardware_offload.gro = ("gro" in iface.offload);
+						capabilities.hardware_offload.gso = ("gso" in iface.offload);
+						capabilities.hardware_offload.sg = ("sg" in iface.offload);
+						capabilities.hardware_offload.tso = ("tso" in iface.offload);
+						break; // Only need to check one interface
+					}
 				}
 			}
-			if (!length(device.lan))
-				delete device.lan;
-			if (!length(device.wan))
-				delete device.wan;
-			if (netdev) {
-				if (capa.switch_ports[netdev]) {
-					for (let iface in ['lan', 'wan'])
-						if (device[iface])
-							capa.switch_ports[netdev][iface] = device[iface]
-				} else {
-					capa.switch_ports[netdev] = device;
-				}
+
+			// Extract service capabilities
+			if (data.service) {
+				capabilities.services.https_api = (data.service.https && data.service.https.api) ? true : false;
+				capabilities.services.ssh = (data.service.ssh) ? true : false;
+				capabilities.services.ntp = (data.service.ntp) ? true : false;
+				capabilities.services.dns_forwarding = (data.service.dns && data.service.dns.forwarding) ? true : false;
+				capabilities.services.dhcp_server = (data.service["dhcp-server"]) ? true : false;
 			}
 		}
-		push(capa.switch, { name, enable: s.enable, reset: s.reset });
 	}
+} catch (e) {
+	// If VyOS API fails, use fallback values (already initialized)
+	warn("Failed to query VyOS API, using fallback values: " + e + "\n");
 }
 
-function swconfig_ports(device, role) {
-	let netdev = split(device, '.')[0];
-	let switch_dev = capa.switch_ports ? capa.switch_ports[netdev] : null;
-	if (!switch_dev || !switch_dev[role])
-		return [ device ];
-	let rv = [];
-	for (let port in switch_dev[role])
-		push(rv, netdev + ':' + port);
-	return rv;
-}
-
-capa.network = {};
-macs = {};
-for (let k, v in board.network) {
-	if (v.ports)
-		capa.network[k] = v.ports;
-	if (v.device)
-		capa.network[k] = swconfig_ports(v.device, k);
-	if (v.ifname)
-		capa.network[k] = split(replace(v.ifname, /^ */, ''), " ");
-	if (v.macaddr)
-		macs[k] = v.macaddr;
-}
-
-if (length(macs))
-	capa.macaddr = macs;
-
-if (board.system?.label_macaddr)
-	capa.label_macaddr = board.system?.label_macaddr;
-
-if (length(wifi))
-	capa.wifi = wifi;
-
-capa.compress_cmd = true;
-
-fs.writefile('/etc/ucentral/capabilities.json', capa);
-
+// Write capabilities to file
+fs.writefile('/etc/ucentral/capabilities.json', capabilities);
