@@ -360,6 +360,11 @@
                                 {
                                     "format": "uc-fw-ip4range"
                                 }
+                            ],
+                            "examples": [
+                                "!192.168.0.9",
+                                "10.28.3.0/24",
+                                "!10.76.5.98-10.76.5.187"
                             ]
                         },
                         "port": {
@@ -3775,22 +3780,27 @@
                         ]
                     }
                 },
-                "listen-ipv4-address": {
-                    "description": "IPv4 address to listen on as NTP server.",
-                    "type": "string",
-                    "format": "ipv4"
-                },
-                "listen-ipv6-address": {
-                    "description": "IPv6 address to listen on as NTP server.",
-                    "type": "string",
-                    "format": "ipv6"
+                "listen-addresses": {
+                    "description": "List of IP addresses to listen on as NTP server.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uc-ip"
+                    }
                 },
                 "allow-clients": {
                     "description": "Allowed IPv4 or IPv6 address",
                     "type": "array",
                     "items": {
                         "type": "string",
-                        "format": "uc-ip"
+                        "anyOf": [
+                            {
+                                "format": "uc-ip"
+                            },
+                            {
+                                "format": "uc-cidr"
+                            }
+                        ]
                     }
                 }
             }
@@ -3803,7 +3813,23 @@
                     "description": "Interfaces to enable LLDP.",
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Interface name.",
+                                "type": "string"
+                            },
+                            "mode": {
+                                "type": "string",
+                                "enum": [
+                                    "rx-tx",
+                                    "rx",
+                                    "tx",
+                                    "disable"
+                                ],
+                                "default": "rx-tx"
+                            }
+                        }
                     }
                 },
                 "management-addresses": {
@@ -3822,6 +3848,14 @@
             "properties": {
                 "interfaces": {
                     "description": "Interfaces to repeat mDNS between.",
+                    "type": "array",
+                    "minItems": 2,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "allow-services": {
+                    "description": "Services allowed to be repeated",
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -3851,17 +3885,8 @@
                 },
                 "client-ip-pool": {
                     "description": "IP address pool for assigning to PPPoE clients.",
-                    "type": "object",
-                    "properties": {
-                        "start": {
-                            "type": "string",
-                            "format": "ipv4"
-                        },
-                        "stop": {
-                            "type": "string",
-                            "format": "ipv4"
-                        }
-                    }
+                    "type": "string",
+                    "format": "uc-ip4range"
                 },
                 "wins-servers": {
                     "description": "Windows Internet Name Service (WINS) servers propagated to client.",
@@ -3936,7 +3961,7 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "ip": {
+                            "address": {
                                 "description": "IP address that the proxy server listens.",
                                 "type": "string",
                                 "format": "uc-ip"
@@ -3953,7 +3978,7 @@
                             }
                         },
                         "required": [
-                            "ip"
+                            "address"
                         ]
                     }
                 },
@@ -3970,7 +3995,7 @@
                         "format": "hostname"
                     }
                 },
-                "non-cache-domains": {
+                "noncache-domains": {
                     "description": "Allow access to domains without retrieving them from the Proxy cache.",
                     "type": "array",
                     "items": {

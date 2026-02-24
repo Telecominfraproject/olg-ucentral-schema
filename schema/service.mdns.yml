@@ -4,5 +4,11 @@ properties:
   interfaces:
     description: Interfaces to repeat mDNS between.
     type: array
+    minItems: 2
+    items:
+      type: string
+  allow-services:
+    description: Services allowed to be repeated
+    type: array
     items:
       type: string

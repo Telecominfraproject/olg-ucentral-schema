@@ -12,17 +12,18 @@ properties:
     - noauth
   interface:
     description: Interface to listen as PPPoE server.
-    type: string
+    type: array
+    items:
+      type: string
   client-ip-pool:
     description: IP address pool for assigning to PPPoE clients.
     type: object
     properties:
-      start:
+      range:
         type: string
-        format: ipv4
-      stop:
+        format: uc-ip4range
+      name:
         type: string
-        format: ipv4
   wins-servers:
     description: Windows Internet Name Service (WINS) servers propagated to client.
     type: array
@@ -31,7 +32,7 @@ properties:
       type: string
       format: uc-ip
   service-names:
-    description:  Service-Name to respond. If absent, any Service-Name is acceptable and client's Service-Name will be sent back.
+    description: Service-Name to respond. If absent, any Service-Name is acceptable and client's Service-Name will be sent back.
     type: array
     items:
       type: string

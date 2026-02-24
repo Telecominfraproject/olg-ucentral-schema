@@ -318,6 +318,11 @@
                                 {
                                     "format": "uc-fw-ip4range"
                                 }
+                            ],
+                            "examples": [
+                                "!192.168.0.9",
+                                "10.28.3.0/24",
+                                "!10.76.5.98-10.76.5.187"
                             ]
                         },
                         "port": {
@@ -3413,19 +3418,25 @@
                         ]
                     }
                 },
-                "listen-ipv4-address": {
-                    "type": "string",
-                    "format": "ipv4"
-                },
-                "listen-ipv6-address": {
-                    "type": "string",
-                    "format": "ipv6"
+                "listen-addresses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uc-ip"
+                    }
                 },
                 "allow-clients": {
                     "type": "array",
                     "items": {
                         "type": "string",
-                        "format": "uc-ip"
+                        "anyOf": [
+                            {
+                                "format": "uc-ip"
+                            },
+                            {
+                                "format": "uc-cidr"
+                            }
+                        ]
                     }
                 }
             }
@@ -3436,7 +3447,22 @@
                 "interfaces": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "mode": {
+                                "type": "string",
+                                "enum": [
+                                    "rx-tx",
+                                    "rx",
+                                    "tx",
+                                    "disable"
+                                ],
+                                "default": "rx-tx"
+                            }
+                        }
                     }
                 },
                 "management-addresses": {
@@ -3452,6 +3478,13 @@
             "type": "object",
             "properties": {
                 "interfaces": {
+                    "type": "array",
+                    "minItems": 2,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "allow-services": {
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -3474,17 +3507,8 @@
                     "type": "string"
                 },
                 "client-ip-pool": {
-                    "type": "object",
-                    "properties": {
-                        "start": {
-                            "type": "string",
-                            "format": "ipv4"
-                        },
-                        "stop": {
-                            "type": "string",
-                            "format": "ipv4"
-                        }
-                    }
+                    "type": "string",
+                    "format": "uc-ip4range"
                 },
                 "wins-servers": {
                     "type": "array",
@@ -3551,7 +3575,7 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "ip": {
+                            "address": {
                                 "type": "string",
                                 "format": "uc-ip"
                             },
@@ -3565,7 +3589,7 @@
                             }
                         },
                         "required": [
-                            "ip"
+                            "address"
                         ]
                     }
                 },
@@ -3580,7 +3604,7 @@
                         "format": "hostname"
                     }
                 },
-                "non-cache-domains": {
+                "noncache-domains": {
                     "type": "array",
                     "items": {
                         "type": "string",

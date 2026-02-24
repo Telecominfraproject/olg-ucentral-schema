@@ -48,4 +48,6 @@ properties:
     type: array
     items:
       type: string
-      format: uc-ip
+      anyOf:
+        - format: uc-ip
+        - format: uc-cidr

@@ -5,7 +5,15 @@ properties:
     description: Interfaces to enable LLDP.
     type: array
     items:
-      type: string
+      type: object
+      properties:
+        name:
+          description: Interface name.
+          type: string
+        mode:
+          type: string
+          enum: [rx-tx, rx, tx, disable]
+          default: rx-tx
   management-addresses:
     description: Management IP addresses to advertise via LLDP.
     type: array

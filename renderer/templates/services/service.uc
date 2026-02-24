@@ -12,6 +12,24 @@ service {
         if (services.snmp) {
             include("snmp.uc", { location: location + '/snmp', snmp: services.snmp });
         }
+        if (services.ntp) {
+            include("ntp.uc", { location: location + '/ntp', ntp: services.ntp });
+        }
+        if (services.lldp) {
+            include("lldp.uc", { location: location + '/lldp', lldp: services.lldp });
+        }
+        if (services.mdns) {
+            include("mdns.uc", { location: location + '/mdns', mdns: services.mdns });
+        }
+        if (services.pppoe_server) {
+            include("pppoe-server.uc", { location: location + '/pppoe_server', pppoe: services.pppoe_server });
+        }
+        if (services.tftp_server) {
+            include("tftp-server.uc", { location: location + '/tftp_server', tftp: services.tftp_server });
+        }
+        if (services.webproxy) {
+            include("webproxy.uc", { location: location + '/webproxy', wbp: services.webproxy });
+        }
         include("https.uc", { location: location + '/https' });
     %}
 }

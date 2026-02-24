@@ -10,7 +10,7 @@ properties:
     items:
       type: object
       properties:
-        ip:
+        address:
           description: IP address that the proxy server listens.
           type: string
           format: uc-ip
@@ -23,7 +23,7 @@ properties:
           type: boolean
           default: true
       required:
-      - ip
+      - address
   cache-size:
     description: Cache size in MB.
     type: integer
@@ -34,7 +34,7 @@ properties:
     items:
       type: string
       format: hostname
-  non-cache-domains:
+  noncache-domains:
     description: Allow access to domains without retrieving them from the Proxy cache.
     type: array
     items:

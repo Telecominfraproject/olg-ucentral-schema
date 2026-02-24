@@ -10218,41 +10218,7 @@ function instantiateServiceNtp(location, value, errors) {
 			obj.servers = parseServers(location + "/servers", value["servers"], errors);
 		}
 
-		function parseListenIpv4Address(location, value, errors) {
-			if (type(value) == "string") {
-				if (!matchIpv4(value))
-					push(errors, [ location, "must be a valid IPv4 address" ]);
-
-			}
-
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			return value;
-		}
-
-		if (exists(value, "listen-ipv4-address")) {
-			obj.listen_ipv4_address = parseListenIpv4Address(location + "/listen-ipv4-address", value["listen-ipv4-address"], errors);
-		}
-
-		function parseListenIpv6Address(location, value, errors) {
-			if (type(value) == "string") {
-				if (!matchIpv6(value))
-					push(errors, [ location, "must be a valid IPv6 address" ]);
-
-			}
-
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			return value;
-		}
-
-		if (exists(value, "listen-ipv6-address")) {
-			obj.listen_ipv6_address = parseListenIpv6Address(location + "/listen-ipv6-address", value["listen-ipv6-address"], errors);
-		}
-
-		function parseAllowClients(location, value, errors) {
+		function parseListenAddresses(location, value, errors) {
 			if (type(value) == "array") {
 				function parseItem(location, value, errors) {
 					if (type(value) == "string") {
@@ -10260,6 +10226,88 @@ function instantiateServiceNtp(location, value, errors) {
 							push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
 
 					}
+
+					if (type(value) != "string")
+						push(errors, [ location, "must be of type string" ]);
+
+					return value;
+				}
+
+				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
+
+			return value;
+		}
+
+		if (exists(value, "listen-addresses")) {
+			obj.listen_addresses = parseListenAddresses(location + "/listen-addresses", value["listen-addresses"], errors);
+		}
+
+		function parseAllowClients(location, value, errors) {
+			if (type(value) == "array") {
+				function parseItem(location, value, errors) {
+					function parseVariant0(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcIp(value))
+								push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+						}
+
+						return value;
+					}
+
+					function parseVariant1(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcCidr(value))
+								push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
+
+						}
+
+						return value;
+					}
+
+					let success = 0, tryval, tryerr, vvalue = null, verrors = [];
+
+					tryerr = [];
+					tryval = parseVariant0(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant1(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					if (success == 0) {
+						if (length(verrors))
+							push(errors, [ location, "must match at least one of the following constraints:\n" + join("\n- or -\n", verrors) ]);
+						else
+							push(errors, [ location, "must match only one variant" ]);
+						return null;
+					}
+
+					value = vvalue;
 
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
@@ -10296,8 +10344,42 @@ function instantiateServiceLldp(location, value, errors) {
 		function parseInterfaces(location, value, errors) {
 			if (type(value) == "array") {
 				function parseItem(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
+					if (type(value) == "object") {
+						let obj = {};
+
+						function parseName(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						if (exists(value, "name")) {
+							obj.name = parseName(location + "/name", value["name"], errors);
+						}
+
+						function parseMode(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							if (!(value in [ "rx-tx", "rx", "tx", "disable" ]))
+								push(errors, [ location, "must be one of \"rx-tx\", \"rx\", \"tx\" or \"disable\"" ]);
+
+							return value;
+						}
+
+						if (exists(value, "mode")) {
+							obj.mode = parseMode(location + "/mode", value["mode"], errors);
+						}
+						else {
+							obj.mode = "rx-tx";
+						}
+
+						return obj;
+					}
+
+					if (type(value) != "object")
+						push(errors, [ location, "must be of type object" ]);
 
 					return value;
 				}
@@ -10358,6 +10440,9 @@ function instantiateServiceMdns(location, value, errors) {
 
 		function parseInterfaces(location, value, errors) {
 			if (type(value) == "array") {
+				if (length(value) < 2)
+					push(errors, [ location, "must have at least 2 items" ]);
+
 				function parseItem(location, value, errors) {
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
@@ -10376,6 +10461,28 @@ function instantiateServiceMdns(location, value, errors) {
 
 		if (exists(value, "interfaces")) {
 			obj.interfaces = parseInterfaces(location + "/interfaces", value["interfaces"], errors);
+		}
+
+		function parseAllowServices(location, value, errors) {
+			if (type(value) == "array") {
+				function parseItem(location, value, errors) {
+					if (type(value) != "string")
+						push(errors, [ location, "must be of type string" ]);
+
+					return value;
+				}
+
+				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
+
+			return value;
+		}
+
+		if (exists(value, "allow-services")) {
+			obj.allow_services = parseAllowServices(location + "/allow-services", value["allow-services"], errors);
 		}
 
 		return obj;
@@ -10431,48 +10538,14 @@ function instantiateServicePppoeServer(location, value, errors) {
 		}
 
 		function parseClientIpPool(location, value, errors) {
-			if (type(value) == "object") {
-				let obj = {};
+			if (type(value) == "string") {
+				if (!matchUcIp4range(value))
+					push(errors, [ location, "must be a valid IPv4 address range" ]);
 
-				function parseStart(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchIpv4(value))
-							push(errors, [ location, "must be a valid IPv4 address" ]);
-
-					}
-
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					return value;
-				}
-
-				if (exists(value, "start")) {
-					obj.start = parseStart(location + "/start", value["start"], errors);
-				}
-
-				function parseStop(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchIpv4(value))
-							push(errors, [ location, "must be a valid IPv4 address" ]);
-
-					}
-
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					return value;
-				}
-
-				if (exists(value, "stop")) {
-					obj.stop = parseStop(location + "/stop", value["stop"], errors);
-				}
-
-				return obj;
 			}
 
-			if (type(value) != "object")
-				push(errors, [ location, "must be of type object" ]);
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
 
 			return value;
 		}
@@ -10685,7 +10758,7 @@ function instantiateServiceWebProxy(location, value, errors) {
 					if (type(value) == "object") {
 						let obj = {};
 
-						function parseIp(location, value, errors) {
+						function parseAddress(location, value, errors) {
 							if (type(value) == "string") {
 								if (!matchUcIp(value))
 									push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
@@ -10698,8 +10771,8 @@ function instantiateServiceWebProxy(location, value, errors) {
 							return value;
 						}
 
-						if (exists(value, "ip")) {
-							obj.ip = parseIp(location + "/ip", value["ip"], errors);
+						if (exists(value, "address")) {
+							obj.address = parseAddress(location + "/address", value["address"], errors);
 						}
 						else {
 							push(errors, [ location, "is required" ]);
@@ -10800,7 +10873,7 @@ function instantiateServiceWebProxy(location, value, errors) {
 			obj.block_domains = parseBlockDomains(location + "/block-domains", value["block-domains"], errors);
 		}
 
-		function parseNonCacheDomains(location, value, errors) {
+		function parseNoncacheDomains(location, value, errors) {
 			if (type(value) == "array") {
 				function parseItem(location, value, errors) {
 					if (type(value) == "string") {
@@ -10824,8 +10897,8 @@ function instantiateServiceWebProxy(location, value, errors) {
 			return value;
 		}
 
-		if (exists(value, "non-cache-domains")) {
-			obj.non_cache_domains = parseNonCacheDomains(location + "/non-cache-domains", value["non-cache-domains"], errors);
+		if (exists(value, "noncache-domains")) {
+			obj.noncache_domains = parseNoncacheDomains(location + "/noncache-domains", value["noncache-domains"], errors);
 		}
 
 		return obj;
