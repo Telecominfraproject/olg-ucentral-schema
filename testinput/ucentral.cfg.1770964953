@@ -1,82 +1,78 @@
 {
-	"firewall":	{
-		"ipv4-rulesets":	[{
-				"default-action":	"accept",
-				"name":	"lan-wan-ipv4",
-				"rules":	[{
-						"action":	"accept",
-						"destination":	{
-							"address":	"8.8.8.8"
-						},
-						"rule-number":	100,
-						"source":	{
-							"address":	"192.168.4.1-192.168.4.200"
-						}
-					}]
-			}],
-		"zone-policies":	[{
-				"from":	"lan",
-				"ruleset":	"lan-wan-ipv4",
-				"to":	"wan"
-			}],
-		"zones":	[{
-				"default-action":	"accept",
-				"interfaces":	["eth0"],
-				"name":	"wan"
-			}, {
-				"default-action":	"accept",
-				"interfaces":	["eth1"],
-				"name":	"lan"
-			}, {
-				"default-action":	"accept",
-				"local-zone":	true,
-				"name":	"local"
-			}]
-	},
-	"interfaces":	[{
-			"ipv4":	{
-				"address":	["192.168.240.31/24"],
-				"addressing":	"static",
-				"gateway":	"192.168.240.254"
+	"interfaces": [
+		{
+			"ipv4": {
+				"addressing": "dhcp"
 			},
-			"ipv6":	{
-				"addressing":	"none"
-			},
-			"mtu":	1500,
-			"name":	"eth0",
-			"role":	"upstream"
-		}, {
-			"ipv4":	{
-				"address":	["192.168.2.1/24"],
-				"addressing":	"static"
-			},
-			"ipv6":	{
-				"addressing":	"none"
-			},
-			"mtu":	1500,
-			"name":	"eth1",
-			"role":	"downstream"
-		}],
-	"metrics":	{
-		"health":	{
-			"interval":	60
+			"mtu": 1500,
+			"name": "eth2",
+			"role": "upstream",
+			"type": "ethernet"
 		},
-		"statistics":	{
-			"interval":	150
-		}
-	},
-	"system":	{
-		"syslog":	{
-			"local":	[{
-					"facility":	"all",
-					"severity":	"info"
-				}],
-			"marker":	{
-				"enable":	true,
-				"interval":	1200
+		{
+			"ipv4": {
+				"addressing": "dhcp"
 			},
-			"preserve-fqdn":	false
+			"mtu": 1500,
+			"name": "eth3",
+			"role": "upstream",
+			"type": "ethernet"
+		},
+		{
+			"bridge": {
+				"members": [
+					"eth0",
+					"eth1",
+					"eth4",
+					"eth5"
+				],
+				"stp": false
+			},
+			"ipv4": {
+				"address": [
+					"10.28.34.253/24"
+				],
+				"addressing": "static"
+			},
+			"mtu": 1500,
+			"name": "br-lan",
+			"role": "downstream",
+			"type": "bridge"
+		}
+	],
+	"metrics": {
+		"health": {
+			"interval": 60
+		},
+		"statistics": {
+			"interval": 300,
+			"types": []
 		}
 	},
-	"uuid":	1770964953
+	"services": {
+		"dhcp-server": {
+			"networks": [
+				{
+					"name": "Default LAN",
+					"subnets": [
+						{
+							"default-router": "10.28.34.253",
+							"dns-servers": [
+								"10.28.34.253"
+							],
+							"lease-time": 86400,
+							"ranges": [
+								{
+									"start": "10.28.34.100",
+									"stop": "10.28.34.200"
+								}
+							],
+							"subnet": "10.28.34.0/24"
+						}
+					]
+				}
+			]
+		}
+	},
+	"uuid": 1771988004
 }

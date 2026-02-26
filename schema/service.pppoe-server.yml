@@ -10,7 +10,7 @@ properties:
     - radius
     - local
     - noauth
-  interface:
+  interfaces:
     description: Interface to listen as PPPoE server.
     type: array
     items:
@@ -24,6 +24,10 @@ properties:
         format: uc-ip4range
       name:
         type: string
+  gateway-address:
+    description: Gateway address for client.
+    type: string
+    format: uc-ip
   wins-servers:
     description: Windows Internet Name Service (WINS) servers propagated to client.
     type: array
