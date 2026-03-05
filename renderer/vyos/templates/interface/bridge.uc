@@ -47,7 +47,6 @@
 					{% for (let vid in vlan_ids): %}
 				allowed-vlan {{ vid }}
 					{% endfor %}
-				native-vlan 1
 				{% endif %}
 			}
 			{% endfor %}
