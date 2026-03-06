@@ -1,0 +1,21 @@
+{
+    "uuid": 55555555,
+    "nat": {
+		"source-ipv4": [
+			{
+				"rule-number": 283,
+				"outbound-interface": "eth2",
+				"protocol": "icmp",
+				"source": {
+					"address": "10.28.34.150"
+				},
+				"destination": {
+					"address": "8.8.4.4"
+				},
+				"translation": {
+					"address": "192.168.240.34"
+				}
+			}
+        ]
+    }
+}

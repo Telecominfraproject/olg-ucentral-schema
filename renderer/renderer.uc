@@ -2,6 +2,10 @@
 
 "use strict";
 let fs = require("fs");
+
+let capabfile = fs.open("/etc/board.json", "r");
+let capab = capabfile ? json(capabfile.read("all")) : null;
+
 /**
  * Formats a given input value as uci boolean value.
  *
@@ -67,6 +71,25 @@ function tryinclude(path, scope) {
 	}
 }
 
+function discover_ports() {
+	let roles = {
+		upstream: [],
+		downstream: []
+	};
+	if (capab.network) {
+		map(capab.network.wan, (value, index) => {
+			push(roles.upstream, {alias: "WAN" + (index + 1), dev: value});
+		});
+		map(capab.network.lan, (value, index) => {
+			push(roles.downstream, {alias: "LAN" + (index + 1), dev: value});
+		});
+	}
+
+	fs.writefile("/tmp/roles.json", roles);
+
+	return roles;
+}
+
 /**
  * @class uCentral.ethernet
  * @classdesc
@@ -77,214 +100,255 @@ function tryinclude(path, scope) {
 
 /** @lends uCentral.ethernet.prototype */
 
-// let ethernet = {
-// 	ports: discover_ports(),
+let ethernet = {
+	ports: discover_ports(),
 
-// 	reverse_lookup: function(iface) {
-// 		for (let name, dev in this.ports)
-// 			if (dev == iface)
-// 				return name;
-// 		return null;
-// 	},
+	bridge_c: 0,
+	pppoe_c: 0,
+	dummy_c: 0,
+	vtun_c: 0,
+	client_c: 0,
+	wg_c: 0,
+	peer_c: 0,
 
-// 	lookup_port: function(iface) {
-// 		for (let name, dev in this.ports)
-// 			if (dev.netdev == iface)
-// 				return dev;
-// 		return null;
-// 	},
+	interfaces: {},
 
-// 	/**
-// 	 * Get a list of all wireless PHYs for a specific wireless band
-// 	 *
-// 	 * @param {string} band
-// 	 *
-// 	 * @returns {object}
-// 	 * Returns an array of all wireless PHYs for a specific wireless
-// 	 * band.
-// 	 */
-// 	lookup: function(globs) {
-// 		let matched = {};
+	get_iface: function(interface) {
+		return this.interfaces[interface.name] || this.calculate_name(interface);
+	},
 
-// 		for (let glob, tag_state in globs) {
-// 			for (let name, spec in this.ports) {
-// 				if (wildcard(name, glob)) {
-// 					if (spec.netdev)
-// 						matched[spec.netdev] = tag_state;
-// 					else
-// 						warn("Not implemented yet: mapping switch port to netdev");
-// 				}
-// 			}
-// 		}
+	get_iface_by_name: function(name) {
+		return this.interfaces[name];
+	},
 
-// 		return matched;
-// 	},
+	calculate_name: function(interface) {
+		let iface_temp;
+		switch (interface.type) {
+			case "ethernet":
+				this.interfaces[interface.name] = interface.name;
+				return interface.name;
+			case "bridge":
+				iface_temp = "br" + this.bridge_c++;
+				this.interfaces[interface.name] = iface_temp;
+				return iface_temp;
+			case "pppoe":
+				iface_temp = "pppoe" + this.pppoe_c++;
+				this.interfaces[interface.name] = iface_temp;
+				return iface_temp;
+			case "dummy":
+				iface_temp = "dummy" + this.dummy_c++;
+				this.interfaces[interface.name] = iface_temp;
+				return iface_temp;
+			default:
+				return interface.name;
+		}
+	}
 
-// 	lookup_name: function(globs) {
-// 		let matched = {};
+	// reverse_lookup: function(iface) {
+	// 	for (let name, dev in this.ports)
+	// 		if (dev == iface)
+	// 			return name;
+	// 	return null;
+	// },
 
-// 		for (let glob, tag_state in globs){
-// 			for (let name, spec in this.ports){
-// 				if (wildcard(name, glob))
-// 					matched[name] = tag_state;
-// 			}
-// 		}
-// 		return matched;
-// 	},
+	// lookup_port: function(iface) {
+	// 	for (let name, dev in this.ports)
+	// 		if (dev.netdev == iface)
+	// 			return dev;
+	// 	return null;
+	// },
 
-// 	lookup_by_interface_vlan: function(interface, raw) {
-// 		// Gather the glob patterns in all `ethernet: [ { select-ports: ... }]` specs,
-// 		// dedup them and turn them into one global regular expression pattern, then
-// 		// match this pattern against all known system ethernet ports, remember the
-// 		// related netdevs and return them.
-// 		let globs = {};
-// 		map(interface.ethernet, eth => map(eth.select_ports, glob => globs[glob] = eth.vlan_tag));
+	// /**
+	//  * Get a list of all wireless PHYs for a specific wireless band
+	//  *
+	//  * @param {string} band
+	//  *
+	//  * @returns {object}
+	//  * Returns an array of all wireless PHYs for a specific wireless
+	//  * band.
+	//  */
+	// lookup: function(globs) {
+	// 	let matched = {};
 
-// 		let lookup = this.lookup(globs);
-// 		if (raw)
-// 			return lookup;
+	// 	for (let glob, tag_state in globs) {
+	// 		for (let name, spec in this.ports) {
+	// 			if (wildcard(name, glob)) {
+	// 				if (spec.netdev)
+	// 					matched[spec.netdev] = tag_state;
+	// 				else
+	// 					warn("Not implemented yet: mapping switch port to netdev");
+	// 			}
+	// 		}
+	// 	}
 
-// 		let rv = {};
-// 		for (let k, v in lookup) {
-// 			/* tagged swconfig downstream ports are not allowed */
-// 			if (interface.role == 'downstream') {
-// 				if (this.swconfig && this.swconfig[k].switch && v == 'tagged')
-// 					warn('%s:%d - vlan tagging on downstream swconfig ports is not supported', this.swconfig[k]?.switch.name, this.swconfig[k].swconfig);
-// 				else
-// 					rv[k] = v;
-// 				continue;
-// 			}
-// 			/* resolve upstream vlans on swconfig ports */
-// 			if (this.swconfig && interface.role == 'upstream' && interface.vlan.id && this.swconfig[k]?.switch) {
-// 				rv[split(k, '.')[0] + '.' + interface.vlan.id] = 'un-tagged';
-// 				continue;
-// 			}
-// 			rv[k] = v;
-// 		}
-// 		return rv;
-// 	},
+	// 	return matched;
+	// },
 
-// 	switch_by_interface_vlan: function(interface, raw) {
-// 		let ports = this.lookup_by_interface_vlan(interface, true);
-// 		let rv = { ports: "" };
-// 		let cpu_port = 0;
-// 		for (let port, tag in ports) {
-// 			if (!this.swconfig || !this.swconfig[port]?.switch) continue;
-// 			rv.name = this.swconfig[port].switch.name;
-// 			cpu_port = this.swconfig[port].switch.port;
-// 			rv.ports += ' ' + this.swconfig[port].swconfig;
-// 			if (tag != 'un-tagged')
-// 				rv.ports += 't';
-// 		}
-// 		if (!rv.name)
-// 			return null;
-// 		rv.ports = cpu_port + 't' + rv.ports;
+	// lookup_name: function(globs) {
+	// 	let matched = {};
 
-// 		return rv;
-// 	},
+	// 	for (let glob, tag_state in globs){
+	// 		for (let name, spec in this.ports){
+	// 			if (wildcard(name, glob))
+	// 				matched[name] = tag_state;
+	// 		}
+	// 	}
+	// 	return matched;
+	// },
 
-// 	lookup_by_interface_spec: function(interface) {
-// 		return sort(keys(this.lookup_by_interface_vlan(interface)));
-// 	},
+	// lookup_by_interface_vlan: function(interface, raw) {
+	// 	// Gather the glob patterns in all `ethernet: [ { select-ports: ... }]` specs,
+	// 	// dedup them and turn them into one global regular expression pattern, then
+	// 	// match this pattern against all known system ethernet ports, remember the
+	// 	// related netdevs and return them.
+	// 	let globs = {};
+	// 	map(interface.ethernet, eth => map(eth.select_ports, glob => globs[glob] = eth.vlan_tag));
 
-// 	lookup_by_select_ports: function(select_ports) {
-// 		let globs = {};
-// 		map(select_ports, glob => globs[glob] = true);
+	// 	let lookup = this.lookup(globs);
+	// 	if (raw)
+	// 		return lookup;
 
-// 		return sort(keys(this.lookup(globs)));
-// 	},
+	// 	let rv = {};
+	// 	for (let k, v in lookup) {
+	// 		/* tagged swconfig downstream ports are not allowed */
+	// 		if (interface.role == 'downstream') {
+	// 			if (this.swconfig && this.swconfig[k].switch && v == 'tagged')
+	// 				warn('%s:%d - vlan tagging on downstream swconfig ports is not supported', this.swconfig[k]?.switch.name, this.swconfig[k].swconfig);
+	// 			else
+	// 				rv[k] = v;
+	// 			continue;
+	// 		}
+	// 		/* resolve upstream vlans on swconfig ports */
+	// 		if (this.swconfig && interface.role == 'upstream' && interface.vlan.id && this.swconfig[k]?.switch) {
+	// 			rv[split(k, '.')[0] + '.' + interface.vlan.id] = 'un-tagged';
+	// 			continue;
+	// 		}
+	// 		rv[k] = v;
+	// 	}
+	// 	return rv;
+	// },
 
-// 	lookup_name_by_select_ports: function(select_ports) {
-// 		let globs = {};
-// 		map(select_ports, glob => globs[glob] = true);
+	// switch_by_interface_vlan: function(interface, raw) {
+	// 	let ports = this.lookup_by_interface_vlan(interface, true);
+	// 	let rv = { ports: "" };
+	// 	let cpu_port = 0;
+	// 	for (let port, tag in ports) {
+	// 		if (!this.swconfig || !this.swconfig[port]?.switch) continue;
+	// 		rv.name = this.swconfig[port].switch.name;
+	// 		cpu_port = this.swconfig[port].switch.port;
+	// 		rv.ports += ' ' + this.swconfig[port].swconfig;
+	// 		if (tag != 'un-tagged')
+	// 			rv.ports += 't';
+	// 	}
+	// 	if (!rv.name)
+	// 		return null;
+	// 	rv.ports = cpu_port + 't' + rv.ports;
 
-// 		return sort(keys(this.lookup_name(globs)));
-// 	},
+	// 	return rv;
+	// },
 
-// 	lookup_by_ethernet: function(ethernets) {
-// 		let result = [];
+	// lookup_by_interface_spec: function(interface) {
+	// 	return sort(keys(this.lookup_by_interface_vlan(interface)));
+	// },
 
-// 		for (let ethernet in ethernets)
-// 			result = [ ...result,  ...this.lookup_by_select_ports(ethernet.select_ports) ];
-// 		return result;
-// 	},
+	// lookup_by_select_ports: function(select_ports) {
+	// 	let globs = {};
+	// 	map(select_ports, glob => globs[glob] = true);
 
-// 	reserve_port: function(port) {
-// 		delete this.ports[port];
-// 	},
+	// 	return sort(keys(this.lookup(globs)));
+	// },
 
-// 	is_single_config: function(interface) {
-// 		let ipv4_mode = interface.ipv4 ? interface.ipv4.addressing : 'none';
-// 		let ipv6_mode = interface.ipv6 ? interface.ipv6.addressing : 'none';
+	// lookup_name_by_select_ports: function(select_ports) {
+	// 	let globs = {};
+	// 	map(select_ports, glob => globs[glob] = true);
 
-// 		return (
-// 			(ipv4_mode == 'none') || (ipv6_mode == 'none') ||
-// 			(ipv4_mode == 'static' && ipv6_mode == 'static')
-// 		);
-// 	},
+	// 	return sort(keys(this.lookup_name(globs)));
+	// },
 
-// 	calculate_name: function(interface) {
-// 		let vid = interface.vlan.id;
-// 		if (interface.admin_ui)
-// 			return 'admin_ui';
-// 		return (interface.role == 'upstream' ? 'up' : 'down') + interface.index + 'v' + vid;
-// 	},
+	// lookup_by_ethernet: function(ethernets) {
+	// 	let result = [];
 
-// 	calculate_names: function(interface) {
-// 		let name = this.calculate_name(interface);
+	// 	for (let ethernet in ethernets)
+	// 		result = [ ...result,  ...this.lookup_by_select_ports(ethernet.select_ports) ];
+	// 	return result;
+	// },
 
-// 		return this.is_single_config(interface) ? [ name ] : [ name + '_4', name + '_6' ];
-// 	},
+	// reserve_port: function(port) {
+	// 	delete this.ports[port];
+	// },
 
-// 	calculate_ipv4_name: function(interface) {
-// 		let name = this.calculate_name(interface);
+	// is_single_config: function(interface) {
+	// 	let ipv4_mode = interface.ipv4 ? interface.ipv4.addressing : 'none';
+	// 	let ipv6_mode = interface.ipv6 ? interface.ipv6.addressing : 'none';
 
-// 		return this.is_single_config(interface) ? name : name + '_4';
-// 	},
+	// 	return (
+	// 		(ipv4_mode == 'none') || (ipv6_mode == 'none') ||
+	// 		(ipv4_mode == 'static' && ipv6_mode == 'static')
+	// 	);
+	// },
 
-// 	calculate_ipv6_name: function(interface) {
-// 		let name = this.calculate_name(interface);
+	// calculate_name: function(interface) {
+	// 	let vid = interface.vlan.id;
+	// 	if (interface.admin_ui)
+	// 		return 'admin_ui';
+	// 	return (interface.role == 'upstream' ? 'up' : 'down') + interface.index + 'v' + vid;
+	// },
 
-// 		return this.is_single_config(interface) ? name : name + '_6';
-// 	},
+	// calculate_names: function(interface) {
+	// 	let name = this.calculate_name(interface);
 
-// 	has_vlan: function(interface) {
-// 		return interface.vlan && interface.vlan.id;
-// 	},
+	// 	return this.is_single_config(interface) ? [ name ] : [ name + '_4', name + '_6' ];
+	// },
 
-// 	port_vlan: function(interface, port) {
-// 		if (port == "tagged")
-// 			return ':t';
-// 		if (port == "un-tagged")
-// 			return '';
-// 		return ((interface.role == 'upstream') && this.has_vlan(interface)) ? ':t' : '';
-// 	},
+	// calculate_ipv4_name: function(interface) {
+	// 	let name = this.calculate_name(interface);
 
-// 	find_interface: function(role, vid) {
-// 		for (let interface in state.interfaces)
-// 			if (interface.role == role &&
-// 			    interface.vlan?.id == vid)
-// 				return this.calculate_name(interface);
-// 		return '';
-// 	},
+	// 	return this.is_single_config(interface) ? name : name + '_4';
+	// },
 
-// 	get_interface: function(role, vid) {
-// 		for (let interface in state.interfaces)
-// 			if (interface.role == role &&
-// 			    interface.vlan.id == vid)
-// 				return interface;
-// 		return null;
-// 	},
+	// calculate_ipv6_name: function(interface) {
+	// 	let name = this.calculate_name(interface);
 
-// 	get_speed: function(dev) {
-// 		let fp = fs.open(sprintf("/sys/class/net/%s/speed", dev));
-// 		if (!fp)
-// 			return 1000;
-// 		let speed = fp.read("all");
-// 		fp.close();
-// 		return +speed;
-// 	}
-// };
+	// 	return this.is_single_config(interface) ? name : name + '_6';
+	// },
+
+	// has_vlan: function(interface) {
+	// 	return interface.vlan && interface.vlan.id;
+	// },
+
+	// port_vlan: function(interface, port) {
+	// 	if (port == "tagged")
+	// 		return ':t';
+	// 	if (port == "un-tagged")
+	// 		return '';
+	// 	return ((interface.role == 'upstream') && this.has_vlan(interface)) ? ':t' : '';
+	// },
+
+	// find_interface: function(role, vid) {
+	// 	for (let interface in state.interfaces)
+	// 		if (interface.role == role &&
+	// 		    interface.vlan?.id == vid)
+	// 			return this.calculate_name(interface);
+	// 	return '';
+	// },
+
+	// get_interface: function(role, vid) {
+	// 	for (let interface in state.interfaces)
+	// 		if (interface.role == role &&
+	// 		    interface.vlan.id == vid)
+	// 			return interface;
+	// 	return null;
+	// },
+
+	// get_speed: function(dev) {
+	// 	let fp = fs.open(sprintf("/sys/class/net/%s/speed", dev));
+	// 	if (!fp)
+	// 		return 1000;
+	// 	let speed = fp.read("all");
+	// 	fp.close();
+	// 	return +speed;
+	// }
+};
 
 /**
  * @constructs
@@ -310,6 +374,10 @@ return /** @lends uCentral.prototype */ {
 			s,
 			tryinclude,
 			state,
+
+			ethernet,
+
+			location: '/',
 			/**
 			 * Emit a warning message.
 			 *

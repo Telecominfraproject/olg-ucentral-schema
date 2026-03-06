@@ -33,16 +33,21 @@
 		push(up_i, interface);
 	}
 	
+    if (state.interfaces || state.vpn) {
+        include("interfaces.uc", {
+			location: '/interfaces',
+			ethernet: ethernet,
+			interfaces: state.interfaces,
+			vpn: state.vpn ? state.vpn : {}
+		});
+	}
+	
 	if (state.firewall) {
 		include("firewall.uc", { location: '/firewall', firewall: state.firewall });
 	}
 
 	if (state.high_availability) {
 		include("high-availability/high-availability.uc", { location: '/high_availability', ha: state.high_availability})
-	}
-
-    if (state.interfaces || state.vpn) {
-        include("interfaces.uc", { location: '/interfaces', interfaces: state.interfaces, vpn: state.vpn ? state.vpn : {} });
 	}
 
 	if (state.load_balancing) {
@@ -65,15 +70,13 @@
 			include("policy.uc", { location: '/policy', policies: state.routing.policies });
 		}
 		state.services = state.services || {};
-		include(
-			"routing.uc", 
-			{ 
-				location: '/routing', 
-				routing: state.routing,
-				igmp_proxy: state.services.igmp_proxy || {},
-				upstreams: up_i,
-			}
-		);
+
+		include("routing/routing.uc", {
+			location: '/routing',
+			routing: state.routing,
+			upstreams: up_i,
+			igmp_proxy: state.services.igmp_proxy
+		});
 	}
 
 	if (state.qos) {

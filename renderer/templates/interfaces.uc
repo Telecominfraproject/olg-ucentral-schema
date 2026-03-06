@@ -48,7 +48,7 @@ function getVlanIfaceName(type, name, vlanId) {
 
 interfaces {
     {% for (let i in interfaces): %}
-        {% let iface = getIfaceName(i.type, i.name) %}
+        {% let iface = ethernet.get_iface(i) %}
     {{ i.type }} {{ iface }} {
         {% if (i.mac_address): %}
         mac "{{ i.mac_address }}"

@@ -54,9 +54,6 @@ firewall {
                     {% endif %}
                     }
                 {% endif %}
-                {% if (rule.source.negate): %}
-                    negate
-                {% endif %}
                 }
             {% endif %}
 
@@ -80,9 +77,6 @@ firewall {
                         port-group {{ rule.destination.group.port_group }}
                     {% endif %}
                     }
-                {% endif %}
-                {% if (rule.destination.negate): %}
-                    negate
                 {% endif %}
                 }
             {% endif %}
@@ -198,9 +192,6 @@ firewall {
                     {% endif %}
                     }
                 {% endif %}
-                {% if (rule.source.negate): %}
-                    negate
-                {% endif %}
                 }
             {% endif %}
 
@@ -224,9 +215,6 @@ firewall {
                         port-group {{ rule.destination.group.port_group }}
                     {% endif %}
                     }
-                {% endif %}
-                {% if (rule.destination.negate): %}
-                    negate
                 {% endif %}
                 }
             {% endif %}
@@ -323,9 +311,6 @@ firewall {
                 {% if (rule.source.mac_group): %}
                     mac-group {{ rule.source.mac_group }}
                 {% endif %}
-                {% if (rule.source.negate): %}
-                    negate
-                {% endif %}
                 }
             {% endif %}
 
@@ -336,9 +321,6 @@ firewall {
                 {% endif %}
                 {% if (rule.destination.mac_group): %}
                     mac-group {{ rule.destination.mac_group }}
-                {% endif %}
-                {% if (rule.destination.negate): %}
-                    negate
                 {% endif %}
                 }
             {% endif %}
@@ -377,7 +359,7 @@ firewall {
         {% else %}
         member {
             {% for (let i in z.interfaces): %}
-            interface {{ i }}        
+            interface {{ ethernet.get_iface_by_name(i) }}
             {% endfor %}
         }
         {% endif %}

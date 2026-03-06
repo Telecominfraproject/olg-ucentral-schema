@@ -88,7 +88,7 @@ properties:
       required:
         - name
   redistribute:
-    description: Import routes from other sources into OSPF.
+    description: Import routes from other sources into OSPFv3.
     type: object
     properties:
       connected:

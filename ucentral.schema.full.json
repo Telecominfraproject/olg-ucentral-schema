@@ -56,255 +56,9 @@
             }
         },
         "firewall": {
-            "description": "Firewall configuration (zone-based, stateful).",
+            "description": "Firewall configuration (zone-based and chain-based, stateful).",
             "type": "object",
             "properties": {
-                "state-policy": {
-                    "description": "Global connection state policy applied before zone rules.",
-                    "type": "object",
-                    "properties": {
-                        "established": {
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "drop",
-                                "reject"
-                            ],
-                            "default": "accept"
-                        },
-                        "related": {
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "drop",
-                                "reject"
-                            ],
-                            "default": "accept"
-                        },
-                        "invalid": {
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "drop",
-                                "reject"
-                            ],
-                            "default": "drop"
-                        }
-                    }
-                },
-                "groups": {
-                    "type": "array",
-                    "items": {
-                        "description": "Firewall address, port, and MAC groups for reuse in rules.",
-                        "type": "object",
-                        "properties": {
-                            "ipv4-address-groups": {
-                                "description": "Groups of IPv4 addresses.",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "description": "Group name for reference in IPv4 rules.",
-                                            "type": "string"
-                                        },
-                                        "members": {
-                                            "description": "IPv4 addresses.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "anyOf": [
-                                                    {
-                                                        "format": "ipv4"
-                                                    },
-                                                    {
-                                                        "format": "uc-ip4range"
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "name",
-                                        "members"
-                                    ]
-                                }
-                            },
-                            "ipv4-network-groups": {
-                                "description": "Groups of IPv4 networks.",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "description": "Group name for reference in IPv4 rules.",
-                                            "type": "string"
-                                        },
-                                        "members": {
-                                            "description": "IPv4 networks in CIDR notation.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "format": "uc-cidr4",
-                                                "example": "192.168.1.0/24"
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "name",
-                                        "members"
-                                    ]
-                                }
-                            },
-                            "ipv6-address-groups": {
-                                "description": "Groups of IPv6 addresses.",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "description": "Group name for reference in IPv6 rules.",
-                                            "type": "string"
-                                        },
-                                        "members": {
-                                            "description": "IPv6 addresses.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "anyOf": [
-                                                    {
-                                                        "format": "ipv6"
-                                                    },
-                                                    {
-                                                        "format": "uc-ip6range"
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "name",
-                                        "members"
-                                    ]
-                                }
-                            },
-                            "ipv6-network-groups": {
-                                "description": "Groups of IPv6 networks.",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "description": "Group name for reference in IPv6 rules.",
-                                            "type": "string"
-                                        },
-                                        "members": {
-                                            "description": "IPv6 networks in CIDR notation.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "format": "uc-cidr6",
-                                                "example": "2001:db8::/32"
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "name",
-                                        "members"
-                                    ]
-                                }
-                            },
-                            "port-groups": {
-                                "description": "Groups of ports. Shared between IPv4 and IPv6 rulesets.",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "description": "Group name for reference in rules.",
-                                            "type": "string"
-                                        },
-                                        "members": {
-                                            "description": "Ports or port ranges.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": [
-                                                    "integer",
-                                                    "string"
-                                                ],
-                                                "examples": [
-                                                    80,
-                                                    "8080-8090"
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "name",
-                                        "members"
-                                    ]
-                                }
-                            },
-                            "mac-groups": {
-                                "description": "Groups of MAC addresses for bridge firewall rules.",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "description": "Group name for reference in bridge rules.",
-                                            "type": "string"
-                                        },
-                                        "description": {
-                                            "type": "string"
-                                        },
-                                        "members": {
-                                            "description": "MAC addresses.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "format": "uc-mac",
-                                                "example": "98:e7:9a:27:fe:49"
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "name",
-                                        "members"
-                                    ]
-                                }
-                            },
-                            "domain-groups": {
-                                "description": "Groups of domain names. Shared between IPv4 and IPv6 rulesets.",
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "description": "Group name for reference in rules.",
-                                            "type": "string"
-                                        },
-                                        "description": {
-                                            "type": "string"
-                                        },
-                                        "members": {
-                                            "description": "Domain names (resolved dynamically).",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "format": "hostname"
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "name",
-                                        "members"
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                },
                 "ipv4-rulesets": {
                     "type": "array",
                     "items": {
@@ -412,10 +166,6 @@
                                                             "type": "string"
                                                         }
                                                     }
-                                                },
-                                                "negate": {
-                                                    "type": "boolean",
-                                                    "default": false
                                                 }
                                             }
                                         },
@@ -435,6 +185,11 @@
                                                         {
                                                             "format": "uc-fw-ip4range"
                                                         }
+                                                    ],
+                                                    "examples": [
+                                                        "!192.168.0.9",
+                                                        "10.28.3.0/24",
+                                                        "!10.76.5.98-10.76.5.187"
                                                     ]
                                                 },
                                                 "port": {
@@ -455,10 +210,6 @@
                                                             "type": "string"
                                                         }
                                                     }
-                                                },
-                                                "negate": {
-                                                    "type": "boolean",
-                                                    "default": false
                                                 }
                                             }
                                         },
@@ -654,10 +405,6 @@
                                                             "type": "string"
                                                         }
                                                     }
-                                                },
-                                                "negate": {
-                                                    "type": "boolean",
-                                                    "default": false
                                                 }
                                             }
                                         },
@@ -688,10 +435,6 @@
                                                             "type": "string"
                                                         }
                                                     }
-                                                },
-                                                "negate": {
-                                                    "type": "boolean",
-                                                    "default": false
                                                 }
                                             }
                                         },
@@ -855,10 +598,6 @@
                                                 "mac-group": {
                                                     "description": "Reference to MAC address group.",
                                                     "type": "string"
-                                                },
-                                                "negate": {
-                                                    "type": "boolean",
-                                                    "default": false
                                                 }
                                             }
                                         },
@@ -874,10 +613,6 @@
                                                 "mac-group": {
                                                     "description": "Reference to MAC address group.",
                                                     "type": "string"
-                                                },
-                                                "negate": {
-                                                    "type": "boolean",
-                                                    "default": false
                                                 }
                                             }
                                         },
@@ -1716,8 +1451,22 @@
                                     "address": {
                                         "description": "Source IPv4 network.",
                                         "type": "string",
-                                        "format": "uc-cidr4",
-                                        "example": "192.168.1.0/24"
+                                        "anyOf": [
+                                            {
+                                                "format": "uc-fw-ipv4"
+                                            },
+                                            {
+                                                "format": "uc-fw-cidr4"
+                                            },
+                                            {
+                                                "format": "uc-fw-ip4range"
+                                            }
+                                        ],
+                                        "examples": [
+                                            "!192.168.0.9",
+                                            "10.28.3.0/24",
+                                            "!10.76.5.98-10.76.5.187"
+                                        ]
                                     },
                                     "port": {
                                         "description": "Source port or port range.",
@@ -1755,8 +1504,22 @@
                                     "address": {
                                         "description": "Destination IPv4 network.",
                                         "type": "string",
-                                        "format": "uc-cidr4",
-                                        "example": "192.168.1.0/24"
+                                        "anyOf": [
+                                            {
+                                                "format": "uc-fw-ipv4"
+                                            },
+                                            {
+                                                "format": "uc-fw-cidr4"
+                                            },
+                                            {
+                                                "format": "uc-fw-ip4range"
+                                            }
+                                        ],
+                                        "examples": [
+                                            "!192.168.0.9",
+                                            "10.28.3.0/24",
+                                            "!10.76.5.98-10.76.5.187"
+                                        ]
                                     },
                                     "port": {
                                         "description": "Destination port or port range.",
@@ -1849,8 +1612,22 @@
                                     "address": {
                                         "description": "Source IPv4 network.",
                                         "type": "string",
-                                        "format": "uc-cidr4",
-                                        "example": "192.168.1.0/24"
+                                        "anyOf": [
+                                            {
+                                                "format": "uc-fw-ipv4"
+                                            },
+                                            {
+                                                "format": "uc-fw-cidr4"
+                                            },
+                                            {
+                                                "format": "uc-fw-ip4range"
+                                            }
+                                        ],
+                                        "examples": [
+                                            "!192.168.0.9",
+                                            "10.28.3.0/24",
+                                            "!10.76.5.98-10.76.5.187"
+                                        ]
                                     },
                                     "port": {
                                         "description": "Source port or port range.",
@@ -1888,8 +1665,22 @@
                                     "address": {
                                         "description": "Original destination IPv4 network.",
                                         "type": "string",
-                                        "format": "uc-cidr4",
-                                        "example": "192.168.1.0/24"
+                                        "anyOf": [
+                                            {
+                                                "format": "uc-fw-ipv4"
+                                            },
+                                            {
+                                                "format": "uc-fw-cidr4"
+                                            },
+                                            {
+                                                "format": "uc-fw-ip4range"
+                                            }
+                                        ],
+                                        "examples": [
+                                            "!192.168.0.9",
+                                            "10.28.3.0/24",
+                                            "!10.76.5.98-10.76.5.187"
+                                        ]
                                     },
                                     "port": {
                                         "description": "Original destination port or port range.",
@@ -2771,6 +2562,32 @@
                                     "network"
                                 ]
                             }
+                        },
+                        "redistribute": {
+                            "description": "Import routes from other sources into BGP.",
+                            "type": "object",
+                            "properties": {
+                                "connected": {
+                                    "description": "Redistribute directly connected networks.",
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "static": {
+                                    "description": "Redistribute static routes.",
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "ospf": {
+                                    "description": "Redistribute OSPF routes.",
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "rip": {
+                                    "description": "Redistribute RIP routes.",
+                                    "type": "boolean",
+                                    "default": false
+                                }
+                            }
                         }
                     },
                     "required": [
@@ -2785,30 +2602,6 @@
                             "description": "OSPF router identifier. Must be unique within the OSPF domain.",
                             "type": "string",
                             "format": "ipv4"
-                        },
-                        "default-route-options": {
-                            "description": "Options for default route in OSPF.",
-                            "type": "object",
-                            "properties": {
-                                "always-advertise": {
-                                    "description": "Always advertise default route even if not in routing table.",
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "metric-value": {
-                                    "description": "Metric for the default route.",
-                                    "type": "integer"
-                                },
-                                "metric-type": {
-                                    "description": "External metric type. E1 => External cost + Internal OSPF cost E2 => External cost only",
-                                    "type": "string",
-                                    "enum": [
-                                        "E1",
-                                        "E2"
-                                    ],
-                                    "default": "E2"
-                                }
-                            }
                         },
                         "areas": {
                             "description": "OSPF area definitions.",
@@ -2942,6 +2735,11 @@
                                     "description": "Redistribute BGP routes.",
                                     "type": "boolean",
                                     "default": false
+                                },
+                                "rip": {
+                                    "description": "Redistribute RIP routes.",
+                                    "type": "boolean",
+                                    "default": false
                                 }
                             }
                         }
@@ -3069,7 +2867,7 @@
                             }
                         },
                         "redistribute": {
-                            "description": "Import routes from other sources into OSPF.",
+                            "description": "Import routes from other sources into OSPFv3.",
                             "type": "object",
                             "properties": {
                                 "connected": {
@@ -3126,7 +2924,10 @@
                                         "type": "boolean",
                                         "default": false
                                     }
-                                }
+                                },
+                                "required": [
+                                    "name"
+                                ]
                             }
                         },
                         "neighbors": {
@@ -3138,6 +2939,7 @@
                             }
                         },
                         "redistribute": {
+                            "description": "Import routes from other sources into RIP.",
                             "type": "object",
                             "properties": {
                                 "connected": {
@@ -3148,23 +2950,7 @@
                                     "type": "boolean",
                                     "default": false
                                 },
-                                "babel": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
                                 "bgp": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "isis": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "kernel": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "nhrp": {
                                     "type": "boolean",
                                     "default": false
                                 },
@@ -3207,6 +2993,7 @@
                             }
                         },
                         "redistribute": {
+                            "description": "Import routes from other sources into RIPng.",
                             "type": "object",
                             "properties": {
                                 "connected": {
@@ -3217,23 +3004,7 @@
                                     "type": "boolean",
                                     "default": false
                                 },
-                                "babel": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
                                 "bgp": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "isis": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "kernel": {
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "nhrp": {
                                     "type": "boolean",
                                     "default": false
                                 },
@@ -3795,14 +3566,30 @@
                                 "noauth"
                             ]
                         },
-                        "interface": {
+                        "interfaces": {
                             "description": "Interface to listen as PPPoE server.",
-                            "type": "string"
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         },
                         "client-ip-pool": {
                             "description": "IP address pool for assigning to PPPoE clients.",
+                            "type": "object",
+                            "properties": {
+                                "range": {
+                                    "type": "string",
+                                    "format": "uc-ip4range"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "gateway-address": {
+                            "description": "Gateway address for client.",
                             "type": "string",
-                            "format": "uc-ip4range"
+                            "format": "uc-ip"
                         },
                         "wins-servers": {
                             "description": "Windows Internet Name Service (WINS) servers propagated to client.",

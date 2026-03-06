@@ -92,188 +92,6 @@
                 }
             }
         },
-        "firewall.groups": {
-            "type": "object",
-            "properties": {
-                "ipv4-address-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "anyOf": [
-                                        {
-                                            "format": "ipv4"
-                                        },
-                                        {
-                                            "format": "uc-ip4range"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "ipv4-network-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "format": "uc-cidr4",
-                                    "example": "192.168.1.0/24"
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "ipv6-address-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "anyOf": [
-                                        {
-                                            "format": "ipv6"
-                                        },
-                                        {
-                                            "format": "uc-ip6range"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "ipv6-network-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "format": "uc-cidr6",
-                                    "example": "2001:db8::/32"
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "port-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": [
-                                        "integer",
-                                        "string"
-                                    ],
-                                    "examples": [
-                                        80,
-                                        "8080-8090"
-                                    ]
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "mac-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "format": "uc-mac",
-                                    "example": "98:e7:9a:27:fe:49"
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                },
-                "domain-groups": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "members": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "format": "hostname"
-                                }
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "members"
-                        ]
-                    }
-                }
-            }
-        },
         "firewall.rule.ipv4": {
             "type": "object",
             "properties": {
@@ -346,10 +164,6 @@
                                     "type": "string"
                                 }
                             }
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
                         }
                     }
                 },
@@ -368,6 +182,11 @@
                                 {
                                     "format": "uc-fw-ip4range"
                                 }
+                            ],
+                            "examples": [
+                                "!192.168.0.9",
+                                "10.28.3.0/24",
+                                "!10.76.5.98-10.76.5.187"
                             ]
                         },
                         "port": {
@@ -386,10 +205,6 @@
                                     "type": "string"
                                 }
                             }
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
                         }
                     }
                 },
@@ -573,10 +388,6 @@
                                     "type": "string"
                                 }
                             }
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
                         }
                     }
                 },
@@ -604,10 +415,6 @@
                                     "type": "string"
                                 }
                             }
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
                         }
                     }
                 },
@@ -765,10 +572,6 @@
                         },
                         "mac-group": {
                             "type": "string"
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
                         }
                     }
                 },
@@ -782,10 +585,6 @@
                         },
                         "mac-group": {
                             "type": "string"
-                        },
-                        "negate": {
-                            "type": "boolean",
-                            "default": false
                         }
                     }
                 },
@@ -911,44 +710,6 @@
         "firewall": {
             "type": "object",
             "properties": {
-                "state-policy": {
-                    "type": "object",
-                    "properties": {
-                        "established": {
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "drop",
-                                "reject"
-                            ],
-                            "default": "accept"
-                        },
-                        "related": {
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "drop",
-                                "reject"
-                            ],
-                            "default": "accept"
-                        },
-                        "invalid": {
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "drop",
-                                "reject"
-                            ],
-                            "default": "drop"
-                        }
-                    }
-                },
-                "groups": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/firewall.groups"
-                    }
-                },
                 "ipv4-rulesets": {
                     "type": "array",
                     "items": {
@@ -1613,8 +1374,22 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "format": "uc-cidr4",
-                            "example": "192.168.1.0/24"
+                            "anyOf": [
+                                {
+                                    "format": "uc-fw-ipv4"
+                                },
+                                {
+                                    "format": "uc-fw-cidr4"
+                                },
+                                {
+                                    "format": "uc-fw-ip4range"
+                                }
+                            ],
+                            "examples": [
+                                "!192.168.0.9",
+                                "10.28.3.0/24",
+                                "!10.76.5.98-10.76.5.187"
+                            ]
                         },
                         "port": {
                             "type": [
@@ -1648,8 +1423,22 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "format": "uc-cidr4",
-                            "example": "192.168.1.0/24"
+                            "anyOf": [
+                                {
+                                    "format": "uc-fw-ipv4"
+                                },
+                                {
+                                    "format": "uc-fw-cidr4"
+                                },
+                                {
+                                    "format": "uc-fw-ip4range"
+                                }
+                            ],
+                            "examples": [
+                                "!192.168.0.9",
+                                "10.28.3.0/24",
+                                "!10.76.5.98-10.76.5.187"
+                            ]
                         },
                         "port": {
                             "type": [
@@ -1727,8 +1516,22 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "format": "uc-cidr4",
-                            "example": "192.168.1.0/24"
+                            "anyOf": [
+                                {
+                                    "format": "uc-fw-ipv4"
+                                },
+                                {
+                                    "format": "uc-fw-cidr4"
+                                },
+                                {
+                                    "format": "uc-fw-ip4range"
+                                }
+                            ],
+                            "examples": [
+                                "!192.168.0.9",
+                                "10.28.3.0/24",
+                                "!10.76.5.98-10.76.5.187"
+                            ]
                         },
                         "port": {
                             "type": [
@@ -1762,8 +1565,22 @@
                     "properties": {
                         "address": {
                             "type": "string",
-                            "format": "uc-cidr4",
-                            "example": "192.168.1.0/24"
+                            "anyOf": [
+                                {
+                                    "format": "uc-fw-ipv4"
+                                },
+                                {
+                                    "format": "uc-fw-cidr4"
+                                },
+                                {
+                                    "format": "uc-fw-ip4range"
+                                }
+                            ],
+                            "examples": [
+                                "!192.168.0.9",
+                                "10.28.3.0/24",
+                                "!10.76.5.98-10.76.5.187"
+                            ]
                         },
                         "port": {
                             "type": [
@@ -2558,6 +2375,27 @@
                             "network"
                         ]
                     }
+                },
+                "redistribute": {
+                    "type": "object",
+                    "properties": {
+                        "connected": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "static": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "ospf": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "rip": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
                 }
             },
             "required": [
@@ -2570,26 +2408,6 @@
                 "router-id": {
                     "type": "string",
                     "format": "ipv4"
-                },
-                "default-route-options": {
-                    "type": "object",
-                    "properties": {
-                        "always-advertise": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "metric-value": {
-                            "type": "integer"
-                        },
-                        "metric-type": {
-                            "type": "string",
-                            "enum": [
-                                "E1",
-                                "E2"
-                            ],
-                            "default": "E2"
-                        }
-                    }
                 },
                 "areas": {
                     "type": "array",
@@ -2703,6 +2521,10 @@
                             "default": false
                         },
                         "bgp": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "rip": {
                             "type": "boolean",
                             "default": false
                         }
@@ -2868,7 +2690,10 @@
                                 "type": "boolean",
                                 "default": false
                             }
-                        }
+                        },
+                        "required": [
+                            "name"
+                        ]
                     }
                 },
                 "neighbors": {
@@ -2889,23 +2714,7 @@
                             "type": "boolean",
                             "default": false
                         },
-                        "babel": {
-                            "type": "boolean",
-                            "default": false
-                        },
                         "bgp": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "isis": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "kernel": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "nhrp": {
                             "type": "boolean",
                             "default": false
                         },
@@ -2956,23 +2765,7 @@
                             "type": "boolean",
                             "default": false
                         },
-                        "babel": {
-                            "type": "boolean",
-                            "default": false
-                        },
                         "bgp": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "isis": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "kernel": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "nhrp": {
                             "type": "boolean",
                             "default": false
                         },
@@ -3503,12 +3296,27 @@
                         "noauth"
                     ]
                 },
-                "interface": {
-                    "type": "string"
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "client-ip-pool": {
+                    "type": "object",
+                    "properties": {
+                        "range": {
+                            "type": "string",
+                            "format": "uc-ip4range"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "gateway-address": {
                     "type": "string",
-                    "format": "uc-ip4range"
+                    "format": "uc-ip"
                 },
                 "wins-servers": {
                     "type": "array",

@@ -234,654 +234,6 @@ function instantiateGlobals(location, value, errors) {
 	return value;
 }
 
-function instantiateFirewallGroups(location, value, errors) {
-	if (type(value) == "object") {
-		let obj = {};
-
-		function parseIpv4AddressGroups(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseMembers(location, value, errors) {
-							if (type(value) == "array") {
-								function parseItem(location, value, errors) {
-									function parseVariant0(location, value, errors) {
-										if (type(value) == "string") {
-											if (!matchIpv4(value))
-												push(errors, [ location, "must be a valid IPv4 address" ]);
-
-										}
-
-										return value;
-									}
-
-									function parseVariant1(location, value, errors) {
-										if (type(value) == "string") {
-											if (!matchUcIp4range(value))
-												push(errors, [ location, "must be a valid IPv4 address range" ]);
-
-										}
-
-										return value;
-									}
-
-									let success = 0, tryval, tryerr, vvalue = null, verrors = [];
-
-									tryerr = [];
-									tryval = parseVariant0(location, value, tryerr);
-									if (!length(tryerr)) {
-										if (type(vvalue) == "object" && type(tryval) == "object")
-											vvalue = { ...vvalue, ...tryval };
-										else
-											vvalue = tryval;
-
-										success++;
-									}
-									else {
-										push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
-									}
-
-									tryerr = [];
-									tryval = parseVariant1(location, value, tryerr);
-									if (!length(tryerr)) {
-										if (type(vvalue) == "object" && type(tryval) == "object")
-											vvalue = { ...vvalue, ...tryval };
-										else
-											vvalue = tryval;
-
-										success++;
-									}
-									else {
-										push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
-									}
-
-									if (success == 0) {
-										if (length(verrors))
-											push(errors, [ location, "must match at least one of the following constraints:\n" + join("\n- or -\n", verrors) ]);
-										else
-											push(errors, [ location, "must match only one variant" ]);
-										return null;
-									}
-
-									value = vvalue;
-
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-							}
-
-							if (type(value) != "array")
-								push(errors, [ location, "must be of type array" ]);
-
-							return value;
-						}
-
-						if (exists(value, "members")) {
-							obj.members = parseMembers(location + "/members", value["members"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "ipv4-address-groups")) {
-			obj.ipv4_address_groups = parseIpv4AddressGroups(location + "/ipv4-address-groups", value["ipv4-address-groups"], errors);
-		}
-
-		function parseIpv4NetworkGroups(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseMembers(location, value, errors) {
-							if (type(value) == "array") {
-								function parseItem(location, value, errors) {
-									if (type(value) == "string") {
-										if (!matchUcCidr4(value))
-											push(errors, [ location, "must be a valid IPv4 CIDR" ]);
-
-									}
-
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-							}
-
-							if (type(value) != "array")
-								push(errors, [ location, "must be of type array" ]);
-
-							return value;
-						}
-
-						if (exists(value, "members")) {
-							obj.members = parseMembers(location + "/members", value["members"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "ipv4-network-groups")) {
-			obj.ipv4_network_groups = parseIpv4NetworkGroups(location + "/ipv4-network-groups", value["ipv4-network-groups"], errors);
-		}
-
-		function parseIpv6AddressGroups(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseMembers(location, value, errors) {
-							if (type(value) == "array") {
-								function parseItem(location, value, errors) {
-									function parseVariant0(location, value, errors) {
-										if (type(value) == "string") {
-											if (!matchIpv6(value))
-												push(errors, [ location, "must be a valid IPv6 address" ]);
-
-										}
-
-										return value;
-									}
-
-									function parseVariant1(location, value, errors) {
-										if (type(value) == "string") {
-											if (!matchUcIp6range(value))
-												push(errors, [ location, "must be a valid IPv6 address range" ]);
-
-										}
-
-										return value;
-									}
-
-									let success = 0, tryval, tryerr, vvalue = null, verrors = [];
-
-									tryerr = [];
-									tryval = parseVariant0(location, value, tryerr);
-									if (!length(tryerr)) {
-										if (type(vvalue) == "object" && type(tryval) == "object")
-											vvalue = { ...vvalue, ...tryval };
-										else
-											vvalue = tryval;
-
-										success++;
-									}
-									else {
-										push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
-									}
-
-									tryerr = [];
-									tryval = parseVariant1(location, value, tryerr);
-									if (!length(tryerr)) {
-										if (type(vvalue) == "object" && type(tryval) == "object")
-											vvalue = { ...vvalue, ...tryval };
-										else
-											vvalue = tryval;
-
-										success++;
-									}
-									else {
-										push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
-									}
-
-									if (success == 0) {
-										if (length(verrors))
-											push(errors, [ location, "must match at least one of the following constraints:\n" + join("\n- or -\n", verrors) ]);
-										else
-											push(errors, [ location, "must match only one variant" ]);
-										return null;
-									}
-
-									value = vvalue;
-
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-							}
-
-							if (type(value) != "array")
-								push(errors, [ location, "must be of type array" ]);
-
-							return value;
-						}
-
-						if (exists(value, "members")) {
-							obj.members = parseMembers(location + "/members", value["members"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "ipv6-address-groups")) {
-			obj.ipv6_address_groups = parseIpv6AddressGroups(location + "/ipv6-address-groups", value["ipv6-address-groups"], errors);
-		}
-
-		function parseIpv6NetworkGroups(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseMembers(location, value, errors) {
-							if (type(value) == "array") {
-								function parseItem(location, value, errors) {
-									if (type(value) == "string") {
-										if (!matchUcCidr6(value))
-											push(errors, [ location, "must be a valid IPv6 CIDR" ]);
-
-									}
-
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-							}
-
-							if (type(value) != "array")
-								push(errors, [ location, "must be of type array" ]);
-
-							return value;
-						}
-
-						if (exists(value, "members")) {
-							obj.members = parseMembers(location + "/members", value["members"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "ipv6-network-groups")) {
-			obj.ipv6_network_groups = parseIpv6NetworkGroups(location + "/ipv6-network-groups", value["ipv6-network-groups"], errors);
-		}
-
-		function parsePortGroups(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseMembers(location, value, errors) {
-							if (type(value) == "array") {
-								function parseItem(location, value, errors) {
-									if (type(value) != "int" && type(value) != "string")
-										push(errors, [ location, "must be of type integer or string" ]);
-
-									return value;
-								}
-
-								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-							}
-
-							if (type(value) != "array")
-								push(errors, [ location, "must be of type array" ]);
-
-							return value;
-						}
-
-						if (exists(value, "members")) {
-							obj.members = parseMembers(location + "/members", value["members"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "port-groups")) {
-			obj.port_groups = parsePortGroups(location + "/port-groups", value["port-groups"], errors);
-		}
-
-		function parseMacGroups(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseDescription(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "description")) {
-							obj.description = parseDescription(location + "/description", value["description"], errors);
-						}
-
-						function parseMembers(location, value, errors) {
-							if (type(value) == "array") {
-								function parseItem(location, value, errors) {
-									if (type(value) == "string") {
-										if (!matchUcMac(value))
-											push(errors, [ location, "must be a valid MAC address" ]);
-
-									}
-
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-							}
-
-							if (type(value) != "array")
-								push(errors, [ location, "must be of type array" ]);
-
-							return value;
-						}
-
-						if (exists(value, "members")) {
-							obj.members = parseMembers(location + "/members", value["members"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "mac-groups")) {
-			obj.mac_groups = parseMacGroups(location + "/mac-groups", value["mac-groups"], errors);
-		}
-
-		function parseDomainGroups(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseDescription(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "description")) {
-							obj.description = parseDescription(location + "/description", value["description"], errors);
-						}
-
-						function parseMembers(location, value, errors) {
-							if (type(value) == "array") {
-								function parseItem(location, value, errors) {
-									if (type(value) == "string") {
-										if (!matchHostname(value))
-											push(errors, [ location, "must be a valid hostname" ]);
-
-									}
-
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									return value;
-								}
-
-								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-							}
-
-							if (type(value) != "array")
-								push(errors, [ location, "must be of type array" ]);
-
-							return value;
-						}
-
-						if (exists(value, "members")) {
-							obj.members = parseMembers(location + "/members", value["members"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "domain-groups")) {
-			obj.domain_groups = parseDomainGroups(location + "/domain-groups", value["domain-groups"], errors);
-		}
-
-		return obj;
-	}
-
-	if (type(value) != "object")
-		push(errors, [ location, "must be of type object" ]);
-
-	return value;
-}
-
 function instantiateFirewallRuleIpv4(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
@@ -1128,20 +480,6 @@ function instantiateFirewallRuleIpv4(location, value, errors) {
 					obj.group = parseGroup(location + "/group", value["group"], errors);
 				}
 
-				function parseNegate(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "negate")) {
-					obj.negate = parseNegate(location + "/negate", value["negate"], errors);
-				}
-				else {
-					obj.negate = false;
-				}
-
 				return obj;
 			}
 
@@ -1313,20 +651,6 @@ function instantiateFirewallRuleIpv4(location, value, errors) {
 
 				if (exists(value, "group")) {
 					obj.group = parseGroup(location + "/group", value["group"], errors);
-				}
-
-				function parseNegate(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "negate")) {
-					obj.negate = parseNegate(location + "/negate", value["negate"], errors);
-				}
-				else {
-					obj.negate = false;
 				}
 
 				return obj;
@@ -1840,20 +1164,6 @@ function instantiateFirewallRuleIpv6(location, value, errors) {
 					obj.group = parseGroup(location + "/group", value["group"], errors);
 				}
 
-				function parseNegate(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "negate")) {
-					obj.negate = parseNegate(location + "/negate", value["negate"], errors);
-				}
-				else {
-					obj.negate = false;
-				}
-
 				return obj;
 			}
 
@@ -1947,20 +1257,6 @@ function instantiateFirewallRuleIpv6(location, value, errors) {
 
 				if (exists(value, "group")) {
 					obj.group = parseGroup(location + "/group", value["group"], errors);
-				}
-
-				function parseNegate(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "negate")) {
-					obj.negate = parseNegate(location + "/negate", value["negate"], errors);
-				}
-				else {
-					obj.negate = false;
 				}
 
 				return obj;
@@ -2396,20 +1692,6 @@ function instantiateFirewallRuleBridge(location, value, errors) {
 					obj.mac_group = parseMacGroup(location + "/mac-group", value["mac-group"], errors);
 				}
 
-				function parseNegate(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "negate")) {
-					obj.negate = parseNegate(location + "/negate", value["negate"], errors);
-				}
-				else {
-					obj.negate = false;
-				}
-
 				return obj;
 			}
 
@@ -2453,20 +1735,6 @@ function instantiateFirewallRuleBridge(location, value, errors) {
 
 				if (exists(value, "mac-group")) {
 					obj.mac_group = parseMacGroup(location + "/mac-group", value["mac-group"], errors);
-				}
-
-				function parseNegate(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "negate")) {
-					obj.negate = parseNegate(location + "/negate", value["negate"], errors);
-				}
-				else {
-					obj.negate = false;
 				}
 
 				return obj;
@@ -2806,89 +2074,6 @@ function instantiateFirewallZonePolicy(location, value, errors) {
 function instantiateFirewall(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
-
-		function parseStatePolicy(location, value, errors) {
-			if (type(value) == "object") {
-				let obj = {};
-
-				function parseEstablished(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					if (!(value in [ "accept", "drop", "reject" ]))
-						push(errors, [ location, "must be one of \"accept\", \"drop\" or \"reject\"" ]);
-
-					return value;
-				}
-
-				if (exists(value, "established")) {
-					obj.established = parseEstablished(location + "/established", value["established"], errors);
-				}
-				else {
-					obj.established = "accept";
-				}
-
-				function parseRelated(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					if (!(value in [ "accept", "drop", "reject" ]))
-						push(errors, [ location, "must be one of \"accept\", \"drop\" or \"reject\"" ]);
-
-					return value;
-				}
-
-				if (exists(value, "related")) {
-					obj.related = parseRelated(location + "/related", value["related"], errors);
-				}
-				else {
-					obj.related = "accept";
-				}
-
-				function parseInvalid(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					if (!(value in [ "accept", "drop", "reject" ]))
-						push(errors, [ location, "must be one of \"accept\", \"drop\" or \"reject\"" ]);
-
-					return value;
-				}
-
-				if (exists(value, "invalid")) {
-					obj.invalid = parseInvalid(location + "/invalid", value["invalid"], errors);
-				}
-				else {
-					obj.invalid = "drop";
-				}
-
-				return obj;
-			}
-
-			if (type(value) != "object")
-				push(errors, [ location, "must be of type object" ]);
-
-			return value;
-		}
-
-		if (exists(value, "state-policy")) {
-			obj.state_policy = parseStatePolicy(location + "/state-policy", value["state-policy"], errors);
-		}
-
-		function parseGroups(location, value, errors) {
-			if (type(value) == "array") {
-				return map(value, (item, i) => instantiateFirewallGroups(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "groups")) {
-			obj.groups = parseGroups(location + "/groups", value["groups"], errors);
-		}
 
 		function parseIpv4Rulesets(location, value, errors) {
 			if (type(value) == "array") {
@@ -4748,11 +3933,89 @@ function instantiateNatSourceIpv4(location, value, errors) {
 				let obj = {};
 
 				function parseAddress(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchUcCidr4(value))
-							push(errors, [ location, "must be a valid IPv4 CIDR" ]);
+					function parseVariant0(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIpv4(value))
+								push(errors, [ location, "must be a valid IPv4 address, but accept negation" ]);
 
+						}
+
+						return value;
 					}
+
+					function parseVariant1(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwCidr4(value))
+								push(errors, [ location, "must be a valid IPv4 CIDR, but accepts negation." ]);
+
+						}
+
+						return value;
+					}
+
+					function parseVariant2(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIp4range(value))
+								push(errors, [ location, "must be a valid IPv4 range, but accepts negation" ]);
+
+						}
+
+						return value;
+					}
+
+					let success = 0, tryval, tryerr, vvalue = null, verrors = [];
+
+					tryerr = [];
+					tryval = parseVariant0(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant1(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant2(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					if (success == 0) {
+						if (length(verrors))
+							push(errors, [ location, "must match at least one of the following constraints:\n" + join("\n- or -\n", verrors) ]);
+						else
+							push(errors, [ location, "must match only one variant" ]);
+						return null;
+					}
+
+					value = vvalue;
 
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
@@ -4849,11 +4112,89 @@ function instantiateNatSourceIpv4(location, value, errors) {
 				let obj = {};
 
 				function parseAddress(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchUcCidr4(value))
-							push(errors, [ location, "must be a valid IPv4 CIDR" ]);
+					function parseVariant0(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIpv4(value))
+								push(errors, [ location, "must be a valid IPv4 address, but accept negation" ]);
 
+						}
+
+						return value;
 					}
+
+					function parseVariant1(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwCidr4(value))
+								push(errors, [ location, "must be a valid IPv4 CIDR, but accepts negation." ]);
+
+						}
+
+						return value;
+					}
+
+					function parseVariant2(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIp4range(value))
+								push(errors, [ location, "must be a valid IPv4 range, but accepts negation" ]);
+
+						}
+
+						return value;
+					}
+
+					let success = 0, tryval, tryerr, vvalue = null, verrors = [];
+
+					tryerr = [];
+					tryval = parseVariant0(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant1(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant2(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					if (success == 0) {
+						if (length(verrors))
+							push(errors, [ location, "must match at least one of the following constraints:\n" + join("\n- or -\n", verrors) ]);
+						else
+							push(errors, [ location, "must match only one variant" ]);
+						return null;
+					}
+
+					value = vvalue;
 
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
@@ -5053,11 +4394,89 @@ function instantiateNatDestinationIpv4(location, value, errors) {
 				let obj = {};
 
 				function parseAddress(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchUcCidr4(value))
-							push(errors, [ location, "must be a valid IPv4 CIDR" ]);
+					function parseVariant0(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIpv4(value))
+								push(errors, [ location, "must be a valid IPv4 address, but accept negation" ]);
 
+						}
+
+						return value;
 					}
+
+					function parseVariant1(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwCidr4(value))
+								push(errors, [ location, "must be a valid IPv4 CIDR, but accepts negation." ]);
+
+						}
+
+						return value;
+					}
+
+					function parseVariant2(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIp4range(value))
+								push(errors, [ location, "must be a valid IPv4 range, but accepts negation" ]);
+
+						}
+
+						return value;
+					}
+
+					let success = 0, tryval, tryerr, vvalue = null, verrors = [];
+
+					tryerr = [];
+					tryval = parseVariant0(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant1(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant2(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					if (success == 0) {
+						if (length(verrors))
+							push(errors, [ location, "must match at least one of the following constraints:\n" + join("\n- or -\n", verrors) ]);
+						else
+							push(errors, [ location, "must match only one variant" ]);
+						return null;
+					}
+
+					value = vvalue;
 
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
@@ -5154,11 +4573,89 @@ function instantiateNatDestinationIpv4(location, value, errors) {
 				let obj = {};
 
 				function parseAddress(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchUcCidr4(value))
-							push(errors, [ location, "must be a valid IPv4 CIDR" ]);
+					function parseVariant0(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIpv4(value))
+								push(errors, [ location, "must be a valid IPv4 address, but accept negation" ]);
 
+						}
+
+						return value;
 					}
+
+					function parseVariant1(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwCidr4(value))
+								push(errors, [ location, "must be a valid IPv4 CIDR, but accepts negation." ]);
+
+						}
+
+						return value;
+					}
+
+					function parseVariant2(location, value, errors) {
+						if (type(value) == "string") {
+							if (!matchUcFwIp4range(value))
+								push(errors, [ location, "must be a valid IPv4 range, but accepts negation" ]);
+
+						}
+
+						return value;
+					}
+
+					let success = 0, tryval, tryerr, vvalue = null, verrors = [];
+
+					tryerr = [];
+					tryval = parseVariant0(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant1(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					tryerr = [];
+					tryval = parseVariant2(location, value, tryerr);
+					if (!length(tryerr)) {
+						if (type(vvalue) == "object" && type(tryval) == "object")
+							vvalue = { ...vvalue, ...tryval };
+						else
+							vvalue = tryval;
+
+						success++;
+					}
+					else {
+						push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+					}
+
+					if (success == 0) {
+						if (length(verrors))
+							push(errors, [ location, "must match at least one of the following constraints:\n" + join("\n- or -\n", verrors) ]);
+						else
+							push(errors, [ location, "must match only one variant" ]);
+						return null;
+					}
+
+					value = vvalue;
 
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
@@ -7545,6 +7042,79 @@ function instantiateRoutingBgp(location, value, errors) {
 			obj.networks = parseNetworks(location + "/networks", value["networks"], errors);
 		}
 
+		function parseRedistribute(location, value, errors) {
+			if (type(value) == "object") {
+				let obj = {};
+
+				function parseConnected(location, value, errors) {
+					if (type(value) != "bool")
+						push(errors, [ location, "must be of type boolean" ]);
+
+					return value;
+				}
+
+				if (exists(value, "connected")) {
+					obj.connected = parseConnected(location + "/connected", value["connected"], errors);
+				}
+				else {
+					obj.connected = false;
+				}
+
+				function parseStatic(location, value, errors) {
+					if (type(value) != "bool")
+						push(errors, [ location, "must be of type boolean" ]);
+
+					return value;
+				}
+
+				if (exists(value, "static")) {
+					obj.static = parseStatic(location + "/static", value["static"], errors);
+				}
+				else {
+					obj.static = false;
+				}
+
+				function parseOspf(location, value, errors) {
+					if (type(value) != "bool")
+						push(errors, [ location, "must be of type boolean" ]);
+
+					return value;
+				}
+
+				if (exists(value, "ospf")) {
+					obj.ospf = parseOspf(location + "/ospf", value["ospf"], errors);
+				}
+				else {
+					obj.ospf = false;
+				}
+
+				function parseRip(location, value, errors) {
+					if (type(value) != "bool")
+						push(errors, [ location, "must be of type boolean" ]);
+
+					return value;
+				}
+
+				if (exists(value, "rip")) {
+					obj.rip = parseRip(location + "/rip", value["rip"], errors);
+				}
+				else {
+					obj.rip = false;
+				}
+
+				return obj;
+			}
+
+			if (type(value) != "object")
+				push(errors, [ location, "must be of type object" ]);
+
+			return value;
+		}
+
+		if (exists(value, "redistribute")) {
+			obj.redistribute = parseRedistribute(location + "/redistribute", value["redistribute"], errors);
+		}
+
 		return obj;
 	}
 
@@ -7576,65 +7146,6 @@ function instantiateRoutingOspf(location, value, errors) {
 		}
 		else {
 			push(errors, [ location, "is required" ]);
-		}
-
-		function parseDefaultRouteOptions(location, value, errors) {
-			if (type(value) == "object") {
-				let obj = {};
-
-				function parseAlwaysAdvertise(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "always-advertise")) {
-					obj.always_advertise = parseAlwaysAdvertise(location + "/always-advertise", value["always-advertise"], errors);
-				}
-				else {
-					obj.always_advertise = false;
-				}
-
-				function parseMetricValue(location, value, errors) {
-					if (type(value) != "int")
-						push(errors, [ location, "must be of type integer" ]);
-
-					return value;
-				}
-
-				if (exists(value, "metric-value")) {
-					obj.metric_value = parseMetricValue(location + "/metric-value", value["metric-value"], errors);
-				}
-
-				function parseMetricType(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					if (!(value in [ "E1", "E2" ]))
-						push(errors, [ location, "must be one of \"E1\" or \"E2\"" ]);
-
-					return value;
-				}
-
-				if (exists(value, "metric-type")) {
-					obj.metric_type = parseMetricType(location + "/metric-type", value["metric-type"], errors);
-				}
-				else {
-					obj.metric_type = "E2";
-				}
-
-				return obj;
-			}
-
-			if (type(value) != "object")
-				push(errors, [ location, "must be of type object" ]);
-
-			return value;
-		}
-
-		if (exists(value, "default-route-options")) {
-			obj.default_route_options = parseDefaultRouteOptions(location + "/default-route-options", value["default-route-options"], errors);
 		}
 
 		function parseAreas(location, value, errors) {
@@ -7968,6 +7479,20 @@ function instantiateRoutingOspf(location, value, errors) {
 				}
 				else {
 					obj.bgp = false;
+				}
+
+				function parseRip(location, value, errors) {
+					if (type(value) != "bool")
+						push(errors, [ location, "must be of type boolean" ]);
+
+					return value;
+				}
+
+				if (exists(value, "rip")) {
+					obj.rip = parseRip(location + "/rip", value["rip"], errors);
+				}
+				else {
+					obj.rip = false;
 				}
 
 				return obj;
@@ -8416,6 +7941,9 @@ function instantiateRoutingRip(location, value, errors) {
 						if (exists(value, "name")) {
 							obj.name = parseName(location + "/name", value["name"], errors);
 						}
+						else {
+							push(errors, [ location, "is required" ]);
+						}
 
 						function parsePassive(location, value, errors) {
 							if (type(value) != "bool")
@@ -8513,20 +8041,6 @@ function instantiateRoutingRip(location, value, errors) {
 					obj.static = false;
 				}
 
-				function parseBabel(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "babel")) {
-					obj.babel = parseBabel(location + "/babel", value["babel"], errors);
-				}
-				else {
-					obj.babel = false;
-				}
-
 				function parseBgp(location, value, errors) {
 					if (type(value) != "bool")
 						push(errors, [ location, "must be of type boolean" ]);
@@ -8539,48 +8053,6 @@ function instantiateRoutingRip(location, value, errors) {
 				}
 				else {
 					obj.bgp = false;
-				}
-
-				function parseIsis(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "isis")) {
-					obj.isis = parseIsis(location + "/isis", value["isis"], errors);
-				}
-				else {
-					obj.isis = false;
-				}
-
-				function parseKernel(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "kernel")) {
-					obj.kernel = parseKernel(location + "/kernel", value["kernel"], errors);
-				}
-				else {
-					obj.kernel = false;
-				}
-
-				function parseNhrp(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "nhrp")) {
-					obj.nhrp = parseNhrp(location + "/nhrp", value["nhrp"], errors);
-				}
-				else {
-					obj.nhrp = false;
 				}
 
 				function parseOspf(location, value, errors) {
@@ -8739,20 +8211,6 @@ function instantiateRoutingRipng(location, value, errors) {
 					obj.static = false;
 				}
 
-				function parseBabel(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "babel")) {
-					obj.babel = parseBabel(location + "/babel", value["babel"], errors);
-				}
-				else {
-					obj.babel = false;
-				}
-
 				function parseBgp(location, value, errors) {
 					if (type(value) != "bool")
 						push(errors, [ location, "must be of type boolean" ]);
@@ -8765,48 +8223,6 @@ function instantiateRoutingRipng(location, value, errors) {
 				}
 				else {
 					obj.bgp = false;
-				}
-
-				function parseIsis(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "isis")) {
-					obj.isis = parseIsis(location + "/isis", value["isis"], errors);
-				}
-				else {
-					obj.isis = false;
-				}
-
-				function parseKernel(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "kernel")) {
-					obj.kernel = parseKernel(location + "/kernel", value["kernel"], errors);
-				}
-				else {
-					obj.kernel = false;
-				}
-
-				function parseNhrp(location, value, errors) {
-					if (type(value) != "bool")
-						push(errors, [ location, "must be of type boolean" ]);
-
-					return value;
-				}
-
-				if (exists(value, "nhrp")) {
-					obj.nhrp = parseNhrp(location + "/nhrp", value["nhrp"], errors);
-				}
-				else {
-					obj.nhrp = false;
 				}
 
 				function parseOspf(location, value, errors) {
@@ -10526,21 +9942,77 @@ function instantiateServicePppoeServer(location, value, errors) {
 			push(errors, [ location, "is required" ]);
 		}
 
-		function parseInterface(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
+		function parseInterfaces(location, value, errors) {
+			if (type(value) == "array") {
+				function parseItem(location, value, errors) {
+					if (type(value) != "string")
+						push(errors, [ location, "must be of type string" ]);
+
+					return value;
+				}
+
+				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
 
 			return value;
 		}
 
-		if (exists(value, "interface")) {
-			obj.interface = parseInterface(location + "/interface", value["interface"], errors);
+		if (exists(value, "interfaces")) {
+			obj.interfaces = parseInterfaces(location + "/interfaces", value["interfaces"], errors);
 		}
 
 		function parseClientIpPool(location, value, errors) {
+			if (type(value) == "object") {
+				let obj = {};
+
+				function parseRange(location, value, errors) {
+					if (type(value) == "string") {
+						if (!matchUcIp4range(value))
+							push(errors, [ location, "must be a valid IPv4 address range" ]);
+
+					}
+
+					if (type(value) != "string")
+						push(errors, [ location, "must be of type string" ]);
+
+					return value;
+				}
+
+				if (exists(value, "range")) {
+					obj.range = parseRange(location + "/range", value["range"], errors);
+				}
+
+				function parseName(location, value, errors) {
+					if (type(value) != "string")
+						push(errors, [ location, "must be of type string" ]);
+
+					return value;
+				}
+
+				if (exists(value, "name")) {
+					obj.name = parseName(location + "/name", value["name"], errors);
+				}
+
+				return obj;
+			}
+
+			if (type(value) != "object")
+				push(errors, [ location, "must be of type object" ]);
+
+			return value;
+		}
+
+		if (exists(value, "client-ip-pool")) {
+			obj.client_ip_pool = parseClientIpPool(location + "/client-ip-pool", value["client-ip-pool"], errors);
+		}
+
+		function parseGatewayAddress(location, value, errors) {
 			if (type(value) == "string") {
-				if (!matchUcIp4range(value))
-					push(errors, [ location, "must be a valid IPv4 address range" ]);
+				if (!matchUcIp(value))
+					push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
 
 			}
 
@@ -10550,8 +10022,8 @@ function instantiateServicePppoeServer(location, value, errors) {
 			return value;
 		}
 
-		if (exists(value, "client-ip-pool")) {
-			obj.client_ip_pool = parseClientIpPool(location + "/client-ip-pool", value["client-ip-pool"], errors);
+		if (exists(value, "gateway-address")) {
+			obj.gateway_address = parseGatewayAddress(location + "/gateway-address", value["gateway-address"], errors);
 		}
 
 		function parseWinsServers(location, value, errors) {

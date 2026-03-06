@@ -5,27 +5,6 @@ properties:
     description: OSPF router identifier. Must be unique within the OSPF domain.
     type: string
     format: ipv4
-  default-route-options:
-    description: Options for default route in OSPF.
-    type: object
-    properties:
-      always-advertise:
-        description: Always advertise default route even if not in routing table.
-        type: boolean
-        default: false
-      metric-value:
-        description: Metric for the default route.
-        type: integer
-      metric-type:
-        description:
-          External metric type.
-          E1 => External cost + Internal OSPF cost
-          E2 => External cost only
-        type: string
-        enum:
-        - E1
-        - E2
-        default: E2
   areas:
     description: OSPF area definitions.
     type: array
@@ -126,6 +105,10 @@ properties:
         default: false
       bgp:
         description: Redistribute BGP routes.
+        type: boolean
+        default: false
+      rip:
+        description: Redistribute RIP routes.
         type: boolean
         default: false
 required:

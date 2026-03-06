@@ -25,9 +25,6 @@ properties:
       mac-group:
         description: Reference to MAC address group.
         type: string
-      negate:
-        type: boolean
-        default: false
   destination:
     type: object
     properties:
@@ -39,9 +36,6 @@ properties:
       mac-group:
         description: Reference to MAC address group.
         type: string
-      negate:
-        type: boolean
-        default: false
   vlan:
     description: Match VLAN tag.
     type: object

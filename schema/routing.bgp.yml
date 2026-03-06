@@ -95,5 +95,25 @@ properties:
       required:
       - address-family
       - network
+  redistribute:
+    description: Import routes from other sources into BGP.
+    type: object
+    properties:
+      connected:
+        description: Redistribute directly connected networks.
+        type: boolean
+        default: false
+      static:
+        description: Redistribute static routes.
+        type: boolean
+        default: false
+      ospf:
+        description: Redistribute OSPF routes.
+        type: boolean
+        default: false
+      rip:
+        description: Redistribute RIP routes.
+        type: boolean
+        default: false
 required:
 - local-as

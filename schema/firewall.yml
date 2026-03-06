@@ -1,35 +1,6 @@
-description: Firewall configuration (zone-based, stateful).
+description: Firewall configuration (zone-based and chain-based, stateful).
 type: object
 properties:
-  state-policy:
-    description: Global connection state policy applied before zone rules.
-    type: object
-    properties:
-      established:
-        type: string
-        enum:
-        - accept
-        - drop
-        - reject
-        default: accept
-      related:
-        type: string
-        enum:
-        - accept
-        - drop
-        - reject
-        default: accept
-      invalid:
-        type: string
-        enum:
-        - accept
-        - drop
-        - reject
-        default: drop
-  groups:
-    type: array
-    items:
-      $ref: https://ucentral.io/schema/v1/firewall/groups/
   ipv4-rulesets:
     type: array
     items:

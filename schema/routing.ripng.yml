@@ -20,6 +20,7 @@ properties:
       required:
       - name
   redistribute:
+    description: Import routes from other sources into RIPng.
     type: object
     properties:
       connected:
@@ -28,19 +29,7 @@ properties:
       static:
         type: boolean
         default: false
-      babel:
-        type: boolean
-        default: false
       bgp:
-        type: boolean
-        default: false
-      isis:
-        type: boolean
-        default: false
-      kernel:
-        type: boolean
-        default: false
-      nhrp:
         type: boolean
         default: false
       ospf:

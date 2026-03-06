@@ -10,16 +10,21 @@
         {% for (let n in bgp.neighbors): %}
         neighbor {{ n.address }} {
             address-family {
-                {{ n.peer_params }} {
+            {% for (let param in n.peer_params): %}
+                {{ param.address_family }} {
                 }
+            {% endfor %}
             }
+
             {% if (n.passive): %}
             passive
             {% endif %}
             {% if (n.password): %}
             password "{{ n.password }}"
             {% endif %}
+            {% if (n.port): %}
             port "{{ n.port }}"
+            {% endif %}
             remote-as "{{ n.remote_as }}"
         }
         {% endfor %}

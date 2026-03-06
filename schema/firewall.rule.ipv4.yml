@@ -54,9 +54,6 @@ properties:
             type: string
           port-group:
             type: string
-      negate:
-        type: boolean
-        default: false
   destination:
     type: object
     properties:
@@ -67,6 +64,10 @@ properties:
           - format: uc-fw-ipv4
           - format: uc-fw-cidr4
           - format: uc-fw-ip4range
+        examples:
+          - "!192.168.0.9"
+          - "10.28.3.0/24"
+          - "!10.76.5.98-10.76.5.187"
       port:
         type: string
       group:
@@ -80,9 +81,6 @@ properties:
             type: string
           port-group:
             type: string
-      negate:
-        type: boolean
-        default: false
   state:
     type: object
     properties:

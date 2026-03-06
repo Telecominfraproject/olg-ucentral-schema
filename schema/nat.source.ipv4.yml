@@ -23,8 +23,14 @@ properties:
       address:
         description: Source IPv4 network.
         type: string
-        format: uc-cidr4
-        example: 192.168.1.0/24
+        anyOf:
+          - format: uc-fw-ipv4
+          - format: uc-fw-cidr4
+          - format: uc-fw-ip4range
+        examples:
+          - "!192.168.0.9"
+          - "10.28.3.0/24"
+          - "!10.76.5.98-10.76.5.187"
       port:
         description: Source port or port range.
         type: 
@@ -51,8 +57,14 @@ properties:
       address:
         description: Destination IPv4 network.
         type: string
-        format: uc-cidr4
-        example: 192.168.1.0/24
+        anyOf:
+          - format: uc-fw-ipv4
+          - format: uc-fw-cidr4
+          - format: uc-fw-ip4range
+        examples:
+          - "!192.168.0.9"
+          - "10.28.3.0/24"
+          - "!10.76.5.98-10.76.5.187"
       port:
         description: Destination port or port range.
         type: 

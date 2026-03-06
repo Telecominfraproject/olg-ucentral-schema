@@ -14,7 +14,6 @@
         }
         redistribute {
             connected {
-                route-map "CONNECTED-TO-OSPF"
             }
         }
     }

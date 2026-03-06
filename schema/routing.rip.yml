@@ -23,6 +23,8 @@ properties:
         passive:
           type: boolean
           default: false
+      required:
+      - name
   neighbors:
     description: Neighbors to advertise with unicast
     type: array
@@ -30,6 +32,7 @@ properties:
       type: string
       format: ipv4
   redistribute:
+    description: Import routes from other sources into RIP.
     type: object
     properties:
       connected:
@@ -38,19 +41,7 @@ properties:
       static:
         type: boolean
         default: false
-      babel:
-        type: boolean
-        default: false
       bgp:
-        type: boolean
-        default: false
-      isis:
-        type: boolean
-        default: false
-      kernel:
-        type: boolean
-        default: false
-      nhrp:
         type: boolean
         default: false
       ospf:
