@@ -76,6 +76,47 @@ try {
 
 			if (rc != '' && rc.success == false)
 				error = 1;
+
+			// Update UCI state config with intervals from uCentral config
+			let uci = require("uci").cursor();
+			let stats_interval = state.metrics?.statistics?.interval || 60;
+			let health_interval = state.metrics?.health?.interval || 60;
+
+			// Enforce 60-second minimum per schema
+			if (stats_interval < 60) stats_interval = 60;
+			if (health_interval < 60) health_interval = 60;
+
+			uci.set("state", "stats", "stats");
+			uci.set("state", "stats", "interval", "" + stats_interval);
+			uci.set("state", "health", "health");
+			uci.set("state", "health", "interval", "" + health_interval);
+			uci.commit("state");
+
+			// Restart state daemon so it reads the new intervals from UCI
+			// Use killall since /etc/init.d restart doesn't work in this context
+			// procd will automatically restart it
+			system('killall ucentral-state');
+
+			// Update symlink for successful applications (error 0 or 1)
+			if (!custom_config) {
+				// Prevent symlink loop: don't create symlink if source is the symlink itself
+				if (ARGV[0] != '/etc/ucentral/ucentral.active') {
+					fs.unlink('/etc/ucentral/ucentral.active');
+					fs.symlink(ARGV[0], '/etc/ucentral/ucentral.active');
+				}
+
+				// Clean up old config files, keeping only the 5 most recent
+				let cfgs = [];
+				for (let k, v in fs.lsdir('/etc/ucentral/'))
+					if (wildcard(v, 'ucentral.cfg.1*', true))
+						push(cfgs, v);
+
+				cfgs = sort(cfgs);
+				while (length(cfgs) >= 5) {
+					fs.unlink('/etc/ucentral/' + cfgs[0]);
+					shift(cfgs);
+				}
+			}
 		}
 
 	} else {
@@ -141,9 +182,13 @@ try {
 				system(cmd);
 
 			if (!custom_config) {
-				fs.unlink('/etc/ucentral/ucentral.active');
-				fs.symlink(ARGV[0], '/etc/ucentral/ucentral.active');
+				// Prevent symlink loop: don't create symlink if source is the symlink itself
+				if (ARGV[0] != '/etc/ucentral/ucentral.active') {
+					fs.unlink('/etc/ucentral/ucentral.active');
+					fs.symlink(ARGV[0], '/etc/ucentral/ucentral.active');
+				}
 
+				// Clean up old config files, keeping only the 5 most recent
 				let cfgs = [];
 				for (let k, v in fs.lsdir('/etc/ucentral/'))
 					if (wildcard(v, 'ucentral.cfg.1*', true))
@@ -193,4 +238,3 @@ if (inputjson.uuid && inputjson.uuid > 1 && !custom_config) {
 	if (error > 1)
 		exit(1);
 }
-
