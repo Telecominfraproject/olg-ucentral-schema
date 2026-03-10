@@ -7,8 +7,17 @@ properties:
     $ref: https://ucentral.io/schema/v1/system/netflow/
   sflow:
     $ref: https://ucentral.io/schema/v1/system/sflow/
-  name-server:
-    type: array
-    items:
-      type: string
-      format: uc-ip
+  name-servers:
+    type: object
+    properties:
+      dhcp-interfaces:
+        description: Use DNS servers from the DHCP interfaces
+        type: array
+        items:
+          type: string
+      addresses:
+        description: DNS server addresses
+        type: array
+        items:
+          type: string
+          format: uc-ip

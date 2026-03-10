@@ -18,9 +18,16 @@ system {
             include("sflow.uc", { location: location + '/slow', sflow: system.sflow });
         }
     %}
-    {% if (system.name_server): %}
-        {% for (let server in system.name_server): %}
-    name-server {{ server }}
-        {% endfor %}
+    {% if (system.name_servers): %}
+        {% if (system.name_servers.dhcp-interfaces): %}
+            {% for (let interface in system.name_servers.dhcp-interfaces): %}
+    name-server {{ interface }}
+            {% endfor %}
+        {% endif %}
+        {% if (system.name_servers.addresses): %}
+            {% for (let address in system.name_servers.addresses): %}
+    name-server {{ address }}
+            {% endfor %}
+        {% endif %}
     {% endif %}
 }
