@@ -1,10 +1,51 @@
 {%
     let snat_rules = [];
 
+    // Check for explicit NAT configuration
     if (type(config.nat) == "object" &&
         type(config.nat.snat) == "object" &&
         type(config.nat.snat.rules) == "array") {
         snat_rules = config.nat.snat.rules;
+    }
+    // Auto-generate NAT masquerade rules for downstream interfaces if no explicit config
+    else if (type(config.interfaces) == "array") {
+        // First, check if we have an upstream interface (WAN)
+        let has_upstream = false;
+        let upstream_bridge = null;
+
+        for (let iface in config.interfaces) {
+            if (iface.role == "upstream") {
+                has_upstream = true;
+                upstream_bridge = ethernet.upstream_bridge_name();
+                break;
+            }
+        }
+
+        // Only auto-generate if we have an upstream interface
+        if (has_upstream && upstream_bridge) {
+            let rule_id = 100;
+
+            for (let iface in config.interfaces) {
+                // Auto-generate NAT for downstream interfaces with IPv4 addressing
+                if (iface.role == "downstream" &&
+                    type(iface.ipv4) == "object" &&
+                    type(iface.ipv4.subnet) == "string") {
+
+                    // Use network_base helper to extract network address from subnet
+                    let subnet_parts = network_base(iface.ipv4.subnet);
+
+                    if (subnet_parts && subnet_parts[0]) {
+                        // Create masquerade rule for this downstream network
+                        push(snat_rules, {
+                            rule_id: rule_id++,
+                            out_interface: { name: upstream_bridge },
+                            source: { address: subnet_parts[0] },
+                            translation: { address: "masquerade" }
+                        });
+                    }
+                }
+            }
+        }
     }
 %}
 
