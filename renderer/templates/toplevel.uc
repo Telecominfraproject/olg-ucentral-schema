@@ -43,19 +43,33 @@
 	}
 	
 	if (state.firewall) {
-		include("firewall.uc", { location: '/firewall', firewall: state.firewall });
+		include("firewall.uc", {
+			location: '/firewall',
+			firewall: state.firewall
+		});
 	}
 
 	if (state.high_availability) {
-		include("high-availability/high-availability.uc", { location: '/high_availability', ha: state.high_availability})
+		include("high-availability/high-availability.uc", {
+			location: '/high_availability',
+			ha: state.high_availability,
+			ethernet: ethernet
+		});
 	}
 
 	if (state.load_balancing) {
-		include("load-balancing/load-balancing.uc", { location: '/load_balancing', lb: state.load_balancing });
+		include("load-balancing/load-balancing.uc", {
+			location: '/load_balancing',
+			lb: state.load_balancing,
+			ethernet: ethernet
+		});
 	}
 	
 	if (state.nat) {
-		include("nat.uc", { location: '/nat', nat: state.nat });
+		include("nat.uc", {
+			location: '/nat',
+			nat: state.nat
+		});
 	}
 
 	if (!state.pki) {
@@ -67,7 +81,10 @@
 		state.routing = state.routing || {};
 		if (state.routing.policies) {
 			state.routing.policies = state.routing.policies || [];
-			include("policy.uc", { location: '/policy', policies: state.routing.policies });
+			include("policy.uc", {
+				location: '/policy',
+				policies: state.routing.policies
+			});
 		}
 		state.services = state.services || {};
 
@@ -80,21 +97,32 @@
 	}
 
 	if (state.qos) {
-		include("qos.uc", { location: '/qos', qos: state.qos });
+		include("qos.uc", {
+			location: '/qos',
+			qos: state.qos
+		});
 	}
 
 	if (!state.services) {
 		state.services = {};
 	}
-	include("services/service.uc", { location: '/services', services: state.services });
+	include("services/service.uc", {
+		location: '/services', services: state.services
+	});
 
 	if (!state.system) {
 		state.system = {};
 	}
-	include("system/system.uc", { location: '/system', system: state.system });
+	include("system/system.uc", {
+		location: '/system',
+		system: state.system
+	});
 
 	if (state.vpn) {
-		include("vpn/vpn.uc", { location: '/vpn', vpn: state.vpn });
+		include("vpn/vpn.uc", {
+			location: '/vpn',
+			vpn: state.vpn
+		});
 	}
 %}
 

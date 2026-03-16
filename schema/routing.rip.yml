@@ -2,11 +2,9 @@ description: RIP routing protocol configuration.
 type: object
 properties:
   version:
-    type: string
-    enum:
-    - '1'
-    - '2'
-    default: '2'
+    type: number
+    enum: [1, 2]
+    default: 2
   networks:
     description: Networks to advertise.
     type: array

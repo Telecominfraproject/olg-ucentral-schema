@@ -24,4 +24,15 @@
         }
     {% endfor %}
 {% endif %}
+{% if (syslog.local): %}
+        local {
+    {% for (let s in syslog.local): %}
+            facility {{ s.facility }} {
+        {% if (s.severity): %}
+                level {{ s.severity }}
+        {% endif %}
+            }
+    {% endfor %}
+        }
+{% endif %}
     }

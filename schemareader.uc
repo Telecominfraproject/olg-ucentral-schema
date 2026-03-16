@@ -7881,11 +7881,11 @@ function instantiateRoutingRip(location, value, errors) {
 		let obj = {};
 
 		function parseVersion(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
+			if (!(type(value) in [ "int", "double" ]))
+				push(errors, [ location, "must be of type number" ]);
 
-			if (!(value in [ "1", "2" ]))
-				push(errors, [ location, "must be one of \"1\" or \"2\"" ]);
+			if (!(value in [ 1, 2 ]))
+				push(errors, [ location, "must be one of 1 or 2" ]);
 
 			return value;
 		}
@@ -7894,7 +7894,7 @@ function instantiateRoutingRip(location, value, errors) {
 			obj.version = parseVersion(location + "/version", value["version"], errors);
 		}
 		else {
-			obj.version = "2";
+			obj.version = 2;
 		}
 
 		function parseNetworks(location, value, errors) {
@@ -11488,32 +11488,71 @@ function instantiateSystem(location, value, errors) {
 			obj.sflow = instantiateSystemSflow(location + "/sflow", value["sflow"], errors);
 		}
 
-		function parseNameServer(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchUcIp(value))
-							push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+		function parseNameServers(location, value, errors) {
+			if (type(value) == "object") {
+				let obj = {};
 
+				function parseDhcpInterfaces(location, value, errors) {
+					if (type(value) == "array") {
+						function parseItem(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
 					}
 
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
+					if (type(value) != "array")
+						push(errors, [ location, "must be of type array" ]);
 
 					return value;
 				}
 
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+				if (exists(value, "dhcp-interfaces")) {
+					obj.dhcp_interfaces = parseDhcpInterfaces(location + "/dhcp-interfaces", value["dhcp-interfaces"], errors);
+				}
+
+				function parseAddresses(location, value, errors) {
+					if (type(value) == "array") {
+						function parseItem(location, value, errors) {
+							if (type(value) == "string") {
+								if (!matchUcIp(value))
+									push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+							}
+
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+					}
+
+					if (type(value) != "array")
+						push(errors, [ location, "must be of type array" ]);
+
+					return value;
+				}
+
+				if (exists(value, "addresses")) {
+					obj.addresses = parseAddresses(location + "/addresses", value["addresses"], errors);
+				}
+
+				return obj;
 			}
 
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
+			if (type(value) != "object")
+				push(errors, [ location, "must be of type object" ]);
 
 			return value;
 		}
 
-		if (exists(value, "name-server")) {
-			obj.name_server = parseNameServer(location + "/name-server", value["name-server"], errors);
+		if (exists(value, "name-servers")) {
+			obj.name_servers = parseNameServers(location + "/name-servers", value["name-servers"], errors);
 		}
 
 		return obj;

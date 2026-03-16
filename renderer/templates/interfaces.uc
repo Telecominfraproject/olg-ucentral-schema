@@ -2,48 +2,6 @@
 let bridge_c = 0, pppoe_c = 0, dummy_c = 0, vtun_c = 0, client_c = 0;
 let wg_c = 0, peer_c = 0;
 let iface_mapping = {}, iface_vlan_mapping = {};
-function getIfaceName(type, name) {
-    let iface_temp;
-    switch (type) {
-    case "ethernet":
-        return name;
-    case "bridge":
-        iface_temp = "br" + bridge_c++;
-        iface_mapping[name] = iface_temp;
-        return iface_temp;
-    case "pppoe":
-        iface_temp = "pppoe" + pppoe_c++;
-        iface_mapping[name] = iface_temp;
-        return iface_temp;
-    case "dummy":
-        iface_temp = "dummy" + dummy_c++;
-        iface_mapping[name] = iface_temp;
-        return iface_temp;
-    default:
-        return name;
-    }
-}
-
-function getVlanIfaceName(type, name, vlanId) {
-    let iface_temp;
-    switch (type) {
-    case "ethernet":
-        iface_temp = name + "v" + vlanId;
-
-        return iface_temp;
-    case "bridge":
-        iface_temp = "br" + bridge_c++ + "v" + vlanId;
-        return iface_temp;
-    case "pppoe":
-        iface_temp = "pppoe" + bridge_c++ + "v" + vlanId;
-        return iface_temp;
-    case "dummy":
-        iface_temp = "dummy" + bridge_c++ + "v" + vlanId;
-        return iface_temp;
-    default:
-        return name;
-    }
-}
 %}
 
 interfaces {

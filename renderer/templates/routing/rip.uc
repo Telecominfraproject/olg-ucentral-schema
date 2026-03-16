@@ -1,9 +1,12 @@
     rip {
+        version {{ rip.version }}
 {% for (let i in rip.interfaces): %}
-        interface {{ i }} {
+        interface {{ i.name }} {
         }
 {% endfor %}
-        neighbor "192.168.240.22"
+{% for (let n in rip.neighbors): %}
+        neighbor {{ n }}
+{% endfor %}
 {% for (let n in rip.networks): %}
         network "{{ n }}"
 {% endfor %}

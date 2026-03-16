@@ -49,13 +49,9 @@ properties:
                             - format: uc-cidr4
                         port:
                           description: Source port or range.
-                          type:
-                            - integer
-                            - string
-                          format: uc-portrange
-                          examples:
-                            - 2345
-                            - 1024-65535
+                          type: integer
+                          maximum: 65535
+                          minimum: 1
                     destination:
                       description: Destination matching criteria.
                       type: object
@@ -68,21 +64,17 @@ properties:
                             - format: uc-cidr4
                         port:
                           description: Destination port or range.
-                          type:
-                            - integer
-                            - string
-                          format: uc-portrange
-                          examples:
-                            - 2345
-                            - 1024-65535
+                          type: integer
+                          maximum: 65535
+                          minimum: 1
                     protocol:
                       description:
                         IP protocol to match.
                         Use "all" for all protocols and "tcp_udp" for both TCP and UDP.
                       type: string
-                      examples:
+                      enum: 
                         - tcp
-                        - tcp_udp
+                        - udp
                         - icmp
                         - all
                     inbound-interface:
@@ -91,7 +83,7 @@ properties:
               burst:
                 description: Size of token bucket (in bytes), which will be available to be sent at ceiling speed.
                 type: string
-                example: 15Kb
+                default: 15kb
               ceiling:
                 description: Maximum speed possible for this class. Default is bandwidth value.
                 type: string

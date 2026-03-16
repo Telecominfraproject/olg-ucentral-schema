@@ -2664,12 +2664,12 @@
             "type": "object",
             "properties": {
                 "version": {
-                    "type": "string",
+                    "type": "number",
                     "enum": [
-                        "1",
-                        "2"
+                        1,
+                        2
                     ],
-                    "default": "2"
+                    "default": 2
                 },
                 "networks": {
                     "type": "array",
@@ -3866,11 +3866,22 @@
                 "sflow": {
                     "$ref": "#/$defs/system.sflow"
                 },
-                "name-server": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "format": "uc-ip"
+                "name-servers": {
+                    "type": "object",
+                    "properties": {
+                        "dhcp-interfaces": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "addresses": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "uc-ip"
+                            }
+                        }
                     }
                 }
             }
