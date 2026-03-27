@@ -1,6 +1,5 @@
     wan {
 {% for (let i in wan.interfaces): %}
-        {% /* We might need to implement name conversion here*/ %}
         interface-health {{ ethernet.get_iface_by_name(i.name) }} {
             nexthop "{{ i.health_check.target }}"
     {% if (i.success_count): %}

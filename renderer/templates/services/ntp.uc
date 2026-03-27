@@ -1,27 +1,28 @@
-{% if (ntp): %}
     ntp {
+{% if (ntp.allow_clients && length(ntp.allow_clients)): %}
         allow-client {
-            address "192.168.0.0/16"
-            address "10.28.3.254"
+    {% for (let a in ntp.allow_clients): %}
+            address "{{ a }}"
+    {% endfor %}
         }
+{% endif %}
         listen-address "192.168.240.31"
 
-    {% for (let s in ntp.servers): %}
+{% for (let s in ntp.servers): %}
         server {{ s.address }} {
-        {% if (s.no_select): %}
+    {% if (s.no_select): %}
             no-select
-        {% elif (s.nts):%}
+    {% elif (s.nts):%}
             nts
-        {% elif (s.pool): %}
+    {% elif (s.pool): %}
             pool
-        {% elif (s.prefer): %}
+    {% elif (s.prefer): %}
             prefer
-        {% elif (s.ptp): %}
+    {% elif (s.ptp): %}
             ptp
-        {% elif (s.interleave): %}
+    {% elif (s.interleave): %}
             interleave
-        {% endif %}
+    {% endif %}
         }
-    {% endfor %}
+{% endfor %}
     }
-{% endif %}

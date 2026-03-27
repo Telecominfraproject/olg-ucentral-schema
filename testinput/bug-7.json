@@ -1,0 +1,231 @@
+{
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "mtu": 1500,
+            "name": "eth2",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth3",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "enabled": true,
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "enabled": true,
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "enabled": true,
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth4",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "enabled": true,
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth5",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "bridge": {
+                "members": [
+                    "eth0",
+                    "eth1",
+                    "eth4",
+                    "eth5"
+                ]
+            },
+            "ipv4": {
+                "address": [
+                    "192.168.1.1/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "br0",
+            "role": "downstream",
+            "type": "bridge"
+        }
+    ],
+    "metrics": {
+        "health": {
+            "interval": 60
+        },
+        "statistics": {
+            "interval": 300,
+            "types": []
+        }
+    },
+    "nat": {
+        "source-ipv4": [
+            {
+                "outbound-interface": "eth2",
+                "protocol": "all",
+                "rule-number": 10,
+                "source": {
+                    "address": "192.168.1.0/24"
+                },
+                "translation": {
+                    "address": "masquerade"
+                }
+            }
+        ]
+    },
+    "pki": {
+        "ca-certs": [
+            {
+                "certificate": "MIIDnTCCAoWgAwIBAgIUGEfKjQz899E0iDgZgNQVgkwK5QUwDQYJKoZIhvcNAQELBQAwVzELMAkGA1UEBhMCR0IxEzARBgNVBAgMClNvbWUtU3RhdGUxEjAQBgNVBAcMCVNvbWUtQ2l0eTENMAsGA1UECgwEVnlPUzEQMA4GA1UEAwwHdnlvcy5pbzAeFw0yNjAyMTAwNTMxNTlaFw0zMTAyMDkwNTMxNTlaMFcxCzAJBgNVBAYTAkdCMRMwEQYDVQQIDApTb21lLVN0YXRlMRIwEAYDVQQHDAlTb21lLUNpdHkxDTALBgNVBAoMBFZ5T1MxEDAOBgNVBAMMB3Z5b3MuaW8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDAPVpSCIDl0stV/Fnpf09nxBRt4NlSkvdJEpfkZ92oh8CHayUgKqrwnIopOz+aAYNwwzwlXI/Pt5rI9aV8/xWNHxLjKyrwpm5iW0SuYHD+ZLM4HFj1LCqLN8xwBh+51UxeY+SMzF6jYZDETKogPus2xsL0rktfTMwOMaQnGIpg3xB3zPfq7w+cxBeUSC7Sq37CL2USL7au2A0T/G8Nue0NIdNreWi6ytazWhuUkvUkRunl1mt5zRunnC0D04hrqIezZq9/a0IhHYm2cI6ZGHLpWLNmcm8VtGlmuLTcJaub70COuuE+WylcDnbkfF5ihW0P/R18P+xEZp3j5dHOv3NrAgMBAAGjYTBfMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgGGMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDATAdBgNVHQ4EFgQUaLYFo00jbYuKS4fXQ5S9GMfGJTQwDQYJKoZIhvcNAQELBQADggEBAFe4h15WsNutFf0qp47k5Yfo8f06Mv8xqkeTye84yyfbbv2cln1kc8KB17vKirdLn9Bs/P4KLG8xomCACdfY5SxVE6F1pWZ8HUzDDPp5wOEo5TmJ14ST67cTNVZo/Btp0Fzc/Nga5F3KkFJSB/+tY7COT7OnTV2oSAh4zgsMTkavK7QKnmByakTrr6T/7LlaEOwaPBvqHsf4/Fz8wORvufG2VdCzC5nsB1ilv4zOLBMj2X/KciS2HMyQ9OOhJATGlej94ZNiJPpilTZhzvEYJbLX0FhzcXoPZvUL6E2yIVjsbuJ1D1j8P/sHWiSilYCTCz4xyAkTsx2Zz3DQuga7xEI=",
+                "name": "ipsec-ca"
+            }
+        ],
+        "certs": [
+            {
+                "certificate": "MIIDsTCCApmgAwIBAgIUS6hVtLG3y2tGdXtyppWIDg/IBB4wDQYJKoZIhvcNAQELBQAwVzELMAkGA1UEBhMCR0IxEzARBgNVBAgMClNvbWUtU3RhdGUxEjAQBgNVBAcMCVNvbWUtQ2l0eTENMAsGA1UECgwEVnlPUzEQMA4GA1UEAwwHdnlvcy5pbzAeFw0yNjAyMTAwNTM3MzFaFw0yNzAyMTAwNTM3MzFaMFcxCzAJBgNVBAYTAkdCMRMwEQYDVQQIDApTb21lLVN0YXRlMRIwEAYDVQQHDAlTb21lLUNpdHkxDTALBgNVBAoMBFZ5T1MxEDAOBgNVBAMMB3Z5b3MuaW8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCxXt9C7eSJ5Xj5ECW6rf9KnRlE4h0gkQ3iieOqNAAvBzOcImVmScaYvyCWUKkCmftpfDxY5yJznLUZFIL/3CiqxEL60wPMd4mNqH4CwlE/OAlReNnYEIgfbGpBKs3QJ3Huc3Dq0Mmv5HqwRskLV0KbWsFrd38iYdoBfGVs7+usNUDIokEAONrsF600vtdhr3BVysFEkuxds73hjNivnctDFmiHYmG06R8eFnGlyaBgMiyheI4zUWXdQLErHSZq3YZFt14FsA1dPjrUHbr4JFnyFlQ1Kd19aUGKUVva9xu9tZnMFAl2Unjk6XvIoakrcEQ+QpgA/uP356ID2Q1zwLndAgMBAAGjdTBzMAwGA1UdEwEB/wQCMAAwDgYDVR0PAQH/BAQDAgeAMBMGA1UdJQQMMAoGCCsGAQUFBwMBMB0GA1UdDgQWBBTT0HFY+zn97Pc13aVbDv1wyYHhsDAfBgNVHSMEGDAWgBRotgWjTSNti4pLh9dDlL0Yx8YlNDANBgkqhkiG9w0BAQsFAAOCAQEAemMcYcKjOGV766oPCcmR+9DtW2nETXYz8E6i5DBQSO3k4WH24wPS2FOyJYLz7FVm+0GVtcfrMRg2UuMQ0f8Vb+v5kXrlKNCHDGidaWEcPatOIINJwKkFYwQM/7vb0aztAO5XEa1JJpbNxVwRUkCRjdP547hneC5CAxaPOgCZPhFnJhxWYwHZSywEOVCwK90XGkMMmPSULnQvAs7dk1GRy1rtSyD309vu83AVd5HrokzPJnfuEtpmDF7n4qG3oKDIhcmyzT+GPXpcpyeuXxbVbkIi9gK65X1eRL5eh4Nf/ZKibZwuyAAZXVqdu78+BV2NkQGYVRlsSdC/1ucgCl9y1A==",
+                "name": "ipsec-cert"
+            }
+        ]
+    },
+    "services": {
+        "dhcp-server": {
+            "networks": [
+                {
+                    "name": "dhcp-br0",
+                    "subnets": [
+                        {
+                            "default-router": "192.168.1.1",
+                            "dns-servers": [
+                                "192.168.1.1"
+                            ],
+                            "lease-time": 86400,
+                            "ranges": [
+                                {
+                                    "start": "192.168.1.100",
+                                    "stop": "192.168.1.200"
+                                }
+                            ],
+                            "subnet": "192.168.1.0/24"
+                        }
+                    ]
+                }
+            ]
+        },
+        "dns": {
+            "allow-from": [
+                "192.168.1.0/24"
+            ],
+            "listen-addresses": [
+                "192.168.1.1"
+            ]
+        }
+    },
+    "system": {
+        "name-servers": {
+            "dhcp-interfaces": [
+                "eth2"
+            ]
+        },
+        "syslog": {
+            "local": [
+                {
+                    "facility": "daemon",
+                    "severity": "info"
+                }
+            ]
+        }
+    },
+    "uuid": 1773897684,
+    "vpn": {
+        "ipsec": {
+            "authentication": {
+                "id": [
+                    "10.76.2.254"
+                ],
+                "secret": "12345678"
+            },
+            "esp-groups": [
+                {
+                    "lifetime": 3600,
+                    "mode": "tunnel",
+                    "name": "ESP-SITE2SITE",
+                    "pfs": true,
+                    "proposal": [{
+                        "encryption": "aes256gcm128",
+                        "hash": "sha256"
+                    }]
+                }
+            ],
+            "ike-groups": [
+                {
+                    "dead-peer-detection": {
+                        "action": "restart",
+                        "interval": 30
+                    },
+                    "key-exchange": "ikev2",
+                    "lifetime": 28800,
+                    "name": "IKE-SITE2SITE",
+                    "proposal": [{
+                        "dh-group": 19,
+                        "encryption": "aes256gcm128",
+                        "hash": "sha256"
+                    }]
+                }
+            ],
+            "interface": "eth2",
+            "pools": [
+                {
+                    "name": "CLIENTS",
+                    "name-server": "8.8.8.8",
+                    "prefix": "10.10.1.0/24"
+                }
+            ],
+            "remote-access": [
+                {
+                    "ca-cert": "ipsec-ca",
+                    "connection-type": "none",
+                    "esp-group": "ESP-SITE2SITE",
+                    "ike-group": "IKE-SITE2SITE",
+                    "local-address": "192.168.240.30",
+                    "local-id": "vyos.io",
+                    "name": "remote-clients",
+                    "pool": "CLIENTS",
+                    "server-cert": "ipsec-cert"
+                }
+            ]
+        }
+    }
+}

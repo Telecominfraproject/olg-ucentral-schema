@@ -1,5 +1,3 @@
-{%%}
-
     webproxy {
 {% if (wbp.default_port): %}
         default-port {{ wbp.default_port }}

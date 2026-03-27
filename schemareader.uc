@@ -8530,14 +8530,17 @@ function instantiateQos(location, value, errors) {
 																}
 
 																function parsePort(location, value, errors) {
-																	if (type(value) == "string") {
-																		if (!matchUcPortrange(value))
-																			push(errors, [ location, "must be a valid network port range" ]);
+																	if (type(value) in [ "int", "double" ]) {
+																		if (value > 65535)
+																			push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+																		if (value < 1)
+																			push(errors, [ location, "must be bigger than or equal to 1" ]);
 
 																	}
 
-																	if (type(value) != "int" && type(value) != "string")
-																		push(errors, [ location, "must be of type integer or string" ]);
+																	if (type(value) != "int")
+																		push(errors, [ location, "must be of type integer" ]);
 
 																	return value;
 																}
@@ -8635,14 +8638,17 @@ function instantiateQos(location, value, errors) {
 																}
 
 																function parsePort(location, value, errors) {
-																	if (type(value) == "string") {
-																		if (!matchUcPortrange(value))
-																			push(errors, [ location, "must be a valid network port range" ]);
+																	if (type(value) in [ "int", "double" ]) {
+																		if (value > 65535)
+																			push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+																		if (value < 1)
+																			push(errors, [ location, "must be bigger than or equal to 1" ]);
 
 																	}
 
-																	if (type(value) != "int" && type(value) != "string")
-																		push(errors, [ location, "must be of type integer or string" ]);
+																	if (type(value) != "int")
+																		push(errors, [ location, "must be of type integer" ]);
 
 																	return value;
 																}
@@ -8667,6 +8673,9 @@ function instantiateQos(location, value, errors) {
 														function parseProtocol(location, value, errors) {
 															if (type(value) != "string")
 																push(errors, [ location, "must be of type string" ]);
+
+															if (!(value in [ "tcp", "udp", "icmp", "all" ]))
+																push(errors, [ location, "must be one of \"tcp\", \"udp\", \"icmp\" or \"all\"" ]);
 
 															return value;
 														}
@@ -8717,6 +8726,9 @@ function instantiateQos(location, value, errors) {
 
 										if (exists(value, "burst")) {
 											obj.burst = parseBurst(location + "/burst", value["burst"], errors);
+										}
+										else {
+											obj.burst = "15kb";
 										}
 
 										function parseCeiling(location, value, errors) {
@@ -10317,6 +10329,17 @@ function instantiateServiceWebProxy(location, value, errors) {
 			obj.cache_size = 100;
 		}
 
+		function parseAppendDomain(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "append-domain")) {
+			obj.append_domain = parseAppendDomain(location + "/append-domain", value["append-domain"], errors);
+		}
+
 		function parseBlockDomains(location, value, errors) {
 			if (type(value) == "array") {
 				function parseItem(location, value, errors) {
@@ -11642,65 +11665,76 @@ function instantiateVpnIpsec(location, value, errors) {
 						}
 
 						function parseProposal(location, value, errors) {
-							if (type(value) == "object") {
-								let obj = {};
+							if (type(value) == "array") {
+								function parseItem(location, value, errors) {
+									if (type(value) == "object") {
+										let obj = {};
 
-								function parseEncryption(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
+										function parseEncryption(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
 
-									if (!(value in [ "aes128", "aes256", "aes128ccm128", "aes256ccm128", "aes256gcm128", "aes128gcm128", "3des" ]))
-										push(errors, [ location, "must be one of \"aes128\", \"aes256\", \"aes128ccm128\", \"aes256ccm128\", \"aes256gcm128\", \"aes128gcm128\" or \"3des\"" ]);
+											if (!(value in [ "aes128", "aes256", "aes128ccm128", "aes256ccm128", "aes256gcm128", "aes128gcm128", "3des" ]))
+												push(errors, [ location, "must be one of \"aes128\", \"aes256\", \"aes128ccm128\", \"aes256ccm128\", \"aes256gcm128\", \"aes128gcm128\" or \"3des\"" ]);
+
+											return value;
+										}
+
+										if (exists(value, "encryption")) {
+											obj.encryption = parseEncryption(location + "/encryption", value["encryption"], errors);
+										}
+										else {
+											push(errors, [ location, "is required" ]);
+										}
+
+										function parseHash(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											if (!(value in [ "sha1", "sha256", "sha384", "sha512" ]))
+												push(errors, [ location, "must be one of \"sha1\", \"sha256\", \"sha384\" or \"sha512\"" ]);
+
+											return value;
+										}
+
+										if (exists(value, "hash")) {
+											obj.hash = parseHash(location + "/hash", value["hash"], errors);
+										}
+										else {
+											push(errors, [ location, "is required" ]);
+										}
+
+										function parseDhGroup(location, value, errors) {
+											if (type(value) != "int")
+												push(errors, [ location, "must be of type integer" ]);
+
+											if (!(value in [ 1, 2, 5, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]))
+												push(errors, [ location, "must be one of 1, 2, 5, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 or 31" ]);
+
+											return value;
+										}
+
+										if (exists(value, "dh-group")) {
+											obj.dh_group = parseDhGroup(location + "/dh-group", value["dh-group"], errors);
+										}
+										else {
+											push(errors, [ location, "is required" ]);
+										}
+
+										return obj;
+									}
+
+									if (type(value) != "object")
+										push(errors, [ location, "must be of type object" ]);
 
 									return value;
 								}
 
-								if (exists(value, "encryption")) {
-									obj.encryption = parseEncryption(location + "/encryption", value["encryption"], errors);
-								}
-								else {
-									push(errors, [ location, "is required" ]);
-								}
-
-								function parseHash(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									if (!(value in [ "sha1", "sha256", "sha384", "sha512" ]))
-										push(errors, [ location, "must be one of \"sha1\", \"sha256\", \"sha384\" or \"sha512\"" ]);
-
-									return value;
-								}
-
-								if (exists(value, "hash")) {
-									obj.hash = parseHash(location + "/hash", value["hash"], errors);
-								}
-								else {
-									push(errors, [ location, "is required" ]);
-								}
-
-								function parseDhGroup(location, value, errors) {
-									if (type(value) != "int")
-										push(errors, [ location, "must be of type integer" ]);
-
-									if (!(value in [ 1, 2, 5, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]))
-										push(errors, [ location, "must be one of 1, 2, 5, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 or 31" ]);
-
-									return value;
-								}
-
-								if (exists(value, "dh-group")) {
-									obj.dh_group = parseDhGroup(location + "/dh-group", value["dh-group"], errors);
-								}
-								else {
-									push(errors, [ location, "is required" ]);
-								}
-
-								return obj;
+								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
 							}
 
-							if (type(value) != "object")
-								push(errors, [ location, "must be of type object" ]);
+							if (type(value) != "array")
+								push(errors, [ location, "must be of type array" ]);
 
 							return value;
 						}
@@ -11879,48 +11913,59 @@ function instantiateVpnIpsec(location, value, errors) {
 						}
 
 						function parseProposal(location, value, errors) {
-							if (type(value) == "object") {
-								let obj = {};
+							if (type(value) == "array") {
+								function parseItem(location, value, errors) {
+									if (type(value) == "object") {
+										let obj = {};
 
-								function parseEncryption(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
+										function parseEncryption(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
 
-									if (!(value in [ "aes128", "aes256", "aes128ccm128", "aes256ccm128", "aes256gcm128", "aes128gcm128", "3des" ]))
-										push(errors, [ location, "must be one of \"aes128\", \"aes256\", \"aes128ccm128\", \"aes256ccm128\", \"aes256gcm128\", \"aes128gcm128\" or \"3des\"" ]);
+											if (!(value in [ "aes128", "aes256", "aes128ccm128", "aes256ccm128", "aes256gcm128", "aes128gcm128", "3des" ]))
+												push(errors, [ location, "must be one of \"aes128\", \"aes256\", \"aes128ccm128\", \"aes256ccm128\", \"aes256gcm128\", \"aes128gcm128\" or \"3des\"" ]);
+
+											return value;
+										}
+
+										if (exists(value, "encryption")) {
+											obj.encryption = parseEncryption(location + "/encryption", value["encryption"], errors);
+										}
+										else {
+											push(errors, [ location, "is required" ]);
+										}
+
+										function parseHash(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											if (!(value in [ "sha1", "sha256", "sha384", "sha512" ]))
+												push(errors, [ location, "must be one of \"sha1\", \"sha256\", \"sha384\" or \"sha512\"" ]);
+
+											return value;
+										}
+
+										if (exists(value, "hash")) {
+											obj.hash = parseHash(location + "/hash", value["hash"], errors);
+										}
+										else {
+											push(errors, [ location, "is required" ]);
+										}
+
+										return obj;
+									}
+
+									if (type(value) != "object")
+										push(errors, [ location, "must be of type object" ]);
 
 									return value;
 								}
 
-								if (exists(value, "encryption")) {
-									obj.encryption = parseEncryption(location + "/encryption", value["encryption"], errors);
-								}
-								else {
-									push(errors, [ location, "is required" ]);
-								}
-
-								function parseHash(location, value, errors) {
-									if (type(value) != "string")
-										push(errors, [ location, "must be of type string" ]);
-
-									if (!(value in [ "sha1", "sha256", "sha384", "sha512" ]))
-										push(errors, [ location, "must be one of \"sha1\", \"sha256\", \"sha384\" or \"sha512\"" ]);
-
-									return value;
-								}
-
-								if (exists(value, "hash")) {
-									obj.hash = parseHash(location + "/hash", value["hash"], errors);
-								}
-								else {
-									push(errors, [ location, "is required" ]);
-								}
-
-								return obj;
+								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
 							}
 
-							if (type(value) != "object")
-								push(errors, [ location, "must be of type object" ]);
+							if (type(value) != "array")
+								push(errors, [ location, "must be of type array" ]);
 
 							return value;
 						}
@@ -12568,20 +12613,6 @@ function instantiateVpnOpenvpn(location, value, errors) {
 								function parseEncryption(location, value, errors) {
 									if (type(value) == "object") {
 										let obj = {};
-
-										function parseCipher(location, value, errors) {
-											if (type(value) != "string")
-												push(errors, [ location, "must be of type string" ]);
-
-											if (!(value in [ "none", "3des", "aes128", "aes128gcm", "aes192", "aes192gcm", "aes256", "aes256gcm" ]))
-												push(errors, [ location, "must be one of \"none\", \"3des\", \"aes128\", \"aes128gcm\", \"aes192\", \"aes192gcm\", \"aes256\" or \"aes256gcm\"" ]);
-
-											return value;
-										}
-
-										if (exists(value, "cipher")) {
-											obj.cipher = parseCipher(location + "/cipher", value["cipher"], errors);
-										}
 
 										function parseDataCiphers(location, value, errors) {
 											if (type(value) == "array") {

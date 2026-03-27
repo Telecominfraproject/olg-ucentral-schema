@@ -80,10 +80,6 @@ properties:
               description: Encryption settings for the VPN connection.
               type: object
               properties:
-                cipher:
-                  description: Standard data encryption algorithm.
-                  type: string
-                  enum: [none, 3des, aes128, aes128gcm, aes192, aes192gcm, aes256, aes256gcm]
                 data-ciphers:
                   description: Cipher negotiation list for data channel encryption.
                   type: array

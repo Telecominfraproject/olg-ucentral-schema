@@ -1,4 +1,3 @@
-{%%}
     tftp-server {
         directory {{ tftp.directory }}
 {% if (tftp.listen_address): %}

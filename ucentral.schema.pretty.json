@@ -3167,15 +3167,9 @@
                                                             },
                                                             "port": {
                                                                 "description": "Source port or range.",
-                                                                "type": [
-                                                                    "integer",
-                                                                    "string"
-                                                                ],
-                                                                "format": "uc-portrange",
-                                                                "examples": [
-                                                                    2345,
-                                                                    "1024-65535"
-                                                                ]
+                                                                "type": "integer",
+                                                                "maximum": 65535,
+                                                                "minimum": 1
                                                             }
                                                         }
                                                     },
@@ -3197,24 +3191,18 @@
                                                             },
                                                             "port": {
                                                                 "description": "Destination port or range.",
-                                                                "type": [
-                                                                    "integer",
-                                                                    "string"
-                                                                ],
-                                                                "format": "uc-portrange",
-                                                                "examples": [
-                                                                    2345,
-                                                                    "1024-65535"
-                                                                ]
+                                                                "type": "integer",
+                                                                "maximum": 65535,
+                                                                "minimum": 1
                                                             }
                                                         }
                                                     },
                                                     "protocol": {
                                                         "description": "IP protocol to match. Use \"all\" for all protocols and \"tcp_udp\" for both TCP and UDP.",
                                                         "type": "string",
-                                                        "examples": [
+                                                        "enum": [
                                                             "tcp",
-                                                            "tcp_udp",
+                                                            "udp",
                                                             "icmp",
                                                             "all"
                                                         ]
@@ -3229,7 +3217,7 @@
                                         "burst": {
                                             "description": "Size of token bucket (in bytes), which will be available to be sent at ceiling speed.",
                                             "type": "string",
-                                            "example": "15Kb"
+                                            "default": "15kb"
                                         },
                                         "ceiling": {
                                             "description": "Maximum speed possible for this class. Default is bandwidth value.",
@@ -3770,6 +3758,10 @@
                     "description": "Cache size in MB.",
                     "type": "integer",
                     "default": 100
+                },
+                "append-domain": {
+                    "description": "Domain to append to requests with unqualified hostnames.",
+                    "type": "string"
                 },
                 "block-domains": {
                     "description": "Domains to block.",
@@ -4333,65 +4325,68 @@
                                 "default": 28800
                             },
                             "proposal": {
-                                "description": "Cryptographic proposal for IKE negotiation.",
-                                "type": "object",
-                                "properties": {
-                                    "encryption": {
-                                        "description": "Encryption algorithm for IKE SA.",
-                                        "type": "string",
-                                        "enum": [
-                                            "aes128",
-                                            "aes256",
-                                            "aes128ccm128",
-                                            "aes256ccm128",
-                                            "aes256gcm128",
-                                            "aes128gcm128",
-                                            "3des"
-                                        ]
+                                "description": "An array of cryptographic proposals for IKE negotiation.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "encryption": {
+                                            "description": "Encryption algorithm for IKE SA.",
+                                            "type": "string",
+                                            "enum": [
+                                                "aes128",
+                                                "aes256",
+                                                "aes128ccm128",
+                                                "aes256ccm128",
+                                                "aes256gcm128",
+                                                "aes128gcm128",
+                                                "3des"
+                                            ]
+                                        },
+                                        "hash": {
+                                            "description": "Hash algorithm for IKE SA integrity.",
+                                            "type": "string",
+                                            "enum": [
+                                                "sha1",
+                                                "sha256",
+                                                "sha384",
+                                                "sha512"
+                                            ]
+                                        },
+                                        "dh-group": {
+                                            "description": "Diffie-Hellman group number for key exchange.",
+                                            "type": "integer",
+                                            "enum": [
+                                                1,
+                                                2,
+                                                5,
+                                                14,
+                                                15,
+                                                16,
+                                                17,
+                                                18,
+                                                19,
+                                                20,
+                                                21,
+                                                22,
+                                                23,
+                                                24,
+                                                25,
+                                                26,
+                                                27,
+                                                28,
+                                                29,
+                                                30,
+                                                31
+                                            ]
+                                        }
                                     },
-                                    "hash": {
-                                        "description": "Hash algorithm for IKE SA integrity.",
-                                        "type": "string",
-                                        "enum": [
-                                            "sha1",
-                                            "sha256",
-                                            "sha384",
-                                            "sha512"
-                                        ]
-                                    },
-                                    "dh-group": {
-                                        "description": "Diffie-Hellman group number for key exchange.",
-                                        "type": "integer",
-                                        "enum": [
-                                            1,
-                                            2,
-                                            5,
-                                            14,
-                                            15,
-                                            16,
-                                            17,
-                                            18,
-                                            19,
-                                            20,
-                                            21,
-                                            22,
-                                            23,
-                                            24,
-                                            25,
-                                            26,
-                                            27,
-                                            28,
-                                            29,
-                                            30,
-                                            31
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "encryption",
-                                    "hash",
-                                    "dh-group"
-                                ]
+                                    "required": [
+                                        "encryption",
+                                        "hash",
+                                        "dh-group"
+                                    ]
+                                }
                             },
                             "dead-peer-detection": {
                                 "description": "Dead Peer Detection (DPD) settings.",
@@ -4466,37 +4461,40 @@
                                 "default": true
                             },
                             "proposal": {
-                                "description": "Cryptographic proposal for ESP negotiation.",
-                                "type": "object",
-                                "properties": {
-                                    "encryption": {
-                                        "description": "Encryption algorithm for ESP SA.",
-                                        "type": "string",
-                                        "enum": [
-                                            "aes128",
-                                            "aes256",
-                                            "aes128ccm128",
-                                            "aes256ccm128",
-                                            "aes256gcm128",
-                                            "aes128gcm128",
-                                            "3des"
-                                        ]
+                                "description": "An array of cryptographic proposals for ESP negotiation.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "encryption": {
+                                            "description": "Encryption algorithm for ESP SA.",
+                                            "type": "string",
+                                            "enum": [
+                                                "aes128",
+                                                "aes256",
+                                                "aes128ccm128",
+                                                "aes256ccm128",
+                                                "aes256gcm128",
+                                                "aes128gcm128",
+                                                "3des"
+                                            ]
+                                        },
+                                        "hash": {
+                                            "description": "Hash algorithm for ESP SA integrity.",
+                                            "type": "string",
+                                            "enum": [
+                                                "sha1",
+                                                "sha256",
+                                                "sha384",
+                                                "sha512"
+                                            ]
+                                        }
                                     },
-                                    "hash": {
-                                        "description": "Hash algorithm for ESP SA integrity.",
-                                        "type": "string",
-                                        "enum": [
-                                            "sha1",
-                                            "sha256",
-                                            "sha384",
-                                            "sha512"
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "encryption",
-                                    "hash"
-                                ]
+                                    "required": [
+                                        "encryption",
+                                        "hash"
+                                    ]
+                                }
                             }
                         },
                         "required": [
@@ -4732,20 +4730,6 @@
                                         "description": "Encryption settings for the VPN connection.",
                                         "type": "object",
                                         "properties": {
-                                            "cipher": {
-                                                "description": "Standard data encryption algorithm.",
-                                                "type": "string",
-                                                "enum": [
-                                                    "none",
-                                                    "3des",
-                                                    "aes128",
-                                                    "aes128gcm",
-                                                    "aes192",
-                                                    "aes192gcm",
-                                                    "aes256",
-                                                    "aes256gcm"
-                                                ]
-                                            },
                                             "data-ciphers": {
                                                 "description": "Cipher negotiation list for data channel encryption.",
                                                 "type": "array",

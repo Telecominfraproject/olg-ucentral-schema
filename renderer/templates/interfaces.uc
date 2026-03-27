@@ -191,21 +191,20 @@ interfaces {
             {% endfor %}
         {% endif %}
         {% if (vpn.openvpn): %}
-            {% for (let ov in vpn.openvpn.servers): %}
+            {% for (let ov in vpn.openvpn.interfaces): %}
     openvpn vtun{{ vtun_c++ }} {
+            {% if(ov.mode == "server"): %}
         encryption {
-                {% for (let cipher in ov.encryption.data_ciphers): %}
+                {% for (let cipher in ov.server.encryption.data_ciphers): %}
             data-ciphers "{{ cipher }}"
                 {% endfor %}
-                {% if (ov.encryption.cipher): %}
-            cipher "{{ ov.encryption.cipher }}"
-                {% endif %}
+
         }
-                {% if (ov.hash): %}
-        hash "{{ ov.hash }}"
+                {% if (ov.server.hash): %}
+        hash "{{ ov.server.hash }}"
                 {% endif %}
-        local-host "{{ ov.address }}"
-        local-port "{{ ov.port }}"
+        local-host "{{ ov.server.listen_address }}"
+        local-port "{{ ov.server.listen_port }}"
         mode "{{ ov.mode }}"
                 {% if (!ov.persistent_tunnel): %}
         persistent-tunnel
@@ -218,26 +217,27 @@ interfaces {
                 subnet "{{ c.subnet }}"
             }
                 {% endfor %}
-                {% if (ov.domain): %}
-            domain-name "{{ ov.domain }}"
+                {% if (ov.server.domain): %}
+            domain-name "{{ ov.server.domain }}"
                 {% endif %}
-                {% if (ov.max_connections): %}
-            max-connections "{{ ov.max_connections }}"
+                {% if (ov.server.max_connections): %}
+            max-connections "{{ ov.server.max_connections }}"
                 {% endif %}
-            name-server "{{ ov.name_server }}"
-                {% if (ov.subnet): %}
-            subnet "{{ ov.subnet }}"
+            name-server "{{ ov.server.name_server }}"
+                {% if (ov.server.subnet): %}
+            subnet "{{ ov.server.subnet }}"
                 {% endif %}
-                {% if (ov.topology): %}
-            topology "{{ ov.topology }}"
+                {% if (ov.server.topology): %}
+            topology "{{ ov.server.topology }}"
                 {% endif %}
         }
         tls {
-            ca-certificate "{{ ov.tls.ca_cert }}"
-            certificate "{{ ov.tls.cert }}"
-            dh-params "{{ ov.tls.dh }}"
+            ca-certificate "{{ ov.server.tls.ca_cert }}"
+            certificate "{{ ov.server.tls.cert }}"
+            dh-params "{{ ov.server.tls.dh }}"
         }
     }
+            {% endif %}
             {% endfor %}
         {% endif %}
     {% endif %}

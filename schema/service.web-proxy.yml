@@ -28,6 +28,9 @@ properties:
     description: Cache size in MB.
     type: integer
     default: 100
+  append-domain:
+    description: Domain to append to requests with unqualified hostnames.
+    type: string
   block-domains:
     description: Domains to block.
     type: array

@@ -5,7 +5,7 @@
 {% endfor %}
 {% for (let ike_g in ipsec.ike_groups): %}
         ike-group {{ ike_g.name }} {
-            key-exchange {{ ike.key_exchange }}
+            key-exchange {{ ike_g.key_exchange }}
     {% for (let prop in ike_g.proposal): %}
             proposal {{ prop_c++ }} {
                 encryption {{ prop.encryption }}
@@ -14,8 +14,8 @@
             }
     {% endfor %}
         }
-{{% endfor %}}
-{% for (let esp_g in ipsec.esp_group): %}
+{% endfor %}
+{% for (let esp_g in ipsec.esp_groups): %}
         esp-group {{ esp_g.name }} {
     {% if (!esp_g.pfs): %}
             psf disable
@@ -46,16 +46,16 @@
                         ca-certificate {{ p.ca_cert }}
                         certificate {{ p.server_cert }}
                     }
+                }
     {% if (p.dhcp_interface): %}
-                    dhcp-interface {{ p.dhcp_interface }}
+                dhcp-interface {{ p.dhcp_interface }}
     {% endif %}
     {% if (p.local_address): %}
-                    local-address {{ p.local_address }}
+                local-address {{ p.local_address }}
     {% endif %}
-                    esp-group {{ p.esp_group }}
-                    ike-group {{ p.ike_group }}
-                    pool {{ p.pool }}
-                }
+                esp-group {{ p.esp_group }}
+                ike-group {{ p.ike_group }}
+                pool {{ p.pool }}
             }
 {% endfor %}
 {% for (let pool in ipsec.pools): %}
@@ -64,4 +64,5 @@
                 prefix {{ pool.prefix }}
             }
 {% endfor %}
+        }
     }

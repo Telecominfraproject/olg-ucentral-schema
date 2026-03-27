@@ -1,4 +1,3 @@
-{% %}
     mdns {
         repeater {
 {% for (let i in mdns.interfaces): %}
