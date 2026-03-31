@@ -8,7 +8,6 @@ properties:
     description: Default action for intra-zone traffic.
     type: string
     enum:
-    - accept
     - drop
     - reject
     default: drop
