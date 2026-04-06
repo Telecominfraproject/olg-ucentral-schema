@@ -14,13 +14,13 @@
         }
 {% endif %}
 {% if (syslog.remote_hosts): %}
-    {% for (let host in syslog.remote_hosts): %}
-        host {{ host.address }} {
-            facility {{ host.facility }} {
-                level {{ host.severity }}
+    {% for (let remote in syslog.remote_hosts): %}
+        remote {{ remote.address }} {
+            facility {{ remote.facility }} {
+                level {{ remote.severity }}
             }
-            port {{ host.port ?? 514 }}
-            protocol {{ host.protocol ?? "udp" }}
+            port {{ remote.port ?? 514 }}
+            protocol {{ remote.protocol ?? "udp" }}
         }
     {% endfor %}
 {% endif %}

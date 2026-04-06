@@ -3,7 +3,10 @@
 qos {
     {% for (let i in qos.interfaces): %}
     interface {{ ethernet.get_iface_by_name(i.name) }} {
-        {% shaper_map[i.policy] = "shaper" + shaper_c++; %}
+        {%
+        if (!shaper_map[i.policy])
+            shaper_map[i.policy] = "shaper" + shaper_c++;
+        %}
         egress {{ shaper_map[i.policy] }}
     }
     {% endfor %}

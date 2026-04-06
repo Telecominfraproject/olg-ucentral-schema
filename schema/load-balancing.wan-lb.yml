@@ -25,7 +25,7 @@ properties:
           type: object
           properties:
             target:
-              description: Outbound interface nexthop address. Can be 'DHCP or IPv4 address'
+              description: Outbound interface nexthop address. Can be 'DHCP' or IPv4 address
               type: string
             interval:
               type: integer

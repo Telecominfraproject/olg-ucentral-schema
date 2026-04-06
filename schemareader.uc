@@ -1958,8 +1958,8 @@ function instantiateFirewallZone(location, value, errors) {
 			if (type(value) != "string")
 				push(errors, [ location, "must be of type string" ]);
 
-			if (!(value in [ "accept", "drop", "reject" ]))
-				push(errors, [ location, "must be one of \"accept\", \"drop\" or \"reject\"" ]);
+			if (!(value in [ "drop", "reject" ]))
+				push(errors, [ location, "must be one of \"drop\" or \"reject\"" ]);
 
 			return value;
 		}
@@ -10330,6 +10330,12 @@ function instantiateServiceWebProxy(location, value, errors) {
 		}
 
 		function parseAppendDomain(location, value, errors) {
+			if (type(value) == "string") {
+				if (!matchHostname(value))
+					push(errors, [ location, "must be a valid hostname" ]);
+
+			}
+
 			if (type(value) != "string")
 				push(errors, [ location, "must be of type string" ]);
 

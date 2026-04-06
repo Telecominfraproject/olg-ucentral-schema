@@ -6,7 +6,9 @@
     {% endfor %}
         }
 {% endif %}
-        listen-address "192.168.240.31"
+{% for (let i in ntp.listen_addresses): %}
+        listen-address "{{ i }}"
+{% endfor %}
 
 {% for (let s in ntp.servers): %}
         server {{ s.address }} {

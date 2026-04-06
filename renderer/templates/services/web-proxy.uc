@@ -3,7 +3,11 @@
         default-port {{ wbp.default_port }}
 {% endif %}
 {% if (wbp.append_domain): %}
-        append-domain {{ wbp.append_domain }}
+    {% if (wbp.append_domain[0] != "."): %}
+        append-domain ".{{ wbp.append_domain }}"
+    {% else %}
+        append-domain "{{ wbp.append_domain }}"
+    {% endif %}
 {% endif %}
 {% for (let s in wbp.servers): %}
         listen-address {{ s.address }} {

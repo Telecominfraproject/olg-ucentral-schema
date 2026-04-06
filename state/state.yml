@@ -57,4 +57,7 @@ properties:
         $ref: "https://ucentral.io/state/v1/dhcp/ipv4-lease/"
       ipv6-leases:
         $ref: "https://ucentral.io/state/v1/dhcp/ipv6-lease/"
-      
+  external:
+    type: array
+    items:
+      type: object

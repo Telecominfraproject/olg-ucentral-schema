@@ -684,7 +684,6 @@
                                 "description": "Default action for intra-zone traffic.",
                                 "type": "string",
                                 "enum": [
-                                    "accept",
                                     "drop",
                                     "reject"
                                 ],
@@ -1343,7 +1342,7 @@
                                         "type": "object",
                                         "properties": {
                                             "target": {
-                                                "description": "Outbound interface nexthop address. Can be 'DHCP or IPv4 address'",
+                                                "description": "Outbound interface nexthop address. Can be 'DHCP' or IPv4 address",
                                                 "type": "string"
                                             },
                                             "interval": {
@@ -3680,7 +3679,8 @@
                         },
                         "append-domain": {
                             "description": "Domain to append to requests with unqualified hostnames.",
-                            "type": "string"
+                            "type": "string",
+                            "format": "hostname"
                         },
                         "block-domains": {
                             "description": "Domains to block.",

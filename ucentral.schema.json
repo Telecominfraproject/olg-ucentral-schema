@@ -667,7 +667,6 @@
                 "default-action": {
                     "type": "string",
                     "enum": [
-                        "accept",
                         "drop",
                         "reject"
                     ],
@@ -3394,7 +3393,8 @@
                     "default": 100
                 },
                 "append-domain": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "hostname"
                 },
                 "block-domains": {
                     "type": "array",

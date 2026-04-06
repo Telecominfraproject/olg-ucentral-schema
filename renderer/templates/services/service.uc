@@ -27,8 +27,8 @@ service {
         if (services.tftp_server) {
             include("tftp-server.uc", { location: location + '/tftp_server', tftp: services.tftp_server });
         }
-        if (services.webproxy) {
-            include("webproxy.uc", { location: location + '/webproxy', wbp: services.webproxy });
+        if (services.web_proxy) {
+            include("web-proxy.uc", { location: location + '/web_proxy', wbp: services.web_proxy });
         }
         include("https.uc", { location: location + '/https' });
     %}
