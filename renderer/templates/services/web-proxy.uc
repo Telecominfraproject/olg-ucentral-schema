@@ -3,7 +3,7 @@
         default-port {{ wbp.default_port }}
 {% endif %}
 {% if (wbp.append_domain): %}
-    {% if (wbp.append_domain[0] != "."): %}
+    {% if (substr(wbp.append_domain, 0, 1) != "."): %}
         append-domain ".{{ wbp.append_domain }}"
     {% else %}
         append-domain "{{ wbp.append_domain }}"
