@@ -31,7 +31,12 @@ interfaces {
         member {
             {% for (let j in i.bridge.members): %}
             interface {{ j }} {
-
+                {% if (i.vlan): %}
+                native-vlan 1
+                    {% for (let k in i.vlan): %}
+                allowed-vlan {{ k.id }}
+                    {% endfor %}
+                {% endif %}
             }
             {% endfor %}
         }
