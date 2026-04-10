@@ -1,7 +1,6 @@
 {%
 let bridge_c = 0, pppoe_c = 0, dummy_c = 0, vtun_c = 0, client_c = 0;
 let wg_c = 0, peer_c = 0;
-let iface_mapping = {}, iface_vlan_mapping = {};
 %}
 
 interfaces {
@@ -61,6 +60,7 @@ interfaces {
         enable-vlan
             {% endif %}
             {% for (let j in i.vlan): %}
+                {% ethernet.get_iface_by_name_and_vlan(iface, j.name, j.id) %}
         vif {{ j.id }} {
                 {% if (!j.enabled): %}
             disable

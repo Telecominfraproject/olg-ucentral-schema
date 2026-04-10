@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-rm -rf debian > /dev/null 2>&1 && mkdir debian
-
 PACKAGE_NAME="ucentral-schema"
 PACKAGE_VERSION="${repo_ucentral_schema_tag:-1.0}"
 
@@ -24,7 +22,7 @@ Architecture: ${DESTARCH}
 Maintainer: kmk18 <alex18_huang@accton.com>
 Section: net
 Priority: optional
-Description: uCentral client for OLG gateway devices
+Description: uCentral schema for OLG gateway devices
 EOF
 
 cat > "${DEB_BUILD_DIR}/DEBIAN/prerm" <<'EOF'
