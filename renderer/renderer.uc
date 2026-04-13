@@ -38,6 +38,16 @@ function s(str) {
 }
 
 /**
+ * Replace all spaces in string into _
+ */
+function u(str) {
+	if (str === null || str === '')
+		return '';
+
+	return replace(str, /\s/g, '_');
+}
+
+/**
  * Attempt to include a file, catching potential exceptions.
  *
  * Try to include the given file path in a safe manner. The

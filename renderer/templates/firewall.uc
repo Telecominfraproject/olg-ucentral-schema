@@ -353,7 +353,7 @@ firewall {
 {% endif %}
 {% if (length(firewall.zones)): %}
     {% for (let z in firewall.zones): %}
-    zone {{ z.name }} {
+    zone {{ u(z.name) }} {
         {% if (z.local_zone): %}
         local-zone
         {% else %}
@@ -367,7 +367,7 @@ firewall {
         {% if (length(firewall.zone_policies)): %}
             {% for (let zp in firewall.zone_policies): %}
                 {% if (zp.to == z.name): %}
-        from {{ zp.from }} {
+        from {{ u(zp.from) }} {
             firewall {
                 name rule{{ rule_m[zp.ruleset] }}
             }
