@@ -2,7 +2,7 @@
 set -e
 
 PACKAGE_NAME="ucentral-schema"
-PACKAGE_VERSION="${repo_ucentral_schema_tag:-1.0}"
+PACKAGE_VERSION="${repo_ucentral_schema_tag:-4.0}"
 
 DEB_BUILD_DIR="debian/"
 DEB_OUT="${DEBDIR}/${PACKAGE_NAME}_${PACKAGE_VERSION}_${DESTARCH}.deb"

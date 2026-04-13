@@ -1,7 +1,16 @@
 {% let rule_c = 0, rule_m = {}; %}
 
 firewall {
-
+    global-options {
+        state-policy {
+            established {
+                action accept
+            }
+            related {
+                action accept
+            }
+        }
+    }
 {% if (length(firewall.ipv4_rulesets)): %}
     ipv4 {
     {% for (let ruleset in firewall.ipv4_rulesets): %}
