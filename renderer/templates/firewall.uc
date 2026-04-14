@@ -9,6 +9,9 @@ firewall {
             related {
                 action accept
             }
+            invalid {
+                action drop
+            }
         }
     }
 {% if (length(firewall.ipv4_rulesets)): %}

@@ -395,6 +395,7 @@ return /** @lends uCentral.prototype */ {
 		return render('templates/toplevel.uc', {
 			b,
 			s,
+			u,
 			tryinclude,
 			state,
 

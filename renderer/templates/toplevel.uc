@@ -44,6 +44,7 @@
 	
 	if (state.firewall) {
 		include("firewall.uc", {
+			u,
 			location: '/firewall',
 			firewall: state.firewall,
 			ethernet: ethernet
