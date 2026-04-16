@@ -1,6 +1,4 @@
-{%
-let range_id = 0, subnet_id = 1;
-%}
+{% let range_id = 0, subnet_id = 1; %}
     dhcp-server {
         {% for (let network in dhcp_server.networks): %}
         shared-network-name {{ network.name }} {

@@ -47,6 +47,8 @@
 			u,
 			location: '/firewall',
 			firewall: state.firewall,
+			services: state.services,
+			routing: state.routing,
 			ethernet: ethernet
 		});
 	}

@@ -14,8 +14,68 @@ firewall {
             }
         }
     }
-{% if (length(firewall.ipv4_rulesets)): %}
+    group {
+        port-group service_group {
+{% if (services): %}
+    {% if (services.dhcp_server || services.dhcp_relay): %}
+            port "67"
+            port "68"
+    {% endif %}
+    {% if (services.dns): %}
+            port "53"
+    {% endif %}
+    {% if (services.https): %}
+            port "443"
+            port "80"
+    {% endif %}
+    {% if (services.ntp): %}
+            port "123"
+    {% endif %}
+    {% if (services.snmp): %}
+            port "161"
+            port "162"
+    {% endif %}
+    {% if (services.tftp_server): %}
+            port "69"
+    {% endif %}
+    {% if (services.ssh): %}
+            port "22"
+    {% endif %}
+    {% if (services.web_proxy): %}
+        {% for (let s in services.web_proxy.servers): %}
+            {% if (s.port): %}
+            port "{{ s.port }}"
+            {% endif %}
+        {% endfor %}
+            port "3128"
+    {% endif %}
+    {% if (services.mdns): %}
+            port "5353"
+    {% endif %}
+{% endif %}
+{% if (routing): %}
+    {% if (routing.bgp): %}
+            port "179"
+    {% endif %}
+    {% if (routing.rip): %}
+            port "520"
+    {% endif %}
+{% endif %}
+        }
+    }
     ipv4 {
+        name service_rule {
+            default-action "reject"
+            rule 10 {
+                action "accept"
+                destination {
+                    group {
+                        port-group "service_group"
+                    }
+                }
+            }
+        }
+{% if (length(firewall.ipv4_rulesets)): %}
     {% for (let ruleset in firewall.ipv4_rulesets): %}
         {% rule_m[ruleset.name] = rule_c; %}
         name rule{{ rule_c++ }} {
@@ -150,8 +210,8 @@ firewall {
         {% endfor %}
         }
     {% endfor %}
-    }
 {% endif %}
+    }
 {% if (length(firewall.ipv6_rulesets)): %}
     ipv6 {
     {% for (let ruleset in firewall.ipv6_rulesets): %}
@@ -368,6 +428,7 @@ firewall {
     zone {{ u(z.name) }} {
         {% if (z.local_zone): %}
         local-zone
+        default-firewall service_rule
         {% else %}
         member {
             {% for (let i in z.interfaces): %}
