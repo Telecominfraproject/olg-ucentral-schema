@@ -13653,6 +13653,23 @@ function newUCentralState(location, value, errors) {
 			obj.metrics = instantiateMetrics(location + "/metrics", value["metrics"], errors);
 		}
 
+		function parseThirdParty(location, value, errors) {
+			if (type(value) == "object") {
+				let obj = { ...value };
+
+				return obj;
+			}
+
+			if (type(value) != "object")
+				push(errors, [ location, "must be of type object" ]);
+
+			return value;
+		}
+
+		if (exists(value, "third-party")) {
+			obj.third_party = parseThirdParty(location + "/third-party", value["third-party"], errors);
+		}
+
 		return obj;
 	}
 

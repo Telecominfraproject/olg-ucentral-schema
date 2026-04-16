@@ -50,6 +50,10 @@
         },
         "metrics": {
             "$ref": "#/$defs/metrics"
+        },
+        "third-party": {
+            "type": "object",
+            "additionalProperties": true
         }
     },
     "$defs": {

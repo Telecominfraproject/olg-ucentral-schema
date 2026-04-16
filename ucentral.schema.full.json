@@ -4955,6 +4955,10 @@
                     }
                 }
             }
+        },
+        "third-party": {
+            "type": "object",
+            "additionalProperties": true
         }
     }
 }
