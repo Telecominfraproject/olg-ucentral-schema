@@ -13,7 +13,6 @@ qos {
     policy {
     {% for (let s in qos.shaper): %}
         shaper {{ shaper_map[s.name] }} {
-            bandwidth {{ s.bandwidth }}
         {% for (let c in s.classes): %}
             class {{ c.id }} {
                 bandwidth {{ c.bandwidth }}
@@ -42,7 +41,7 @@ qos {
                     {% endif %}
                         }
                 {% endif %}
-                {% if (m.protocol): %}
+                {% if (m.protocol && m.protocol != "all"): %}
                         protocol {{ m.protocol }}
                 {% endif %}
                     }

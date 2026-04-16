@@ -9,10 +9,6 @@ properties:
       properties:
         name:
           type: string
-        bandwidth:
-          description: Available bandwidth.
-          type: string
-          example: 100mbit
         classes:
           type: array
           items:
