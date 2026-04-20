@@ -14,6 +14,16 @@ firewall {
             }
         }
     }
+    apply-to-bridged-traffic {
+        accept-invalid {
+            ethernet-type arp
+    {% if (services.dhcp_server || services.dhcp_relay): %}
+            ethernet-type dhcp
+    {% endif %}
+            ethernet-type 802.1q
+            ethernet-type 802.1ad
+        }
+    }
     group {
         port-group service_group {
 {% if (services): %}
@@ -73,14 +83,15 @@ firewall {
                         port-group "service_group"
                     }
                 }
+                protocol tcp_udp
             }
         }
 {% if (length(firewall.ipv4_rulesets)): %}
     {% for (let ruleset in firewall.ipv4_rulesets): %}
         {% rule_m[ruleset.name] = rule_c; %}
         name rule{{ rule_c++ }} {
-        {% if (ruleset.description): %}
-            description {{ ruleset.description }}
+        {% if (ruleset.name): %}
+            description {{ ruleset.name }}
         {% endif %}
         {% if (ruleset.default_action): %}
             default-action {{ ruleset.default_action }}
