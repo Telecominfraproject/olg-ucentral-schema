@@ -119,11 +119,13 @@
                 "protocol": {
                     "type": "string",
                     "examples": [
+                        "tcp_udp",
                         "tcp",
                         "udp",
                         "icmp",
                         "all"
-                    ]
+                    ],
+                    "default": "all"
                 },
                 "source": {
                     "type": "object",
@@ -301,7 +303,8 @@
             },
             "required": [
                 "rule-number",
-                "action"
+                "action",
+                "protocol"
             ]
         },
         "firewall.ruleset.ipv4": {
@@ -357,11 +360,13 @@
                 "protocol": {
                     "type": "string",
                     "examples": [
+                        "tcp_udp",
                         "tcp",
                         "udp",
                         "icmpv6",
                         "all"
-                    ]
+                    ],
+                    "default": "all"
                 },
                 "source": {
                     "type": "object",
@@ -514,7 +519,8 @@
             },
             "required": [
                 "rule-number",
-                "action"
+                "action",
+                "protocol"
             ]
         },
         "firewall.ruleset.ipv6": {
@@ -2833,10 +2839,6 @@
                         "properties": {
                             "name": {
                                 "type": "string"
-                            },
-                            "bandwidth": {
-                                "type": "string",
-                                "example": "100mbit"
                             },
                             "classes": {
                                 "type": "array",

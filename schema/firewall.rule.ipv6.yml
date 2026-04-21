@@ -19,10 +19,12 @@ properties:
     description: Protocol to match.
     type: string
     examples:
+      - tcp_udp
       - tcp
       - udp
       - icmpv6
       - all
+    default: all
   source:
     type: object
     properties:
@@ -47,6 +49,7 @@ properties:
             description: Reference to IPv6 network group.
             type: string
           port-group:
+            description: Reference to IPv4 port group.
             type: string
   destination:
     type: object
@@ -68,6 +71,7 @@ properties:
             description: Reference to IPv6 network group.
             type: string
           port-group:
+            description: Reference to IPv4 port group.
             type: string
   state:
     type: object
@@ -136,3 +140,4 @@ properties:
 required:
   - rule-number
   - action
+  - protocol

@@ -132,11 +132,13 @@
                     "description": "Protocol to match.",
                     "type": "string",
                     "examples": [
+                        "tcp_udp",
                         "tcp",
                         "udp",
                         "icmp",
                         "all"
-                    ]
+                    ],
+                    "default": "all"
                 },
                 "source": {
                     "type": "object",
@@ -181,6 +183,7 @@
                                     "type": "string"
                                 },
                                 "port-group": {
+                                    "description": "Reference to IPv4 port group.",
                                     "type": "string"
                                 }
                             }
@@ -225,6 +228,7 @@
                                     "type": "string"
                                 },
                                 "port-group": {
+                                    "description": "Reference to IPv4 port group.",
                                     "type": "string"
                                 }
                             }
@@ -321,7 +325,8 @@
             },
             "required": [
                 "rule-number",
-                "action"
+                "action",
+                "protocol"
             ]
         },
         "firewall.ruleset.ipv4": {
@@ -386,11 +391,13 @@
                     "description": "Protocol to match.",
                     "type": "string",
                     "examples": [
+                        "tcp_udp",
                         "tcp",
                         "udp",
                         "icmpv6",
                         "all"
-                    ]
+                    ],
+                    "default": "all"
                 },
                 "source": {
                     "type": "object",
@@ -421,6 +428,7 @@
                                     "type": "string"
                                 },
                                 "port-group": {
+                                    "description": "Reference to IPv4 port group.",
                                     "type": "string"
                                 }
                             }
@@ -451,6 +459,7 @@
                                     "type": "string"
                                 },
                                 "port-group": {
+                                    "description": "Reference to IPv4 port group.",
                                     "type": "string"
                                 }
                             }
@@ -550,7 +559,8 @@
             },
             "required": [
                 "rule-number",
-                "action"
+                "action",
+                "protocol"
             ]
         },
         "firewall.ruleset.ipv6": {
@@ -3118,11 +3128,6 @@
                         "properties": {
                             "name": {
                                 "type": "string"
-                            },
-                            "bandwidth": {
-                                "description": "Available bandwidth.",
-                                "type": "string",
-                                "example": "100mbit"
                             },
                             "classes": {
                                 "type": "array",

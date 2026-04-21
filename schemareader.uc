@@ -302,6 +302,9 @@ function instantiateFirewallRuleIpv4(location, value, errors) {
 		if (exists(value, "protocol")) {
 			obj.protocol = parseProtocol(location + "/protocol", value["protocol"], errors);
 		}
+		else {
+			obj.protocol = "all";
+		}
 
 		function parseSource(location, value, errors) {
 			if (type(value) == "object") {
@@ -1063,6 +1066,9 @@ function instantiateFirewallRuleIpv6(location, value, errors) {
 
 		if (exists(value, "protocol")) {
 			obj.protocol = parseProtocol(location + "/protocol", value["protocol"], errors);
+		}
+		else {
+			obj.protocol = "all";
 		}
 
 		function parseSource(location, value, errors) {
@@ -8375,20 +8381,6 @@ function instantiateQos(location, value, errors) {
 
 						if (exists(value, "name")) {
 							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseBandwidth(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "bandwidth")) {
-							obj.bandwidth = parseBandwidth(location + "/bandwidth", value["bandwidth"], errors);
 						}
 						else {
 							push(errors, [ location, "is required" ]);

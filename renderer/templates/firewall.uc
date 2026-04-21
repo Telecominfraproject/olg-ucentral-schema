@@ -20,12 +20,62 @@ firewall {
     {% if (services.dhcp_server || services.dhcp_relay): %}
             ethernet-type dhcp
     {% endif %}
+    {% if (service.pppoe_server): %}
+            ethernet-type pppoe
+    {% endif %}
             ethernet-type 802.1q
             ethernet-type 802.1ad
         }
     }
     group {
-        port-group service_group {
+        port-group LAN_SERVICE_GROUP {
+{% if (services): %}
+    {% if (services.dhcp_server || services.dhcp_relay): %}
+            port "67"
+            port "68"
+    {% endif %}
+    {% if (services.dns): %}
+            port "53"
+    {% endif %}
+    {% if (services.https): %}
+            port "443"
+            port "80"
+    {% endif %}
+    {% if (services.ntp): %}
+            port "123"
+    {% endif %}
+    {% if (services.snmp): %}
+            port "161"
+            port "162"
+    {% endif %}
+    {% if (services.tftp_server): %}
+            port "69"
+    {% endif %}
+    {% if (services.ssh): %}
+            port "22"
+    {% endif %}
+    {% if (services.web_proxy): %}
+        {% for (let s in services.web_proxy.servers): %}
+            {% if (s.port): %}
+            port "{{ s.port }}"
+            {% endif %}
+        {% endfor %}
+            port "3128"
+    {% endif %}
+    {% if (services.mdns): %}
+            port "5353"
+    {% endif %}
+{% endif %}
+{% if (routing): %}
+    {% if (routing.bgp): %}
+            port "179"
+    {% endif %}
+    {% if (routing.rip): %}
+            port "520"
+    {% endif %}
+{% endif %}
+        }
+        port-group WAN_SERVICE_GROUP {
 {% if (services): %}
     {% if (services.dhcp_server || services.dhcp_relay): %}
             port "67"
@@ -164,23 +214,6 @@ firewall {
                 }
             {% endif %}
 
-            {% if (rule.state): %}
-                state {
-                {% if (rule.state.established): %}
-                    established
-                {% endif %}
-                {% if (rule.state.related): %}
-                    related
-                {% endif %}
-                {% if (rule.state.new): %}
-                    new
-                {% endif %}
-                {% if (rule.state.invalid): %}
-                    invalid
-                {% endif %}
-                }
-            {% endif %}
-
             {% if (rule.icmp): %}
                 icmp {
                 {% if (rule.icmp.type): %}
@@ -298,23 +331,6 @@ firewall {
                         port-group {{ rule.destination.group.port_group }}
                     {% endif %}
                     }
-                {% endif %}
-                }
-            {% endif %}
-
-            {% if (rule.state): %}
-                state {
-                {% if (rule.state.established): %}
-                    established
-                {% endif %}
-                {% if (rule.state.related): %}
-                    related
-                {% endif %}
-                {% if (rule.state.new): %}
-                    new
-                {% endif %}
-                {% if (rule.state.invalid): %}
-                    invalid
                 {% endif %}
                 }
             {% endif %}

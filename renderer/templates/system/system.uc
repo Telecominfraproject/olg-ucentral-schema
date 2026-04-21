@@ -14,8 +14,8 @@ system {
         }
     %}
     {% if (system.name_servers): %}
-        {% if (system.name_servers.dhcp-interfaces): %}
-            {% for (let interface in system.name_servers.dhcp-interfaces): %}
+        {% if (system.name_servers.dhcp_interfaces): %}
+            {% for (let interface in system.name_servers.dhcp_interfaces): %}
     name-server {{ interface }}
             {% endfor %}
         {% endif %}
