@@ -1,116 +1,188 @@
 {
-	"firewall":	{
-		"ipv4-rulesets":	[{
-				"default-action":	"accept",
-				"name":	"device-wan-ipv4",
-				"rules":	[]
-			}, {
-				"default-action":	"accept",
-				"name":	"wan-device-ipv4",
-				"rules":	[]
-			}, {
-				"default-action":	"accept",
-				"name":	"lan-wan-ipv4",
-				"rules":	[]
-			}, {
-				"default-action":	"accept",
-				"name":	"wan-lan-ipv4",
-				"rules":	[]
-			}, {
-				"default-action":	"accept",
-				"name":	"lan-device-ipv4",
-				"rules":	[]
-			}, {
-				"default-action":	"accept",
-				"name":	"device-lan-ipv4",
-				"rules":	[]
-			}],
-		"zone-policies":	[{
-				"from":	"device",
-				"ruleset":	"device-wan-ipv4",
-				"to":	"wan"
-			}, {
-				"from":	"wan",
-				"ruleset":	"wan-device-ipv4",
-				"to":	"device"
-			}, {
-				"from":	"lan",
-				"ruleset":	"lan-wan-ipv4",
-				"to":	"wan"
-			}, {
-				"from":	"wan",
-				"ruleset":	"wan-lan-ipv4",
-				"to":	"lan"
-			}, {
-				"from":	"lan",
-				"ruleset":	"lan-device-ipv4",
-				"to":	"device"
-			}, {
-				"from":	"device",
-				"ruleset":	"device-lan-ipv4",
-				"to":	"lan"
-			}],
-		"zones":	[{
-				"default-action":	"accept",
-				"interfaces":	["eth2"],
-				"name":	"wan"
-			}, {
-				"default-action":	"accept",
-				"interfaces":	["br-lan"],
-				"name":	"lan"
-			}, {
-				"default-action":	"accept",
-				"local-zone":	true,
-				"name":	"device"
-			}]
+	"firewall": {
+		"ipv4-rulesets": [
+			{
+				"default-action": "accept",
+				"name": "device-wan-ipv4",
+				"rules": []
+			},
+			{
+				"default-action": "drop",
+				"name": "wan-device-ipv4",
+				"rules": [
+					{
+						"rule-number": 5,
+						"action": "accept",
+						"protocol": "tcp_udp",
+						"destination": {
+							"group": {
+								"port-group": "WAN_SERVICE_GROUP"
+							}
+						}
+					}
+				]
+			},
+			{
+				"default-action": "accept",
+				"name": "lan-wan-ipv4",
+				"rules": []
+			},
+			{
+				"default-action": "drop",
+				"name": "wan-lan-ipv4",
+				"rules": []
+			},
+			{
+				"default-action": "drop",
+				"name": "lan-device-ipv4",
+				"rules": [
+					{
+						"rule-number": 5,
+						"action": "accept",
+						"protocol": "tcp_udp",
+						"destination": {
+							"group": {
+								"port-group": "LAN_SERVICE_GROUP"
+							}
+						}
+					}
+				]
+			},
+			{
+				"default-action": "accept",
+				"name": "device-lan-ipv4",
+				"rules": []
+			}
+		],
+		"zone-policies": [
+			{
+				"from": "device",
+				"ruleset": "device-wan-ipv4",
+				"to": "wan"
+			},
+			{
+				"from": "wan",
+				"ruleset": "wan-device-ipv4",
+				"to": "device"
+			},
+			{
+				"from": "lan",
+				"ruleset": "lan-wan-ipv4",
+				"to": "wan"
+			},
+			{
+				"from": "wan",
+				"ruleset": "wan-lan-ipv4",
+				"to": "lan"
+			},
+			{
+				"from": "lan",
+				"ruleset": "lan-device-ipv4",
+				"to": "device"
+			},
+			{
+				"from": "device",
+				"ruleset": "device-lan-ipv4",
+				"to": "lan"
+			}
+		],
+		"zones": [
+			{
+				"default-action": "reject",
+				"interfaces": [
+					"eth2",
+					"eth3"
+				],
+				"name": "wan"
+			},
+			{
+				"default-action": "reject",
+				"interfaces": [
+					"br0"
+				],
+				"name": "lan"
+			},
+			{
+				"default-action": "reject",
+				"local-zone": true,
+				"name": "device"
+			}
+		]
 	},
-	"interfaces":	[{
-			"ipv4":	{
-				"addressing":	"dhcp"
+	"interfaces": [
+		{
+			"ipv4": {
+				"addressing": "dhcp"
 			},
-			"mtu":	1500,
-			"name":	"eth2",
-			"role":	"upstream",
-			"type":	"ethernet"
-		}, {
-			"bridge":	{
-				"members":	["eth0", "eth1", "eth4", "eth5"],
-				"stp":	false
-			},
-			"ipv4":	{
-				"address":	["10.28.34.254/24"],
-				"addressing":	"static"
-			},
-			"mtu":	1500,
-			"name":	"br-lan",
-			"role":	"downstream",
-			"type":	"bridge"
-		}],
-	"metrics":	{
-		"health":	{
-			"interval":	60
+			"mtu": 1500,
+			"name": "eth2",
+			"role": "upstream",
+			"type": "ethernet"
 		},
-		"statistics":	{
-			"interval":	300,
-			"types":	[]
+		{
+			"ipv4": {
+				"addressing": "dhcp"
+			},
+			"mtu": 1500,
+			"name": "eth3",
+			"role": "upstream",
+			"type": "ethernet"
+		},
+		{
+			"bridge": {
+				"members": [
+					"eth0",
+					"eth1",
+					"eth4",
+					"eth5"
+				],
+				"stp": false
+			},
+			"ipv4": {
+				"address": [
+					"10.28.34.254/24"
+				],
+				"addressing": "static"
+			},
+			"mtu": 1500,
+			"name": "br-lan",
+			"role": "downstream",
+			"type": "bridge"
+		}
+	],
+	"metrics": {
+		"health": {
+			"interval": 60
+		},
+		"statistics": {
+			"interval": 300,
+			"types": []
 		}
 	},
-	"services":	{
-		"dhcp-server":	{
-			"networks":	[{
-					"name":	"dhcp-0",
-					"subnets":	[{
-							"default-router":	"10.28.34.254",
-							"dns-servers":	["10.28.34.254"],
-							"lease-time":	86400,
-							"ranges":	[{
-									"start":	"10.28.34.150",
-									"stop":	"10.28.34.200"
-								}],
-							"subnet":	"10.28.34.0/24"
-						}]
-				}]
+	"services": {
+		"dhcp-server": {
+			"networks": [
+				{
+					"name": "dhcp-0",
+					"subnets": [
+						{
+							"default-router": "10.28.34.254",
+							"dns-servers": [
+								"10.28.34.254"
+							],
+							"lease-time": 86400,
+							"ranges": [
+								{
+									"start": "10.28.34.150",
+									"stop": "10.28.34.200"
+								}
+							],
+							"subnet": "10.28.34.0/24"
+						}
+					]
+				}
+			]
 		}
 	},
-	"uuid":	1772093163
+	"uuid": 1772093163
 }

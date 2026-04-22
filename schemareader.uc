@@ -10847,6 +10847,47 @@ function instantiateServiceSnmpv3(location, value, errors) {
 	return value;
 }
 
+function instantiateServiceSsh(location, value, errors) {
+	if (type(value) == "object") {
+		let obj = {};
+
+		function parseExposeLan(location, value, errors) {
+			if (type(value) != "bool")
+				push(errors, [ location, "must be of type boolean" ]);
+
+			return value;
+		}
+
+		if (exists(value, "expose-lan")) {
+			obj.expose_lan = parseExposeLan(location + "/expose-lan", value["expose-lan"], errors);
+		}
+		else {
+			obj.expose_lan = false;
+		}
+
+		function parseExposeWan(location, value, errors) {
+			if (type(value) != "bool")
+				push(errors, [ location, "must be of type boolean" ]);
+
+			return value;
+		}
+
+		if (exists(value, "expose-wan")) {
+			obj.expose_wan = parseExposeWan(location + "/expose-wan", value["expose-wan"], errors);
+		}
+		else {
+			obj.expose_wan = false;
+		}
+
+		return obj;
+	}
+
+	if (type(value) != "object")
+		push(errors, [ location, "must be of type object" ]);
+
+	return value;
+}
+
 function instantiateService(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
@@ -10893,6 +10934,10 @@ function instantiateService(location, value, errors) {
 
 		if (exists(value, "snmp")) {
 			obj.snmp = instantiateServiceSnmpv3(location + "/snmp", value["snmp"], errors);
+		}
+
+		if (exists(value, "ssh")) {
+			obj.ssh = instantiateServiceSsh(location + "/ssh", value["ssh"], errors);
 		}
 
 		return obj;

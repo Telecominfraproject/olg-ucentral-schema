@@ -23,3 +23,5 @@ properties:
     $ref: https://ucentral.io/schema/v1/service/igmp-proxy/
   snmp:
     $ref: https://ucentral.io/schema/v1/service/snmpv3/
+  ssh:
+    $ref: https://ucentral.io/schema/v1/service/ssh/

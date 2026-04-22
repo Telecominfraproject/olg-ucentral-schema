@@ -3854,6 +3854,20 @@
                             }
                         }
                     }
+                },
+                "ssh": {
+                    "description": "Expose ssh port to LAN/WAN",
+                    "type": "object",
+                    "properties": {
+                        "expose-lan": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "expose-wan": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
                 }
             }
         },

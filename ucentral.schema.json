@@ -3556,6 +3556,19 @@
                 }
             }
         },
+        "service.ssh": {
+            "type": "object",
+            "properties": {
+                "expose-lan": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "expose-wan": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
         "service": {
             "type": "object",
             "properties": {
@@ -3591,6 +3604,9 @@
                 },
                 "snmp": {
                     "$ref": "#/$defs/service.snmpv3"
+                },
+                "ssh": {
+                    "$ref": "#/$defs/service.ssh"
                 }
             }
         },
