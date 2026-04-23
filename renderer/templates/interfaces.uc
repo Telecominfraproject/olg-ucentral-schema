@@ -152,7 +152,8 @@ interfaces {
     {% if (vpn): %}
         {% if (vpn.wireguard): %}
             {% for (let i in vpn.wireguard.interfaces): %}
-    wireguard wg{{ wg_c++ }} {
+                {% let iface_tmp = ethernet.calculate_name_by_type_and_name("wireguard", i.name); %}
+    wireguard {{ iface_tmp }} {
                 {% if (i.name): %}
         description "{{ i.name }}"
                 {% endif %}

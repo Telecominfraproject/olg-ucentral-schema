@@ -139,25 +139,33 @@ let ethernet = {
 	},
 
 	calculate_name: function(interface) {
-		let iface_temp;
-		switch (interface.type) {
+		return this.calculate_name_by_type_and_name(interface.type, interface.name);
+	},
+
+	calculate_name_by_type_and_name: function(type, name) {
+		let iface_temp, iface_orig;
+		switch (type) {
 			case "ethernet":
-				this.interfaces[interface.name] = interface.name;
-				return interface.name;
+				this.interfaces[name] = name;
+				return name;
 			case "bridge":
 				iface_temp = "br" + this.bridge_c++;
-				this.interfaces[interface.name] = iface_temp;
+				this.interfaces[name] = iface_temp;
 				return iface_temp;
 			case "pppoe":
 				iface_temp = "pppoe" + this.pppoe_c++;
-				this.interfaces[interface.name] = iface_temp;
+				this.interfaces[name] = iface_temp;
 				return iface_temp;
 			case "dummy":
 				iface_temp = "dummy" + this.dummy_c++;
-				this.interfaces[interface.name] = iface_temp;
+				this.interfaces[name] = iface_temp;
+				return iface_temp;
+			case "wireguard":
+				iface_temp = "wg" + this.wg_c++;
+				this.interfaces[name] = iface_temp;
 				return iface_temp;
 			default:
-				return interface.name;
+				return name;
 		}
 	},
 
