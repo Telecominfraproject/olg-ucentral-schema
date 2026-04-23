@@ -86,4 +86,4 @@ properties:
                 type: array
                 items:
                   type: string
-                  format: uc-ip
+                  format: uc-cidr

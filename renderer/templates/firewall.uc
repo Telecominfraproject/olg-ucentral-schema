@@ -13,33 +13,35 @@ firewall {
                 action reject
             }
         }
-    }
-    apply-to-bridged-traffic {
-        accept-invalid {
-            ethernet-type arp
-    {% if (services.dhcp_server || services.dhcp_relay): %}
-            ethernet-type dhcp
-    {% endif %}
-    {% if (services.pppoe_server): %}
-            ethernet-type pppoe
-    {% endif %}
-            ethernet-type 802.1q
-            ethernet-type 802.1ad
+        apply-to-bridged-traffic {
+            accept-invalid {
+                ethernet-type arp
+{% if (services.dhcp_server || services.dhcp_relay): %}
+                ethernet-type dhcp
+{% endif %}
+{% if (services.pppoe_server): %}
+                ethernet-type pppoe
+{% endif %}
+                ethernet-type 802.1q
+                ethernet-type 802.1ad
+            }
         }
     }
     group {
         port-group LAN_SERVICE_GROUP {
 {% if (services): %}
-    {% if (services.dhcp_server || services.dhcp_relay): %}
-            port "67"
-            port "68"
+    {% if (services.ssh && services.ssh.expose_lan): %}
+            port "22"
     {% endif %}
     {% if (services.dns): %}
             port "53"
     {% endif %}
-    {% if (services.https): %}
-            port "443"
-            port "80"
+    {% if (services.dhcp_server || services.dhcp_relay): %}
+            port "67"
+            port "68"
+    {% endif %}
+    {% if (services.tftp_server): %}
+            port "69"
     {% endif %}
     {% if (services.ntp): %}
             port "123"
@@ -48,18 +50,17 @@ firewall {
             port "161"
             port "162"
     {% endif %}
-    {% if (services.tftp_server): %}
-            port "69"
-    {% endif %}
-    {% if (services.ssh && services.ssh.expose_lan): %}
-            port "22"
-    {% endif %}
     {% if (services.web_proxy): %}
-        {% for (let s in services.web_proxy.servers): %}
-            {% if (s.port): %}
+        {% if (services.web_proxy.servers): %}
+            {% for (let s in services.web_proxy.servers): %}
+                {% if (s.port): %}
             port "{{ s.port }}"
-            {% endif %}
-        {% endfor %}
+                {% endif %}
+                {% if (s.transparent_proxy): %}
+            port "80"
+                {% endif %}
+            {% endfor %}
+        {% endif %}
             port "3128"
     {% endif %}
     {% if (services.mdns): %}
@@ -77,12 +78,12 @@ firewall {
         }
         port-group WAN_SERVICE_GROUP {
 {% if (services): %}
+    {% if (services.ssh && services.ssh.expose_wan): %}
+            port "22"
+    {% endif %}
     {% if (services.snmp): %}
             port "161"
             port "162"
-    {% endif %}
-    {% if (services.ssh && services.ssh.expose_wan): %}
-            port "22"
     {% endif %}
     {% if (services.mdns): %}
             port "5353"

@@ -13400,8 +13400,8 @@ function instantiateVpnWireguard(location, value, errors) {
 											if (type(value) == "array") {
 												function parseItem(location, value, errors) {
 													if (type(value) == "string") {
-														if (!matchUcIp(value))
-															push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+														if (!matchUcCidr(value))
+															push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
 
 													}
 
