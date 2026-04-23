@@ -97,6 +97,17 @@ firewall {
             port "520"
     {% endif %}
 {% endif %}
+{% if (state.vpn && length(state.vpn)): %}
+    {% if (vpn.wireguard): %}
+        {% for (let i in vpn.wireguard.interfaces): %}
+            {% if (i.port): %}
+            port "{{ i.peer_port }}"
+            {% else %}
+            port "51820"
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endif %}
         }
     }
     ipv4 {

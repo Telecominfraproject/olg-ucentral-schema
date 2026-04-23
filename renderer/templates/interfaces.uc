@@ -177,6 +177,9 @@ interfaces {
                     {% for (let a in p.subnet): %}
             allowed-ips "{{ a }}"
                     {% endfor %}
+                    {% for (let a in p.ipaddr): %}
+            allowed-ips "{{ a }}"
+                    {% endfor %}
                     {% if (p.persistent_keepalive): %}
             persistent-keepalive "{{ p.persistent_keepalive }}"
                     {% endif %}

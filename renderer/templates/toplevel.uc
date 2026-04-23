@@ -49,6 +49,7 @@
 			firewall: state.firewall,
 			services: state.services,
 			routing: state.routing,
+			vpn: state.vpn ? state.vpn : {},
 			ethernet: ethernet
 		});
 	}
