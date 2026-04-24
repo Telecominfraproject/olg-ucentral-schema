@@ -2,37 +2,57 @@
 	"firewall":	{
 		"ipv4-rulesets":	[{
 				"default-action":	"accept",
-				"name":	"LAN-WAN-ipv4",
-				"rules":	[]
+				"name":	"LAN-WAN-ipv4"
 			}, {
 				"default-action":	"accept",
-				"name":	"LAN-Device-ipv4",
-				"rules":	[]
+				"name":	"DEVICE-ANY-ipv4"
 			}, {
-				"default-action":	"accept",
-				"name":	"Device-LAN-ipv4",
-				"rules":	[]
+				"default-action":	"drop",
+				"name":	"LAN-DEVICE-ipv4",
+				"rules":	[{
+						"action":	"accept",
+						"destination":	{
+							"group":	{
+								"port-group":	"LAN_SERVICE_GROUP"
+							}
+						},
+						"protocol":	"tcp_udp",
+						"rule-number":	5
+					}]
 			}, {
-				"default-action":	"accept",
-				"name":	"Device-WAN-ipv4",
-				"rules":	[]
+				"default-action":	"drop",
+				"name":	"WAN-DEVICE-ipv4",
+				"rules":	[{
+						"action":	"accept",
+						"destination":	{
+							"group":	{
+								"port-group":	"WAN_SERVICE_GROUP"
+							}
+						},
+						"protocol":	"tcp_udp",
+						"rule-number":	5
+					}]
 			}],
 		"zone-policies":	[{
-				"from":	"Default LAN",
+				"from":	"LAN",
 				"ruleset":	"LAN-WAN-ipv4",
 				"to":	"WAN"
 			}, {
-				"from":	"Default LAN",
-				"ruleset":	"LAN-Device-ipv4",
-				"to":	"Device"
-			}, {
-				"from":	"Device",
-				"ruleset":	"Device-LAN-ipv4",
-				"to":	"Default LAN"
-			}, {
-				"from":	"Device",
-				"ruleset":	"Device-WAN-ipv4",
+				"from":	"DEVICE",
+				"ruleset":	"DEVICE-ANY-ipv4",
 				"to":	"WAN"
+			}, {
+				"from":	"WAN",
+				"ruleset":	"WAN-DEVICE-ipv4",
+				"to":	"DEVICE"
+			}, {
+				"from":	"DEVICE",
+				"ruleset":	"DEVICE-ANY-ipv4",
+				"to":	"LAN"
+			}, {
+				"from":	"LAN",
+				"ruleset":	"LAN-DEVICE-ipv4",
+				"to":	"DEVICE"
 			}],
 		"zones":	[{
 				"default-action":	"drop",
@@ -41,11 +61,11 @@
 			}, {
 				"default-action":	"drop",
 				"interfaces":	["br0"],
-				"name":	"Default LAN"
+				"name":	"LAN"
 			}, {
 				"default-action":	"drop",
 				"local-zone":	true,
-				"name":	"Device"
+				"name":	"DEVICE"
 			}]
 	},
 	"interfaces":	[{
@@ -101,7 +121,7 @@
 				"members":	["eth0", "eth1", "eth4", "eth5"]
 			},
 			"ipv4":	{
-				"address":	["192.168.1.1/24"],
+				"address":	["10.28.30.254/24"],
 				"addressing":	"static"
 			},
 			"ipv6":	{
@@ -127,7 +147,7 @@
 				"protocol":	"all",
 				"rule-number":	10,
 				"source":	{
-					"address":	"192.168.1.0/24"
+					"address":	"10.28.30.0/24"
 				},
 				"translation":	{
 					"address":	"masquerade"
@@ -139,20 +159,29 @@
 			"networks":	[{
 					"name":	"dhcp-br0",
 					"subnets":	[{
-							"default-router":	"192.168.1.1",
-							"dns-servers":	["192.168.1.1"],
+							"default-router":	"10.28.30.254",
+							"dns-servers":	["10.28.30.254"],
 							"lease-time":	86400,
 							"ranges":	[{
-									"start":	"192.168.1.100",
-									"stop":	"192.168.1.200"
+									"start":	"10.28.30.100",
+									"stop":	"10.28.30.200"
 								}],
-							"subnet":	"192.168.1.0/24"
+							"subnet":	"10.28.30.0/24"
 						}]
 				}]
 		},
 		"dns":	{
-			"allow-from":	["192.168.1.0/24"],
-			"listen-addresses":	["192.168.1.1"]
+			"allow-from":	["10.28.30.0/24"],
+			"listen-addresses":	["10.28.30.254"]
+		},
+		"web-proxy":	{
+			"append-domain":	"shinycolors.moe",
+			"default-port":	8080,
+			"servers":	[{
+					"address":	"10.28.30.254",
+					"port":	8080,
+					"transparent-proxy":	true
+				}]
 		}
 	},
 	"system":	{
@@ -166,5 +195,24 @@
 				}]
 		}
 	},
-	"uuid":	1775731552
+	"uuid":	1776903407,
+	"vpn":	{
+		"wireguard":	{
+			"interfaces":	[{
+					"hosts":	[{
+							"ipaddr":	["10.0.0.2/32"],
+							"key":	"nIFrOPrw4WxpkxdhBw+Yz+HH2bjvHfWJxwdaBMA6ZU4=",
+							"name":	"node1"
+						}],
+					"peer-port":	51820,
+					"private-key":	"IBk3qKn/Yau9eGBvFHbS9SDzr4Wvtb1Ow1KDOqcKF1I=",
+					"proto":	"wireguard-overlay",
+					"root-node":	{
+						"endpoint":	"192.168.240.30",
+						"ipaddr":	["10.0.0.1/24"],
+						"key":	"sjBlRa6quEOmIHb01xFQ4s+p3uUJYn8EEoYxClc64kg="
+					}
+				}]
+		}
+	}
 }

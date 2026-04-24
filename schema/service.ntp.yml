@@ -37,12 +37,10 @@ properties:
           default: false
       required:
       - address
-  listen-addresses:
-    description: List of IP addresses to listen on as NTP server.
-    type: array
-    items:
-      type: string
-      format: uc-ip
+  listen-address:
+    description: IP address to listen on as NTP server.
+    type: string
+    format: uc-ip
   allow-clients:
     description: Allowed IPv4 or IPv6 address
     type: array

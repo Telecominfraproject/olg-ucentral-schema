@@ -4976,6 +4976,10 @@
                     "items": {
                         "type": "object",
                         "properties": {
+                            "name": {
+                                "description": "The name of the interface.",
+                                "type": "string"
+                            },
                             "proto": {
                                 "description": "This field must be set to wireguard-overlay.",
                                 "type": "string",
@@ -5060,7 +5064,10 @@
                                     }
                                 }
                             }
-                        }
+                        },
+                        "required": [
+                            "name"
+                        ]
                     }
                 }
             }

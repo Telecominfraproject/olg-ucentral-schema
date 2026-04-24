@@ -7,10 +7,10 @@ pki {
     }
 {% for (let ca in pki.ca_certs): %}
     ca {{ ca.name }} {
-        certificate "{{ ca.certificate }}"
+        certificate "{{ c(ca.certificate) }}"
     {% if (ca.private_key): %}
         private {
-            key "{{ ca.private_key }}"
+            key "{{ c(ca.private_key) }}"
         }
     {% endif %}
     }
@@ -21,19 +21,19 @@ pki {
             key "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDVGAhdH/+Qi1vBqbdCA+WKu6hq7SXse7W/I0r6qj8Acb8tHhgYhH3/wx/I9SsAcLmx713CdzNS5eCbklDzbOX+Ka6qAyLDHo2BBv5mM4QgiVjb/000jLxv/SQ1eA6dsmOX7If+5Rnnx3Nu0ktiK8fTUaUlnxhjlcHSmnJtU01MXVnvKrlrA2a9QY9rf73xXjSUB351u/DcoZH4oZ5Lv7TmFkm7uBwcC2sTAbOCAqQmlzGMhqaIRsboGpA34UWefaPTtPJkrxUIS8EDdGl55Futw/fCdoc9c/2YE0PXDQ7gVacd6QOItCExjqXOMhOvCPu9wXhhI55g1D709W8ThNTNAgMBAAECggEABwczY2rmQWyvOoxv7F/3hqNY0yn+KbYM0QCHfQv3ZvrZbNIExm48P56+YiDf6bROE5XK+Fp5GV9WkJr7S4QIc+EJDzdqQpgz35EM++7wCSiugxcBA14u6tylAJR0mvPiwAR/mcMRnyjfYETUUqkR/qC/OyXrpoEuctVAN+Xa801DdjfkailAGc7MTLT1+KB4OcetMP+NspEM5zqoiyDGGEFnO2EmnDWhZXLn8rNtliuJA6RHLC0AHv5fAPhsroarDoxUYZsjAObPJTJbuq3QL0X/cpzBRGbEYjR2fuj95M4ZWOJucuR7qtKDCEsa36lYQHi3YI3Ho9+zpfUy0K5WmwKBgQD4JorYHhj8hTkMVBgRvtIJVKmp+T12bsswJTTTDSnhUz5PlLWIR5iSxj2vpZY1lfWxF51RGOKuMEdQAM5sEMRgM775qVKshrEColGaiLFEcZnpKZo83W8m3+pVh87zlY8KEgMsRRTeYrtSwuvr7mrvYCCEKIVoyA5g1nFgsxgTRwKBgQDb1ZxPrT55QN5lL4j9yicpBuJN7AgySYHhpQzE38x1WqVY3i+Gdo8yqEf3HdCndkOtrarDHNIHi6Y+0ArlhYKYk8Z8rXFMnCgIV5n2yqS/G7DuA5tXrj3zUzYNtc9VLBoIpdT7w2xEXuHKc2wnTms/2RoxAZX0f3I/wEI7g+DZSwKBgQCF8sgfwJ9cL82Lihkz+v0FbF3pElDLDSNA6dSJ2CEzL+wCqRMUbRE+qSPDHG7onfnxjf2tOPGjdQwJc2X5j1NxWn1L5spptor2EQhbkk2d1HRwF7TaBe1p3pRvds+PTLvZg7+Stfd9022qTu1qfVfbvtfOftEErniUbSzmNcZZIQKBgQC7VKlSAFiXbR7W7Q347tY2EOax7iwB5j/msAZUkj2h12/FbfjjxY47ZcmFnIOc4JvFmZNFlv6nbWpqZlCSzBXAvVTME+TTmtJGYZgTBRYkwI0iFjK/If0qp8MNJdwbQWyh5+a58AsHrC8OnRMR37JnAzNdhXNqmVwbVVNbcgMeRwKBgQCQ5OXn/YcIcIOE0rA5vCtiUldTMfkt8ZdJtvWgKgr/DNLQUM6v/nc1INfhvKeKGnT67X4zRYUXKdUlT5cP2Prgrbqwe3LQVg8SFk1it7BUZ6+LtUSgv4+N8dQrjHLVtlM0+KMvpwQ05lcSBJh00xb//dPG7RB55LgalbM47A4DXA=="
         }
     }
-{% for (let c in pki.certs): %}
-    certificate {{ c.name }} {
-        certificate "{{ c.certificate }}"
-    {% if (c.private_key): %}
+{% for (let cert in pki.certs): %}
+    certificate {{ cert.name }} {
+        certificate "{{ c(cert.certificate) }}"
+    {% if (cert.private_key): %}
         private {
-            key "{{ c.private_key }}"
+            key "{{ c(cert.private_key) }}"
         }
     {% endif %}
     }
 {% endfor %}
 {% for (let dh in pki.dh): %}
     dh {{ dh.name }} {
-        parameters "{{ dh.parameter }}"
+        parameters "{{ c(dh.parameter) }}"
     }
 {% endfor %}
 }

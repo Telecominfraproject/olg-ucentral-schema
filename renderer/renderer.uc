@@ -48,6 +48,19 @@ function u(str) {
 }
 
 /**
+ * Remove all spaces, new line in string
+ */
+function c(str) {
+	if (str === null || str === '')
+		return '';
+	
+	str = replace(str, /-----BEGIN\s[^-]+-----/g, '');
+	str = replace(str, /-----END\s[^-]+-----/g, '');
+
+	return replace(str, /\s|\n/g, '');
+}
+
+/**
  * Attempt to include a file, catching potential exceptions.
  *
  * Try to include the given file path in a safe manner. The
@@ -404,6 +417,7 @@ return /** @lends uCentral.prototype */ {
 			b,
 			s,
 			u,
+			c,
 			tryinclude,
 			state,
 

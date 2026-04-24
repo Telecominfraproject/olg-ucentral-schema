@@ -6,10 +6,7 @@
     {% endfor %}
         }
 {% endif %}
-{% for (let i in ntp.listen_addresses): %}
-        listen-address "{{ i }}"
-{% endfor %}
-
+        listen-address "{{ ntp.listen_address }}"
 {% for (let s in ntp.servers): %}
         server {{ s.address }} {
     {% if (s.no_select): %}

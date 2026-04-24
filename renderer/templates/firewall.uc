@@ -107,6 +107,17 @@ firewall {
             {% endif %}
         {% endfor %}
     {% endif %}
+    {% if (vpn.openvpn): %}
+        {% for (let ov in vpn.openvpn.interfaces): %}
+            {% if (ov.mode == "server"): %}
+            port "{{ ov.server.listen_port }}"
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if (vpn.ipsec && length(vpn.ipsec)): %}
+            port 500
+            port 4500
+    {% endif %}
 {% endif %}
         }
     }

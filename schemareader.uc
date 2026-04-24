@@ -13179,6 +13179,20 @@ function instantiateVpnWireguard(location, value, errors) {
 					if (type(value) == "object") {
 						let obj = {};
 
+						function parseName(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						if (exists(value, "name")) {
+							obj.name = parseName(location + "/name", value["name"], errors);
+						}
+						else {
+							push(errors, [ location, "is required" ]);
+						}
+
 						function parseProto(location, value, errors) {
 							if (type(value) != "string")
 								push(errors, [ location, "must be of type string" ]);

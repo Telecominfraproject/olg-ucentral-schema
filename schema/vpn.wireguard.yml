@@ -8,6 +8,10 @@ properties:
     items:
       type: object
       properties:
+        name: 
+          description:
+            The name of the interface.
+          type: string
         proto:
           description:
             This field must be set to wireguard-overlay.
@@ -87,3 +91,5 @@ properties:
                 items:
                   type: string
                   format: uc-cidr
+      required:
+        - name

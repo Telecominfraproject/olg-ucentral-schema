@@ -32,6 +32,29 @@
 						"protocol":	"tcp_udp",
 						"rule-number":	5
 					}]
+			}, {
+				"default-action":	"drop",
+				"name":	"VPN-DEVICE-ipv4",
+				"rules":	[{
+						"action":	"accept",
+						"destination":	{
+							"group":	{
+								"port-group":	"LAN_SERVICE_GROUP"
+							}
+						},
+						"protocol":	"tcp_udp",
+						"rule-number":	5
+					},{
+						"action":	"accept",
+						"protocol":	"icmp",
+						"rule-number":	6
+					}]
+			}, {
+				"default-action":	"accept",
+				"name":	"VPN-WAN-ipv4"
+			}, {
+				"default-action":	"accept",
+				"name":	"VPN-LAN-ipv4"
 			}],
 		"zone-policies":	[{
 				"from":	"LAN",
@@ -53,6 +76,18 @@
 				"from":	"LAN",
 				"ruleset":	"LAN-DEVICE-ipv4",
 				"to":	"DEVICE"
+			}, {
+				"from":	"VPN",
+				"ruleset":	"VPN-DEVICE-ipv4",
+				"to":	"DEVICE"
+			}, {
+				"from":	"VPN",
+				"ruleset":	"VPN-WAN-ipv4",
+				"to":	"WAN"
+			}, {
+				"from":	"VPN",
+				"ruleset":	"VPN-LAN-ipv4",
+				"to":	"LAN"
 			}],
 		"zones":	[{
 				"default-action":	"drop",
@@ -66,6 +101,10 @@
 				"default-action":	"drop",
 				"local-zone":	true,
 				"name":	"DEVICE"
+			}, {
+				"default-action": "drop",
+				"interfaces": ["wg0"],
+				"name": "VPN"
 			}]
 	},
 	"interfaces":	[{
@@ -180,7 +219,7 @@
 			"servers":	[{
 					"address":	"10.28.30.254",
 					"port":	8080,
-					"transparent-proxy":	false
+					"transparent-proxy":	true
 				}]
 		}
 	},
@@ -195,5 +234,25 @@
 				}]
 		}
 	},
-	"uuid":	1776818583
+	"uuid":	1776907170,
+	"vpn":	{
+		"wireguard":	{
+			"interfaces":	[{
+					"name": "wg0",
+					"hosts":	[{
+							"ipaddr":	["10.0.0.2/32"],
+							"key":	"dVqr3WXQxzMCBQxhQ6eo8DJIqvRFLjcONkt2XwMKpAk=",
+							"name":	"node1"
+						}],
+					"peer-port":	51820,
+					"private-key":	"gGlmej1u/q16l41iFr2UjzFK8YtuzWcO53zQ37+1AWI=",
+					"proto":	"wireguard-overlay",
+					"root-node":	{
+						"endpoint":	"192.168.240.30",
+						"ipaddr":	["10.0.0.1/24"],
+						"key":	"QiVcU+TCapqCZfqurBKVwv3ruNNzhF/ICNOW96O04BU="
+					}
+				}]
+		}
+	}
 }

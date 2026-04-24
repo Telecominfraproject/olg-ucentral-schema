@@ -1,0 +1,300 @@
+{
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "mtu": 1500,
+            "name": "eth2",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "mtu": 1500,
+            "name": "eth3",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth4",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth5",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "bridge": {
+                "members": [
+                    "eth0",
+                    "eth1",
+                    "eth4",
+                    "eth5"
+                ]
+            },
+            "ipv4": {
+                "address": [
+                    "192.168.1.1/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "br0",
+            "role": "downstream",
+            "type": "bridge",
+            "vlan": [
+                {
+                    "id": 30,
+                    "ipv4": {
+                        "address": [
+                            "192.168.2.1/24"
+                        ],
+                        "addressing": "static"
+                    },
+                    "mtu": 1500,
+                    "name": "vlan30",
+                    "role": "downstream"
+                }
+            ]
+        }
+    ],
+    "metrics": {
+        "health": {
+            "interval": 60
+        },
+        "statistics": {
+            "interval": 300,
+            "types": []
+        }
+    },
+    "nat": {
+        "source-ipv4": [
+            {
+                "outbound-interface": "eth2",
+                "protocol": "all",
+                "rule-number": 10,
+                "source": {
+                    "address": "192.168.1.0/24"
+                },
+                "translation": {
+                    "address": "masquerade"
+                }
+            },
+            {
+                "outbound-interface": "eth3",
+                "protocol": "all",
+                "rule-number": 20,
+                "source": {
+                    "address": "192.168.1.0/24"
+                },
+                "translation": {
+                    "address": "masquerade"
+                }
+            },
+            {
+                "outbound-interface": "eth2",
+                "protocol": "all",
+                "rule-number": 30,
+                "source": {
+                    "address": "192.168.2.0/24"
+                },
+                "translation": {
+                    "address": "masquerade"
+                }
+            },
+            {
+                "outbound-interface": "eth3",
+                "protocol": "all",
+                "rule-number": 40,
+                "source": {
+                    "address": "192.168.2.0/24"
+                },
+                "translation": {
+                    "address": "masquerade"
+                }
+            }
+        ]
+    },
+    "pki": {
+        "ca-certs": [
+            {
+                "certificate": "-----BEGIN CERTIFICATE-----\nMIIFSTCCAzGgAwIBAgIUeKCO7su0pkb/76JUcKv88XE6PMowDQYJKoZIhvcNAQEL\nBQAwNDELMAkGA1UEBhMCVFcxDDAKBgNVBAoMA09MRzEXMBUGA1UEAwwOT0xHLU9w\nZW5WUE4tQ0EwHhcNMjYwNDIzMDMxNDEwWhcNMzYwNDIwMDMxNDEwWjA0MQswCQYD\nVQQGEwJUVzEMMAoGA1UECgwDT0xHMRcwFQYDVQQDDA5PTEctT3BlblZQTi1DQTCC\nAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAL2GuiC889Aw21JzECFKKfEP\nN36lxyJl8ScVkSjsb0mXH8FYO6COsYx5NVpSKlXc6HlqoiNwuHDhF6+yQtXakRlz\n1wIRR/sNXHm9yFDLV0/EWBNjGK59+I+KbX1Jzra7l3s8erDMbvqaFsiG7zlKWQyJ\nJmpIxT2A7nWjXPazoKBFWSPhACpQstdMl6IW1CNay0Fnnu2IFPbEV46saQsU0Bgs\n85IlunjT71CvfadcxW8/Nu3N5uaoyn2nB9TqRVDicR6nIIhFXET1U7Yy2n3OV+n9\n1mukD3KKpLN5VAi0xxrPWMFLPpxElgtfphGfZh9nGvcf+0Kj43cLVE2Z3u9l0S7Z\n2QCmJVarWaTtueSNAQE6UuFc0E97g32/f1wSVyb2ff+QWYTX5TPJCwcaIWhZFfB6\nlcGIc2pA4jm71+8PT+IcITFEkhDLQ1ZXEnPnz1Ip5/Ny0FMotb6vL8sZSjzv5ptp\nSmWUC+TQOR7uEvCnb9AcC+EveMDZqNrjhkMjbcbUKXWW5TY/nNakabQ7Vkpa2FzA\n5N/FTElcxFJzdi5LKfTDZpqjc/H8OszD3Z9CQ9tbpCEI8lGBUFeQk7/2xfHbz2tH\nCvQS+HPmDYtHaGkgbyCuIDV8xo+wS0PIvXkaFYdTwk9G89KiMleR9MYwI1lVfwgK\n4rH1gz25dv/R4HbJ24E9AgMBAAGjUzBRMB0GA1UdDgQWBBRFI1/Sd6ox/M+VC+JU\n7ZtQmSKKGTAfBgNVHSMEGDAWgBRFI1/Sd6ox/M+VC+JU7ZtQmSKKGTAPBgNVHRMB\nAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4ICAQCx/FZNl/R1KAGQU0ye/sWCKUWb\nyjQqVsWtluT2Z876euNwaSJfL55lIBzmwPanEKQDS9ByiaaszHOh59Ur/aEvcb4o\n5cnqdeQrkTSC2L0S2vbFDwnhcoXWd6q7htFGaeqQt0An2B3TpA8R5ekdRperM6pv\n3VSNNn3Jjny/IDcZ4smh+7MLp6m3oor+b+jsSsuPkBlFmsv9+tSSI4rzyNWCHvWY\nb4rz7ApCpGA/YHGEXQrHlvOjkW8LXb29P28SKP+DAIkEcOa9tcOrphNWLOajtmA2\nnYGpO8pul8ODsAIiOvrmNjzd29HTiCYipIZYD405f7gfWbxQ83OSHi3U8t3A1xOX\nmlkSnRBYYVk6MIWQyhfhcNCW6yirUgmdcE1kk0bGO2L+PqbVvxwr6b1duQ4gi7oJ\ncbPwvrcpK6J1WJ1HePzpm9ZIuk9UkhHlQdQdefYyiQu4knTApF//NGZcv6ByU55C\nDVGfO2eBaem/jH0dnXpowrsXsdX8lM72O+1ZzpALyl/GZ+fiSB7LYydXgpAFaqEm\nUmn6jJtDxNSAxXUAEqlVawf6Si6MxVLpMmTrj4nAPPjKM4XlFd04ChBgH+bdJiNT\nwVuY7ax6Oi06TvUMIf8jeSjZtHA8qIc6NUAgG2kcbiIUfj+9YJSO0F2TWe1d9Spb\niaXizJGY3qmkEEBbkw==\n-----END CERTIFICATE-----",
+                "name": "openvpn-ca"
+            }
+        ],
+        "certs": [
+            {
+                "certificate": "-----BEGIN CERTIFICATE-----\nMIIE7zCCAtcCFE43muDW5X7WhJg8oIu1b6VC2fPLMA0GCSqGSIb3DQEBCwUAMDQx\nCzAJBgNVBAYTAlRXMQwwCgYDVQQKDANPTEcxFzAVBgNVBAMMDk9MRy1PcGVuVlBO\nLUNBMB4XDTI2MDQyMzAzMTY1OVoXDTM2MDQyMDAzMTY1OVowNDELMAkGA1UEBhMC\nVFcxDDAKBgNVBAoMA09MRzEXMBUGA1UEAwwOb3BlbnZwbi1zZXJ2ZXIwggIiMA0G\nCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQC7mgx3wB6m3ntXF1/VOXR/KsR/i0Xo\nFRIM/bGil+9BBhWL9ltTaLl/UJNM6xKDsgOa4OVStzJ50j8Pr8FdO9LKkkFlU1Nz\nlhSVO6dot04kPsNADH1Ol8NeHInH4K+yjq89r/Ll3VOqagby7VpKBeQ9QQ9EM9sr\nYFCWC4de2Ni28UpfqBa59KQFWMudHZRkUcStVvapSGB2OaavF55Qa2Is8Nj1zfZd\nSEiEMAJscFYSRo/kx+5pFLNEmlK3V8z9FGAm+yHQnkKIVg1huwVTzhP988JQESiZ\nhGsqREXVBqKectNvbB3mXtMLf8MkQYaSkR+KNw8V/mXugZ4pfoBCz81fDNwOZAOi\nMxWuio58RLphps6hFxd/SlA34Dhjc3N49Y4Su5M3jPei+Mz+zZajCH1OnNH78wXQ\nqltwMQMSun+YxrYF2ruaZVNWBTMsQdxsUTkKG26iGyxoVShv+4KSLi453HtbzCxk\nOe3VjYTkpYt/Rvq43/WDm48QjUemzZPguwgl5F+5F9kWmkGi110KbXss0VAeYMZN\nEQ/yiyuvCYOKf+AzaIXmW1IRhPRjN1CwVbuJBkmlIofElwrywPCJhHi8XKcZjZEw\n2GLgtrMVYyHkwgu+qbFCAPNKXvkMJS0VQuhPV6TcwB0vs/X3FQ+FkPS6saOyIMbC\n6oKgP4pG4J6d4QIDAQABMA0GCSqGSIb3DQEBCwUAA4ICAQA4iBv2KfXqgv/c9kkf\nXSmsohK6pm0BgWdKZ/5xalppbOUtuwiwQ83fXgM1c8n2MRlsYiWDCXdRE2Olc1sq\nkRkNwmo8K6oR2Na2HOJxswYZNncOoXyQO2Qzx4Z6v4ZX/GEVRK5CqVdcTqu3DeNL\nC2djkcqsf5rlQ3TPBN+3nI2OL8qv91xuuI9oq4EbWyL+VDKpcsaQ/fxTiVYbUe2j\nBY7EC+oHV0syARnP9NmbyNVEw3+WGQ3l8bnvaC9q3w/6yGjL/Hy8xaoWawK+CRdj\nQXVvGMP0JZYo7lHULTc26W9KlYTxZUFQiQ1Ez8awYRu8eYgWQ8smhYryIzSRtQS1\nVCx/lE3F+1IauBeJjh2hO0UEA/DcQyvTFbtTLHW7V9KXrDSTXhRKehkspqQFgVn9\nV9BmQ4CEna6uiy6QHvS+MrggxCpH++tx1RNf7DKqZMunLiey6KXNea+IKhesUZ5S\nhuK/Idh1Ubq3g9lqTHtqE52tCOYAWQdJkM9pHrIkpRaJY4M9P1mZtDiOIX6m5vhU\nrWX9FD30AsHNm02MxTqZyt6mhDy3KF5r4+y6TskrRXhnhCgrXnIwyiLzfYcFGWAQ\nbAqBz0VkKabksyW7qxZYCWv9+uxHTEzVXk1zBObWtFBzruGje1XZMRBmX7jyq6KP\nl/IgAv776AUzCITG7E2hyXWdQQ==\n-----END CERTIFICATE-----",
+                "name": "openvpn-cert",
+                "private-key": "-----BEGIN PRIVATE KEY----- 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 1SCAuukzIITsfjp/3cPBUQlNSIkyLw== -----END PRIVATE KEY-----"
+            }
+        ],
+        "dh": [
+            {
+                "name": "openvpn-dh",
+                "parameter": "-----BEGIN DH PARAMETERS-----\nMIIBCAKCAQEArvSfUu0UDNOPilE9UL9XlfPi4OddBYzIR+D6QejrLnz5Jnqzd/4u\n2Pnwk6bgItXewUwHaDkLkaz1G7MyqnwTUTWBQQuMCGoGPZ1EjZYoL1mvRIIdq/EL\naj27J6Zs2hj4x35A0p7uA+ZlbxuAsP3+G7mvGshwnpiIjSRrGKfKZ0ie1eFLqy8Z\nNYW1NjF2LiYykPfTX7W9OtZGtFrx4A8KqD2s4XYKkIDqvt8KWTLxhEO0OE2ToGF7\nD/IJPgs5Qg7EGB/WiO7bRsFekwluZweUoYeRG2VNQ6E/A5P+JQNBoAv4518dCN9E\nKzoHzHPdv0knkqBj7l4NCBvgHSa9+85k7wIBAg==\n-----END DH PARAMETERS-----"
+            }
+        ]
+    },
+    "services": {
+        "dhcp-server": {
+            "networks": [
+                {
+                    "name": "dhcp-br0",
+                    "subnets": [
+                        {
+                            "default-router": "192.168.1.1",
+                            "dns-servers": [
+                                "192.168.1.1"
+                            ],
+                            "lease-time": 28800,
+                            "ranges": [
+                                {
+                                    "start": "192.168.1.100",
+                                    "stop": "192.168.1.200"
+                                }
+                            ],
+                            "subnet": "192.168.1.0/24"
+                        }
+                    ]
+                },
+                {
+                    "name": "dhcp-vlan30",
+                    "subnets": [
+                        {
+                            "default-router": "192.168.2.1",
+                            "dns-servers": [
+                                "192.168.2.1"
+                            ],
+                            "lease-time": 86400,
+                            "ranges": [
+                                {
+                                    "start": "192.168.2.100",
+                                    "stop": "192.168.2.150"
+                                }
+                            ],
+                            "subnet": "192.168.2.0/24"
+                        }
+                    ]
+                }
+            ]
+        },
+        "dns": {
+            "allow-from": [
+                "192.168.1.0/24",
+                "192.168.2.0/24"
+            ],
+            "listen-addresses": [
+                "192.168.1.1",
+                "192.168.2.1"
+            ]
+        },
+        "ntp": {
+            "listen-addresses": [
+                "192.168.1.1",
+                "192.168.2.1"
+            ],
+            "servers": [
+                {
+                    "address": "tock.stdtime.gov.tw"
+                },
+                {
+                    "address": "asia.pool.ntp.org"
+                }
+            ]
+        },
+        "web-proxy": {
+            "append-domain": "example.com",
+            "default-port": 8080,
+            "servers": [
+                {
+                    "address": "192.168.1.1",
+                    "port": 8080,
+                    "transparent-proxy": true
+                }
+            ]
+        }
+    },
+    "system": {
+        "name-servers": {
+            "dhcp-interfaces": [
+                "eth2",
+                "eth3"
+            ]
+        },
+        "syslog": {
+            "local": [
+                {
+                    "facility": "daemon",
+                    "severity": "info"
+                }
+            ]
+        }
+    },
+    "uuid": 1776914733,
+    "vpn": {
+        "openvpn": {
+            "interfaces": [
+                {
+                    "mode": "server",
+                    "name": "vtun0",
+                    "persistent-tunnel": true,
+                    "protocol": "udp",
+                    "server": {
+                        "encryption": {
+                            "data-ciphers": [
+                                "aes256gcm"
+                            ]
+                        },
+                        "hash": "sha256",
+                        "listen-address": "0.0.0.0",
+                        "listen-port": 1194,
+                        "max-connections": 128,
+                        "name-server": "192.168.1.1",
+                        "subnet": "10.8.0.0/24",
+                        "tls": {
+                            "ca-cert": "openvpn-ca",
+                            "cert": "openvpn-cert",
+                            "dh": "openvpn-dh"
+                        },
+                        "topology": "subnet"
+                    }
+                }
+            ]
+        }
+    }
+}

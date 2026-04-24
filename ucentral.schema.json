@@ -4480,6 +4480,9 @@
                     "items": {
                         "type": "object",
                         "properties": {
+                            "name": {
+                                "type": "string"
+                            },
                             "proto": {
                                 "type": "string",
                                 "const": "wireguard-overlay"
@@ -4550,7 +4553,10 @@
                                     }
                                 }
                             }
-                        }
+                        },
+                        "required": [
+                            "name"
+                        ]
                     }
                 }
             }

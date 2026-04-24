@@ -80,7 +80,11 @@
 	if (!state.pki) {
 		state.pki = {};
 	}
-	include("pki.uc", { location: '/pki', pki: state.pki });
+	include("pki.uc", { 
+		c,
+		location: '/pki',
+		pki: state.pki
+	});
 
 	if (state.routing || length(up_i) || (state.services && state.services.igmp_proxy) ) {
 		state.routing = state.routing || {};
