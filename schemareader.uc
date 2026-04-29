@@ -5884,69 +5884,66 @@ function instantiateRoutingStaticIpv4(location, value, errors) {
 			push(errors, [ location, "is required" ]);
 		}
 
-		function parseNextHop(location, value, errors) {
-			if (type(value) == "string") {
-				if (!matchIpv4(value))
-					push(errors, [ location, "must be a valid IPv4 address" ]);
+		function parseRoutes(location, value, errors) {
+			if (type(value) == "array") {
+				function parseItem(location, value, errors) {
+					if (type(value) == "object") {
+						let obj = {};
 
+						function parseAction(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							if (!(value in [ "next-hop", "interface", "reject", "blackhole" ]))
+								push(errors, [ location, "must be one of \"next-hop\", \"interface\", \"reject\" or \"blackhole\"" ]);
+
+							return value;
+						}
+
+						if (exists(value, "action")) {
+							obj.action = parseAction(location + "/action", value["action"], errors);
+						}
+
+						function parseDistance(location, value, errors) {
+							if (type(value) in [ "int", "double" ]) {
+								if (value < 1)
+									push(errors, [ location, "must be bigger than or equal to 1" ]);
+
+							}
+
+							if (type(value) != "int")
+								push(errors, [ location, "must be of type integer" ]);
+
+							return value;
+						}
+
+						if (exists(value, "distance")) {
+							obj.distance = parseDistance(location + "/distance", value["distance"], errors);
+						}
+						else {
+							obj.distance = 1;
+						}
+
+						return obj;
+					}
+
+					if (type(value) != "object")
+						push(errors, [ location, "must be of type object" ]);
+
+					return value;
+				}
+
+				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
 			}
 
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
 
 			return value;
 		}
 
-		if (exists(value, "next-hop")) {
-			obj.next_hop = parseNextHop(location + "/next-hop", value["next-hop"], errors);
-		}
-
-		function parseInterface(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			return value;
-		}
-
-		if (exists(value, "interface")) {
-			obj.interface = parseInterface(location + "/interface", value["interface"], errors);
-		}
-
-		function parseDistance(location, value, errors) {
-			if (type(value) in [ "int", "double" ]) {
-				if (value > 255)
-					push(errors, [ location, "must be lower than or equal to 255" ]);
-
-				if (value < 1)
-					push(errors, [ location, "must be bigger than or equal to 1" ]);
-
-			}
-
-			if (type(value) != "int")
-				push(errors, [ location, "must be of type integer" ]);
-
-			return value;
-		}
-
-		if (exists(value, "distance")) {
-			obj.distance = parseDistance(location + "/distance", value["distance"], errors);
-		}
-		else {
-			obj.distance = 1;
-		}
-
-		function parseAction(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			if (!(value in [ "accept", "reject", "blackhole" ]))
-				push(errors, [ location, "must be one of \"accept\", \"reject\" or \"blackhole\"" ]);
-
-			return value;
-		}
-
-		if (exists(value, "action")) {
-			obj.action = parseAction(location + "/action", value["action"], errors);
+		if (exists(value, "routes")) {
+			obj.routes = parseRoutes(location + "/routes", value["routes"], errors);
 		}
 
 		return obj;
@@ -9638,32 +9635,21 @@ function instantiateServiceNtp(location, value, errors) {
 			obj.servers = parseServers(location + "/servers", value["servers"], errors);
 		}
 
-		function parseListenAddresses(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchUcIp(value))
-							push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+		function parseListenAddress(location, value, errors) {
+			if (type(value) == "string") {
+				if (!matchUcIp(value))
+					push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
 
-					}
-
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
 			}
 
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
 
 			return value;
 		}
 
-		if (exists(value, "listen-addresses")) {
-			obj.listen_addresses = parseListenAddresses(location + "/listen-addresses", value["listen-addresses"], errors);
+		if (exists(value, "listen-address")) {
+			obj.listen_address = parseListenAddress(location + "/listen-address", value["listen-address"], errors);
 		}
 
 		function parseAllowClients(location, value, errors) {

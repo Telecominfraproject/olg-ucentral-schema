@@ -49,6 +49,7 @@
 			firewall: state.firewall,
 			services: state.services,
 			routing: state.routing,
+			nat: state.nat ? state.nat : {},
 			vpn: state.vpn ? state.vpn : {},
 			ethernet: ethernet
 		});
@@ -124,7 +125,8 @@
 	}
 	include("system/system.uc", {
 		location: '/system',
-		system: state.system
+		system: state.system,
+		uuid: state.uuid
 	});
 
 	if (state.vpn && state.vpn.ipsec) {

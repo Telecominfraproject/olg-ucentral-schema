@@ -82,7 +82,11 @@ properties:
         format: uc-cidr6
         example: 2001:db8:a::/64
       port:
-        description: Translated destination port or port range.
+        description: 
+          Translated destination port or port range. 
+          Please note that the translated port will be added to 
+          port-group WAN_LAN_FORWARDING_GROUP automatically, user can use it for zone
+          WAN-to-LAN.
         type: 
           - integer
           - string

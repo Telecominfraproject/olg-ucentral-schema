@@ -1,6 +1,9 @@
 system {
     {%
-        include("login.uc", { location: location + '/login' });
+        include("login.uc", {
+            location: location + '/login',
+            uuid
+        });
         if (system.syslog) {
             include("syslog.uc", { location: location + '/syslog', syslog: system.syslog });
         }

@@ -2169,29 +2169,27 @@
                                         "type": "string",
                                         "format": "uc-cidr4"
                                     },
-                                    "next-hop": {
-                                        "description": "Next-hop IP address.",
-                                        "type": "string",
-                                        "format": "ipv4"
-                                    },
-                                    "interface": {
-                                        "description": "Outgoing interface.",
-                                        "type": "string"
-                                    },
-                                    "distance": {
-                                        "description": "Administrative distance.",
-                                        "type": "integer",
-                                        "minimum": 1,
-                                        "maximum": 255,
-                                        "default": 1
-                                    },
-                                    "action": {
-                                        "type": "string",
-                                        "enum": [
-                                            "accept",
-                                            "reject",
-                                            "blackhole"
-                                        ]
+                                    "routes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "action": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "next-hop",
+                                                        "interface",
+                                                        "reject",
+                                                        "blackhole"
+                                                    ]
+                                                },
+                                                "distance": {
+                                                    "type": "integer",
+                                                    "default": 1,
+                                                    "minimum": 1
+                                                }
+                                            }
+                                        }
                                     }
                                 },
                                 "required": [
@@ -3459,13 +3457,10 @@
                                 ]
                             }
                         },
-                        "listen-addresses": {
-                            "description": "List of IP addresses to listen on as NTP server.",
-                            "type": "array",
-                            "items": {
-                                "type": "string",
-                                "format": "uc-ip"
-                            }
+                        "listen-address": {
+                            "description": "IP address to listen on as NTP server.",
+                            "type": "string",
+                            "format": "uc-ip"
                         },
                         "allow-clients": {
                             "description": "Allowed IPv4 or IPv6 address",

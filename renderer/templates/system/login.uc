@@ -1,4 +1,7 @@
     login {
+        banner {
+            pre-login {{ uuid }}
+        }
         operator-group default {
             command-policy {
                 allow "*"

@@ -16,18 +16,22 @@
         {% if (routing.static && routing.static.ipv4_rules): %}
             {% for (let rule in routing.static.ipv4_rules): %}
         route {{ rule.destination }} {
-                {% if (rule.interface): %}
-            interface {{ rule.interface }} {
-                {% elif (rule.action == "accept"): %}
-            next-hop {{ rule.next_hop }} {
-                {% elif (rule.action == "reject"): %}
-            reject {
-                {% elif (rule.action == "blackhole"): %}
-            blackhole {
-                {% endif %}
-                {% if (rule.distance): %}
-                distance "{{ rule.distance }}"
-                {% endif %}
+                {% for (let p in rule.routes): %}
+                    {% if (p.action == "interface"): %}
+            {{ p.action }} {{ p.interface }} {
+                    {% elif (p.action == "next-hop"): %}
+            {{ p.action }} {{ p.next_hop }} {
+                    {% elif (p.action == "reject"): %}
+            {{ p.action }} {
+                    {% elif (p.action == "blackhole"): %}
+            {{ p.action }} {
+                    {% endif %}
+
+                    {% if (p.distance): %}
+                distance "{{ p.distance }}"
+                    {% endif %}
+            }
+                {% endfor %}
             }
         }
             {% endfor %}
@@ -36,18 +40,22 @@
         {% if (routing.static && routing.static.ipv6_rules): %}
             {% for (let rule in routing.static.ipv6_rules): %}
         route6 {{ rule.destination }} {
-                {% if (rule.interface): %}
-            interface {{ rule.interface }} {
-                {% elif (rule.action == "accept"): %}
-            next-hop {{ rule.next_hop }} {
-                {% elif (rule.action == "reject"): %}
-            reject {
-                {% elif (rule.action == "blackhole"): %}
-            blackhole {
-                {% endif %}
-                {% if (rule.distance): %}
-                distance "{{ rule.distance }}"
-                {% endif %}
+                {% for (let p in rule.routes): %}
+                    {% if (p.action == "interface"): %}
+            {{ p.action }} {{ p.interface }} {
+                    {% elif (p.action == "next-hop"): %}
+            {{ p.action }} {{ p.next_hop }} {
+                    {% elif (p.action == "reject"): %}
+            {{ p.action }} {
+                    {% elif (p.action == "blackhole"): %}
+            {{ p.action }} {
+                    {% endif %}
+                    
+                    {% if (p.distance): %}
+                distance "{{ p.distance }}"
+                    {% endif %}
+            }
+                {% endfor %}
             }
         }
             {% endfor %}

@@ -120,6 +120,15 @@ firewall {
     {% endif %}
 {% endif %}
         }
+        port-group WAN_LAN_FORWARDING_GROUP {
+{% if (nat && nat.destination_ipv4): %}
+    {% for (let rule in nat.destination_ipv4): %}
+        {% if (rule.translation && rule.translation.port): %}
+            port "{{ rule.translation.port }}"
+        {% endif %}
+    {% endfor %}
+{% endif %}
+        }
     }
     ipv4 {
 {% if (length(firewall.ipv4_rulesets)): %}
