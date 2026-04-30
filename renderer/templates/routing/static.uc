@@ -26,13 +26,11 @@
                     {% elif (p.action == "blackhole"): %}
             {{ p.action }} {
                     {% endif %}
-
                     {% if (p.distance): %}
                 distance "{{ p.distance }}"
                     {% endif %}
             }
                 {% endfor %}
-            }
         }
             {% endfor %}
         {% endif %}
@@ -50,13 +48,11 @@
                     {% elif (p.action == "blackhole"): %}
             {{ p.action }} {
                     {% endif %}
-                    
                     {% if (p.distance): %}
                 distance "{{ p.distance }}"
                     {% endif %}
             }
                 {% endfor %}
-            }
         }
             {% endfor %}
         {% endif %}
