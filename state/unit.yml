@@ -54,4 +54,3 @@ properties:
     type: number
     description:
       This property contains the current unix time of the device.
-

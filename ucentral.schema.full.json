@@ -1731,7 +1731,7 @@
                                         "example": "192.168.1.88"
                                     },
                                     "port": {
-                                        "description": "Translated destination port or port range.",
+                                        "description": "Translated destination port or port range. Please note that the translated port will be added to port-group WAN_LAN_FORWARDING_GROUP automatically, user can use it for zone WAN-to-LAN.",
                                         "type": [
                                             "integer",
                                             "string"
@@ -1999,7 +1999,7 @@
                                         "example": "2001:db8:a::/64"
                                     },
                                     "port": {
-                                        "description": "Translated destination port or port range.",
+                                        "description": "Translated destination port or port range. Please note that the translated port will be added to port-group WAN_LAN_FORWARDING_GROUP automatically, user can use it for zone WAN-to-LAN.",
                                         "type": [
                                             "integer",
                                             "string"
@@ -2183,6 +2183,13 @@
                                                         "blackhole"
                                                     ]
                                                 },
+                                                "interface": {
+                                                    "type": "string"
+                                                },
+                                                "next-hop": {
+                                                    "type": "string",
+                                                    "format": "ipv4"
+                                                },
                                                 "distance": {
                                                     "type": "integer",
                                                     "default": 1,
@@ -2193,7 +2200,8 @@
                                     }
                                 },
                                 "required": [
-                                    "destination"
+                                    "destination",
+                                    "routes"
                                 ]
                             }
                         },
@@ -2208,33 +2216,39 @@
                                         "type": "string",
                                         "format": "uc-cidr6"
                                     },
-                                    "next-hop": {
-                                        "description": "Next-hop IP address.",
-                                        "type": "string",
-                                        "format": "ipv6"
-                                    },
-                                    "interface": {
-                                        "description": "Outgoing interface.",
-                                        "type": "string"
-                                    },
-                                    "distance": {
-                                        "description": "Administrative distance.",
-                                        "type": "integer",
-                                        "minimum": 1,
-                                        "maximum": 255,
-                                        "default": 1
-                                    },
-                                    "action": {
-                                        "type": "string",
-                                        "enum": [
-                                            "accept",
-                                            "reject",
-                                            "blackhole"
-                                        ]
+                                    "routes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "action": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "next-hop",
+                                                        "interface",
+                                                        "reject",
+                                                        "blackhole"
+                                                    ]
+                                                },
+                                                "interface": {
+                                                    "type": "string"
+                                                },
+                                                "next-hop": {
+                                                    "type": "string",
+                                                    "format": "ipv6"
+                                                },
+                                                "distance": {
+                                                    "type": "integer",
+                                                    "default": 1,
+                                                    "minimum": 1
+                                                }
+                                            }
+                                        }
                                     }
                                 },
                                 "required": [
-                                    "destination"
+                                    "destination",
+                                    "routes"
                                 ]
                             }
                         }
