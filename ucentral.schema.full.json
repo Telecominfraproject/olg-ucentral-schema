@@ -442,6 +442,293 @@
                 }
             }
         },
+        "hypervisor": {
+            "description": "Hypervisor provisioning configuration. Defines the virtualization environment on OLG-Server: applications (VMs), their resources, physical device assignments, and the L2 bridge topology connecting them to each other and to the host.\n",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "apps": {
+                    "description": "Applications to provision on the hypervisor.\nEach app is provisioned with a boot image, compute resources, optional cloud-init data, optional persistent extra volumes, and zero or more physical or virtual NICs (see topology.devices and topology.bridges).\n",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "name",
+                            "image",
+                            "resources"
+                        ],
+                        "properties": {
+                            "name": {
+                                "description": "Unique name for this app instance. Used to reference this app in topology.devices[].app and topology.bridges[].members.\n",
+                                "type": "string",
+                                "examples": [
+                                    "vyos-gw",
+                                    "custom-vm"
+                                ]
+                            },
+                            "image": {
+                                "description": "Boot image for the app.",
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "url",
+                                    "sha256",
+                                    "format",
+                                    "size"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "description": "URL of the disk image. The hypervisor downloads the image from this URL on first provisioning; typically hosted on an image registry.\n",
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "sha256": {
+                                        "description": "SHA-256 hex digest of the image file for integrity verification.",
+                                        "type": "string",
+                                        "pattern": "^[a-fA-F0-9]{64}$"
+                                    },
+                                    "format": {
+                                        "description": "Disk image format.",
+                                        "type": "string",
+                                        "enum": [
+                                            "qcow2",
+                                            "raw",
+                                            "vmdk"
+                                        ]
+                                    },
+                                    "size": {
+                                        "description": "Size of the image file in bytes.",
+                                        "type": "integer",
+                                        "minimum": 0
+                                    }
+                                }
+                            },
+                            "resources": {
+                                "description": "Compute resources to allocate to the app.",
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "memory-mb",
+                                    "vcpus"
+                                ],
+                                "properties": {
+                                    "memory-mb": {
+                                        "description": "RAM allocation in megabytes.",
+                                        "type": "integer",
+                                        "minimum": 512,
+                                        "examples": [
+                                            4096,
+                                            24576
+                                        ]
+                                    },
+                                    "vcpus": {
+                                        "description": "Number of virtual CPUs.",
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "examples": [
+                                            2,
+                                            20
+                                        ]
+                                    },
+                                    "vnc": {
+                                        "description": "Enable VNC console access for the app.",
+                                        "type": "boolean",
+                                        "default": false
+                                    }
+                                }
+                            },
+                            "cloud-init": {
+                                "description": "Cloud-init configuration injected as a config drive at first boot.\n",
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "user-data": {
+                                        "description": "cloud-init user-data file content, base64-encoded. Supports #cloud-config YAML, shell scripts, or any other cloud-init user-data format.\n",
+                                        "type": "string",
+                                        "contentEncoding": "base64"
+                                    }
+                                }
+                            },
+                            "extra-volumes": {
+                                "description": "Additional persistent volumes attached to the app after the boot image, in list order. Use these for application data that should survive boot-image reprovisioning.\n",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "required": [
+                                        "name",
+                                        "image"
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "description": "Short name for this volume, unique within the app.\n",
+                                            "type": "string",
+                                            "examples": [
+                                                "data",
+                                                "logs",
+                                                "cache"
+                                            ]
+                                        },
+                                        "image": {
+                                            "description": "Disk image to use for this volume.",
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "url",
+                                                "sha256",
+                                                "format",
+                                                "size"
+                                            ],
+                                            "properties": {
+                                                "url": {
+                                                    "description": "URL of the disk image. The hypervisor downloads the image from this URL on first provisioning; typically hosted on an image registry.\n",
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "sha256": {
+                                                    "description": "SHA-256 hex digest of the image file for integrity verification.",
+                                                    "type": "string",
+                                                    "pattern": "^[a-fA-F0-9]{64}$"
+                                                },
+                                                "format": {
+                                                    "description": "Disk image format.",
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "qcow2",
+                                                        "raw",
+                                                        "vmdk"
+                                                    ]
+                                                },
+                                                "size": {
+                                                    "description": "Size of the image file in bytes.",
+                                                    "type": "integer",
+                                                    "minimum": 0
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "topology": {
+                    "description": "Physical device assignment and L2 bridge topology for the apps.\n",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "devices": {
+                            "description": "Host devices assigned exclusively to a specific app. Each device is passed through to exactly one app \u2014 it is not shared.\nSupported device types:\n  network  \u2014 PCIe NIC; requires address (PCI address).\n  usb      \u2014 USB device or hub; requires address (USB controller PCI\n             address) and port (port path on that controller, mandatory).\n             If the port hosts a USB hub, the entire hub subtree\n             (hub + all connected downstream devices) is passed to the app.\n  gpu      \u2014 PCIe GPU; requires address.\n  serial   \u2014 PCIe serial controller; requires address.\n  storage  \u2014 PCIe storage controller (NVMe, HBA); requires address.\n",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "app",
+                                    "type",
+                                    "address"
+                                ],
+                                "properties": {
+                                    "app": {
+                                        "description": "Name of the app this device is assigned to (matches apps[].name).",
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "description": "Device class.",
+                                        "type": "string",
+                                        "enum": [
+                                            "network",
+                                            "usb",
+                                            "gpu",
+                                            "serial",
+                                            "storage"
+                                        ]
+                                    },
+                                    "address": {
+                                        "description": "PCI address of the device or USB controller in DDDD:BB:DD.F notation. For type=usb this is the PCI address of the USB host controller.\n",
+                                        "type": "string",
+                                        "pattern": "^[0-9a-fA-F]{4}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\\.[0-9a-fA-F]$",
+                                        "examples": [
+                                            "0000:58:00.0",
+                                            "0000:00:14.0"
+                                        ]
+                                    },
+                                    "port": {
+                                        "description": "USB port path identifying the specific port on the USB controller. Required when type=usb; not applicable to other device types.\nFormat: a dot-separated sequence of port numbers rooted at the USB host controller (e.g. \"2\" = port 2 on the root hub, \"2.3\" = port 3 of the hub plugged into root port 2).\nWhen the device at this port is a USB hub, the entire hub and all devices connected downstream are passed to the app \u2014 no additional entries are needed for the hub's downstream devices.\n",
+                                        "type": "string",
+                                        "pattern": "^[0-9]+(\\.[0-9]+)*$",
+                                        "examples": [
+                                            "1",
+                                            "2.3",
+                                            "1.2.4"
+                                        ]
+                                    },
+                                    "name": {
+                                        "description": "Optional human-readable label for this assignment (e.g. \"wan-port\", \"usb-scanner\").\n",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "bridges": {
+                            "description": "L2 bridge instances that connect apps to each other or to the host.\nTwo bridge types are supported:\n  internal  \u2014 pure app-to-app bridge; no host NIC attached. Used for\n              the data-plane LAN between apps.\n  host      \u2014 bridge backed by a host NIC. The host NIC is NOT\n              passed through; both host and apps share it. Used for\n              the Local Management Port (LMP) providing out-of-band\n              management access.\n\nMembers are app names (matching apps[].name). Each app receives a VirtIO NIC connected to the bridge; the NIC appears inside the app in the order the app is listed in members[].\n",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "name",
+                                    "type",
+                                    "members"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Bridge name (used for reference and state reporting).",
+                                        "type": "string",
+                                        "examples": [
+                                            "lan-bridge",
+                                            "lmp"
+                                        ]
+                                    },
+                                    "type": {
+                                        "description": "Bridge type \u2014 internal (app-to-app) or host (host-backed).",
+                                        "type": "string",
+                                        "enum": [
+                                            "internal",
+                                            "host"
+                                        ]
+                                    },
+                                    "host-interface": {
+                                        "description": "Host NIC to attach to this bridge. Required when type=host. This interface is bridged (not passed through), so the host OS also retains connectivity on it.\n",
+                                        "type": "string",
+                                        "examples": [
+                                            "eth2",
+                                            "bond0"
+                                        ]
+                                    },
+                                    "members": {
+                                        "description": "Ordered list of app names that have a VirtIO NIC on this bridge. Order determines NIC numbering within each app.\n",
+                                        "type": "array",
+                                        "minItems": 1,
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "examples": [
+                                            [
+                                                "vyos-gw",
+                                                "custom-vm"
+                                            ]
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "ethernet": {
             "type": "array",
             "items": {

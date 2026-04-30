@@ -18,6 +18,11 @@ properties:
     $ref: "https://ucentral.io/schema/v1/globals/"
   definitions:
     $ref: "https://ucentral.io/schema/v1/definitions/"
+  hypervisor:
+    description: >
+      Hypervisor provisioning for OLG-Server: applications (VMs), shared
+      resources, physical device assignments, and L2 bridge topology.
+    $ref: "https://ucentral.io/schema/v1/hypervisor/"
   ethernet:
     type: array
     items:
