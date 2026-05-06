@@ -1,0 +1,131 @@
+{
+    "config-raw": [
+        [
+            "add_list",
+            "lldpd.config.lldp_hostname",
+            "Bruce_Test_Use"
+        ]
+    ],
+    "interfaces": [
+        {
+            "ethernet": [
+                {
+                    "select-ports": [
+                        "WAN*"
+                    ]
+                }
+            ],
+            "ipv4": {
+                "addressing": "dynamic"
+            },
+            "name": "WAN",
+            "role": "upstream",
+            "services": [
+                "ssh",
+                "lldp",
+                "clients",
+                "tid-stats"
+            ]
+        },
+        {
+            "ethernet": [
+                {
+                    "select-ports": [
+                        "WAN*"
+                    ]
+                }
+            ],
+            "name": "WAN2633",
+            "role": "upstream",
+            "vlan": {
+                "id": 2633
+            }
+        },
+        {
+            "ethernet": [
+                {
+                    "select-ports": [
+                        "WAN*"
+                    ]
+                }
+            ],
+            "name": "WAN2632",
+            "role": "upstream",
+            "ssids": [
+                {
+                    "bss-mode": "ap",
+                    "encryption": {
+                        "ieee80211w": "optional",
+                        "key": "testing111",
+                        "proto": "psk2"
+                    },
+                    "name": "VLAN_2632 Wi-Fi",
+                    "wifi-bands": [
+                        "5G"
+                    ]
+                }
+            ],
+            "vlan": {
+                "id": 2632
+            }
+        },
+        {
+            "ethernet": [
+                {
+                    "select-ports": [
+                        "LAN*"
+                    ]
+                }
+            ],
+            "ipv4": {
+                "addressing": "static",
+                "dhcp": {
+                    "lease-count": 100,
+                    "lease-first": 10,
+                    "lease-time": "6h"
+                },
+                "subnet": "192.168.182.1/24"
+            },
+            "name": "LAN",
+            "role": "downstream",
+            "services": [
+                "ssh"
+            ]
+        }
+    ],
+    "metrics": {
+        "health": {
+            "interval": 120
+        },
+        "statistics": {
+            "interval": 120,
+            "types": [
+                "ssids",
+                "lldp",
+                "clients"
+            ]
+        }
+    },
+    "radios": [
+        {
+            "band": "2G",
+            "channel": 6,
+            "channel-mode": "HE",
+            "channel-width": 20,
+            "country": "US"
+        },
+        {
+            "band": "5G",
+            "channel": 36,
+            "channel-mode": "HE",
+            "channel-width": 80,
+            "country": "US"
+        }
+    ],
+    "services": {
+        "ssh": {
+            "port": 22
+        }
+    },
+    "uuid": 1776655092
+}

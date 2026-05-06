@@ -1,0 +1,176 @@
+$id: https://openwrt.org/olg.ucentral.capabilities.json
+$schema: http://json-schema.org/draft-07/schema#
+description: Device capabilities built from board.json at boot/provisioning time.
+type: object
+required:
+  - compatible
+  - model
+  - platform
+  - version
+properties:
+  secure-rtty:
+    description: Device supports secure RTTY sessions.
+    type: boolean
+  default-config:
+    description: Device supports default configuration delivery.
+    type: boolean
+  compress_cmd:
+    description: Device supports compressed command transport.
+    type: boolean
+  compatible:
+    description: Hardware compatible string derived from board.model.id (commas replaced with underscores).
+    type: string
+    examples:
+      - vendor_model_rev
+  model:
+    description: Human-readable hardware model name from board.model.name.
+    type: string
+    examples:
+      - Vendor Model Rev
+  platform:
+    description: Detected platform type.
+    type: string
+    enum:
+      - ap
+      - switch
+      - olg
+      - unknown
+  country:
+    description: Effective country code in use.
+    type: string
+    examples:
+      - US
+  country_codes:
+    description: Allowed country codes sourced from board.wifi.country.
+    type: array
+    items:
+      type: string
+      examples:
+        - US
+        - DE
+        - JP
+  version:
+    description: Firmware and schema version information.
+    type: object
+    properties:
+      ap:
+        type: object
+        properties:
+          version:
+            type: string
+          hash:
+            type: string
+          vendor:
+            type: object
+      schema:
+        type: object
+        properties:
+          version:
+            type: string
+          vendor:
+            type: object
+  restrictions:
+    description: Per-SKU capability limits loaded from restrictions.json.
+    type: object
+    additionalProperties: true
+  developer:
+    description: Device is running in developer mode (fw_printenv developer == 1).
+    type: boolean
+  switch:
+    description: Switch chips present on the device.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        enable:
+          type: boolean
+        reset:
+          type: integer
+      required:
+        - name
+  switch_ports:
+    description: Maps CPU netdev to its switch chip and associated LAN/WAN port numbers.
+    type: object
+    additionalProperties:
+      type: object
+      properties:
+        name:
+          description: Switch chip name.
+          type: string
+        port:
+          description: CPU port number.
+          type: integer
+        lan:
+          description: LAN port numbers on this switch.
+          type: array
+          items:
+            type: integer
+        wan:
+          description: WAN port numbers on this switch.
+          type: array
+          items:
+            type: integer
+      required:
+        - name
+        - port
+        - lan
+        - wan
+  network:
+    description: Maps network role to a list of physical netdevs.
+    type: object
+    properties:
+      lan:
+        type: array
+        items:
+          type: string
+      wan:
+        type: array
+        items:
+          type: string
+    additionalProperties:
+      type: array
+      items:
+        type: string
+  macaddr:
+    description: Per-role MAC addresses sourced from board.network.
+    type: object
+    additionalProperties:
+      type: string
+      format: uc-mac
+  label_macaddr:
+    description: Label MAC address from board.system.label_macaddr.
+    type: string
+    format: uc-mac
+  ports:
+    description: >
+      Named port alias map used for select-ports resolution.
+      Keys are logical aliases (LAN1..N, WAN1..N); values map to the
+      physical netdev and interface role.
+    type: object
+    additionalProperties:
+      type: object
+      properties:
+        netdev:
+          description: Physical network device name.
+          type: string
+        role:
+          description: Interface role for this port.
+          type: string
+          enum:
+            - upstream
+            - downstream
+      required:
+        - netdev
+        - role
+    examples:
+      - LAN1:
+          netdev: eth0
+          role: downstream
+        LAN2:
+          netdev: eth1
+          role: downstream
+        WAN1:
+          netdev: eth2
+          role: upstream

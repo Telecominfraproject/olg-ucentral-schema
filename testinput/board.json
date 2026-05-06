@@ -1,0 +1,39 @@
+{
+  "model": {
+    "id": "accton,as4630-54pe",
+    "name": "Accton AS4630-54PE"
+  },
+  "bridge": {
+    "name": "switch"
+  },
+  "switch": {
+    "switch0": {
+      "enable": true,
+      "reset": 6,
+      "roles": [
+        { "ports": "0 1 2 3 4 5" }
+      ],
+      "ports": [
+        { "num": 5, "device": "eth0" },
+        { "num": 0, "role": "lan" },
+        { "num": 1, "role": "lan" },
+        { "num": 2, "role": "lan" },
+        { "num": 3, "role": "lan" },
+        { "num": 4, "role": "wan" }
+      ]
+    }
+  },
+  "network": {
+    "lan": {
+      "device": "eth0",
+      "macaddr": "aa:bb:cc:dd:ee:01"
+    },
+    "wan": {
+      "ports": ["eth1"],
+      "macaddr": "aa:bb:cc:dd:ee:02"
+    }
+  },
+  "system": {
+    "label_macaddr": "aa:bb:cc:dd:ee:00"
+  }
+}

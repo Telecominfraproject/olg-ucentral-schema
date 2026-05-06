@@ -1,53 +1,31 @@
 {
 	"interfaces":	[{
-			"ipv4":	{
-				"addressing":	"dhcp"
-			},
-			"mtu":	1500,
-			"name":	"eth2",
-			"role":	"upstream",
-			"type":	"ethernet"
-		}, {
-			"ipv4":	{
-				"addressing":	"dhcp"
-			},
-			"mtu":	1500,
-			"name":	"eth3",
-			"role":	"upstream",
-			"type":	"ethernet"
-		}, {
-			"ipv4":	{
-				"addressing":	"none"
-			},
-			"mtu":	1500,
-			"name":	"eth0",
-			"role":	"downstream",
-			"type":	"ethernet"
-		}, {
-			"ipv4":	{
-				"addressing":	"none"
-			},
-			"mtu":	1500,
-			"name":	"eth1",
-			"role":	"downstream",
-			"type":	"ethernet"
-		}, {
-			"ipv4":	{
-				"addressing":	"none"
-			},
-			"mtu":	1500,
-			"name":	"eth4",
-			"role":	"downstream",
-			"type":	"ethernet"
-		}, {
-			"ipv4":	{
-				"addressing":	"none"
-			},
-			"mtu":	1500,
-			"name":	"eth5",
-			"role":	"downstream",
-			"type":	"ethernet"
-		}, {
+            "ethernet": [
+                {
+                    "select-ports": [
+                        "WAN*"
+                    ]
+                }
+            ],
+            "ipv4": {
+                "addressing": "dynamic"
+            },
+            "name": "WAN",
+            "role": "upstream"
+		},{
+            "ethernet": [
+                {
+                    "select-ports": [
+                        "WAN*"
+                    ]
+                }
+            ],
+            "name": "WAN2633",
+            "role": "upstream",
+            "vlan": {
+                "id": 2633
+            }
+        }, {
 			"bridge":	{
 				"members":	["eth0", "eth1", "eth4", "eth5"]
 			},

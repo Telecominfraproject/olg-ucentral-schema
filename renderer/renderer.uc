@@ -3,7 +3,7 @@
 "use strict";
 let fs = require("fs");
 
-let capabfile = fs.open("/etc/board.json", "r");
+let capabfile = fs.open("/etc/ucentral/capabilities.json", "r");
 let capab = capabfile ? json(capabfile.read("all")) : null;
 
 /**
@@ -95,21 +95,26 @@ function tryinclude(path, scope) {
 }
 
 function discover_ports() {
-	let roles = {
-		upstream: [],
-		downstream: []
-	};
-	if (capab.network) {
+	let roles = { upstream: [], downstream: [] };
+
+	if (capab?.ports) {
+		for (let alias, spec in capab.ports) {
+			let entry = { alias, dev: spec.netdev };
+			if (spec.role == "upstream")
+				push(roles.upstream, entry);
+			else
+				push(roles.downstream, entry);
+		}
+	} else if (capab?.network) {
 		map(capab.network.wan, (value, index) => {
-			push(roles.upstream, {alias: "WAN" + (index + 1), dev: value});
+			push(roles.upstream, { alias: "WAN" + (index + 1), dev: value });
 		});
 		map(capab.network.lan, (value, index) => {
-			push(roles.downstream, {alias: "LAN" + (index + 1), dev: value});
+			push(roles.downstream, { alias: "LAN" + (index + 1), dev: value });
 		});
 	}
 
 	fs.writefile("/tmp/roles.json", roles);
-
 	return roles;
 }
 
@@ -125,6 +130,22 @@ function discover_ports() {
 
 let ethernet = {
 	ports: discover_ports(),
+
+	// Resolve an array of select-ports glob patterns (e.g. ["LAN*","WAN1"])
+	// against capab.ports and return the matching netdev names.
+	lookup_by_select_ports: function(select_ports) {
+		let matched = [];
+		if (!capab?.ports) return matched;
+		for (let alias, spec in capab.ports) {
+			for (let glob in select_ports) {
+				if (wildcard(alias, glob)) {
+					push(matched, spec.netdev);
+					break;
+				}
+			}
+		}
+		return matched;
+	},
 
 	bridge_c: 0,
 	pppoe_c: 0,
