@@ -1,18 +1,22 @@
     static {
+    {% if (length(upstreams)): %}
+        route 0.0.0.0/0 {
         {% for (let up in upstreams): %}
             {% if (up.ipv4 && up.ipv4.addressing == "static"): %}
-        route 0.0.0.0/0 {
             next-hop {{ up.ipv4.gateway }} {
             }
-        }
-            {% endif %}
-            {% if (up.ipv6 && up.ipv6.addressing == "static"): %}
-        route6 ::/0 {
-            next-hop {{ up.ipv6.gateway }} {
-            }
-        }
             {% endif %}
         {% endfor %}
+        }
+        route6 ::/0 {
+        {% for (let up in upstreams): %}
+            {% if (up.ipv6 && up.ipv6.addressing == "static"): %}
+            next-hop {{ up.ipv6.gateway }} {
+            }
+            {% endif %}
+        {% endfor %}
+        }
+    {% endif %}
         {% if (routing.static && routing.static.ipv4_rules): %}
             {% for (let rule in routing.static.ipv4_rules): %}
         route {{ rule.destination }} {

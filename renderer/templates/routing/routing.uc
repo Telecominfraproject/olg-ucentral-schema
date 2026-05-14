@@ -34,7 +34,7 @@ protocols {
     {% 
     if (routing.ospf) {
         include("ospf.uc", {
-            location: location + '/bgp',
+            location: location + '/ospf',
             ospf: routing.ospf
         });
     }
@@ -43,7 +43,7 @@ protocols {
     {% 
     if (routing.rip) {
         include("rip.uc", {
-            location: location + '/bgp',
+            location: location + '/rip',
             rip: routing.rip
         });
     }

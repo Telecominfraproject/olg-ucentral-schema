@@ -1,0 +1,183 @@
+{
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "mtu": 1500,
+            "name": "eth2",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth3",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth4",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth5",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "bridge": {
+                "members": [
+                    "eth0",
+                    "eth1",
+                    "eth4",
+                    "eth5"
+                ]
+            },
+            "ipv4": {
+                "address": [
+                    "192.168.1.2/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "br0",
+            "role": "downstream",
+            "type": "bridge",
+            "vlan": [
+                {
+                    "id": 2,
+                    "ipv4": {
+                        "address": [
+                            "192.168.2.1/24"
+                        ],
+                        "addressing": "static"
+                    },
+                    "mtu": 1500,
+                    "name": "vlan2",
+                    "role": "downstream"
+                }
+            ]
+        }
+    ],
+    "metrics": {
+        "health": {
+            "interval": 60
+        },
+        "statistics": {
+            "interval": 300,
+            "types": []
+        }
+    },
+    "nat": {
+        "source-ipv4": [
+            {
+                "outbound-interface": "eth2",
+                "protocol": "all",
+                "rule-number": 10,
+                "source": {
+                    "address": "192.168.1.0/24"
+                },
+                "translation": {
+                    "address": "masquerade"
+                }
+            },
+            {
+                "outbound-interface": "eth2",
+                "protocol": "all",
+                "rule-number": 20,
+                "source": {
+                    "address": "192.168.2.0/24"
+                },
+                "translation": {
+                    "address": "masquerade"
+                }
+            }
+        ]
+    },
+    "routing": {
+        "ospf": {
+            "areas": [
+                {
+                    "area-id": "0",
+                    "area-type": "normal",
+                    "networks": [
+                        "192.168.1.0/24"
+                    ]
+                }
+            ],
+            "redistribute": {
+                "connected": true
+            },
+            "router-id": "10.255.255.2"
+        }
+    },
+    "services": {
+        "ntp": {
+            "allow-clients": [
+                "192.168.1.0/24",
+                "192.168.2.0/24"
+            ],
+            "listen-address": "0.0.0.0",
+            "servers": [
+                {
+                    "address": "pool.ntp.org"
+                },
+                {
+                    "address": "time.google.com"
+                },
+                {
+                    "address": "time.nist.gov"
+                }
+            ]
+        }
+    },
+    "system": {
+        "name-servers": {
+            "dhcp-interfaces": [
+                "eth2"
+            ]
+        },
+        "syslog": {
+            "local": [
+                {
+                    "facility": "daemon",
+                    "severity": "info"
+                }
+            ]
+        }
+    },
+    "uuid": 1778578439
+}

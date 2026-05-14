@@ -2,7 +2,14 @@
 {% for (let a in ospf.areas): %}
         area {{ a.area_id }} {
     {% if (a.area_type): %}
-            {{ a.area_type }}
+            area-type {
+        {% if (a.area_type != "normal"): %}
+                {{ a.area_type }} {
+                }
+        {% else %}
+                normal
+        {% endif %}
+            }
     {% endif %}
     {% for (let n in a.networks): %}
             network "{{ n }}"
@@ -13,7 +20,26 @@
             router-id "{{ ospf.router_id }}"
         }
         redistribute {
+{% if (ospf.redistribute): %}
+    {% if (ospf.redistribute.connected): %}
             connected {
             }
+    {% endif %}
+    {% if (ospf.redistribute.static): %}
+            static {
+            }
+    {% endif %}
+    {% if (ospf.redistribute.bgp): %}
+            bgp {
+            }
+    {% endif %}
+    {% if (ospf.redistribute.rip): %}
+            rip {
+            }
+    {% endif %}
+{% else %}
+            connected {
+            }
+{% endif %}
         }
     }
