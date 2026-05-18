@@ -77,6 +77,7 @@ firewall {
 {% endif %}
         }
         port-group WAN_SERVICE_GROUP {
+            port 1883
 {% if (services): %}
     {% if (services.ssh && services.ssh.expose_wan): %}
             port "22"
