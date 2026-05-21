@@ -5,6 +5,9 @@
             area-type {
         {% if (a.area_type != "normal"): %}
                 {{ a.area_type }} {
+            {% if (a.no_summary): %}
+                    no-summary
+            {% endif %}
                 }
         {% else %}
                 normal

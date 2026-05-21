@@ -198,6 +198,10 @@ let ethernet = {
 				iface_temp = "wg" + this.wg_c++;
 				this.interfaces[name] = iface_temp;
 				return iface_temp;
+			case "openvpn":
+				iface_temp = "vtun" + this.vtun_c++;
+				this.interfaces[name] = iface_temp;
+				return iface_temp;
 			default:
 				return name;
 		}

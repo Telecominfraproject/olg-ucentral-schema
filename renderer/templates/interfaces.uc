@@ -201,7 +201,8 @@ interfaces {
         {% endif %}
         {% if (vpn.openvpn): %}
             {% for (let ov in vpn.openvpn.interfaces): %}
-    openvpn vtun{{ vtun_c++ }} {
+                {% let iface_tmp = ethernet.calculate_name_by_type_and_name("openvpn", ov.name); %}
+    openvpn {{ iface_tmp }} {
             {% if(ov.mode == "server"): %}
         encryption {
                 {% for (let cipher in ov.server.encryption.data_ciphers): %}
