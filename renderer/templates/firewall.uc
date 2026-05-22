@@ -77,7 +77,9 @@ firewall {
 {% endif %}
         }
         port-group WAN_SERVICE_GROUP {
-            port 1883
+            port "8883"
+            port "5140"
+            port "1883"
 {% if (services): %}
     {% if (services.ssh && services.ssh.expose_wan): %}
             port "22"
@@ -116,8 +118,8 @@ firewall {
         {% endfor %}
     {% endif %}
     {% if (vpn.ipsec && length(vpn.ipsec)): %}
-            port 500
-            port 4500
+            port "500"
+            port "4500"
     {% endif %}
 {% endif %}
         }

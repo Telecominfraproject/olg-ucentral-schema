@@ -22,7 +22,7 @@
         route {{ rule.destination }} {
                 {% for (let p in rule.routes): %}
                     {% if (p.action == "interface"): %}
-            {{ p.action }} {{ p.interface }} {
+            {{ p.action }} {{ ethernet.get_iface_by_name(p.interface) }} {
                     {% elif (p.action == "next-hop"): %}
             {{ p.action }} {{ p.next_hop }} {
                     {% elif (p.action == "reject"): %}
