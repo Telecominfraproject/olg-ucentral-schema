@@ -16,6 +16,9 @@ properties:
       - udp
       - icmpv6
       - all
+  target-zone:
+    description: The zone that this packet should be forward to
+    type: string
   source:
     description: Source address/port to match.
     type: object

@@ -5,7 +5,6 @@ properties:
     description: Rule number for ordering (lower numbers processed first).
     type: integer
     minimum: 1
-    maximum: 999999
   inbound-interface:
     description: Inbound interface for NAT.
     type: string
@@ -17,6 +16,9 @@ properties:
       - udp
       - icmp
       - all
+  target-zone:
+    description: The zone that this packet should be forward to
+    type: string
   source:
     description: Source address/port to match.
     type: object

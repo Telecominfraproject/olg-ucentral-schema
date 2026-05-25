@@ -1597,8 +1597,7 @@
                             "rule-number": {
                                 "description": "Rule number for ordering (lower numbers processed first).",
                                 "type": "integer",
-                                "minimum": 1,
-                                "maximum": 999999
+                                "minimum": 1
                             },
                             "inbound-interface": {
                                 "description": "Inbound interface for NAT.",
@@ -1613,6 +1612,10 @@
                                     "icmp",
                                     "all"
                                 ]
+                            },
+                            "target-zone": {
+                                "description": "The zone that this packet should be forward to",
+                                "type": "string"
                             },
                             "source": {
                                 "description": "Source address/port to match.",
@@ -1909,6 +1912,10 @@
                                     "icmpv6",
                                     "all"
                                 ]
+                            },
+                            "target-zone": {
+                                "description": "The zone that this packet should be forward to",
+                                "type": "string"
                             },
                             "source": {
                                 "description": "Source address/port to match.",
@@ -4615,6 +4622,14 @@
                                         "description": "Configuration for server mode",
                                         "type": "object",
                                         "properties": {
+                                            "push-routes": {
+                                                "description": "Routes to be pushed to clients",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "format": "uc-cidr"
+                                                }
+                                            },
                                             "listen-address": {
                                                 "description": "Local IP address for the OpenVPN server to bind to.",
                                                 "type": "string",
@@ -4923,6 +4938,12 @@
                                                     "description": "The public IP of the host (optional).",
                                                     "type": "string",
                                                     "format": "uc-ip"
+                                                },
+                                                "endport": {
+                                                    "description": "The public port of the host (optional).",
+                                                    "type": "integer",
+                                                    "maximum": 65535,
+                                                    "minimum": 1
                                                 },
                                                 "subnet": {
                                                     "description": "The list of subnets that shall be routed to this host.",

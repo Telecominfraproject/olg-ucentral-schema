@@ -1505,8 +1505,7 @@
             "properties": {
                 "rule-number": {
                     "type": "integer",
-                    "minimum": 1,
-                    "maximum": 999999
+                    "minimum": 1
                 },
                 "inbound-interface": {
                     "type": "string"
@@ -1519,6 +1518,9 @@
                         "icmp",
                         "all"
                     ]
+                },
+                "target-zone": {
+                    "type": "string"
                 },
                 "source": {
                     "type": "object",
@@ -1777,6 +1779,9 @@
                         "icmpv6",
                         "all"
                     ]
+                },
+                "target-zone": {
+                    "type": "string"
                 },
                 "source": {
                     "type": "object",
@@ -4287,6 +4292,13 @@
                             "server": {
                                 "type": "object",
                                 "properties": {
+                                    "push-routes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uc-cidr"
+                                        }
+                                    },
                                     "listen-address": {
                                         "type": "string",
                                         "format": "uc-ip"
@@ -4550,6 +4562,11 @@
                                         "endpoint": {
                                             "type": "string",
                                             "format": "uc-ip"
+                                        },
+                                        "endport": {
+                                            "type": "integer",
+                                            "maximum": 65535,
+                                            "minimum": 1
                                         },
                                         "subnet": {
                                             "type": "array",

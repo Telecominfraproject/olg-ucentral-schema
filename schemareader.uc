@@ -4352,9 +4352,6 @@ function instantiateNatDestinationIpv4(location, value, errors) {
 
 		function parseRuleNumber(location, value, errors) {
 			if (type(value) in [ "int", "double" ]) {
-				if (value > 999999)
-					push(errors, [ location, "must be lower than or equal to 999999" ]);
-
 				if (value < 1)
 					push(errors, [ location, "must be bigger than or equal to 1" ]);
 
@@ -4393,6 +4390,17 @@ function instantiateNatDestinationIpv4(location, value, errors) {
 
 		if (exists(value, "protocol")) {
 			obj.protocol = parseProtocol(location + "/protocol", value["protocol"], errors);
+		}
+
+		function parseTargetZone(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "target-zone")) {
+			obj.target_zone = parseTargetZone(location + "/target-zone", value["target-zone"], errors);
 		}
 
 		function parseSource(location, value, errors) {
@@ -5165,6 +5173,17 @@ function instantiateNatDestinationIpv6(location, value, errors) {
 
 		if (exists(value, "protocol")) {
 			obj.protocol = parseProtocol(location + "/protocol", value["protocol"], errors);
+		}
+
+		function parseTargetZone(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "target-zone")) {
+			obj.target_zone = parseTargetZone(location + "/target-zone", value["target-zone"], errors);
 		}
 
 		function parseSource(location, value, errors) {
@@ -12641,6 +12660,34 @@ function instantiateVpnOpenvpn(location, value, errors) {
 							if (type(value) == "object") {
 								let obj = {};
 
+								function parsePushRoutes(location, value, errors) {
+									if (type(value) == "array") {
+										function parseItem(location, value, errors) {
+											if (type(value) == "string") {
+												if (!matchUcCidr(value))
+													push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
+
+											}
+
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+									}
+
+									if (type(value) != "array")
+										push(errors, [ location, "must be of type array" ]);
+
+									return value;
+								}
+
+								if (exists(value, "push-routes")) {
+									obj.push_routes = parsePushRoutes(location + "/push-routes", value["push-routes"], errors);
+								}
+
 								function parseListenAddress(location, value, errors) {
 									if (type(value) == "string") {
 										if (!matchUcIp(value))
@@ -13425,6 +13472,26 @@ function instantiateVpnWireguard(location, value, errors) {
 
 										if (exists(value, "endpoint")) {
 											obj.endpoint = parseEndpoint(location + "/endpoint", value["endpoint"], errors);
+										}
+
+										function parseEndport(location, value, errors) {
+											if (type(value) in [ "int", "double" ]) {
+												if (value > 65535)
+													push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+												if (value < 1)
+													push(errors, [ location, "must be bigger than or equal to 1" ]);
+
+											}
+
+											if (type(value) != "int")
+												push(errors, [ location, "must be of type integer" ]);
+
+											return value;
+										}
+
+										if (exists(value, "endport")) {
+											obj.endport = parseEndport(location + "/endport", value["endport"], errors);
 										}
 
 										function parseSubnet(location, value, errors) {

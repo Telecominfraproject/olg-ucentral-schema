@@ -63,6 +63,12 @@ properties:
           description: Configuration for server mode
           type: object
           properties:
+            push-routes:
+              description: Routes to be pushed to clients
+              type: array
+              items:
+                type: string
+                format: uc-cidr
             listen-address:
               description: Local IP address for the OpenVPN server to bind to.
               type: string

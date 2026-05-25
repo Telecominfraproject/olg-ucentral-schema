@@ -14,35 +14,35 @@
         passive-interface "{{ p }}"
 {% endfor %}
         redistribute {
-{% if (rip.connected): %}
+{% if (rip.redistribute.connected): %}
             connected {
             }
 {% endif %}
-{% if (rip.static): %}
+{% if (rip.redistribute.static): %}
             static {
             }
 {% endif %}
-{% if (rip.babel): %}
+{% if (rip.redistribute.babel): %}
             babel {
             }
 {% endif %}
-{% if (rip.bgp): %}
+{% if (rip.redistribute.bgp): %}
             bgp {
             }
 {% endif %}
-{% if (rip.isis): %}
+{% if (rip.redistribute.isis): %}
             isis {
             }
 {% endif %}
-{% if (rip.kernel): %}
+{% if (rip.redistribute.kernel): %}
             kernel {
             }
 {% endif %}
-{% if (rip.nhrp): %}
+{% if (rip.redistribute.nhrp): %}
             nhrp {
             }
 {% endif %}
-{% if (rip.ospf): %}
+{% if (rip.redistribute.ospf): %}
             nhrp {
             }
 {% endif %}

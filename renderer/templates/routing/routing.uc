@@ -10,7 +10,7 @@ if (length(upstreams)) {
     }
 }
 %}
-{% if (routing || has_static_upstream || igmp_proxy): %}
+{% if (routing.static || routing.bgp || routing.ospf || routing.rip || has_static_upstream || igmp_proxy): %}
 protocols {
     {% 
     if (routing.static || has_static_upstream) {

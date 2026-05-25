@@ -77,6 +77,12 @@ properties:
                   The public IP of the host (optional).
                 type: string
                 format: uc-ip
+              endport:
+                description:
+                  The public port of the host (optional).
+                type: integer
+                maximum: 65535
+                minimum: 1
               subnet:
                 description:
                   The list of subnets that shall be routed to this host.

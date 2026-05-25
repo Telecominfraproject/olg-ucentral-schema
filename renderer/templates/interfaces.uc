@@ -190,8 +190,8 @@ interfaces {
                     {% if (p.endpoint): %}
             address "{{ p.endpoint }}"
                     {% endif %}
-                    {% if (p.port): %}
-            port "{{ p.endpoint.port }}"
+                    {% if (p.endport): %}
+            port "{{ p.endport }}"
                     {% endif %}
         }
                 {% endfor %}
@@ -221,6 +221,10 @@ interfaces {
                 {% endif %}
         protocol "{{ ov.protocol }}"
         server {
+                {% for (let route in ov.server.push_routes): %}
+            {{ route }} {
+            }
+                {% endfor %}
                 {% for (let c in ov.clients): %}
             client client{{ client_c++ }} {
                 ip "{{ c.address }}"
