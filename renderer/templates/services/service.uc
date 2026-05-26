@@ -22,7 +22,11 @@ service {
             include("mdns.uc", { location: location + '/mdns', mdns: services.mdns });
         }
         if (services.pppoe_server) {
-            include("pppoe-server.uc", { location: location + '/pppoe_server', pppoe: services.pppoe_server });
+            include("pppoe-server.uc", {
+                location: location + '/pppoe_server',
+                ethernet,
+                pppoe: services.pppoe_server
+            });
         }
         if (services.tftp_server) {
             include("tftp-server.uc", { location: location + '/tftp_server', tftp: services.tftp_server });

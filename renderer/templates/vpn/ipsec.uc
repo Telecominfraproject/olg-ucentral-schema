@@ -1,8 +1,5 @@
 {% let prop_c = 1, prop_e = 1; %}
     ipsec {
-{% for (let iface in ipsec.interfaces): %}
-        interface "{{ iface }}"
-{% endfor %}
 {% for (let ike_g in ipsec.ike_groups): %}
         ike-group {{ ike_g.name }} {
             key-exchange {{ ike_g.key_exchange }}

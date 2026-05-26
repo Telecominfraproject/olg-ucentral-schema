@@ -21,7 +21,7 @@
         gateway-address "{{ pppoe.gateway_address }}"
 {% endif %}
 {% for (let i in pppoe.interfaces): %}
-        interface {{ i }} {
+        interface {{ ethernet.get_iface_by_name(i) }} {
         }
 {% endfor %}
     }

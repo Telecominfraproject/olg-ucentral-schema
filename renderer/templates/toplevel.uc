@@ -117,7 +117,9 @@
 		state.services = {};
 	}
 	include("services/service.uc", {
-		location: '/services', services: state.services
+		location: '/services',
+		services: state.services,
+		ethernet
 	});
 
 	if (!state.system) {

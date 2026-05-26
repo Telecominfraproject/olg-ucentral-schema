@@ -21,6 +21,7 @@ firewall {
 {% endif %}
 {% if (services.pppoe_server): %}
                 ethernet-type pppoe
+                ethernet-type pppoe-discovery
 {% endif %}
                 ethernet-type 802.1q
                 ethernet-type 802.1ad
