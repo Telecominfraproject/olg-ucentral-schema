@@ -222,7 +222,7 @@ interfaces {
         protocol "{{ ov.protocol }}"
         server {
                 {% for (let route in ov.server.push_routes): %}
-            {{ route }} {
+            push-route {{ route }} {
             }
                 {% endfor %}
                 {% for (let c in ov.clients): %}

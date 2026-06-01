@@ -23,6 +23,7 @@ properties:
       - tcp
       - udp
       - icmp
+      - ospf
       - all
     default: all
   source:

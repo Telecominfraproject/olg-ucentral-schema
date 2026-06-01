@@ -1,12 +1,14 @@
     lldp {
 {% for (let i in lldp.interfaces): %}
-        interface {{ i.name }} {
+        interface {{ ethernet.get_iface_by_name(i.name) }} {
     {% if (i.mode): %}
             mode "{{ i.mode }}"
     {% endif %}
         }
 {% endfor %}
-{% if (lldp.management_address): %}
-        management-address "{{ lldp.management_address }}"
+{% if (lldp.management-addresses): %}
+    {% for (let addr in lldp.management-addresses): %}
+        management-address "{{ addr }}"
+    {% endfor %}
 {% endif %}
     }

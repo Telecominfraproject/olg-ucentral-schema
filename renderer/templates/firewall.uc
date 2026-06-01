@@ -92,6 +92,9 @@ firewall {
     {% if (services.mdns): %}
             port "5353"
     {% endif %}
+    {% if (services.tftp_server): %}
+            port "69"
+    {% endif %}
 {% endif %}
 {% if (routing): %}
     {% if (routing.bgp): %}

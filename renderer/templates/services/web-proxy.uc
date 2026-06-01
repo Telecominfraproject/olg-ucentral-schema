@@ -14,9 +14,7 @@
     {% if (s.port): %}
             port "{{ s.port }}"
     {% endif %}
-    {% if (!s.transparent_proxy): %}
             disable-transparent
-    {% endif %}
         }
 {% endfor %}
 {% if (wbp.cache_size): %}

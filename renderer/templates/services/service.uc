@@ -1,7 +1,11 @@
 service {
     {%
         if (services.dhcp_relay) {
-			include("dhcp-relay.uc", { location: location + '/dhcp_relay', dhcp_relay: services.dhcp_relay });
+			include("dhcp-relay.uc", {
+                location: location + '/dhcp_relay',
+                dhcp_relay: services.dhcp_relay,
+                ethernet
+            });
         }
         if (services.dhcp_server) {
             include("dhcp-server.uc", { location: location + '/dhcp_server', dhcp_server: services.dhcp_server });
@@ -16,10 +20,18 @@ service {
             include("ntp.uc", { location: location + '/ntp', ntp: services.ntp });
         }
         if (services.lldp) {
-            include("lldp.uc", { location: location + '/lldp', lldp: services.lldp });
+            include("lldp.uc", {
+                location: location + '/lldp',
+                lldp: services.lldp,
+                ethernet
+            });
         }
         if (services.mdns) {
-            include("mdns.uc", { location: location + '/mdns', mdns: services.mdns });
+            include("mdns.uc", {
+                location: location + '/mdns',
+                mdns: services.mdns,
+                ethernet
+            });
         }
         if (services.pppoe_server) {
             include("pppoe-server.uc", {
