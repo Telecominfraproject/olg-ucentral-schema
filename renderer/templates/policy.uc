@@ -87,5 +87,15 @@ policy {
         {% endif %}
     }
     {% endfor %}
+
+    {% for (let q in qos): %}
+            {% if (policy.address_family == "ipv4"): %}
+    route {{ policy.name }} {
+        {% elif (policy.address_family == "ipv6"): %}
+    route6 {{ policy.name }} {
+        {% endif %}
+
+    }
+    {% endfor%}
 }
 {% endif %}

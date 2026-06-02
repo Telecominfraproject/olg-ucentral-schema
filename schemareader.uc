@@ -12428,6 +12428,56 @@ function instantiateVpnIpsec(location, value, errors) {
 			push(errors, [ location, "is required" ]);
 		}
 
+		function parseUsers(location, value, errors) {
+			if (type(value) == "array") {
+				function parseItem(location, value, errors) {
+					if (type(value) == "object") {
+						let obj = {};
+
+						function parseName(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						if (exists(value, "name")) {
+							obj.name = parseName(location + "/name", value["name"], errors);
+						}
+
+						function parsePassword(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							return value;
+						}
+
+						if (exists(value, "password")) {
+							obj.password = parsePassword(location + "/password", value["password"], errors);
+						}
+
+						return obj;
+					}
+
+					if (type(value) != "object")
+						push(errors, [ location, "must be of type object" ]);
+
+					return value;
+				}
+
+				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
+
+			return value;
+		}
+
+		if (exists(value, "users")) {
+			obj.users = parseUsers(location + "/users", value["users"], errors);
+		}
+
 		return obj;
 	}
 

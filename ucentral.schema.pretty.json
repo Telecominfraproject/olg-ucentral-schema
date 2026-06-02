@@ -136,6 +136,7 @@
                         "tcp",
                         "udp",
                         "icmp",
+                        "ospf",
                         "all"
                     ],
                     "default": "all"
@@ -4655,6 +4656,23 @@
                                 "description": "Name server for client",
                                 "type": "string",
                                 "format": "uc-ip"
+                            }
+                        }
+                    }
+                },
+                "users": {
+                    "description": "User configuration.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Username.",
+                                "type": "string"
+                            },
+                            "password": {
+                                "description": "User password.",
+                                "type": "string"
                             }
                         }
                     }

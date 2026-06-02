@@ -102,7 +102,8 @@
 			location: '/routing',
 			routing: state.routing,
 			upstreams: up_i,
-			igmp_proxy: state.services.igmp_proxy
+			igmp_proxy: state.services.igmp_proxy,
+			ethernet
 		});
 	}
 

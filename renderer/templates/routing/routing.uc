@@ -54,7 +54,8 @@ protocols {
     if (igmp_proxy) {
         include("igmp_proxy.uc", {
             location: location + '/igmp_proxy',
-            igmp_proxy
+            igmp_proxy,
+            ethernet
         });
     }
     %}
