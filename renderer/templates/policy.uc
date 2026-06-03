@@ -88,7 +88,7 @@ policy {
         {% endif %}
     }
     {% endfor %}
-
+    {% if (qos && length(qos.shaper)): %}
     {% for (let s in qos.shaper): %}
         {% if (s.address_family == "ipv4"): %}
     route {{ s.name }} {
@@ -135,10 +135,9 @@ policy {
             }
         }
             {% endfor %}
-        {% endfor %}
-
-        
+        {% endfor %}    
     }
     {% endfor%}
+    {% endif %}
 }
 {% endif %}

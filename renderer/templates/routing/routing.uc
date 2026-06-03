@@ -16,6 +16,7 @@ protocols {
     if (routing.static || has_static_upstream) {
         include("static.uc", {
             location: location + '/static',
+            has_default: has_static_upstream,
             upstreams,
             routing
         });

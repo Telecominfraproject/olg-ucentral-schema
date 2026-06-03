@@ -1,5 +1,5 @@
     static {
-    {% if (length(upstreams)): %}
+    {% if (has_default): %}
         route 0.0.0.0/0 {
         {% for (let up in upstreams): %}
             {% if (up.ipv4 && up.ipv4.addressing == "static"): %}
