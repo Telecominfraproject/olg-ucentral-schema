@@ -82,6 +82,7 @@ properties:
           description: Port number of the syslog server.
           type: integer
           maximum: 65535
+          minimum: 1
           default: 514
         protocol:
           description: Transport protocol for syslog messages.

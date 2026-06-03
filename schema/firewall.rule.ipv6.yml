@@ -34,7 +34,14 @@ properties:
         format: uc-cidr6
         example: 2001:db8::/32
       port:
-        type: string
+        description: Source port or port range.
+        type: 
+          - integer
+          - string
+        format: uc-portrange
+        examples:
+          - 80
+          - 1024-65535
       mac-address:
         type: string
         format: uc-mac
@@ -60,7 +67,14 @@ properties:
         format: uc-cidr6
         example: 2001:db8::/32
       port:
-        type: string
+        description: Destination port or port range.
+        type: 
+          - integer
+          - string
+        format: uc-portrange
+        examples:
+          - 80
+          - 1024-65535
       group:
         type: object
         properties:

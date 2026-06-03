@@ -5,6 +5,8 @@ properties:
     description: Port used for all specified listen-address.
     type: integer
     default: 3128
+    maximum: 65535
+    minimum: 1
   servers:
     type: array
     items:
@@ -18,6 +20,7 @@ properties:
           description: Port number that the proxy server listens.
           type: integer
           maximum: 65535
+          minimum: 1
         transparent-proxy:
           description: Automatically forward traffic arriving on port 80 destined for Internet.
           type: boolean

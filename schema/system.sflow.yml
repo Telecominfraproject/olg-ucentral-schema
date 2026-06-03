@@ -36,6 +36,7 @@ properties:
           description: Port number of the sFlow collector.
           type: integer
           maximum: 65535
+          minimum: 1
           default: 6343
       required:
       - address

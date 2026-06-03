@@ -151,7 +151,15 @@
                             ]
                         },
                         "port": {
-                            "type": "string"
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
                         },
                         "mac-address": {
                             "type": "string",
@@ -197,7 +205,15 @@
                             ]
                         },
                         "port": {
-                            "type": "string"
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
                         },
                         "group": {
                             "type": "object",
@@ -378,7 +394,15 @@
                             "example": "2001:db8::/32"
                         },
                         "port": {
-                            "type": "string"
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
                         },
                         "mac-address": {
                             "type": "string",
@@ -410,7 +434,15 @@
                             "example": "2001:db8::/32"
                         },
                         "port": {
-                            "type": "string"
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "uc-portrange",
+                            "examples": [
+                                80,
+                                "1024-65535"
+                            ]
                         },
                         "group": {
                             "type": "object",
@@ -3396,7 +3428,9 @@
             "properties": {
                 "default-port": {
                     "type": "integer",
-                    "default": 3128
+                    "default": 3128,
+                    "maximum": 65535,
+                    "minimum": 1
                 },
                 "servers": {
                     "type": "array",
@@ -3409,7 +3443,8 @@
                             },
                             "port": {
                                 "type": "integer",
-                                "maximum": 65535
+                                "maximum": 65535,
+                                "minimum": 1
                             },
                             "transparent-proxy": {
                                 "type": "boolean",
@@ -3727,6 +3762,7 @@
                             "port": {
                                 "type": "integer",
                                 "maximum": 65535,
+                                "minimum": 1,
                                 "default": 514
                             },
                             "protocol": {
@@ -3821,7 +3857,8 @@
                             },
                             "port": {
                                 "type": "integer",
-                                "maximum": 65535
+                                "maximum": 65535,
+                                "minimum": 1
                             }
                         },
                         "required": [
@@ -3880,6 +3917,7 @@
                             "port": {
                                 "type": "integer",
                                 "maximum": 65535,
+                                "minimum": 1,
                                 "default": 6343
                             }
                         },
@@ -4273,7 +4311,8 @@
                                     },
                                     "local-port": {
                                         "type": "integer",
-                                        "maximum": 65535
+                                        "maximum": 65535,
+                                        "minimum": 1
                                     },
                                     "remote-address": {
                                         "type": "string",
@@ -4281,7 +4320,8 @@
                                     },
                                     "remote-port": {
                                         "type": "integer",
-                                        "maximum": 65535
+                                        "maximum": 65535,
+                                        "minimum": 1
                                     },
                                     "tls": {
                                         "type": "object",
@@ -4327,6 +4367,7 @@
                                     "listen-port": {
                                         "type": "integer",
                                         "maximum": 65535,
+                                        "minimum": 1,
                                         "default": 1194
                                     },
                                     "subnet": {
@@ -4431,6 +4472,7 @@
                                     "server-port": {
                                         "type": "integer",
                                         "maximum": 65535,
+                                        "minimum": 1,
                                         "default": 1194
                                     },
                                     "authentication": {

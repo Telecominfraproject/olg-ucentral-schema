@@ -406,8 +406,14 @@ function instantiateFirewallRuleIpv4(location, value, errors) {
 				}
 
 				function parsePort(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
+					if (type(value) == "string") {
+						if (!matchUcPortrange(value))
+							push(errors, [ location, "must be a valid network port range" ]);
+
+					}
+
+					if (type(value) != "int" && type(value) != "string")
+						push(errors, [ location, "must be of type integer or string" ]);
 
 					return value;
 				}
@@ -596,8 +602,14 @@ function instantiateFirewallRuleIpv4(location, value, errors) {
 				}
 
 				function parsePort(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
+					if (type(value) == "string") {
+						if (!matchUcPortrange(value))
+							push(errors, [ location, "must be a valid network port range" ]);
+
+					}
+
+					if (type(value) != "int" && type(value) != "string")
+						push(errors, [ location, "must be of type integer or string" ]);
 
 					return value;
 				}
@@ -1093,8 +1105,14 @@ function instantiateFirewallRuleIpv6(location, value, errors) {
 				}
 
 				function parsePort(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
+					if (type(value) == "string") {
+						if (!matchUcPortrange(value))
+							push(errors, [ location, "must be a valid network port range" ]);
+
+					}
+
+					if (type(value) != "int" && type(value) != "string")
+						push(errors, [ location, "must be of type integer or string" ]);
 
 					return value;
 				}
@@ -1205,8 +1223,14 @@ function instantiateFirewallRuleIpv6(location, value, errors) {
 				}
 
 				function parsePort(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
+					if (type(value) == "string") {
+						if (!matchUcPortrange(value))
+							push(errors, [ location, "must be a valid network port range" ]);
+
+					}
+
+					if (type(value) != "int" && type(value) != "string")
+						push(errors, [ location, "must be of type integer or string" ]);
 
 					return value;
 				}
@@ -10290,6 +10314,15 @@ function instantiateServiceWebProxy(location, value, errors) {
 		let obj = {};
 
 		function parseDefaultPort(location, value, errors) {
+			if (type(value) in [ "int", "double" ]) {
+				if (value > 65535)
+					push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+				if (value < 1)
+					push(errors, [ location, "must be bigger than or equal to 1" ]);
+
+			}
+
 			if (type(value) != "int")
 				push(errors, [ location, "must be of type integer" ]);
 
@@ -10333,6 +10366,9 @@ function instantiateServiceWebProxy(location, value, errors) {
 							if (type(value) in [ "int", "double" ]) {
 								if (value > 65535)
 									push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+								if (value < 1)
+									push(errors, [ location, "must be bigger than or equal to 1" ]);
 
 							}
 
@@ -11186,6 +11222,9 @@ function instantiateSystemSyslog(location, value, errors) {
 								if (value > 65535)
 									push(errors, [ location, "must be lower than or equal to 65535" ]);
 
+								if (value < 1)
+									push(errors, [ location, "must be bigger than or equal to 1" ]);
+
 							}
 
 							if (type(value) != "int")
@@ -11356,6 +11395,9 @@ function instantiateSystemNetflow(location, value, errors) {
 							if (type(value) in [ "int", "double" ]) {
 								if (value > 65535)
 									push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+								if (value < 1)
+									push(errors, [ location, "must be bigger than or equal to 1" ]);
 
 							}
 
@@ -11552,6 +11594,9 @@ function instantiateSystemSflow(location, value, errors) {
 							if (type(value) in [ "int", "double" ]) {
 								if (value > 65535)
 									push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+								if (value < 1)
+									push(errors, [ location, "must be bigger than or equal to 1" ]);
 
 							}
 
@@ -12599,6 +12644,9 @@ function instantiateVpnOpenvpn(location, value, errors) {
 										if (value > 65535)
 											push(errors, [ location, "must be lower than or equal to 65535" ]);
 
+										if (value < 1)
+											push(errors, [ location, "must be bigger than or equal to 1" ]);
+
 									}
 
 									if (type(value) != "int")
@@ -12635,6 +12683,9 @@ function instantiateVpnOpenvpn(location, value, errors) {
 									if (type(value) in [ "int", "double" ]) {
 										if (value > 65535)
 											push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+										if (value < 1)
+											push(errors, [ location, "must be bigger than or equal to 1" ]);
 
 									}
 
@@ -12773,6 +12824,9 @@ function instantiateVpnOpenvpn(location, value, errors) {
 									if (type(value) in [ "int", "double" ]) {
 										if (value > 65535)
 											push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+										if (value < 1)
+											push(errors, [ location, "must be bigger than or equal to 1" ]);
 
 									}
 
@@ -13089,6 +13143,9 @@ function instantiateVpnOpenvpn(location, value, errors) {
 									if (type(value) in [ "int", "double" ]) {
 										if (value > 65535)
 											push(errors, [ location, "must be lower than or equal to 65535" ]);
+
+										if (value < 1)
+											push(errors, [ location, "must be bigger than or equal to 1" ]);
 
 									}
 

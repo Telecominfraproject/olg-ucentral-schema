@@ -26,6 +26,7 @@ properties:
         port:
           type: integer
           maximum: 65535
+          minimum: 1
       required:
       - address
   engine-id:

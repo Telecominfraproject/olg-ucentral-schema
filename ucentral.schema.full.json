@@ -147,7 +147,16 @@
                                                     ]
                                                 },
                                                 "port": {
-                                                    "type": "string"
+                                                    "description": "Source port or port range.",
+                                                    "type": [
+                                                        "integer",
+                                                        "string"
+                                                    ],
+                                                    "format": "uc-portrange",
+                                                    "examples": [
+                                                        80,
+                                                        "1024-65535"
+                                                    ]
                                                 },
                                                 "mac-address": {
                                                     "type": "string",
@@ -197,7 +206,16 @@
                                                     ]
                                                 },
                                                 "port": {
-                                                    "type": "string"
+                                                    "description": "Destination port or port range.",
+                                                    "type": [
+                                                        "integer",
+                                                        "string"
+                                                    ],
+                                                    "format": "uc-portrange",
+                                                    "examples": [
+                                                        80,
+                                                        "1024-65535"
+                                                    ]
                                                 },
                                                 "group": {
                                                     "type": "object",
@@ -391,7 +409,16 @@
                                                     "example": "2001:db8::/32"
                                                 },
                                                 "port": {
-                                                    "type": "string"
+                                                    "description": "Source port or port range.",
+                                                    "type": [
+                                                        "integer",
+                                                        "string"
+                                                    ],
+                                                    "format": "uc-portrange",
+                                                    "examples": [
+                                                        80,
+                                                        "1024-65535"
+                                                    ]
                                                 },
                                                 "mac-address": {
                                                     "type": "string",
@@ -427,7 +454,16 @@
                                                     "example": "2001:db8::/32"
                                                 },
                                                 "port": {
-                                                    "type": "string"
+                                                    "description": "Destination port or port range.",
+                                                    "type": [
+                                                        "integer",
+                                                        "string"
+                                                    ],
+                                                    "format": "uc-portrange",
+                                                    "examples": [
+                                                        80,
+                                                        "1024-65535"
+                                                    ]
                                                 },
                                                 "group": {
                                                     "type": "object",
@@ -3672,7 +3708,9 @@
                         "default-port": {
                             "description": "Port used for all specified listen-address.",
                             "type": "integer",
-                            "default": 3128
+                            "default": 3128,
+                            "maximum": 65535,
+                            "minimum": 1
                         },
                         "servers": {
                             "type": "array",
@@ -3687,7 +3725,8 @@
                                     "port": {
                                         "description": "Port number that the proxy server listens.",
                                         "type": "integer",
-                                        "maximum": 65535
+                                        "maximum": 65535,
+                                        "minimum": 1
                                     },
                                     "transparent-proxy": {
                                         "description": "Automatically forward traffic arriving on port 80 destined for Internet.",
@@ -3997,6 +4036,7 @@
                                         "description": "Port number of the syslog server.",
                                         "type": "integer",
                                         "maximum": 65535,
+                                        "minimum": 1,
                                         "default": 514
                                     },
                                     "protocol": {
@@ -4098,7 +4138,8 @@
                                     },
                                     "port": {
                                         "type": "integer",
-                                        "maximum": 65535
+                                        "maximum": 65535,
+                                        "minimum": 1
                                     }
                                 },
                                 "required": [
@@ -4167,6 +4208,7 @@
                                         "description": "Port number of the sFlow collector.",
                                         "type": "integer",
                                         "maximum": 65535,
+                                        "minimum": 1,
                                         "default": 6343
                                     }
                                 },
@@ -4605,7 +4647,8 @@
                                             },
                                             "local-port": {
                                                 "type": "integer",
-                                                "maximum": 65535
+                                                "maximum": 65535,
+                                                "minimum": 1
                                             },
                                             "remote-address": {
                                                 "type": "string",
@@ -4613,7 +4656,8 @@
                                             },
                                             "remote-port": {
                                                 "type": "integer",
-                                                "maximum": 65535
+                                                "maximum": 65535,
+                                                "minimum": 1
                                             },
                                             "tls": {
                                                 "type": "object",
@@ -4663,6 +4707,7 @@
                                                 "description": "Port number for the OpenVPN server to listen on.",
                                                 "type": "integer",
                                                 "maximum": 65535,
+                                                "minimum": 1,
                                                 "default": 1194
                                             },
                                             "subnet": {
@@ -4785,6 +4830,7 @@
                                                 "description": "Port number of the remote OpenVPN server.",
                                                 "type": "integer",
                                                 "maximum": 65535,
+                                                "minimum": 1,
                                                 "default": 1194
                                             },
                                             "authentication": {
