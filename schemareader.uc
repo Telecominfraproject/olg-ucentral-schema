@@ -8447,6 +8447,23 @@ function instantiateQos(location, value, errors) {
 					if (type(value) == "object") {
 						let obj = {};
 
+						function parseAddressFamily(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							if (!(value in [ "ipv4", "ipv6" ]))
+								push(errors, [ location, "must be one of \"ipv4\" or \"ipv6\"" ]);
+
+							return value;
+						}
+
+						if (exists(value, "address-family")) {
+							obj.address_family = parseAddressFamily(location + "/address-family", value["address-family"], errors);
+						}
+						else {
+							obj.address_family = "ipv4";
+						}
+
 						function parseName(location, value, errors) {
 							if (type(value) != "string")
 								push(errors, [ location, "must be of type string" ]);
@@ -8941,6 +8958,50 @@ function instantiateQos(location, value, errors) {
 							obj.default = parseDefault(location + "/default", value["default"], errors);
 						}
 
+						function parseIngress(location, value, errors) {
+							if (type(value) == "array") {
+								function parseItem(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+							}
+
+							if (type(value) != "array")
+								push(errors, [ location, "must be of type array" ]);
+
+							return value;
+						}
+
+						if (exists(value, "ingress")) {
+							obj.ingress = parseIngress(location + "/ingress", value["ingress"], errors);
+						}
+
+						function parseEgress(location, value, errors) {
+							if (type(value) == "array") {
+								function parseItem(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+							}
+
+							if (type(value) != "array")
+								push(errors, [ location, "must be of type array" ]);
+
+							return value;
+						}
+
+						if (exists(value, "egress")) {
+							obj.egress = parseEgress(location + "/egress", value["egress"], errors);
+						}
+
 						return obj;
 					}
 
@@ -8961,56 +9022,6 @@ function instantiateQos(location, value, errors) {
 
 		if (exists(value, "shaper")) {
 			obj.shaper = parseShaper(location + "/shaper", value["shaper"], errors);
-		}
-
-		function parseInterfaces(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-
-						function parsePolicy(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "policy")) {
-							obj.policy = parsePolicy(location + "/policy", value["policy"], errors);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "interfaces")) {
-			obj.interfaces = parseInterfaces(location + "/interfaces", value["interfaces"], errors);
 		}
 
 		return obj;

@@ -16,12 +16,14 @@ firewall {
         apply-to-bridged-traffic {
             accept-invalid {
                 ethernet-type arp
-{% if (services.dhcp_server || services.dhcp_relay): %}
+{% if (services): %}
+    {% if (services.dhcp_server || services.dhcp_relay): %}
                 ethernet-type dhcp
-{% endif %}
-{% if (services.pppoe_server): %}
+    {% endif %}
+    {% if (services.pppoe_server): %}
                 ethernet-type pppoe
                 ethernet-type pppoe-discovery
+    {% endif %}
 {% endif %}
                 ethernet-type 802.1q
                 ethernet-type 802.1ad

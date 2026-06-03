@@ -1,4 +1,5 @@
-{% if (length(policies)): %}
+{% let shaper_c = 0, match_c = 1; %}
+{% if (length(policies) || length(qos)): %}
 policy {
     {% for (let policy in policies): %}
         {% if (policy.address_family == "ipv4"): %}
@@ -88,13 +89,55 @@ policy {
     }
     {% endfor %}
 
-    {% for (let q in qos): %}
-            {% if (policy.address_family == "ipv4"): %}
-    route {{ policy.name }} {
-        {% elif (policy.address_family == "ipv6"): %}
-    route6 {{ policy.name }} {
+    {% for (let s in qos.shaper): %}
+        {% if (s.address_family == "ipv4"): %}
+    route {{ s.name }} {
+        {% elif (s.address_family == "ipv6"): %}
+    route6 {{ s.name }} {
         {% endif %}
 
+        {% for (let ing in s.ingress): %}
+        interface {{ ethernet.get_iface_by_name(ing) }}
+        {% endfor %}
+
+        {% for (let c in s.classes): %}
+            {% for (let m in c.match): %}
+                {% m.serial = "match_" + match_c; m.mark = match_c; match_c++; %}
+        rule {{ m.mark }} {
+                {% if (m.destination): %}
+            destination {
+                    {% if (m.destination.address): %}
+                address "{{ m.destination.address }}"
+                    {% endif %}
+                    {% if (m.destination.port): %}
+                port "{{ m.destination.port }}"
+                    {% endif %}
+            }
+                {% endif %}
+
+                {% if (m.source): %}
+            source {
+                    {% if (m.source.address): %}
+                address "{{ m.source.address }}"
+                    {% endif %}
+                    {% if (m.source.port): %}
+                port "{{ m.source.port }}"
+                    {% endif %}
+            }
+                {% endif %}
+
+                {% if (m.protocol && m.protocol != "all"): %}
+            protocol {{ m.protocol }}
+                {% endif %}
+
+            set {
+                mark {{ m.mark }}
+            }
+        }
+            {% endfor %}
+        {% endfor %}
+
+        
     }
     {% endfor%}
 }

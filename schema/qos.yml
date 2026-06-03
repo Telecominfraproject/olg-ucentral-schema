@@ -7,6 +7,10 @@ properties:
     items:
       type: object
       properties:
+        address-family: 
+          type: string
+          enum: [ipv4, ipv6]
+          default: ipv4
         name:
           type: string
         classes:
@@ -124,17 +128,16 @@ properties:
               default: fq-codel
           required:
           - bandwidth
+        ingress:
+          type: array
+          description: Name of the interfaces that'll do the marking
+          items:
+            type: string
+        egress:
+          type: array
+          description: Name of the interfaces that'll do the policing
+          items:
+            type: string
       required:
       - name
       - bandwidth
-  interfaces:
-    type: array
-    items:
-      type: object
-      properties:
-        name:
-          description: Name of the interface to apply QoS policy
-          type: string
-        policy:
-          description: Name of the QoS policy (e.g. shaper) to apply on this interface
-          type: string

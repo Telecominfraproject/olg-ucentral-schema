@@ -16,6 +16,8 @@
  *
  */
 
+	// Sequence of the code is **IMPORTANT**, moving code block might lead to error.
+
  	let fs = require('fs');
 
 	// reject the config if there is no valid upstream configuration
@@ -93,7 +95,9 @@
 			state.routing.policies = state.routing.policies || [];
 			include("policy.uc", {
 				location: '/policy',
-				policies: state.routing.policies
+				policies: state.routing.policies,
+				qos: state.qos,
+				ethernet
 			});
 		}
 		state.services = state.services || {};
@@ -110,7 +114,8 @@
 	if (state.qos) {
 		include("qos.uc", {
 			location: '/qos',
-			qos: state.qos
+			qos: state.qos,
+			ethernet
 		});
 	}
 
