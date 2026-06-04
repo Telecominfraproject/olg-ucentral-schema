@@ -111,7 +111,7 @@
 			upstreams: up_i,
 			igmp_proxy: state.services.igmp_proxy,
 			ethernet,
-			wireguard: state.vpn.wireguard
+			wireguard: (state.vpn && state.vpn.wireguard) ? state.vpn.wireguard : {}
 		});
 	}
 
