@@ -17,6 +17,22 @@
         {% endfor %}
         }
     {% endif %}
+    {% if (wireguard && length(wireguard.interfaces)): %}
+        {% for (let i in wireguard.interfaces): %}
+            {% let iface_tmp = ethernet.get_iface_by_name(i.name); %}
+            {% if (i.hosts && length(i.hosts)): %}
+                {% for (let p in i.hosts): %}
+                    {% for (let ip in p.ipaddr): %}
+        route {{ ip }} {
+            interface {{ iface_tmp }} {
+
+            }
+        }
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
         {% if (routing.static && routing.static.ipv4_rules): %}
             {% for (let rule in routing.static.ipv4_rules): %}
         route {{ rule.destination }} {

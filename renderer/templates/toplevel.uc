@@ -89,7 +89,10 @@
 		pki: state.pki
 	});
 
-	if (state.routing || length(up_i) || (state.services && state.services.igmp_proxy) ) {
+	if (state.routing || 
+		length(up_i) || 
+		(state.services && state.services.igmp_proxy) ||
+		(vpn.wireguard && length(vpn.wireguard.interfaces)) ) {
 		state.routing = state.routing || {};
 		if (state.routing.policies) {
 			state.routing.policies = state.routing.policies || [];
@@ -107,7 +110,8 @@
 			routing: state.routing,
 			upstreams: up_i,
 			igmp_proxy: state.services.igmp_proxy,
-			ethernet
+			ethernet,
+			wireguard: state.vpn.wireguard
 		});
 	}
 

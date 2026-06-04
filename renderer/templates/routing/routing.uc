@@ -10,15 +10,19 @@ if (length(upstreams)) {
     }
 }
 %}
-{% if (routing.static || routing.bgp || routing.ospf || routing.rip || has_static_upstream || igmp_proxy): %}
+{% if (
+    routing.static || routing.bgp || routing.ospf || routing.rip || 
+    has_static_upstream || igmp_proxy || 
+    (wireguard && length(wireguard.interfaces))): %}
 protocols {
     {% 
-    if (routing.static || has_static_upstream) {
+    if (routing.static || has_static_upstream || (wireguard && length(wireguard.interfaces))) {
         include("static.uc", {
             location: location + '/static',
             has_default: has_static_upstream,
             upstreams,
-            routing
+            routing,
+            wireguard
         });
     }
     %}

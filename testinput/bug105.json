@@ -1,0 +1,300 @@
+{
+	"firewall":	{
+		"ipv4-rulesets":	[{
+				"default-action":	"drop",
+				"name":	"WAN-LAN-ipv4",
+				"rules":	[{
+						"action":	"accept",
+						"destination":	{
+							"group":	{
+								"port-group":	"WAN_LAN_FORWARDING_GROUP"
+							}
+						},
+						"protocol":	"tcp_udp",
+						"rule-number":	5
+					}]
+			}, {
+				"default-action":	"accept",
+				"name":	"LAN-WAN-ipv4"
+			}, {
+				"default-action":	"accept",
+				"name":	"DEVICE-ANY-ipv4"
+			}, {
+				"default-action":	"drop",
+				"name":	"LAN-DEVICE-ipv4",
+				"rules":	[{
+						"action":	"accept",
+						"protocol":	"icmp",
+						"rule-number":	1
+					}, {
+						"action":	"accept",
+						"destination":	{
+							"group":	{
+								"port-group":	"LAN_SERVICE_GROUP"
+							}
+						},
+						"protocol":	"tcp_udp",
+						"rule-number":	5
+					}]
+			}, {
+				"default-action":	"drop",
+				"name":	"WAN-DEVICE-ipv4",
+				"rules":	[{
+						"action":	"accept",
+						"protocol":	"icmp",
+						"rule-number":	1
+					}, {
+						"action":	"accept",
+						"destination":	{
+							"group":	{
+								"port-group":	"WAN_SERVICE_GROUP"
+							}
+						},
+						"protocol":	"tcp_udp",
+						"rule-number":	5
+					}]
+			}, {
+				"default-action":	"drop",
+				"name":	"VPN-DEVICE-ipv4",
+				"rules":	[{
+						"action":	"accept",
+						"protocol":	"icmp",
+						"rule-number":	1
+					}, {
+						"action":	"accept",
+						"destination":	{
+							"group":	{
+								"port-group":	"LAN_SERVICE_GROUP"
+							}
+						},
+						"protocol":	"tcp_udp",
+						"rule-number":	5
+					}]
+			}, {
+				"default-action":	"accept",
+				"name":	"VPN-ANY-ipv4"
+			}],
+		"zone-policies":	[{
+				"from":	"WAN",
+				"ruleset":	"WAN-LAN-ipv4",
+				"to":	"LAN"
+			}, {
+				"from":	"LAN",
+				"ruleset":	"LAN-WAN-ipv4",
+				"to":	"WAN"
+			}, {
+				"from":	"DEVICE",
+				"ruleset":	"DEVICE-ANY-ipv4",
+				"to":	"WAN"
+			}, {
+				"from":	"WAN",
+				"ruleset":	"WAN-DEVICE-ipv4",
+				"to":	"DEVICE"
+			}, {
+				"from":	"DEVICE",
+				"ruleset":	"DEVICE-ANY-ipv4",
+				"to":	"LAN"
+			}, {
+				"from":	"LAN",
+				"ruleset":	"LAN-DEVICE-ipv4",
+				"to":	"DEVICE"
+			}, {
+				"from":	"VPN",
+				"ruleset":	"VPN-ANY-ipv4",
+				"to":	"WAN"
+			}, {
+				"from":	"VPN",
+				"ruleset":	"VPN-ANY-ipv4",
+				"to":	"LAN"
+			}, {
+				"from":	"LAN",
+				"ruleset":	"VPN-ANY-ipv4",
+				"to":	"VPN"
+			}, {
+				"from":	"VPN",
+				"ruleset":	"VPN-DEVICE-ipv4",
+				"to":	"DEVICE"
+			}, {
+				"from":	"DEVICE",
+				"ruleset":	"VPN-ANY-ipv4",
+				"to":	"VPN"
+			}],
+		"zones":	[{
+				"default-action":	"drop",
+				"interfaces":	["eth2", "eth3"],
+				"name":	"WAN"
+			}, {
+				"default-action":	"drop",
+				"interfaces":	["br0"],
+				"name":	"LAN"
+			}, {
+				"default-action":	"drop",
+				"local-zone":	true,
+				"name":	"DEVICE"
+			}, {
+				"default-action":	"drop",
+				"interfaces":	["wg0"],
+				"name":	"VPN"
+			}]
+	},
+	"interfaces":	[{
+			"ipv4":	{
+				"addressing":	"dhcp"
+			},
+			"mtu":	1500,
+			"name":	"eth2",
+			"role":	"upstream",
+			"type":	"ethernet"
+		}, {
+			"ipv4":	{
+				"addressing":	"none"
+			},
+			"mtu":	1500,
+			"name":	"eth3",
+			"role":	"upstream",
+			"type":	"ethernet"
+		}, {
+			"ipv4":	{
+				"addressing":	"none"
+			},
+			"mtu":	1500,
+			"name":	"eth0",
+			"role":	"downstream",
+			"type":	"ethernet"
+		}, {
+			"ipv4":	{
+				"addressing":	"none"
+			},
+			"mtu":	1500,
+			"name":	"eth1",
+			"role":	"downstream",
+			"type":	"ethernet"
+		}, {
+			"ipv4":	{
+				"addressing":	"none"
+			},
+			"mtu":	1500,
+			"name":	"eth4",
+			"role":	"downstream",
+			"type":	"ethernet"
+		}, {
+			"ipv4":	{
+				"addressing":	"none"
+			},
+			"mtu":	1500,
+			"name":	"eth5",
+			"role":	"downstream",
+			"type":	"ethernet"
+		}, {
+			"bridge":	{
+				"members":	["eth0", "eth1", "eth4", "eth5"]
+			},
+			"ipv4":	{
+				"address":	["10.28.34.254/24"],
+				"addressing":	"static"
+			},
+			"ipv6":	{
+				"addressing":	"none"
+			},
+			"mtu":	1500,
+			"name":	"br0",
+			"role":	"downstream",
+			"type":	"bridge"
+		}],
+	"metrics":	{
+		"health":	{
+			"interval":	60
+		},
+		"statistics":	{
+			"interval":	300,
+			"types":	[]
+		}
+	},
+	"nat":	{
+		"source-ipv4":	[{
+				"outbound-interface":	"eth2",
+				"protocol":	"all",
+				"rule-number":	20,
+				"source":	{
+					"address":	"10.28.34.0/24"
+				},
+				"translation":	{
+					"address":	"masquerade"
+				}
+			}]
+	},
+	"routing":	{
+		"policies":	[{
+				"address-family":	"ipv4",
+				"interface":	"br0",
+				"name":	"policy-ipv4-0",
+				"rules":	[{
+						"action":	"reject",
+						"match":	{
+							"destination":	{
+								"address":	"8.8.8.8/32"
+							},
+							"protocol":	"all"
+						},
+						"priority":	10
+					}]
+			}]
+	},
+	"services":	{
+		"dhcp-server":	{
+			"networks":	[{
+					"name":	"dhcp-br0",
+					"subnets":	[{
+							"default-router":	"10.28.34.254",
+							"dns-servers":	["10.28.34.254"],
+							"lease-time":	86400,
+							"ranges":	[{
+									"start":	"10.28.34.100",
+									"stop":	"10.28.34.200"
+								}],
+							"subnet":	"10.28.34.0/24"
+						}]
+				}]
+		},
+		"dns":	{
+			"allow-from":	["10.28.34.0/24"],
+			"listen-addresses":	["10.28.34.254"]
+		},
+		"ssh":	{
+			"expose-lan":	true
+		}
+	},
+	"system":	{
+		"name-servers":	{
+			"dhcp-interfaces":	["eth2"]
+		},
+		"syslog":	{
+			"local":	[{
+					"facility":	"daemon",
+					"severity":	"info"
+				}]
+		}
+	},
+	"uuid":	1780480628,
+	"vpn":	{
+		"wireguard":	{
+			"interfaces":	[{
+					"hosts":	[{
+							"endpoint":	"192.168.240.33",
+							"endport":	51820,
+							"ipaddr":	["10.0.0.2/32", "192.168.88.0/24", "10.28.33.0/24"],
+							"key":	"ddOa1kBCbxxa4vFv4hXUJtQziY5TaeXkV+F7fSxxjWM=",
+							"name":	"n1"
+						}],
+					"name":	"wg0",
+					"peer-port":	51820,
+					"private-key":	"aNyMPi5tEMGnLUQ+IvtGEgil1oi23WMWAzzoCUQvK1A=",
+					"proto":	"wireguard-overlay",
+					"root-node":	{
+						"ipaddr":	["10.0.0.1/24"],
+						"key":	"eDhjqTh9TXjY+6huorRCm5kpge59+mGKg9FbjfB8Ays="
+					}
+				}]
+		}
+	}
+}
