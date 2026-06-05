@@ -92,9 +92,10 @@
 	if (state.routing || 
 		length(up_i) || 
 		(state.services && state.services.igmp_proxy) ||
-		(vpn.wireguard && length(vpn.wireguard.interfaces)) ) {
+		(vpn.wireguard && length(vpn.wireguard.interfaces)) || 
+		(state.qos && length(state.qos.shaper))) {
 		state.routing = state.routing || {};
-		if (state.routing.policies) {
+		if (state.routing.policies || (state.qos && length(state.qos.shaper))) {
 			state.routing.policies = state.routing.policies || [];
 			include("policy.uc", {
 				location: '/policy',
