@@ -17,6 +17,13 @@
         {% endfor %}
         }
     {% endif %}
+
+    {% if (dhcp_iface): %}
+        route 0.0.0.0/0 {
+            dhcp-interface "{{ ethernet.get_iface_by_name(dhcp_iface) }}"
+        }
+    {% endif %}
+
     {% if (wireguard && length(wireguard.interfaces)): %}
         {% for (let i in wireguard.interfaces): %}
             {% let iface_tmp = ethernet.get_iface_by_name(i.name); %}

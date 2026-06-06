@@ -31,7 +31,7 @@ try {
 	if (state) {
 		fs.stdout.write("VyOS batch output:\n" + batch + "\n");
 
-		let outputjson = fs.open("/config/config.boot", "w");
+		let outputjson = fs.open("/config/config." + inputjson.uuid, "w");
 		outputjson.write(batch);
 		outputjson.close();
 

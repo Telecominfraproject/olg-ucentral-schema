@@ -1,9 +1,23 @@
 {%
 let bridge_c = 0, pppoe_c = 0, dummy_c = 0, vtun_c = 0, client_c = 0;
 let wg_c = 0, peer_c = 0;
+// used to force bridge interface to be up
+let has_bridge = false;
 %}
 
 interfaces {
+    {% for (let i in interfaces): %}
+        {% if (i.type == "bridge"): %}
+            {% has_bridge = true; %}
+            {% dummy_c++; %}
+        {% endif %}
+    {% endfor %}
+    
+    {% if (has_bridge): %}
+    dummy dum0 {
+    }
+    {% endif %}
+    
     {% for (let i in interfaces): %}
         {% let iface = ethernet.get_iface(i) %}
     {{ i.type }} {{ iface }} {
@@ -38,6 +52,8 @@ interfaces {
                 {% endif %}
             }
             {% endfor %}
+            interface dum0 {
+            }
         }
             {% if (i.bridge.stp): %}
         stp

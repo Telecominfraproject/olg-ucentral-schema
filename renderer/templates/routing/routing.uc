@@ -1,5 +1,5 @@
 {%
-let has_static_upstream = false;
+let has_static_upstream = false, dhcp_iface = null;
 if (length(upstreams)) {
     for (let up in upstreams) {
         if ((up.ipv4 && up.ipv4.addressing == "static") || 
@@ -8,21 +8,38 @@ if (length(upstreams)) {
             break;
         }
     }
+    for (let up in upstreams) {
+        if (!dhcp_iface) {
+            // first match, set to dhcp_iface
+            if (up.ipv4 && up.ipv4.addressing == "dhcp") {
+                dhcp_iface = up.name;
+            }
+        }
+        else {
+            // second match, dual wan mode, disable dhcp-iface 
+            if (up.ipv4 && up.ipv4.addressing == "dhcp") {
+                dhcp_iface = null;
+            }
+        }
+    }
 }
 %}
 {% if (
     routing.static || routing.bgp || routing.ospf || routing.rip || 
-    has_static_upstream || igmp_proxy || 
+    has_static_upstream || igmp_proxy || dhcp_iface ||
     (wireguard && length(wireguard.interfaces))): %}
 protocols {
     {% 
-    if (routing.static || has_static_upstream || (wireguard && length(wireguard.interfaces))) {
+    if (routing.static || has_static_upstream || dhcp_iface || 
+        (wireguard && length(wireguard.interfaces))) {
         include("static.uc", {
             location: location + '/static',
             has_default: has_static_upstream,
             upstreams,
             routing,
-            wireguard
+            wireguard,
+            dhcp_iface,
+            ethernet,
         });
     }
     %}
