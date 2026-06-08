@@ -8502,6 +8502,20 @@ function instantiateQos(location, value, errors) {
 							push(errors, [ location, "is required" ]);
 						}
 
+						function parseDirection(location, value, errors) {
+							if (type(value) != "string")
+								push(errors, [ location, "must be of type string" ]);
+
+							if (!(value in [ "upload", "download" ]))
+								push(errors, [ location, "must be one of \"upload\" or \"download\"" ]);
+
+							return value;
+						}
+
+						if (exists(value, "direction")) {
+							obj.direction = parseDirection(location + "/direction", value["direction"], errors);
+						}
+
 						function parseClasses(location, value, errors) {
 							if (type(value) == "array") {
 								function parseItem(location, value, errors) {

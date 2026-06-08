@@ -3104,6 +3104,13 @@
                             "name": {
                                 "type": "string"
                             },
+                            "direction": {
+                                "type": "string",
+                                "enum": [
+                                    "upload",
+                                    "download"
+                                ]
+                            },
                             "classes": {
                                 "type": "array",
                                 "items": {
@@ -3279,8 +3286,7 @@
                             }
                         },
                         "required": [
-                            "name",
-                            "bandwidth"
+                            "name"
                         ]
                     }
                 }

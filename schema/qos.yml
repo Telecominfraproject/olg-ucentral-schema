@@ -13,6 +13,9 @@ properties:
           default: ipv4
         name:
           type: string
+        direction:
+          type: string
+          enum: [upload, download]
         classes:
           type: array
           items:
@@ -141,4 +144,3 @@ properties:
             type: string
       required:
       - name
-      - bandwidth
