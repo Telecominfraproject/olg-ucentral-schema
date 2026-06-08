@@ -1,0 +1,961 @@
+{
+      "firewall": {
+        "ipv4-rulesets": [
+          {
+            "default-action": "drop",
+            "name": "WAN-LAN-ipv4",
+            "rules": [
+              {
+                "action": "accept",
+                "destination": {
+                  "group": {
+                    "port-group": "WAN_LAN_FORWARDING_GROUP"
+                  }
+                },
+                "protocol": "tcp_udp",
+                "rule-number": 5
+              },
+              {
+                "action": "reject",
+                "destination": {
+                  "address": "9.9.9.9/32"
+                },
+                "protocol": "all",
+                "rule-number": 20,
+                "source": {
+                  "address": "8.8.8.8/32"
+                }
+              }
+            ]
+          },
+          {
+            "default-action": "drop",
+            "name": "WAN-LAN2-ipv4",
+            "rules": [
+              {
+                "action": "accept",
+                "destination": {
+                  "group": {
+                    "port-group": "WAN_LAN_FORWARDING_GROUP"
+                  }
+                },
+                "protocol": "tcp_udp",
+                "rule-number": 5
+              }
+            ]
+          },
+          {
+            "default-action": "drop",
+            "name": "WAN-LAN3-ipv4",
+            "rules": [
+              {
+                "action": "accept",
+                "destination": {
+                  "group": {
+                    "port-group": "WAN_LAN_FORWARDING_GROUP"
+                  }
+                },
+                "protocol": "tcp_udp",
+                "rule-number": 5
+              }
+            ]
+          },
+          {
+            "default-action": "accept",
+            "name": "LAN-WAN-ipv4"
+          },
+          {
+            "default-action": "accept",
+            "name": "LAN2-WAN-ipv4"
+          },
+          {
+            "default-action": "drop",
+            "name": "LAN2-LAN3-ipv4",
+            "rules": [
+              {
+                "action": "drop",
+                "destination": {
+                  "address": "10.0.0.0/24",
+                  "port": 8080
+                },
+                "protocol": "tcp_udp",
+                "rule-number": 20,
+                "source": {
+                  "address": "10.0.0.0/24",
+                  "port": 8080
+                }
+              }
+            ]
+          },
+          {
+            "default-action": "accept",
+            "name": "LAN3-WAN-ipv4"
+          },
+          {
+            "default-action": "accept",
+            "name": "DEVICE-ANY-ipv4"
+          },
+          {
+            "default-action": "drop",
+            "name": "LAN-DEVICE-ipv4",
+            "rules": [
+              {
+                "action": "accept",
+                "protocol": "icmp",
+                "rule-number": 1
+              },
+              {
+                "action": "accept",
+                "protocol": "ospf",
+                "rule-number": 2
+              },
+              {
+                "action": "accept",
+                "destination": {
+                  "group": {
+                    "port-group": "LAN_SERVICE_GROUP"
+                  }
+                },
+                "protocol": "tcp_udp",
+                "rule-number": 5
+              }
+            ]
+          },
+          {
+            "default-action": "drop",
+            "name": "WAN-DEVICE-ipv4",
+            "rules": [
+              {
+                "action": "accept",
+                "protocol": "icmp",
+                "rule-number": 1
+              },
+              {
+                "action": "accept",
+                "destination": {
+                  "group": {
+                    "port-group": "WAN_SERVICE_GROUP"
+                  }
+                },
+                "protocol": "tcp_udp",
+                "rule-number": 5
+              }
+            ]
+          },
+          {
+            "default-action": "drop",
+            "name": "VPN-DEVICE-ipv4",
+            "rules": [
+              {
+                "action": "accept",
+                "protocol": "icmp",
+                "rule-number": 1
+              },
+              {
+                "action": "accept",
+                "protocol": "ospf",
+                "rule-number": 2
+              },
+              {
+                "action": "accept",
+                "destination": {
+                  "group": {
+                    "port-group": "LAN_SERVICE_GROUP"
+                  }
+                },
+                "protocol": "tcp_udp",
+                "rule-number": 5
+              }
+            ]
+          },
+          {
+            "default-action": "accept",
+            "name": "VPN-ANY-ipv4"
+          }
+        ],
+        "zone-policies": [
+          {
+            "from": "WAN",
+            "ruleset": "WAN-LAN-ipv4",
+            "to": "LAN"
+          },
+          {
+            "from": "WAN",
+            "ruleset": "WAN-LAN2-ipv4",
+            "to": "LAN2"
+          },
+          {
+            "from": "WAN",
+            "ruleset": "WAN-LAN3-ipv4",
+            "to": "LAN3"
+          },
+          {
+            "from": "LAN",
+            "ruleset": "LAN-WAN-ipv4",
+            "to": "WAN"
+          },
+          {
+            "from": "LAN2",
+            "ruleset": "LAN2-WAN-ipv4",
+            "to": "WAN"
+          },
+          {
+            "from": "LAN2",
+            "ruleset": "LAN2-LAN3-ipv4",
+            "to": "LAN3"
+          },
+          {
+            "from": "LAN3",
+            "ruleset": "LAN3-WAN-ipv4",
+            "to": "WAN"
+          },
+          {
+            "from": "DEVICE",
+            "ruleset": "DEVICE-ANY-ipv4",
+            "to": "WAN"
+          },
+          {
+            "from": "WAN",
+            "ruleset": "WAN-DEVICE-ipv4",
+            "to": "DEVICE"
+          },
+          {
+            "from": "DEVICE",
+            "ruleset": "DEVICE-ANY-ipv4",
+            "to": "LAN"
+          },
+          {
+            "from": "LAN",
+            "ruleset": "LAN-DEVICE-ipv4",
+            "to": "DEVICE"
+          },
+          {
+            "from": "DEVICE",
+            "ruleset": "DEVICE-ANY-ipv4",
+            "to": "LAN2"
+          },
+          {
+            "from": "LAN2",
+            "ruleset": "LAN-DEVICE-ipv4",
+            "to": "DEVICE"
+          },
+          {
+            "from": "DEVICE",
+            "ruleset": "DEVICE-ANY-ipv4",
+            "to": "LAN3"
+          },
+          {
+            "from": "LAN3",
+            "ruleset": "LAN-DEVICE-ipv4",
+            "to": "DEVICE"
+          },
+          {
+            "from": "VPN",
+            "ruleset": "VPN-ANY-ipv4",
+            "to": "WAN"
+          },
+          {
+            "from": "VPN",
+            "ruleset": "VPN-ANY-ipv4",
+            "to": "LAN"
+          },
+          {
+            "from": "LAN",
+            "ruleset": "VPN-ANY-ipv4",
+            "to": "VPN"
+          },
+          {
+            "from": "VPN",
+            "ruleset": "VPN-ANY-ipv4",
+            "to": "LAN2"
+          },
+          {
+            "from": "LAN2",
+            "ruleset": "VPN-ANY-ipv4",
+            "to": "VPN"
+          },
+          {
+            "from": "VPN",
+            "ruleset": "VPN-ANY-ipv4",
+            "to": "LAN3"
+          },
+          {
+            "from": "LAN3",
+            "ruleset": "VPN-ANY-ipv4",
+            "to": "VPN"
+          },
+          {
+            "from": "VPN",
+            "ruleset": "VPN-DEVICE-ipv4",
+            "to": "DEVICE"
+          },
+          {
+            "from": "DEVICE",
+            "ruleset": "VPN-ANY-ipv4",
+            "to": "VPN"
+          }
+        ],
+        "zones": [
+          {
+            "default-action": "drop",
+            "interfaces": [
+              "eth2",
+              "eth3"
+            ],
+            "name": "WAN"
+          },
+          {
+            "default-action": "drop",
+            "interfaces": [
+              "br0"
+            ],
+            "name": "LAN"
+          },
+          {
+            "default-action": "drop",
+            "interfaces": [
+              "vlan2"
+            ],
+            "name": "LAN2"
+          },
+          {
+            "default-action": "drop",
+            "interfaces": [
+              "vlan3"
+            ],
+            "name": "LAN3"
+          },
+          {
+            "default-action": "drop",
+            "local-zone": true,
+            "name": "DEVICE"
+          },
+          {
+            "default-action": "drop",
+            "interfaces": [
+              "wg0",
+              "vtun0"
+            ],
+            "name": "VPN"
+          }
+        ]
+      },
+      "high-availability": {
+        "vrrp": {
+          "groups": [
+            {
+              "interface": "vlan2",
+              "name": "vrrp-vlan2",
+              "preempt": true,
+              "priority": 100,
+              "virtual-addresses": [
+                "192.168.2.254/24"
+              ],
+              "vrid": 10
+            }
+          ]
+        }
+      },
+      "interfaces": [
+        {
+          "ipv4": {
+            "addressing": "dhcp"
+          },
+          "mtu": 1500,
+          "name": "eth2",
+          "role": "upstream",
+          "type": "ethernet"
+        },
+        {
+          "ipv4": {
+            "addressing": "none"
+          },
+          "mtu": 1500,
+          "name": "eth3",
+          "role": "upstream",
+          "type": "ethernet"
+        },
+        {
+          "ipv4": {
+            "addressing": "none"
+          },
+          "mtu": 1500,
+          "name": "eth0",
+          "role": "downstream",
+          "type": "ethernet"
+        },
+        {
+          "ipv4": {
+            "addressing": "none"
+          },
+          "mtu": 1500,
+          "name": "eth1",
+          "role": "downstream",
+          "type": "ethernet"
+        },
+        {
+          "ipv4": {
+            "addressing": "none"
+          },
+          "mtu": 1500,
+          "name": "eth4",
+          "role": "downstream",
+          "type": "ethernet"
+        },
+        {
+          "ipv4": {
+            "addressing": "none"
+          },
+          "mtu": 1500,
+          "name": "eth5",
+          "role": "downstream",
+          "type": "ethernet"
+        },
+        {
+          "bridge": {
+            "members": [
+              "eth0",
+              "eth1",
+              "eth4",
+              "eth5"
+            ]
+          },
+          "ipv4": {
+            "address": [
+              "192.168.1.1/24"
+            ],
+            "addressing": "static"
+          },
+          "ipv6": {
+            "addressing": "none"
+          },
+          "mtu": 1500,
+          "name": "br0",
+          "role": "downstream",
+          "type": "bridge",
+          "vlan": [
+            {
+              "id": 2,
+              "ipv4": {
+                "address": [
+                  "192.168.2.1/24"
+                ],
+                "addressing": "static"
+              },
+              "mtu": 1500,
+              "name": "vlan2",
+              "role": "downstream"
+            },
+            {
+              "id": 3,
+              "ipv4": {
+                "address": [
+                  "192.168.3.1/24"
+                ],
+                "addressing": "static"
+              },
+              "mtu": 1500,
+              "name": "vlan3",
+              "role": "downstream"
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "health": {
+          "interval": 60
+        },
+        "statistics": {
+          "interval": 300,
+          "types": []
+        }
+      },
+      "nat": {
+        "destination-ipv4": [
+          {
+            "destination": {
+              "port": 80
+            },
+            "inbound-interface": "eth2",
+            "protocol": "tcp_udp",
+            "rule-number": 20,
+            "translation": {
+              "address": "192.168.1.1",
+              "port": 8080
+            }
+          }
+        ],
+        "source-ipv4": [
+          {
+            "outbound-interface": "eth2",
+            "protocol": "all",
+            "rule-number": 20,
+            "source": {
+              "address": "192.168.1.0/24"
+            },
+            "translation": {
+              "address": "masquerade"
+            }
+          },
+          {
+            "outbound-interface": "eth2",
+            "protocol": "all",
+            "rule-number": 21,
+            "source": {
+              "address": "192.168.2.0/24"
+            },
+            "translation": {
+              "address": "masquerade"
+            }
+          },
+          {
+            "outbound-interface": "eth2",
+            "protocol": "all",
+            "rule-number": 22,
+            "source": {
+              "address": "192.168.3.0/24"
+            },
+            "translation": {
+              "address": "masquerade"
+            }
+          }
+        ]
+      },
+      "pki": {
+        "ca-certs": [
+          {
+            "certificate": "asdasd",
+            "name": "openvpn-ca"
+          }
+        ],
+        "certs": [
+          {
+            "certificate": "asdasd",
+            "name": "openvpn-cert",
+            "private-key": "asdasd"
+          }
+        ],
+        "dh": [
+          {
+            "name": "openvpn-dh",
+            "parameter": "asdasd"
+          }
+        ]
+      },
+      "qos": {
+        "shaper": [
+          {
+            "classes": [
+              {
+                "bandwidth": "100mbit",
+                "burst": "15kb",
+                "ceiling": "1gbit",
+                "id": 10,
+                "match": [
+                  {
+                    "protocol": "all",
+                    "source": {
+                      "address": "10.0.0.1/32"
+                    }
+                  }
+                ],
+                "priority": 10
+              }
+            ],
+            "default": {
+              "bandwidth": "100mbit",
+              "burst": "15kb",
+              "ceiling": "1gbit"
+            },
+            "egress": [
+              "eth2",
+              "eth3"
+            ],
+            "ingress": [
+              "br0",
+              "vlan2",
+              "vlan3"
+            ],
+            "name": "upload-shaper"
+          },
+          {
+            "default": {
+              "bandwidth": "100mbit",
+              "burst": "15kb",
+              "ceiling": "1000mbit"
+            },
+            "egress": [
+              "br0",
+              "vlan2",
+              "vlan3"
+            ],
+            "ingress": [
+              "eth2",
+              "eth3"
+            ],
+            "name": "download-shaper"
+          }
+        ]
+      },
+      "routing": {
+        "bgp": {
+          "local-as": 65535,
+          "neighbors": [
+            {
+              "address": "10.0.0.1",
+              "ebgp-multihop": 1,
+              "passive": true,
+              "peer-params": [
+                {
+                  "address-family": "ipv4-unicast",
+                  "default-originate": false,
+                  "nexthop-self": false,
+                  "soft-reconfig": false
+                }
+              ],
+              "remote-as": 65535
+            }
+          ],
+          "networks": [
+            {
+              "address-family": "ipv4-unicast",
+              "network": "10.28.34.0/24"
+            }
+          ],
+          "router-id": "10.0.0.1"
+        },
+        "ospf": {
+          "areas": [
+            {
+              "area-id": "0",
+              "area-type": "normal",
+              "networks": [
+                "10.0.0.0/24"
+              ]
+            }
+          ],
+          "router-id": "10.0.0.1"
+        },
+        "policies": [
+          {
+            "address-family": "ipv4",
+            "interface": "eth2",
+            "name": "policy-ipv4-0",
+            "rules": [
+              {
+                "action": "drop",
+                "match": {
+                  "destination": {
+                    "address": "10.0.0.0/24",
+                    "port": 8080
+                  },
+                  "protocol": "tcp_udp",
+                  "source": {
+                    "address": "10.0.0.0/24",
+                    "port": 8080
+                  }
+                },
+                "priority": 10
+              }
+            ]
+          }
+        ],
+        "rip": {
+          "interfaces": [
+            {
+              "name": "br0",
+              "passive": true
+            }
+          ],
+          "neighbors": [
+            "192.168.240.33"
+          ],
+          "networks": [
+            "10.28.31.0/24"
+          ],
+          "version": 1
+        },
+        "static": {
+          "ipv4-rules": [
+            {
+              "destination": "10.0.0.0/24",
+              "routes": [
+                {
+                  "action": "blackhole",
+                  "distance": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "services": {
+        "dhcp-relay": {
+          "listen-interfaces": [
+            "vlan2"
+          ],
+          "servers": [
+            "10.0.0.1"
+          ],
+          "upstream-interfaces": [
+            "eth2",
+            "eth3"
+          ]
+        },
+        "dhcp-server": {
+          "networks": [
+            {
+              "name": "dhcp-br0",
+              "subnets": [
+                {
+                  "default-router": "192.168.1.1",
+                  "dns-servers": [
+                    "192.168.1.1"
+                  ],
+                  "lease-time": 86400,
+                  "ranges": [
+                    {
+                      "start": "192.168.1.100",
+                      "stop": "192.168.1.200"
+                    }
+                  ],
+                  "subnet": "192.168.1.0/24"
+                }
+              ]
+            }
+          ]
+        },
+        "dns": {
+          "allow-from": [
+            "192.168.1.0/24"
+          ],
+          "listen-addresses": [
+            "192.168.1.1"
+          ]
+        },
+        "igmp-proxy": {
+          "alt-subnets": [
+            "10.0.0.0/24"
+          ],
+          "downstream-interfaces": [
+            "br0",
+            "vlan2",
+            "vlan3"
+          ],
+          "upstream-interface": "eth2"
+        },
+        "lldp": {
+          "interfaces": [
+            {
+              "mode": "rx-tx",
+              "name": "eth2"
+            },
+            {
+              "mode": "rx-tx",
+              "name": "eth3"
+            },
+            {
+              "mode": "rx-tx",
+              "name": "br0"
+            },
+            {
+              "mode": "rx-tx",
+              "name": "vlan2"
+            },
+            {
+              "mode": "rx-tx",
+              "name": "vlan3"
+            }
+          ],
+          "management-addresses": [
+            "10.0.0.1"
+          ]
+        },
+        "mdns": {
+          "allow-services": [
+            "_http._tcp"
+          ],
+          "interfaces": [
+            "eth2",
+            "br0",
+            "vlan2",
+            "vlan3"
+          ]
+        },
+        "ntp": {
+          "allow-clients": [
+            "192.168.1.0/24",
+            "192.168.2.0/24",
+            "192.168.3.0/24"
+          ],
+          "listen-address": "0.0.0.0",
+          "servers": [
+            {
+              "address": "asdasd.com"
+            }
+          ]
+        },
+        "snmp": {
+          "engine-id": "800800",
+          "groups": [
+            {
+              "mode": "ro",
+              "name": "admin",
+              "oid": "1",
+              "view": "admin"
+            }
+          ],
+          "listen-addresses": [
+            "0.0.0.0"
+          ],
+          "users": [
+            {
+              "auth": {
+                "hash-algo": "md5",
+                "password": "asdasdasd"
+              },
+              "group": "admin",
+              "name": "test",
+              "privacy": {
+                "hash-algo": "des",
+                "password": "asdasdasd"
+              }
+            }
+          ]
+        },
+        "ssh": {
+          "expose-lan": true,
+          "expose-wan": true
+        },
+        "web-proxy": {
+          "append-domain": "asdasd.com",
+          "default-port": 8080,
+          "servers": [
+            {
+              "address": "0.0.0.0",
+              "port": 8080
+            }
+          ]
+        }
+      },
+      "system": {
+        "name-servers": {
+          "dhcp-interfaces": [
+            "eth2"
+          ]
+        },
+        "netflow": {
+          "engine-id": 10,
+          "interfaces": [
+            "br0"
+          ],
+          "sampling-rate": 1000,
+          "servers": [
+            {
+              "address": "10.0.0.1",
+              "port": 2055
+            }
+          ],
+          "version": "9"
+        },
+        "sflow": {
+          "agent": {
+            "address": "10.0.0.1",
+            "interface": "eth2"
+          },
+          "interfaces": [
+            "br0"
+          ],
+          "sample-egress": false,
+          "sampling-rate": 1000,
+          "servers": [
+            {
+              "address": "10.0.0.1",
+              "port": 6343
+            }
+          ]
+        },
+        "syslog": {
+          "local": [
+            {
+              "facility": "daemon",
+              "severity": "info"
+            }
+          ],
+          "remote-hosts": [
+            {
+              "address": "10.0.0.1",
+              "facility": "daemon",
+              "port": 514,
+              "protocol": "udp",
+              "severity": "info"
+            }
+          ]
+        }
+      },
+      "uuid": 1780902555,
+      "vpn": {
+        "openvpn": {
+          "interfaces": [
+            {
+              "mode": "server",
+              "name": "vtun0",
+              "persistent-tunnel": true,
+              "protocol": "tcp-passive",
+              "server": {
+                "domain": "asdasd.com",
+                "encryption": {
+                  "data-ciphers": [
+                    "aes256"
+                  ]
+                },
+                "hash": "sha256",
+                "listen-address": "0.0.0.0",
+                "listen-port": 1194,
+                "max-connections": 128,
+                "name-server": "8.8.8.8",
+                "push-routes": [
+                  "192.168.1.0/24",
+                  "192.168.2.0/24",
+                  "192.168.3.0/24"
+                ],
+                "subnet": "10.0.0.0/16",
+                "tls": {
+                  "ca-cert": "openvpn-ca",
+                  "cert": "openvpn-cert",
+                  "dh": "openvpn-dh"
+                },
+                "topology": "point-to-point"
+              }
+            }
+          ]
+        },
+        "wireguard": {
+          "interfaces": [
+            {
+              "hosts": [
+                {
+                  "endpoint": "10.0.0.1",
+                  "endport": 51820,
+                  "ipaddr": [
+                    "10.0.0.0/8"
+                  ],
+                  "key": "EKY0dxRrSD98QHjfHOK13mZ5PJ7hnddRZt5woB3szyw=",
+                  "name": "test"
+                }
+              ],
+              "name": "wg0",
+              "peer-port": 51820,
+              "private-key": "iJJyEARGK52Ls1GYRCcFvPuTj7WyWYDo//BknoDU0XY=",
+              "proto": "wireguard-overlay",
+              "root-node": {
+                "ipaddr": [
+                  "10.0.0.1/24"
+                ],
+                "key": "EKY0dxRrSD98QHjfHOK13mZ5PJ7hnddRZt5woB3szyw="
+              }
+            }
+          ]
+        }
+      }
+    }
