@@ -1,6 +1,9 @@
     static {
-    {% if (has_default): %}
+    {% if (has_default || length(dhcp_iface)): %}
         route 0.0.0.0/0 {
+        {% for (let f in dhcp_iface): %}
+            dhcp-interface "{{ ethernet.get_iface_by_name(f) }}"
+        {% endfor %}
         {% for (let up in upstreams): %}
             {% if (up.ipv4 && up.ipv4.addressing == "static"): %}
             next-hop {{ up.ipv4.gateway }} {
@@ -14,14 +17,6 @@
             next-hop {{ up.ipv6.gateway }} {
             }
             {% endif %}
-        {% endfor %}
-        }
-    {% endif %}
-
-    {% if (length(dhcp_iface)): %}
-        route 0.0.0.0/0 {
-        {% for (let f in dhcp_iface): %}
-            dhcp-interface "{{ ethernet.get_iface_by_name(f) }}"
         {% endfor %}
         }
     {% endif %}

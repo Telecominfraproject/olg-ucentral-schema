@@ -1,8 +1,10 @@
     rip {
         version {{ rip.version }}
 {% for (let i in rip.interfaces): %}
-        interface {{ i.name }} {
+    {% if (!i.passive): %}
+        interface {{ ethernet.get_iface_by_name(i.name) }} {
         }
+    {% endif %}
 {% endfor %}
 {% for (let n in rip.neighbors): %}
         neighbor {{ n }}
@@ -10,8 +12,10 @@
 {% for (let n in rip.networks): %}
         network "{{ n }}"
 {% endfor %}
-{% for (let p in rip.passive_interfaces): %}
-        passive-interface "{{ p }}"
+{% for (let p in rip.interfaces): %}
+    {% if (i.passive): %}
+        passive-interface "{{ ethernet.get_iface_by_name(p.name) }}"
+    {% endif %}
 {% endfor %}
 {% if (rip.redistribute): %}
         redistribute {

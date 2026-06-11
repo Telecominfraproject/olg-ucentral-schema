@@ -57,7 +57,8 @@ protocols {
     if (routing.rip) {
         include("rip.uc", {
             location: location + '/rip',
-            rip: routing.rip
+            rip: routing.rip,
+            ethernet
         });
     }
     %}
