@@ -1,5 +1,5 @@
 {%
-let has_static_upstream = false, dhcp_iface = null;
+let has_static_upstream = false, dhcp_iface = [];
 if (length(upstreams)) {
     for (let up in upstreams) {
         if ((up.ipv4 && up.ipv4.addressing == "static") || 
@@ -9,17 +9,8 @@ if (length(upstreams)) {
         }
     }
     for (let up in upstreams) {
-        if (!dhcp_iface) {
-            // first match, set to dhcp_iface
-            if (up.ipv4 && up.ipv4.addressing == "dhcp") {
-                dhcp_iface = up.name;
-            }
-        }
-        else {
-            // second match, dual wan mode, disable dhcp-iface 
-            if (up.ipv4 && up.ipv4.addressing == "dhcp") {
-                dhcp_iface = null;
-            }
+        if (up.ipv4 && up.ipv4.addressing == "dhcp") {
+            push(dhcp_iface, up.name);
         }
     }
 }

@@ -18,9 +18,11 @@
         }
     {% endif %}
 
-    {% if (dhcp_iface): %}
+    {% if (length(dhcp_iface)): %}
         route 0.0.0.0/0 {
-            dhcp-interface "{{ ethernet.get_iface_by_name(dhcp_iface) }}"
+        {% for (let f in dhcp_iface): %}
+            dhcp-interface "{{ ethernet.get_iface_by_name(f) }}"
+        {% endfor %}
         }
     {% endif %}
 
