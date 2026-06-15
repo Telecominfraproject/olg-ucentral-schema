@@ -13,7 +13,7 @@
         network "{{ n }}"
 {% endfor %}
 {% for (let p in rip.interfaces): %}
-    {% if (i.passive): %}
+    {% if (p.passive): %}
         passive-interface "{{ ethernet.get_iface_by_name(p.name) }}"
     {% endif %}
 {% endfor %}
