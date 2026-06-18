@@ -4391,12 +4391,17 @@
             "description": "IPsec VPN configuration.",
             "type": "object",
             "properties": {
-                "interfaces": {
-                    "description": "Interface facing the remote peer.",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                "local-id": {
+                    "description": "Domain name of your certificate. If this var is set, local-id defined in remote-access object will be ignored",
+                    "type": "string"
+                },
+                "ca-cert": {
+                    "description": "Name of ca certificate stored in vyos pki. If this var is set, ca-cert defined in remote-access object will be ignored",
+                    "type": "string"
+                },
+                "server-cert": {
+                    "description": "Name of server certificate stored in vyos pki. If this var is set, server-cert defined in remote-access object will be ignored",
+                    "type": "string"
                 },
                 "ike-groups": {
                     "description": "IKE (Phase 1) group definitions.",
@@ -4601,119 +4606,121 @@
                         ]
                     }
                 },
-                "authentication": {
-                    "description": "Pre-shared key (PSK) authentication configuration.",
+                "remote-access": {
+                    "description": "IPsec peer configurations.",
                     "type": "object",
                     "properties": {
-                        "id": {
-                            "description": "List of local and remote IDs authorized to use this PSK.",
+                        "pools": {
+                            "description": "IP address pool",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of this IP address pool",
+                                        "type": "string"
+                                    },
+                                    "prefix": {
+                                        "description": "IP range in CIDR",
+                                        "type": "string",
+                                        "format": "uc-cidr"
+                                    },
+                                    "name-server": {
+                                        "description": "Name server for client",
+                                        "type": "string",
+                                        "format": "uc-ip"
+                                    }
+                                }
                             }
                         },
-                        "secret": {
-                            "description": "Pre-shared key secret.",
-                            "type": "string"
+                        "connections": {
+                            "description": "IPsec peer configurations.",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "description": "Name identifier for this peer configuration.",
+                                        "type": "string"
+                                    },
+                                    "authentication": {
+                                        "description": "Pre-shared key (PSK) authentication configuration.",
+                                        "type": "object",
+                                        "properties": {
+                                            "client-mode": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "x509",
+                                                    "eap-tls",
+                                                    "eap-mschapv2",
+                                                    "eap-radius"
+                                                ],
+                                                "default": "eap-mschapv2"
+                                            },
+                                            "local-id": {
+                                                "description": "Local identity for IKE authentication.",
+                                                "type": "string"
+                                            },
+                                            "ca-cert": {
+                                                "description": "Name of ca certificate stored in vyos pki",
+                                                "type": "string"
+                                            },
+                                            "server-cert": {
+                                                "description": "Name of server certificate stored in vyos pki",
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "local-address": {
+                                        "description": "Device IP address accepting IPsec connection, mutually exclusive with dhcp-interface.",
+                                        "type": "string",
+                                        "format": "ipv4"
+                                    },
+                                    "remote-address": {
+                                        "description": "Remote peer IP address.",
+                                        "type": "string",
+                                        "format": "ipv4"
+                                    },
+                                    "remote-id": {
+                                        "description": "Remote identity for IKE authentication.",
+                                        "type": "string"
+                                    },
+                                    "ike-group": {
+                                        "description": "Name of the IKE group to use for this peer.",
+                                        "type": "string"
+                                    },
+                                    "esp-group": {
+                                        "description": "Name of the ESP group to use for this peer.",
+                                        "type": "string"
+                                    },
+                                    "connection-type": {
+                                        "description": "Connection initiation behavior.",
+                                        "type": "string",
+                                        "enum": [
+                                            "initiate",
+                                            "none",
+                                            "trap"
+                                        ],
+                                        "default": "none"
+                                    },
+                                    "dhcp-interface": {
+                                        "description": "DHCP interface accepting IPsec connection, mutually exclusive with local-address",
+                                        "type": "string"
+                                    },
+                                    "pool": {
+                                        "description": "Name of the IP address pool to assign to clients connecting to this peer.",
+                                        "type": "string"
+                                    }
+                                }
+                            }
                         }
                     },
                     "required": [
-                        "id",
-                        "secret"
+                        "ike-group",
+                        "esp-group",
+                        "pools",
+                        "connections"
                     ]
-                },
-                "remote-access": {
-                    "description": "IPsec peer configurations.",
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "description": "Name identifier for this peer configuration.",
-                                "type": "string"
-                            },
-                            "local-address": {
-                                "description": "Local IP address for the IPsec connection.",
-                                "type": "string",
-                                "format": "ipv4"
-                            },
-                            "remote-address": {
-                                "description": "Remote peer IP address.",
-                                "type": "string",
-                                "format": "ipv4"
-                            },
-                            "local-id": {
-                                "description": "Local identity for IKE authentication.",
-                                "type": "string"
-                            },
-                            "remote-id": {
-                                "description": "Remote identity for IKE authentication.",
-                                "type": "string"
-                            },
-                            "ike-group": {
-                                "description": "Name of the IKE group to use for this peer.",
-                                "type": "string"
-                            },
-                            "esp-group": {
-                                "description": "Name of the ESP group to use for this peer.",
-                                "type": "string"
-                            },
-                            "connection-type": {
-                                "description": "Connection initiation behavior.",
-                                "type": "string",
-                                "enum": [
-                                    "initiate",
-                                    "none",
-                                    "trap"
-                                ],
-                                "default": "none"
-                            },
-                            "ca-cert": {
-                                "description": "Name of ca certificate stored in vyos pki",
-                                "type": "string"
-                            },
-                            "server-cert": {
-                                "description": "Name of server certificate stored in vyos pki",
-                                "type": "string"
-                            },
-                            "dhcp-interface": {
-                                "description": "DHCP interface supplying next-hop IP address",
-                                "type": "string"
-                            },
-                            "pool": {
-                                "description": "IP address pool",
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "ike-group",
-                            "esp-group"
-                        ]
-                    }
-                },
-                "pools": {
-                    "description": "IP address pool.",
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "description": "Name of this IP address pool",
-                                "type": "string"
-                            },
-                            "prefix": {
-                                "description": "IP range in CIDR",
-                                "type": "string",
-                                "format": "uc-cidr"
-                            },
-                            "name-server": {
-                                "description": "Name server for client",
-                                "type": "string",
-                                "format": "uc-ip"
-                            }
-                        }
-                    }
                 },
                 "users": {
                     "description": "User configuration.",
@@ -4721,7 +4728,7 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "name": {
+                            "username": {
                                 "description": "Username.",
                                 "type": "string"
                             },
@@ -4735,8 +4742,7 @@
             },
             "required": [
                 "ike-groups",
-                "esp-groups",
-                "pools"
+                "esp-groups"
             ]
         },
         "vpn.openvpn": {

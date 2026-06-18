@@ -3974,11 +3974,14 @@
         "vpn.ipsec": {
             "type": "object",
             "properties": {
-                "interfaces": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                "local-id": {
+                    "type": "string"
+                },
+                "ca-cert": {
+                    "type": "string"
+                },
+                "server-cert": {
+                    "type": "string"
                 },
                 "ike-groups": {
                     "type": "array",
@@ -4162,106 +4165,109 @@
                         ]
                     }
                 },
-                "authentication": {
+                "remote-access": {
                     "type": "object",
                     "properties": {
-                        "id": {
+                        "pools": {
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "prefix": {
+                                        "type": "string",
+                                        "format": "uc-cidr"
+                                    },
+                                    "name-server": {
+                                        "type": "string",
+                                        "format": "uc-ip"
+                                    }
+                                }
                             }
                         },
-                        "secret": {
-                            "type": "string"
+                        "connections": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "authentication": {
+                                        "type": "object",
+                                        "properties": {
+                                            "client-mode": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "x509",
+                                                    "eap-tls",
+                                                    "eap-mschapv2",
+                                                    "eap-radius"
+                                                ],
+                                                "default": "eap-mschapv2"
+                                            },
+                                            "local-id": {
+                                                "type": "string"
+                                            },
+                                            "ca-cert": {
+                                                "type": "string"
+                                            },
+                                            "server-cert": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "local-address": {
+                                        "type": "string",
+                                        "format": "ipv4"
+                                    },
+                                    "remote-address": {
+                                        "type": "string",
+                                        "format": "ipv4"
+                                    },
+                                    "remote-id": {
+                                        "type": "string"
+                                    },
+                                    "ike-group": {
+                                        "type": "string"
+                                    },
+                                    "esp-group": {
+                                        "type": "string"
+                                    },
+                                    "connection-type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "initiate",
+                                            "none",
+                                            "trap"
+                                        ],
+                                        "default": "none"
+                                    },
+                                    "dhcp-interface": {
+                                        "type": "string"
+                                    },
+                                    "pool": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
                         }
                     },
                     "required": [
-                        "id",
-                        "secret"
+                        "ike-group",
+                        "esp-group",
+                        "pools",
+                        "connections"
                     ]
-                },
-                "remote-access": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "local-address": {
-                                "type": "string",
-                                "format": "ipv4"
-                            },
-                            "remote-address": {
-                                "type": "string",
-                                "format": "ipv4"
-                            },
-                            "local-id": {
-                                "type": "string"
-                            },
-                            "remote-id": {
-                                "type": "string"
-                            },
-                            "ike-group": {
-                                "type": "string"
-                            },
-                            "esp-group": {
-                                "type": "string"
-                            },
-                            "connection-type": {
-                                "type": "string",
-                                "enum": [
-                                    "initiate",
-                                    "none",
-                                    "trap"
-                                ],
-                                "default": "none"
-                            },
-                            "ca-cert": {
-                                "type": "string"
-                            },
-                            "server-cert": {
-                                "type": "string"
-                            },
-                            "dhcp-interface": {
-                                "type": "string"
-                            },
-                            "pool": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "ike-group",
-                            "esp-group"
-                        ]
-                    }
-                },
-                "pools": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "prefix": {
-                                "type": "string",
-                                "format": "uc-cidr"
-                            },
-                            "name-server": {
-                                "type": "string",
-                                "format": "uc-ip"
-                            }
-                        }
-                    }
                 },
                 "users": {
                     "type": "array",
                     "items": {
                         "type": "object",
                         "properties": {
-                            "name": {
+                            "username": {
                                 "type": "string"
                             },
                             "password": {
@@ -4273,8 +4279,7 @@
             },
             "required": [
                 "ike-groups",
-                "esp-groups",
-                "pools"
+                "esp-groups"
             ]
         },
         "vpn.openvpn": {

@@ -92,7 +92,7 @@
 	if (state.routing || 
 		length(up_i) || 
 		(state.services && state.services.igmp_proxy) ||
-		(vpn.wireguard && length(vpn.wireguard.interfaces)) || 
+		(state.vpn.wireguard && length(state.vpn.wireguard.interfaces)) || 
 		(state.qos && length(state.qos.shaper))) {
 		state.routing = state.routing || {};
 		if (state.routing.policies || (state.qos && length(state.qos.shaper))) {

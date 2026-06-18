@@ -1,0 +1,117 @@
+{
+    "uuid": 88888888,
+    "vpn": {
+        "ipsec": {
+            "local-id": "vyos.moe",
+            "ca-cert": "ipsec-ca",
+            "server-cert": "ipsec-cert",
+            "ike-groups": [
+                {
+                    "name": "IKE_GROUP1",
+                    "proposal": [
+                        {
+                            "encryption": "aes256",
+                            "hash": "sha256",
+                            "dh-group": 14
+                        },
+                        {
+                            "encryption": "aes128ccm128",
+                            "hash": "sha1",
+                            "dh-group": 19
+                        }
+                    ]
+                },
+                {
+                    "name": "IKE_GROUP2",
+                    "proposal": [
+                        {
+                            "encryption": "aes256",
+                            "hash": "sha256",
+                            "dh-group": 2
+                        },
+                        {
+                            "encryption": "aes256gcm128",
+                            "hash": "sha512",
+                            "dh-group": 31
+                        }
+                    ]
+                }
+            ],
+            "esp-groups": [
+                {
+                    "name": "ESP_GROUP1",
+                    "pfs": false,
+                    "proposal": [
+                        {
+                            "encryption": "aes256",
+                            "hash": "sha256"
+                        },
+                        {
+                            "encryption": "aes128",
+                            "hash": "sha1"
+                        }
+                    ]
+                },
+                {
+                    "name": "ESP_GROUP2",
+                    "proposal": [
+                        {
+                            "encryption": "aes256",
+                            "hash": "sha256"
+                        },
+                        {
+                            "encryption": "aes128",
+                            "hash": "sha1"
+                        }
+                    ]
+                }
+            ],
+            "remote-access": {
+                "connections": [
+                    {
+                        "name": "remote1",
+                        "authentication": {
+                            "client-mode": "eap-mschapv2"
+                        },
+                        "ike-group": "IKE_GROUP1",
+                        "esp-group": "ESP_GROUP1",
+                        "dhcp-interface": "eth2",
+                        "pool": "CLIENT1"
+                    },
+                    {
+                        "name": "remote2",
+                        "authentication": {
+                            "client-mode": "eap-mschapv2"
+                        },
+                        "ike-group": "IKE_GROUP2",
+                        "esp-group": "ESP_GROUP2",
+                        "dhcp-interface": "eth2",
+                        "pool": "CLIENT2"
+                    }
+                ],
+                "pools": [
+                    {
+                        "name": "CLIENT1",
+                        "prefix": "10.11.0.0/24",
+                        "name-server": "8.8.8.8"
+                    },
+                    {
+                        "name": "CLIENT2",
+                        "prefix": "10.12.0.0/24",
+                        "name-server": "8.8.8.8"
+                    }
+                ]
+            },
+            "users": [
+                {
+                    "username": "user1",
+                    "password": "password1"
+                },
+                {
+                    "username": "user2",
+                    "password": "password2"
+                }
+            ]
+        }
+    }
+}

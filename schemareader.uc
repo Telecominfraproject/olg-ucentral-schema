@@ -11768,26 +11768,37 @@ function instantiateVpnIpsec(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
 
-		function parseInterfaces(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
+		function parseLocalId(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
 
 			return value;
 		}
 
-		if (exists(value, "interfaces")) {
-			obj.interfaces = parseInterfaces(location + "/interfaces", value["interfaces"], errors);
+		if (exists(value, "local-id")) {
+			obj.local_id = parseLocalId(location + "/local-id", value["local-id"], errors);
+		}
+
+		function parseCaCert(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "ca-cert")) {
+			obj.ca_cert = parseCaCert(location + "/ca-cert", value["ca-cert"], errors);
+		}
+
+		function parseServerCert(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "server-cert")) {
+			obj.server_cert = parseServerCert(location + "/server-cert", value["server-cert"], errors);
 		}
 
 		function parseIkeGroups(location, value, errors) {
@@ -12179,15 +12190,66 @@ function instantiateVpnIpsec(location, value, errors) {
 			push(errors, [ location, "is required" ]);
 		}
 
-		function parseAuthentication(location, value, errors) {
+		function parseRemoteAccess(location, value, errors) {
 			if (type(value) == "object") {
 				let obj = {};
 
-				function parseId(location, value, errors) {
+				function parsePools(location, value, errors) {
 					if (type(value) == "array") {
 						function parseItem(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
+							if (type(value) == "object") {
+								let obj = {};
+
+								function parseName(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "name")) {
+									obj.name = parseName(location + "/name", value["name"], errors);
+								}
+
+								function parsePrefix(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchUcCidr(value))
+											push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "prefix")) {
+									obj.prefix = parsePrefix(location + "/prefix", value["prefix"], errors);
+								}
+
+								function parseNameServer(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchUcIp(value))
+											push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "name-server")) {
+									obj.name_server = parseNameServer(location + "/name-server", value["name-server"], errors);
+								}
+
+								return obj;
+							}
+
+							if (type(value) != "object")
+								push(errors, [ location, "must be of type object" ]);
 
 							return value;
 						}
@@ -12201,22 +12263,223 @@ function instantiateVpnIpsec(location, value, errors) {
 					return value;
 				}
 
-				if (exists(value, "id")) {
-					obj.id = parseId(location + "/id", value["id"], errors);
+				if (exists(value, "pools")) {
+					obj.pools = parsePools(location + "/pools", value["pools"], errors);
 				}
 				else {
 					push(errors, [ location, "is required" ]);
 				}
 
-				function parseSecret(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
+				function parseConnections(location, value, errors) {
+					if (type(value) == "array") {
+						function parseItem(location, value, errors) {
+							if (type(value) == "object") {
+								let obj = {};
+
+								function parseName(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "name")) {
+									obj.name = parseName(location + "/name", value["name"], errors);
+								}
+
+								function parseAuthentication(location, value, errors) {
+									if (type(value) == "object") {
+										let obj = {};
+
+										function parseClientMode(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											if (!(value in [ "x509", "eap-tls", "eap-mschapv2", "eap-radius" ]))
+												push(errors, [ location, "must be one of \"x509\", \"eap-tls\", \"eap-mschapv2\" or \"eap-radius\"" ]);
+
+											return value;
+										}
+
+										if (exists(value, "client-mode")) {
+											obj.client_mode = parseClientMode(location + "/client-mode", value["client-mode"], errors);
+										}
+										else {
+											obj.client_mode = "eap-mschapv2";
+										}
+
+										function parseLocalId(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "local-id")) {
+											obj.local_id = parseLocalId(location + "/local-id", value["local-id"], errors);
+										}
+
+										function parseCaCert(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "ca-cert")) {
+											obj.ca_cert = parseCaCert(location + "/ca-cert", value["ca-cert"], errors);
+										}
+
+										function parseServerCert(location, value, errors) {
+											if (type(value) != "string")
+												push(errors, [ location, "must be of type string" ]);
+
+											return value;
+										}
+
+										if (exists(value, "server-cert")) {
+											obj.server_cert = parseServerCert(location + "/server-cert", value["server-cert"], errors);
+										}
+
+										return obj;
+									}
+
+									if (type(value) != "object")
+										push(errors, [ location, "must be of type object" ]);
+
+									return value;
+								}
+
+								if (exists(value, "authentication")) {
+									obj.authentication = parseAuthentication(location + "/authentication", value["authentication"], errors);
+								}
+
+								function parseLocalAddress(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchIpv4(value))
+											push(errors, [ location, "must be a valid IPv4 address" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "local-address")) {
+									obj.local_address = parseLocalAddress(location + "/local-address", value["local-address"], errors);
+								}
+
+								function parseRemoteAddress(location, value, errors) {
+									if (type(value) == "string") {
+										if (!matchIpv4(value))
+											push(errors, [ location, "must be a valid IPv4 address" ]);
+
+									}
+
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "remote-address")) {
+									obj.remote_address = parseRemoteAddress(location + "/remote-address", value["remote-address"], errors);
+								}
+
+								function parseRemoteId(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "remote-id")) {
+									obj.remote_id = parseRemoteId(location + "/remote-id", value["remote-id"], errors);
+								}
+
+								function parseIkeGroup(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "ike-group")) {
+									obj.ike_group = parseIkeGroup(location + "/ike-group", value["ike-group"], errors);
+								}
+
+								function parseEspGroup(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "esp-group")) {
+									obj.esp_group = parseEspGroup(location + "/esp-group", value["esp-group"], errors);
+								}
+
+								function parseConnectionType(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									if (!(value in [ "initiate", "none", "trap" ]))
+										push(errors, [ location, "must be one of \"initiate\", \"none\" or \"trap\"" ]);
+
+									return value;
+								}
+
+								if (exists(value, "connection-type")) {
+									obj.connection_type = parseConnectionType(location + "/connection-type", value["connection-type"], errors);
+								}
+								else {
+									obj.connection_type = "none";
+								}
+
+								function parseDhcpInterface(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "dhcp-interface")) {
+									obj.dhcp_interface = parseDhcpInterface(location + "/dhcp-interface", value["dhcp-interface"], errors);
+								}
+
+								function parsePool(location, value, errors) {
+									if (type(value) != "string")
+										push(errors, [ location, "must be of type string" ]);
+
+									return value;
+								}
+
+								if (exists(value, "pool")) {
+									obj.pool = parsePool(location + "/pool", value["pool"], errors);
+								}
+
+								return obj;
+							}
+
+							if (type(value) != "object")
+								push(errors, [ location, "must be of type object" ]);
+
+							return value;
+						}
+
+						return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
+					}
+
+					if (type(value) != "array")
+						push(errors, [ location, "must be of type array" ]);
 
 					return value;
 				}
 
-				if (exists(value, "secret")) {
-					obj.secret = parseSecret(location + "/secret", value["secret"], errors);
+				if (exists(value, "connections")) {
+					obj.connections = parseConnections(location + "/connections", value["connections"], errors);
 				}
 				else {
 					push(errors, [ location, "is required" ]);
@@ -12231,271 +12494,8 @@ function instantiateVpnIpsec(location, value, errors) {
 			return value;
 		}
 
-		if (exists(value, "authentication")) {
-			obj.authentication = parseAuthentication(location + "/authentication", value["authentication"], errors);
-		}
-
-		function parseRemoteAccess(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseLocalAddress(location, value, errors) {
-							if (type(value) == "string") {
-								if (!matchIpv4(value))
-									push(errors, [ location, "must be a valid IPv4 address" ]);
-
-							}
-
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "local-address")) {
-							obj.local_address = parseLocalAddress(location + "/local-address", value["local-address"], errors);
-						}
-
-						function parseRemoteAddress(location, value, errors) {
-							if (type(value) == "string") {
-								if (!matchIpv4(value))
-									push(errors, [ location, "must be a valid IPv4 address" ]);
-
-							}
-
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "remote-address")) {
-							obj.remote_address = parseRemoteAddress(location + "/remote-address", value["remote-address"], errors);
-						}
-
-						function parseLocalId(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "local-id")) {
-							obj.local_id = parseLocalId(location + "/local-id", value["local-id"], errors);
-						}
-
-						function parseRemoteId(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "remote-id")) {
-							obj.remote_id = parseRemoteId(location + "/remote-id", value["remote-id"], errors);
-						}
-
-						function parseIkeGroup(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "ike-group")) {
-							obj.ike_group = parseIkeGroup(location + "/ike-group", value["ike-group"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseEspGroup(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "esp-group")) {
-							obj.esp_group = parseEspGroup(location + "/esp-group", value["esp-group"], errors);
-						}
-						else {
-							push(errors, [ location, "is required" ]);
-						}
-
-						function parseConnectionType(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							if (!(value in [ "initiate", "none", "trap" ]))
-								push(errors, [ location, "must be one of \"initiate\", \"none\" or \"trap\"" ]);
-
-							return value;
-						}
-
-						if (exists(value, "connection-type")) {
-							obj.connection_type = parseConnectionType(location + "/connection-type", value["connection-type"], errors);
-						}
-						else {
-							obj.connection_type = "none";
-						}
-
-						function parseCaCert(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "ca-cert")) {
-							obj.ca_cert = parseCaCert(location + "/ca-cert", value["ca-cert"], errors);
-						}
-
-						function parseServerCert(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "server-cert")) {
-							obj.server_cert = parseServerCert(location + "/server-cert", value["server-cert"], errors);
-						}
-
-						function parseDhcpInterface(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "dhcp-interface")) {
-							obj.dhcp_interface = parseDhcpInterface(location + "/dhcp-interface", value["dhcp-interface"], errors);
-						}
-
-						function parsePool(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "pool")) {
-							obj.pool = parsePool(location + "/pool", value["pool"], errors);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
 		if (exists(value, "remote-access")) {
 			obj.remote_access = parseRemoteAccess(location + "/remote-access", value["remote-access"], errors);
-		}
-
-		function parsePools(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "object") {
-						let obj = {};
-
-						function parseName(location, value, errors) {
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
-						}
-
-						function parsePrefix(location, value, errors) {
-							if (type(value) == "string") {
-								if (!matchUcCidr(value))
-									push(errors, [ location, "must be a valid IPv4 or IPv6 CIDR" ]);
-
-							}
-
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "prefix")) {
-							obj.prefix = parsePrefix(location + "/prefix", value["prefix"], errors);
-						}
-
-						function parseNameServer(location, value, errors) {
-							if (type(value) == "string") {
-								if (!matchUcIp(value))
-									push(errors, [ location, "must be a valid IPv4 or IPv6 address" ]);
-
-							}
-
-							if (type(value) != "string")
-								push(errors, [ location, "must be of type string" ]);
-
-							return value;
-						}
-
-						if (exists(value, "name-server")) {
-							obj.name_server = parseNameServer(location + "/name-server", value["name-server"], errors);
-						}
-
-						return obj;
-					}
-
-					if (type(value) != "object")
-						push(errors, [ location, "must be of type object" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "pools")) {
-			obj.pools = parsePools(location + "/pools", value["pools"], errors);
-		}
-		else {
-			push(errors, [ location, "is required" ]);
 		}
 
 		function parseUsers(location, value, errors) {
@@ -12504,15 +12504,15 @@ function instantiateVpnIpsec(location, value, errors) {
 					if (type(value) == "object") {
 						let obj = {};
 
-						function parseName(location, value, errors) {
+						function parseUsername(location, value, errors) {
 							if (type(value) != "string")
 								push(errors, [ location, "must be of type string" ]);
 
 							return value;
 						}
 
-						if (exists(value, "name")) {
-							obj.name = parseName(location + "/name", value["name"], errors);
+						if (exists(value, "username")) {
+							obj.username = parseUsername(location + "/username", value["username"], errors);
 						}
 
 						function parsePassword(location, value, errors) {
