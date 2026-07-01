@@ -1,0 +1,88 @@
+{
+	"uuid": 1750636809,
+	"interfaces": [
+		{
+			"name": "eth0",
+			"role": "upstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.240.30/24"
+				],
+				"gateway": "192.168.240.254"
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		},
+		{
+			"name": "eth1",
+			"role": "downstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.100.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		}
+	],
+	"routing": {
+		"policies": [
+			{
+				"name": "mark-and-route",
+				"interface": "eth1",
+				"address-family": "ipv4",
+				"rules": [
+					{
+						"name": "mark-voip",
+						"priority": 10,
+						"match": {
+							"source": {
+								"address": "192.168.100.0/24"
+							},
+							"destination": {
+								"port": "5060"
+							},
+							"protocol": "udp",
+							"inbound-interface": "eth1"
+						},
+						"action": "accept",
+						"set": {
+							"mark": 100,
+							"dscp": 46
+						}
+					},
+					{
+						"name": "drop-blocked",
+						"priority": 20,
+						"match": {
+							"source": {
+								"address": "192.168.100.50"
+							},
+							"protocol": "all"
+						},
+						"action": "drop"
+					},
+					{
+						"name": "connmark-web",
+						"priority": 30,
+						"match": {
+							"destination": {
+								"port": "443"
+							},
+							"protocol": "tcp",
+							"conn-mark": 5
+						},
+						"action": "accept",
+						"set": {
+							"conn-mark": 5
+						}
+					}
+				]
+			}
+		]
+	}
+}

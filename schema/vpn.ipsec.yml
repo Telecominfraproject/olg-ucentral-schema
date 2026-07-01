@@ -154,10 +154,16 @@ properties:
                 server-cert:
                   description: Name of server certificate stored in vyos pki
                   type: string
+            bind:
+              description: Vti interface to bind for this connection.
+              type: string
             local-address:
               description: Device IP address accepting IPsec connection, mutually exclusive with dhcp-interface.
               type: string
               format: ipv4
+            dhcp-interface:
+              description: DHCP interface accepting IPsec connection, mutually exclusive with local-address
+              type: string
             remote-address:
               description: Remote peer IP address.
               type: string
@@ -176,15 +182,15 @@ properties:
               type: string
               enum: [initiate, none, trap]
               default: none
-            dhcp-interface:
-              description: DHCP interface accepting IPsec connection, mutually exclusive with local-address
-              type: string
             pool:
               description: Name of the IP address pool to assign to clients connecting to this peer.
               type: string
+        required:
+          - name
+          - ike-group
+          - esp-group
+          - bind
     required:
-      - ike-group
-      - esp-group
       - pools
       - connections
   users:

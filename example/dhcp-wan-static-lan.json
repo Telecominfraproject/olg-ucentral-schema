@@ -1,0 +1,64 @@
+{
+	"uuid": 1750636804,
+	"interfaces": [
+		{
+			"name": "eth0",
+			"role": "upstream",
+			"mtu": 1500,
+			"ipv4": {
+				"addressing": "dhcp"
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		},
+		{
+			"name": "eth1",
+			"role": "downstream",
+			"mtu": 1500,
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.50.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		}
+	],
+	"services": {
+		"dhcp-server": {
+			"networks": [
+				{
+					"name": "lan",
+					"subnets": [
+						{
+							"subnet": "192.168.50.0/24",
+							"default-router": "192.168.50.1",
+							"dns-servers": [
+								"8.8.8.8",
+								"1.1.1.1"
+							],
+							"domain-name": "lan.local",
+							"lease-time": 86400,
+							"ranges": [
+								{
+									"start": "192.168.50.100",
+									"stop": "192.168.50.200"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "printer",
+									"mac-address": "02:ec:ec:bd:86:74",
+									"ip-address": "192.168.50.10"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+}

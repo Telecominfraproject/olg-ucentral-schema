@@ -1,0 +1,78 @@
+{
+	"uuid": 1750636803,
+	"interfaces": [
+		{
+			"name": "eth0",
+			"role": "upstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.240.30/24"
+				],
+				"gateway": "192.168.240.254"
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		},
+		{
+			"name": "eth1",
+			"role": "downstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.40.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		}
+	],
+	"routing": {
+		"static": {
+			"ipv4-rules": [
+				{
+					"destination": "10.8.0.0/24",
+					"routes": [
+						{
+							"action": "next-hop",
+							"next-hop": "192.168.240.31",
+							"distance": 1
+						}
+					]
+				},
+				{
+					"destination": "172.16.0.0/16",
+					"routes": [
+						{
+							"action": "interface",
+							"interface": "eth1",
+							"distance": 5
+						}
+					]
+				},
+				{
+					"destination": "192.0.2.0/24",
+					"routes": [
+						{
+							"action": "blackhole"
+						}
+					]
+				}
+			],
+			"ipv6-rules": [
+				{
+					"destination": "2001:db8:100::/48",
+					"routes": [
+						{
+							"action": "next-hop",
+							"next-hop": "2001:db8:1::1",
+							"distance": 1
+						}
+					]
+				}
+			]
+		}
+	}
+}

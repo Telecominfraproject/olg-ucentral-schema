@@ -151,6 +151,7 @@ let ethernet = {
 	pppoe_c: 0,
 	dummy_c: 0,
 	vtun_c: 0,
+	vti_c: 0,
 	client_c: 0,
 	wg_c: 0,
 	peer_c: 0,
@@ -200,6 +201,10 @@ let ethernet = {
 				return iface_temp;
 			case "openvpn":
 				iface_temp = "vtun" + this.vtun_c++;
+				this.interfaces[name] = iface_temp;
+				return iface_temp;
+			case "vti":
+				iface_temp = "vti" + this.vti_c++;
 				this.interfaces[name] = iface_temp;
 				return iface_temp;
 			default:

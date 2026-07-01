@@ -1,0 +1,181 @@
+{
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "mtu": 1500,
+            "name": "eth2",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth3",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth4",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth5",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "bridge": {
+                "members": [
+                    "eth0",
+                    "eth1",
+                    "eth4",
+                    "eth5"
+                ]
+            },
+            "ipv4": {
+                "address": [
+                    "10.28.34.254/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "br0",
+            "role": "downstream",
+            "type": "bridge",
+            "vlan": [
+                {
+                    "id": 27,
+                    "ipv4": {
+                        "address": [
+                            "10.28.27.254/24"
+                        ],
+                        "addressing": "static"
+                    },
+                    "mtu": 1500,
+                    "name": "vlan27",
+                    "role": "downstream"
+                }
+            ]
+        }
+    ],
+    "services": {
+        "dhcp-server": {
+            "networks": [
+                {
+                    "name": "dhcp-br0",
+                    "subnets": [
+                        {
+                            "default-router": "10.28.34.254",
+                            "dns-servers": [
+                                "10.28.34.254"
+                            ],
+                            "lease-time": 86400,
+                            "ranges": [
+                                {
+                                    "start": "10.28.34.100",
+                                    "stop": "10.28.34.200"
+                                }
+                            ],
+                            "subnet": "10.28.34.0/24"
+                        }
+                    ]
+                },
+                {
+                    "name": "dhcp-vlan18",
+                    "subnets": [
+                        {
+                            "default-router": "10.28.18.254",
+                            "dns-servers": [
+                                "10.28.18.254"
+                            ],
+                            "lease-time": 86400,
+                            "ranges": [
+                                {
+                                    "start": "10.28.18.100",
+                                    "stop": "10.28.18.200"
+                                }
+                            ],
+                            "subnet": "10.28.18.0/24"
+                        }
+                    ]
+                }
+            ]
+        },
+        "dns": {
+            "allow-from": [
+                "10.28.34.0/24",
+                "10.28.18.0/24"
+            ],
+            "listen-addresses": [
+                "10.28.34.254",
+                "10.28.18.254"
+            ]
+        },
+        "ssh": {
+            "expose-lan": true
+        }
+    },
+    "uuid": 1782285125,
+    "vpn": {
+        "wireguard": {
+            "interfaces": [
+                {
+                    "hosts": [
+                        {
+                            "ipaddr": [
+                                "10.0.0.2/32",
+                                "10.28.33.0/24"
+                            ],
+                            "key": "ddOa1kBCbxxa4vFv4hXUJtQziY5TaeXkV+F7fSxxjWM=",
+                            "name": "n1"
+                        }
+                    ],
+                    "name": "wg0",
+                    "peer-port": 51820,
+                    "private-key": "ddOa1kBCbxxa4vFv4hXUJtQziY5TaeXkV+F7fSxxjWM=",
+                    "proto": "wireguard-overlay",
+                    "root-node": {
+                        "ipaddr": [
+                            "10.0.0.1/24"
+                        ],
+                        "key": "eDhjqTh9TXjY+6huorRCm5kpge59+mGKg9FbjfB8Ays="
+                    }
+                }
+            ]
+        }
+    }
+}

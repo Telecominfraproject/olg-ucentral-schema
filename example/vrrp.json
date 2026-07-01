@@ -1,0 +1,126 @@
+{
+    "high-availability": {
+        "vrrp": {
+            "groups": [
+                {
+                    "interface": "br0",
+                    "name": "vrrp-br0",
+                    "preempt": false,
+                    "priority": 80,
+                    "virtual-addresses": [
+                        "192.168.1.254/24"
+                    ],
+                    "vrid": 10
+                },
+                {
+                    "interface": "vlan2",
+                    "name": "vrrp-vlan2",
+                    "preempt": true,
+                    "priority": 100,
+                    "virtual-addresses": [
+                        "192.168.2.254/24"
+                    ],
+                    "vrid": 20
+                }
+            ]
+        }
+    },
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "mtu": 1500,
+            "name": "eth2",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "address": [
+                    "10.71.21.30/16"
+                ],
+                "addressing": "static",
+                "gateway": "10.71.2.254"
+            },
+            "mtu": 1500,
+            "name": "eth3",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth4",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth5",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "bridge": {
+                "members": [
+                    "eth0",
+                    "eth1",
+                    "eth4",
+                    "eth5"
+                ]
+            },
+            "ipv4": {
+                "address": [
+                    "192.168.1.1/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "br0",
+            "role": "downstream",
+            "type": "bridge",
+            "vlan": [
+                {
+                    "id": 2,
+                    "ipv4": {
+                        "address": [
+                            "192.168.2.1/24"
+                        ],
+                        "addressing": "static"
+                    },
+                    "mtu": 1500,
+                    "name": "vlan2",
+                    "role": "downstream"
+                }
+            ]
+        }
+    ],
+    "uuid": 1782294953
+}

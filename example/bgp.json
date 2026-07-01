@@ -1,0 +1,79 @@
+{
+	"uuid": 1750636800,
+	"interfaces": [
+		{
+			"name": "eth0",
+			"role": "upstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"10.0.0.1/30"
+				],
+				"gateway": "10.0.0.2"
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		},
+		{
+			"name": "eth1",
+			"role": "downstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.10.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		}
+	],
+	"routing": {
+		"bgp": {
+			"local-as": 65001,
+			"router-id": "10.0.0.1",
+			"neighbors": [
+				{
+					"address": "10.0.0.2",
+					"remote-as": 65002,
+					"update-source": "eth0",
+					"ebgp-multihop": 2,
+					"password": "bgpsecret",
+					"peer-params": [
+						{
+							"address-family": "ipv4-unicast",
+							"nexthop-self": true,
+							"soft-reconfig": true,
+							"default-originate": false
+						}
+					]
+				},
+				{
+					"address": "10.0.0.6",
+					"remote-as": 65001,
+					"passive": true,
+					"advertisement-interval": 10,
+					"peer-params": [
+						{
+							"address-family": "ipv4-unicast",
+							"nexthop-self": false
+						}
+					]
+				}
+			],
+			"networks": [
+				{
+					"address-family": "ipv4-unicast",
+					"network": "192.168.10.0/24"
+				}
+			],
+			"redistribute": {
+				"connected": true,
+				"static": true,
+				"ospf": false,
+				"rip": false
+			}
+		}
+	}
+}

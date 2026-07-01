@@ -1,0 +1,124 @@
+{
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "mtu": 1500,
+            "name": "eth2",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth3",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth4",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth5",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "bridge": {
+                "members": [
+                    "eth0",
+                    "eth1",
+                    "eth4",
+                    "eth5"
+                ]
+            },
+            "ipv4": {
+                "address": [
+                    "10.28.33.254/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "br0",
+            "role": "downstream",
+            "type": "bridge",
+            "vlan": [
+                {
+                    "id": 27,
+                    "ipv4": {
+                        "address": [
+                            "10.28.18.254/24"
+                        ],
+                        "addressing": "static"
+                    },
+                    "mtu": 1500,
+                    "name": "vlan27",
+                    "role": "downstream"
+                }
+            ]
+        }
+    ],
+    "uuid": 1782285125,
+    "vpn": {
+        "wireguard": {
+            "interfaces": [
+                {
+                    "hosts": [
+                        {
+                            "ipaddr": [
+                                "10.0.0.0/24",
+                                "10.28.34.0/24"
+                            ],
+                            "key": "eDhjqTh9TXjY+6huorRCm5kpge59+mGKg9FbjfB8Ays=",
+                            "name": "n1"
+                        }
+                    ],
+                    "name": "wg0",
+                    "peer-port": 51820,
+                    "private-key": "8PP3o+Du1tZFyV3tk/mISosp7Qq0XzkQzqydXcxb2W4=",
+                    "proto": "wireguard-overlay",
+                    "root-node": {
+                        "ipaddr": [
+                            "10.0.0.2/32"
+                        ],
+                        "key": "ddOa1kBCbxxa4vFv4hXUJtQziY5TaeXkV+F7fSxxjWM="
+                    }
+                }
+            ]
+        }
+    }
+}

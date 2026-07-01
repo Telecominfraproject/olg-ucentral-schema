@@ -145,7 +145,8 @@
 	if (state.vpn && state.vpn.ipsec) {
 		include("vpn/vpn.uc", {
 			location: '/vpn',
-			vpn: state.vpn
+			vpn: state.vpn,
+			ethernet
 		});
 	}
 %}

@@ -76,6 +76,7 @@
         {% if (p.local_address): %}
                 local-address {{ p.local_address }}
         {% endif %}
+                bind {{ ethernet.get_iface_by_name(p.bind) }}
                 esp-group {{ esp_map[p.esp_group] }}
                 ike-group {{ ike_map[p.ike_group] }}
                 pool {{ pool_map[p.pool] }}

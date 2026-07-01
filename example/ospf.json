@@ -1,0 +1,79 @@
+{
+	"uuid": 1750636801,
+	"interfaces": [
+		{
+			"name": "eth0",
+			"role": "upstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"10.0.1.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		},
+		{
+			"name": "eth1",
+			"role": "downstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.20.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		}
+	],
+	"routing": {
+		"ospf": {
+			"router-id": "10.0.1.1",
+			"areas": [
+				{
+					"area-id": "0",
+					"area-type": "normal",
+					"networks": [
+						"10.0.1.0/24"
+					]
+				},
+				{
+					"area-id": "0.0.0.1",
+					"area-type": "stub",
+					"no-summary": true,
+					"networks": [
+						"192.168.20.0/24"
+					]
+				}
+			],
+			"interfaces": [
+				{
+					"name": "eth0",
+					"area": "0",
+					"cost": 10,
+					"network-type": "broadcast",
+					"priority": 1
+				},
+				{
+					"name": "eth1",
+					"area": "0.0.0.1",
+					"cost": 20,
+					"passive": true,
+					"authentication": {
+						"type": "md5",
+						"password": "ospfsecret",
+						"key-id": 1
+					}
+				}
+			],
+			"redistribute": {
+				"connected": true,
+				"static": true,
+				"bgp": false,
+				"rip": false
+			}
+		}
+	}
+}

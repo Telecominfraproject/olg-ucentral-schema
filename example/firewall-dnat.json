@@ -1,0 +1,325 @@
+{
+    "firewall": {
+        "ipv4-rulesets": [
+            {
+                "default-action": "drop",
+                "name": "WAN-LAN-ipv4",
+                "rules": [
+                    {
+                        "action": "accept",
+                        "destination": {
+                            "group": {
+                                "port-group": "WAN_LAN_FORWARDING_GROUP"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "rule-number": 5
+                    }
+                ]
+            },
+            {
+                "default-action": "drop",
+                "name": "WAN-LAN2-ipv4",
+                "rules": [
+                    {
+                        "action": "accept",
+                        "destination": {
+                            "group": {
+                                "port-group": "WAN_LAN_FORWARDING_GROUP"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "rule-number": 5
+                    }
+                ]
+            },
+            {
+                "default-action": "accept",
+                "name": "LAN-WAN-ipv4",
+                "rules": [
+                    {
+                        "action": "drop",
+                        "destination": {
+                            "address": "172.16.0.0/16"
+                        },
+                        "protocol": "tcp",
+                        "rule-number": 20
+                    },
+                    {
+                        "action": "reject",
+                        "protocol": "icmp",
+                        "rule-number": 21,
+                        "source": {
+                            "address": "192.168.1.22/32"
+                        }
+                    }
+                ]
+            },
+            {
+                "default-action": "reject",
+                "name": "LAN2-LAN-ipv4",
+                "rules": [
+                    {
+                        "action": "accept",
+                        "destination": {
+                            "port": 9999
+                        },
+                        "protocol": "tcp_udp",
+                        "rule-number": 20
+                    }
+                ]
+            },
+            {
+                "default-action": "accept",
+                "name": "DEVICE-ANY-ipv4"
+            },
+            {
+                "default-action": "drop",
+                "name": "LAN-DEVICE-ipv4",
+                "rules": [
+                    {
+                        "action": "accept",
+                        "protocol": "icmp",
+                        "rule-number": 1
+                    },
+                    {
+                        "action": "accept",
+                        "protocol": "ospf",
+                        "rule-number": 2
+                    },
+                    {
+                        "action": "accept",
+                        "destination": {
+                            "group": {
+                                "port-group": "LAN_SERVICE_GROUP"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "rule-number": 5
+                    }
+                ]
+            },
+            {
+                "default-action": "drop",
+                "name": "WAN-DEVICE-ipv4",
+                "rules": [
+                    {
+                        "action": "accept",
+                        "protocol": "icmp",
+                        "rule-number": 1
+                    },
+                    {
+                        "action": "accept",
+                        "destination": {
+                            "group": {
+                                "port-group": "WAN_SERVICE_GROUP"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "rule-number": 5
+                    }
+                ]
+            }
+        ],
+        "zone-policies": [
+            {
+                "from": "WAN",
+                "ruleset": "WAN-LAN-ipv4",
+                "to": "LAN"
+            },
+            {
+                "from": "WAN",
+                "ruleset": "WAN-LAN2-ipv4",
+                "to": "LAN2"
+            },
+            {
+                "from": "LAN",
+                "ruleset": "LAN-WAN-ipv4",
+                "to": "WAN"
+            },
+            {
+                "from": "LAN2",
+                "ruleset": "LAN2-LAN-ipv4",
+                "to": "LAN"
+            },
+            {
+                "from": "DEVICE",
+                "ruleset": "DEVICE-ANY-ipv4",
+                "to": "WAN"
+            },
+            {
+                "from": "WAN",
+                "ruleset": "WAN-DEVICE-ipv4",
+                "to": "DEVICE"
+            },
+            {
+                "from": "DEVICE",
+                "ruleset": "DEVICE-ANY-ipv4",
+                "to": "LAN"
+            },
+            {
+                "from": "LAN",
+                "ruleset": "LAN-DEVICE-ipv4",
+                "to": "DEVICE"
+            },
+            {
+                "from": "DEVICE",
+                "ruleset": "DEVICE-ANY-ipv4",
+                "to": "LAN2"
+            },
+            {
+                "from": "LAN2",
+                "ruleset": "LAN-DEVICE-ipv4",
+                "to": "DEVICE"
+            }
+        ],
+        "zones": [
+            {
+                "default-action": "drop",
+                "interfaces": [
+                    "eth2",
+                    "eth3"
+                ],
+                "name": "WAN"
+            },
+            {
+                "default-action": "drop",
+                "interfaces": [
+                    "br0"
+                ],
+                "name": "LAN"
+            },
+            {
+                "default-action": "drop",
+                "interfaces": [
+                    "vlan2"
+                ],
+                "name": "LAN2"
+            },
+            {
+                "default-action": "drop",
+                "local-zone": true,
+                "name": "DEVICE"
+            }
+        ]
+    },
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "mtu": 1500,
+            "name": "eth2",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "address": [
+                    "10.71.21.30/16"
+                ],
+                "addressing": "static",
+                "gateway": "10.71.2.254"
+            },
+            "mtu": 1500,
+            "name": "eth3",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth4",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth5",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "bridge": {
+                "members": [
+                    "eth0",
+                    "eth1",
+                    "eth4",
+                    "eth5"
+                ]
+            },
+            "ipv4": {
+                "address": [
+                    "192.168.1.1/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "br0",
+            "role": "downstream",
+            "type": "bridge",
+            "vlan": [
+                {
+                    "id": 2,
+                    "ipv4": {
+                        "address": [
+                            "192.168.2.1/24"
+                        ],
+                        "addressing": "static"
+                    },
+                    "mtu": 1500,
+                    "name": "vlan2",
+                    "role": "downstream"
+                }
+            ]
+        }
+    ],
+    "nat": {
+        "destination-ipv4": [
+            {
+                "destination": {
+                    "port": 80
+                },
+                "inbound-interface": "eth2",
+                "protocol": "tcp_udp",
+                "rule-number": 20,
+                "translation": {
+                    "address": "192.168.1.100",
+                    "port": 8080
+                }
+            }
+        ]
+    },
+    "routing": {
+        "ospf": {
+            "router-id": "192.168.1.1"
+        }
+    },
+    "uuid": 1782293254
+}

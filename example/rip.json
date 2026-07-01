@@ -1,0 +1,59 @@
+{
+	"uuid": 1750636802,
+	"interfaces": [
+		{
+			"name": "eth0",
+			"role": "upstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"10.0.2.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		},
+		{
+			"name": "eth1",
+			"role": "downstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.30.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		}
+	],
+	"routing": {
+		"rip": {
+			"version": 2,
+			"networks": [
+				"10.0.2.0/24",
+				"192.168.30.0/24"
+			],
+			"interfaces": [
+				{
+					"name": "eth0",
+					"passive": false
+				},
+				{
+					"name": "eth1",
+					"passive": true
+				}
+			],
+			"neighbors": [
+				"10.0.2.2"
+			],
+			"redistribute": {
+				"connected": true,
+				"static": true,
+				"bgp": false,
+				"ospf": false
+			}
+		}
+	}
+}

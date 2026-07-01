@@ -1,0 +1,67 @@
+{
+	"uuid": 1750636805,
+	"interfaces": [
+		{
+			"name": "eth0",
+			"role": "upstream",
+			"mtu": 1500,
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"203.0.113.2/30"
+				],
+				"gateway": "203.0.113.1"
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		},
+		{
+			"name": "eth1",
+			"role": "downstream",
+			"mtu": 1500,
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.60.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		}
+	],
+	"services": {
+		"dhcp-server": {
+			"networks": [
+				{
+					"name": "lan",
+					"subnets": [
+						{
+							"subnet": "192.168.60.0/24",
+							"default-router": "192.168.60.1",
+							"dns-servers": [
+								"192.168.60.1"
+							],
+							"domain-name": "corp.local",
+							"lease-time": 43200,
+							"ranges": [
+								{
+									"start": "192.168.60.50",
+									"stop": "192.168.60.150"
+								}
+							],
+							"static-mappings": [
+								{
+									"name": "nas",
+									"mac-address": "02:a2:d9:42:b4:bf",
+									"ip-address": "192.168.60.20"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+}

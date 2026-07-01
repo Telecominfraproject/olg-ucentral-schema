@@ -1,0 +1,302 @@
+{
+    "uuid": 1782283306,
+    "interfaces": [
+        {
+            "ipv4": {
+                "addressing": "dhcp"
+            },
+            "mtu": 1500,
+            "name": "eth2",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "address": [
+                    "10.71.21.30/16"
+                ],
+                "addressing": "static",
+                "gateway": "10.71.2.254"
+            },
+            "mtu": 1500,
+            "name": "eth3",
+            "role": "upstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth0",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth1",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth4",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "ipv4": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "eth5",
+            "role": "downstream",
+            "type": "ethernet"
+        },
+        {
+            "bridge": {
+                "members": [
+                    "eth0",
+                    "eth1",
+                    "eth4",
+                    "eth5"
+                ]
+            },
+            "ipv4": {
+                "address": [
+                    "192.168.1.1/24"
+                ],
+                "addressing": "static"
+            },
+            "ipv6": {
+                "addressing": "none"
+            },
+            "mtu": 1500,
+            "name": "br0",
+            "role": "downstream",
+            "type": "bridge",
+            "vlan": [
+                {
+                    "id": 2,
+                    "ipv4": {
+                        "address": [
+                            "192.168.2.1/24"
+                        ],
+                        "addressing": "static"
+                    },
+                    "mtu": 1500,
+                    "name": "vlan2",
+                    "role": "downstream"
+                }
+            ]
+        }
+    ],
+    "services": {
+        "dhcp-relay": {
+            "listen-interfaces": [
+                "vlan2"
+            ],
+            "servers": [
+                "192.168.240.101"
+            ],
+            "upstream-interfaces": [
+                "eth2",
+                "eth3"
+            ]
+        },
+        "dhcp-server": {
+            "networks": [
+                {
+                    "name": "dhcp-br0",
+                    "subnets": [
+                        {
+                            "default-router": "192.168.1.1",
+                            "dns-servers": [
+                                "192.168.1.1"
+                            ],
+                            "lease-time": 86400,
+                            "ranges": [
+                                {
+                                    "start": "192.168.1.100",
+                                    "stop": "192.168.1.200"
+                                }
+                            ],
+                            "subnet": "192.168.1.0/24"
+                        }
+                    ]
+                }
+            ]
+        },
+        "dns": {
+            "allow-from": [
+                "192.168.1.0/24"
+            ],
+            "listen-addresses": [
+                "192.168.1.1"
+            ]
+        },
+        "igmp-proxy": {
+            "alt-subnets": [
+                "192.168.240.0/24"
+            ],
+            "downstream-interfaces": [
+                "br0",
+                "vlan2"
+            ],
+            "upstream-interface": "eth2"
+        },
+        "lldp": {
+            "interfaces": [
+                {
+                    "mode": "rx-tx",
+                    "name": "eth2"
+                },
+                {
+                    "mode": "rx-tx",
+                    "name": "eth3"
+                },
+                {
+                    "mode": "rx-tx",
+                    "name": "br0"
+                },
+                {
+                    "mode": "rx-tx",
+                    "name": "vlan2"
+                }
+            ],
+            "management-addresses": [
+                "10.71.21.30"
+            ]
+        },
+        "mdns": {
+            "allow-services": [
+                "_http._tcp"
+            ],
+            "interfaces": [
+                "eth2",
+                "eth3",
+                "br0",
+                "vlan2"
+            ]
+        },
+        "ntp": {
+            "allow-clients": [
+                "192.168.1.0/24",
+                "192.168.2.0/24"
+            ],
+            "listen-address": "0.0.0.0",
+            "servers": [
+                {
+                    "address": "pool.ntp.org"
+                }
+            ]
+        },
+        "snmp": {
+            "engine-id": "800000aabbccddeeff",
+            "groups": [
+                {
+                    "mode": "ro",
+                    "name": "admin",
+                    "oid": "1",
+                    "view": "admin"
+                }
+            ],
+            "listen-addresses": [
+                "10.71.21.30"
+            ],
+            "location": "3F-Lab",
+            "users": [
+                {
+                    "auth": {
+                        "hash-algo": "md5",
+                        "password": "shinycolors"
+                    },
+                    "group": "admin",
+                    "name": "test",
+                    "privacy": {
+                        "hash-algo": "des",
+                        "password": "shinycolors"
+                    }
+                }
+            ]
+        },
+        "ssh": {
+            "expose-lan": true,
+            "expose-wan": true
+        },
+        "web-proxy": {
+            "append-domain": "example.com",
+            "default-port": 8080,
+            "servers": [
+                {
+                    "address": "0.0.0.0",
+                    "port": 8080
+                }
+            ]
+        }
+    },
+    "system": {
+        "name-servers": {
+            "addresses": [
+                "1.1.1.1"
+            ],
+            "dhcp-interfaces": [
+                "eth2"
+            ]
+        },
+        "netflow": {
+            "engine-id": 10,
+            "interfaces": [
+                "br0"
+            ],
+            "sampling-rate": 1000,
+            "servers": [
+                {
+                    "address": "192.168.240.101",
+                    "port": 2055
+                }
+            ],
+            "version": "9"
+        },
+        "sflow": {
+            "agent": {
+                "address": "192.168.1.1",
+                "interface": "eth3"
+            },
+            "interfaces": [
+                "br0"
+            ],
+            "sample-egress": false,
+            "sampling-rate": 1000,
+            "servers": [
+                {
+                    "address": "192.168.240.101",
+                    "port": 6343
+                }
+            ]
+        },
+        "syslog": {
+            "local": [
+                {
+                    "facility": "daemon",
+                    "severity": "info"
+                }
+            ],
+            "remote-hosts": [
+                {
+                    "address": "192.168.240.101",
+                    "facility": "daemon",
+                    "port": 514,
+                    "protocol": "udp",
+                    "severity": "info"
+                }
+            ]
+        }
+    }
+}

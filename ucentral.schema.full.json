@@ -932,6 +932,7 @@
                             "bridge",
                             "loopback",
                             "pppoe",
+                            "vti",
                             "dummy"
                         ],
                         "default": "ethernet"
@@ -1186,6 +1187,28 @@
                             "user-name",
                             "password"
                         ]
+                    },
+                    "vti": {
+                        "description": "VTI interface configuration.",
+                        "type": "object",
+                        "properties": {
+                            "addressing": {
+                                "description": "Address assignment method.",
+                                "type": "string",
+                                "enum": [
+                                    "static",
+                                    "none"
+                                ]
+                            },
+                            "address": {
+                                "description": "IPv4 addresses in CIDR notation.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "format": "uc-cidr4"
+                                }
+                            }
+                        }
                     },
                     "ipv4": {
                         "description": "IPv4 interface configuration.",
@@ -4541,10 +4564,18 @@
                                                     }
                                                 }
                                             },
+                                            "bind": {
+                                                "description": "Vti interface to bind for this connection.",
+                                                "type": "string"
+                                            },
                                             "local-address": {
                                                 "description": "Device IP address accepting IPsec connection, mutually exclusive with dhcp-interface.",
                                                 "type": "string",
                                                 "format": "ipv4"
+                                            },
+                                            "dhcp-interface": {
+                                                "description": "DHCP interface accepting IPsec connection, mutually exclusive with local-address",
+                                                "type": "string"
                                             },
                                             "remote-address": {
                                                 "description": "Remote peer IP address.",
@@ -4573,21 +4604,21 @@
                                                 ],
                                                 "default": "none"
                                             },
-                                            "dhcp-interface": {
-                                                "description": "DHCP interface accepting IPsec connection, mutually exclusive with local-address",
-                                                "type": "string"
-                                            },
                                             "pool": {
                                                 "description": "Name of the IP address pool to assign to clients connecting to this peer.",
                                                 "type": "string"
                                             }
                                         }
-                                    }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "ike-group",
+                                        "esp-group",
+                                        "bind"
+                                    ]
                                 }
                             },
                             "required": [
-                                "ike-group",
-                                "esp-group",
                                 "pools",
                                 "connections"
                             ]

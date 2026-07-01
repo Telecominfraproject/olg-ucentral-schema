@@ -1118,6 +1118,25 @@
                 "password"
             ]
         },
+        "interface.vti": {
+            "type": "object",
+            "properties": {
+                "addressing": {
+                    "type": "string",
+                    "enum": [
+                        "static",
+                        "none"
+                    ]
+                },
+                "address": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uc-cidr4"
+                    }
+                }
+            }
+        },
         "interface": {
             "type": "object",
             "properties": {
@@ -1131,6 +1150,7 @@
                         "bridge",
                         "loopback",
                         "pppoe",
+                        "vti",
                         "dummy"
                     ],
                     "default": "ethernet"
@@ -1171,6 +1191,9 @@
                 },
                 "pppoe": {
                     "$ref": "#/$defs/interface.pppoe"
+                },
+                "vti": {
+                    "$ref": "#/$defs/interface.vti"
                 },
                 "ipv4": {
                     "$ref": "#/$defs/interface.ipv4"
@@ -4219,9 +4242,15 @@
                                             }
                                         }
                                     },
+                                    "bind": {
+                                        "type": "string"
+                                    },
                                     "local-address": {
                                         "type": "string",
                                         "format": "ipv4"
+                                    },
+                                    "dhcp-interface": {
+                                        "type": "string"
                                     },
                                     "remote-address": {
                                         "type": "string",
@@ -4245,19 +4274,20 @@
                                         ],
                                         "default": "none"
                                     },
-                                    "dhcp-interface": {
-                                        "type": "string"
-                                    },
                                     "pool": {
                                         "type": "string"
                                     }
                                 }
-                            }
+                            },
+                            "required": [
+                                "name",
+                                "ike-group",
+                                "esp-group",
+                                "bind"
+                            ]
                         }
                     },
                     "required": [
-                        "ike-group",
-                        "esp-group",
                         "pools",
                         "connections"
                     ]

@@ -1,0 +1,58 @@
+{
+	"uuid": 1750636806,
+	"interfaces": [
+		{
+			"name": "eth0",
+			"role": "upstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.240.30/24"
+				],
+				"gateway": "192.168.240.254"
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		},
+		{
+			"name": "eth1",
+			"role": "downstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.70.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		}
+	],
+	"nat": {
+		"source-ipv4": [
+			{
+				"rule-number": 10,
+				"outbound-interface": "eth0",
+				"source": {
+					"address": "192.168.70.0/24"
+				},
+				"translation": {
+					"address": "masquerade"
+				}
+			},
+			{
+				"rule-number": 20,
+				"outbound-interface": "eth0",
+				"protocol": "tcp",
+				"source": {
+					"address": "192.168.70.10",
+					"port": "1024-65535"
+				},
+				"translation": {
+					"address": "192.168.240.40"
+				}
+			}
+		]
+	}
+}

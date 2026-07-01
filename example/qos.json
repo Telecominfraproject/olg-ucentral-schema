@@ -1,0 +1,89 @@
+{
+	"uuid": 1750636808,
+	"interfaces": [
+		{
+			"name": "eth0",
+			"role": "upstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.240.30/24"
+				],
+				"gateway": "192.168.240.254"
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		},
+		{
+			"name": "eth1",
+			"role": "downstream",
+			"ipv4": {
+				"addressing": "static",
+				"address": [
+					"192.168.90.1/24"
+				]
+			},
+			"ipv6": {
+				"addressing": "none"
+			}
+		}
+	],
+	"qos": {
+		"shaper": [
+			{
+				"name": "wan-upload",
+				"address-family": "ipv4",
+				"direction": "upload",
+				"ingress": [
+					"eth1"
+				],
+				"egress": [
+					"eth0"
+				],
+				"classes": [
+					{
+						"id": 10,
+						"bandwidth": "40%",
+						"ceiling": "80%",
+						"burst": "15kb",
+						"priority": 1,
+						"queue-type": "fq-codel",
+						"match": [
+							{
+								"name": "voip",
+								"source": {
+									"address": "192.168.90.0/24"
+								},
+								"protocol": "udp",
+								"inbound-interface": "eth1"
+							}
+						]
+					},
+					{
+						"id": 20,
+						"bandwidth": "30%",
+						"ceiling": "60%",
+						"priority": 5,
+						"queue-type": "fq-codel",
+						"match": [
+							{
+								"name": "web",
+								"destination": {
+									"port": 443
+								},
+								"protocol": "tcp",
+								"inbound-interface": "eth1"
+							}
+						]
+					}
+				],
+				"default": {
+					"bandwidth": "20%",
+					"ceiling": "50%",
+					"queue-type": "fq-codel"
+				}
+			}
+		]
+	}
+}
