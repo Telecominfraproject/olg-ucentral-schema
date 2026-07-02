@@ -90,6 +90,9 @@ policy {
     {% endfor %}
     {% if (qos && length(qos.shaper)): %}
     {% for (let s in qos.shaper): %}
+        {% if (s.direction == "download"): %}
+            {% continue; %}
+        {% endif %}
         {% if (s.address_family == "ipv4"): %}
     route {{ s.name }} {
         {% elif (s.address_family == "ipv6"): %}
@@ -102,7 +105,7 @@ policy {
 
         {% for (let c in s.classes): %}
             {% for (let m in c.match): %}
-                {% m.serial = "match_" + match_c; m.mark = match_c; match_c++; %}
+                {% m.serial = "match_up_" + match_c; m.mark = match_c; match_c++; %}
         rule {{ m.mark }} {
                 {% if (m.destination): %}
             destination {

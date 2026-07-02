@@ -78,7 +78,6 @@ properties:
                       enum: 
                         - tcp
                         - udp
-                        - tcp_udp
                         - icmp
                         - all
                     inbound-interface:

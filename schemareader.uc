@@ -8855,8 +8855,8 @@ function instantiateQos(location, value, errors) {
 															if (type(value) != "string")
 																push(errors, [ location, "must be of type string" ]);
 
-															if (!(value in [ "tcp", "udp", "tcp_udp", "icmp", "all" ]))
-																push(errors, [ location, "must be one of \"tcp\", \"udp\", \"tcp_udp\", \"icmp\" or \"all\"" ]);
+															if (!(value in [ "tcp", "udp", "icmp", "all" ]))
+																push(errors, [ location, "must be one of \"tcp\", \"udp\", \"icmp\" or \"all\"" ]);
 
 															return value;
 														}

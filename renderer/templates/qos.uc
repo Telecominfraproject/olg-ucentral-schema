@@ -17,11 +17,43 @@ qos {
         shaper {{ shaper_map[s.name] }} {
         {% for (let c in s.classes): %}
             class {{ c.id }} {
-            {% for (let m in c.match): %}
+            {% if (s.direction == "upload"): %}
+                {% for (let m in c.match): %}
                 match {{ m.serial }} {
                     mark {{ m.mark }}
                 }
-            {% endfor %}
+                {% endfor %}
+            {% elif (s.direction == "download"): %}
+                {% for (let m in c.match): %}
+                match match_down_{{ match_c++ }} {
+                    ip {
+                    {% if (m.source): %}
+                        source {
+                        {% if (m.source.address): %}
+                            address {{ m.source.address }}
+                        {% endif %}
+                        {% if (m.source.port): %}
+                            port {{ m.source.port }}
+                        {% endif %}
+                        }
+                    {% endif %}
+                    {% if (m.destination): %}
+                        destination {
+                        {% if (m.destination.address): %}
+                            address {{ m.destination.address }}
+                        {% endif %}
+                        {% if (m.destination.port): %}
+                            port {{ m.destination.port }}
+                        {% endif %}
+                        }
+                    {% endif %}
+                    {% if (m.protocol && m.protocol != "all"): %}
+                        protocol {{ m.protocol }}
+                    {% endif %}
+                    }
+                }
+                {% endfor %}
+            {% endif %}
                 bandwidth {{ c.bandwidth }}
                 ceiling {{ c.ceiling }}
                 burst {{ c.burst }}
