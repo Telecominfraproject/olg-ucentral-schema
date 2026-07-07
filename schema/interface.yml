@@ -47,8 +47,6 @@ properties:
     $ref: https://ucentral.io/schema/v1/interface/bridge/
   pppoe:
     $ref: https://ucentral.io/schema/v1/interface/pppoe/
-  vti:
-    $ref: https://ucentral.io/schema/v1/interface/vti/
   ipv4:
     $ref: https://ucentral.io/schema/v1/interface/ipv4/
   ipv6:

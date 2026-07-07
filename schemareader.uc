@@ -3136,61 +3136,6 @@ function instantiateInterfacePppoe(location, value, errors) {
 	return value;
 }
 
-function instantiateInterfaceVti(location, value, errors) {
-	if (type(value) == "object") {
-		let obj = {};
-
-		function parseAddressing(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			if (!(value in [ "static", "none" ]))
-				push(errors, [ location, "must be one of \"static\" or \"none\"" ]);
-
-			return value;
-		}
-
-		if (exists(value, "addressing")) {
-			obj.addressing = parseAddressing(location + "/addressing", value["addressing"], errors);
-		}
-
-		function parseAddress(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) == "string") {
-						if (!matchUcCidr4(value))
-							push(errors, [ location, "must be a valid IPv4 CIDR" ]);
-
-					}
-
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "address")) {
-			obj.address = parseAddress(location + "/address", value["address"], errors);
-		}
-
-		return obj;
-	}
-
-	if (type(value) != "object")
-		push(errors, [ location, "must be of type object" ]);
-
-	return value;
-}
-
 function instantiateInterface(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
@@ -3313,10 +3258,6 @@ function instantiateInterface(location, value, errors) {
 
 		if (exists(value, "pppoe")) {
 			obj.pppoe = instantiateInterfacePppoe(location + "/pppoe", value["pppoe"], errors);
-		}
-
-		if (exists(value, "vti")) {
-			obj.vti = instantiateInterfaceVti(location + "/vti", value["vti"], errors);
 		}
 
 		if (exists(value, "ipv4")) {

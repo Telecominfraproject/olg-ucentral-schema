@@ -1118,25 +1118,6 @@
                 "password"
             ]
         },
-        "interface.vti": {
-            "type": "object",
-            "properties": {
-                "addressing": {
-                    "type": "string",
-                    "enum": [
-                        "static",
-                        "none"
-                    ]
-                },
-                "address": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "format": "uc-cidr4"
-                    }
-                }
-            }
-        },
         "interface": {
             "type": "object",
             "properties": {
@@ -1191,9 +1172,6 @@
                 },
                 "pppoe": {
                     "$ref": "#/$defs/interface.pppoe"
-                },
-                "vti": {
-                    "$ref": "#/$defs/interface.vti"
                 },
                 "ipv4": {
                     "$ref": "#/$defs/interface.ipv4"

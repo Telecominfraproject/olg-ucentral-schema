@@ -576,9 +576,31 @@
               "vlan2",
               "vlan3"
             ],
+            "direction": "upload",
             "name": "upload-shaper"
           },
           {
+            "classes": [
+              {
+                "bandwidth": "100mbit",
+                "burst": "15kb",
+                "ceiling": "1gbit",
+                "id": 10,
+                "match": [
+                  {
+                    "protocol": "tcp_udp",
+                    "source": {
+                      "port": 5555,
+                      "address": "8.8.8.8/32"
+                    },
+                    "destination": {
+                      "address": "10.0.0.1/32"
+                    }
+                  }
+                ],
+                "priority": 10
+              }
+            ],
             "default": {
               "bandwidth": "100mbit",
               "burst": "15kb",
@@ -593,6 +615,7 @@
               "eth2",
               "eth3"
             ],
+            "direction": "download",
             "name": "download-shaper"
           }
         ]

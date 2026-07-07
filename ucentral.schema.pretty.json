@@ -1222,28 +1222,6 @@
                 "password"
             ]
         },
-        "interface.vti": {
-            "description": "VTI interface configuration.",
-            "type": "object",
-            "properties": {
-                "addressing": {
-                    "description": "Address assignment method.",
-                    "type": "string",
-                    "enum": [
-                        "static",
-                        "none"
-                    ]
-                },
-                "address": {
-                    "description": "IPv4 addresses in CIDR notation.",
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "format": "uc-cidr4"
-                    }
-                }
-            }
-        },
         "interface": {
             "description": "Logical network interface configuration.",
             "type": "object",
@@ -1306,9 +1284,6 @@
                 },
                 "pppoe": {
                     "$ref": "#/$defs/interface.pppoe"
-                },
-                "vti": {
-                    "$ref": "#/$defs/interface.vti"
                 },
                 "ipv4": {
                     "$ref": "#/$defs/interface.ipv4"
