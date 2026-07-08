@@ -39,6 +39,14 @@ properties:
     $ref: 'https://ucentral.io/schema/v1/service/wireguard-overlay/'
   captive:
     $ref: 'https://ucentral.io/schema/v1/service/captive/'
+  captive-profiles:
+    description:
+      A list of named captive portal profiles that interfaces may select via
+      their "captive" field. Independent of the device-wide services.captive
+      object.
+    type: array
+    items:
+      $ref: "https://ucentral.io/schema/v1/service/captive-profile/"
   gps:
     $ref: 'https://ucentral.io/schema/v1/service/gps/'
   dhcp-relay:

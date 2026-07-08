@@ -2396,6 +2396,12 @@
                         ]
                     }
                 },
+                "captive": {
+                    "type": "string",
+                    "examples": [
+                        "guest-public"
+                    ]
+                },
                 "vlan-awareness": {
                     "type": "object",
                     "properties": {
@@ -3241,6 +3247,28 @@
                 }
             }
         },
+        "service.captive-profile": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/service.captive"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "name"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "examples": [
+                                "guest-public",
+                                "guest-staff"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
         "service.gps": {
             "type": "object",
             "properties": {
@@ -3737,6 +3765,12 @@
                 },
                 "captive": {
                     "$ref": "#/$defs/service.captive"
+                },
+                "captive-profiles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/service.captive-profile"
+                    }
                 },
                 "gps": {
                     "$ref": "#/$defs/service.gps"

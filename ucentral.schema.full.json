@@ -891,6 +891,13 @@
                             ]
                         }
                     },
+                    "captive": {
+                        "description": "Name of the captive portal profile (from services.captive-profiles) applied to unauthenticated clients on this interface. If omitted, this interface has no captive portal. Has no effect if no matching profile is present in services.captive-profiles.\n",
+                        "type": "string",
+                        "examples": [
+                            "guest-public"
+                        ]
+                    },
                     "vlan-awareness": {
                         "description": "Setup additional VLANs inside the bridge",
                         "type": "object",
@@ -4274,6 +4281,295 @@
                             }
                         }
                     ]
+                },
+                "captive-profiles": {
+                    "description": "A list of named captive portal profiles that interfaces may select via their \"captive\" field. Independent of the device-wide services.captive object.",
+                    "type": "array",
+                    "items": {
+                        "description": "A named captive portal profile. Bound to one or more interfaces through the interface \"captive\" field. Carries the same configuration as services.captive plus a name used as the reference key.",
+                        "allOf": [
+                            {
+                                "allOf": [
+                                    {
+                                        "oneOf": [
+                                            {
+                                                "description": "This section can be used to setup a captive portal on the AP with a click-to-continue splash page.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "auth-mode": {
+                                                        "description": "This field must be set to 'click-to-continue'",
+                                                        "type": "string",
+                                                        "const": "click-to-continue"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "description": "This section can be used to setup a captive portal on the AP with a click-to-continue splash page.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "auth-mode": {
+                                                        "description": "This field must be set to 'radius'",
+                                                        "type": "string",
+                                                        "const": "radius"
+                                                    },
+                                                    "auth-server": {
+                                                        "description": "The URI of our Radius Authentication server.",
+                                                        "type": "string",
+                                                        "format": "uc-host",
+                                                        "examples": [
+                                                            "192.168.1.10"
+                                                        ]
+                                                    },
+                                                    "auth-port": {
+                                                        "description": "The network port of our Radius Authentication server.",
+                                                        "type": "integer",
+                                                        "maximum": 65535,
+                                                        "minimum": 1024,
+                                                        "default": 1812
+                                                    },
+                                                    "auth-secret": {
+                                                        "description": "The shared Radius authentication Authentication secret.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "secret"
+                                                        ]
+                                                    },
+                                                    "acct-server": {
+                                                        "description": "The URI of our Radius Authentication server.",
+                                                        "type": "string",
+                                                        "format": "uc-host",
+                                                        "examples": [
+                                                            "192.168.1.10"
+                                                        ]
+                                                    },
+                                                    "acct-port": {
+                                                        "description": "The network port of our Radius Authentication server.",
+                                                        "type": "integer",
+                                                        "maximum": 65535,
+                                                        "minimum": 1024,
+                                                        "default": 1812
+                                                    },
+                                                    "acct-secret": {
+                                                        "description": "The shared Radius authentication Authentication secret.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "secret"
+                                                        ]
+                                                    },
+                                                    "acct-interval": {
+                                                        "description": "The timeout used for interim messages.",
+                                                        "type": "integer",
+                                                        "default": 600
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "description": "This section can be used to setup a captive portal on the AP with a credentials splash page.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "auth-mode": {
+                                                        "description": "This field must be set to 'credentials'",
+                                                        "type": "string",
+                                                        "const": "credentials"
+                                                    },
+                                                    "credentials": {
+                                                        "description": "The list of local username/password pairs that can be used to login.",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "username": {
+                                                                    "type": "string"
+                                                                },
+                                                                "password": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "description": "This section can be used to setup a captive portal on the AP with a remote UAM server.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "auth-mode": {
+                                                        "description": "This field must be set to 'uam'",
+                                                        "type": "string",
+                                                        "const": "uam"
+                                                    },
+                                                    "uam-port": {
+                                                        "description": "The local UAM port.",
+                                                        "type": "integer",
+                                                        "maximum": 65535,
+                                                        "minimum": 1024,
+                                                        "default": 3990
+                                                    },
+                                                    "uam-secret": {
+                                                        "description": "The pre-shared UAM secret.",
+                                                        "type": "string"
+                                                    },
+                                                    "uam-server": {
+                                                        "description": "The fqdn of the UAM server.",
+                                                        "type": "string"
+                                                    },
+                                                    "nasid": {
+                                                        "description": "The NASID that gets sent to the UAM server.",
+                                                        "type": "string"
+                                                    },
+                                                    "nasmac": {
+                                                        "description": "The NAS MAC that gets send to the UAM server. The devices serial is used if this value is not provided.",
+                                                        "type": "string"
+                                                    },
+                                                    "auth-server": {
+                                                        "description": "The URI of our Radius Authentication server.",
+                                                        "type": "string",
+                                                        "format": "uc-host",
+                                                        "examples": [
+                                                            "192.168.1.10"
+                                                        ]
+                                                    },
+                                                    "auth-port": {
+                                                        "description": "The network port of our Radius Authentication server.",
+                                                        "type": "integer",
+                                                        "maximum": 65535,
+                                                        "minimum": 1024,
+                                                        "default": 1812
+                                                    },
+                                                    "auth-secret": {
+                                                        "description": "The shared Radius authentication Authentication secret.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "secret"
+                                                        ]
+                                                    },
+                                                    "acct-server": {
+                                                        "description": "The URI of our Radius Authentication server.",
+                                                        "type": "string",
+                                                        "format": "uc-host",
+                                                        "examples": [
+                                                            "192.168.1.10"
+                                                        ]
+                                                    },
+                                                    "acct-port": {
+                                                        "description": "The network port of our Radius Authentication server.",
+                                                        "type": "integer",
+                                                        "maximum": 65535,
+                                                        "minimum": 1024,
+                                                        "default": 1812
+                                                    },
+                                                    "acct-secret": {
+                                                        "description": "The shared Radius authentication Authentication secret.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "secret"
+                                                        ]
+                                                    },
+                                                    "acct-interval": {
+                                                        "description": "The timeout used for interim messages.",
+                                                        "type": "integer",
+                                                        "default": 600
+                                                    },
+                                                    "ssid": {
+                                                        "description": "The name of the SSID that shall be sent as part of the UAM redirect.",
+                                                        "type": "string"
+                                                    },
+                                                    "mac-format": {
+                                                        "description": "Defines the format used to send the MAC address inside AAA frames.",
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "aabbccddeeff",
+                                                            "aa-bb-cc-dd-ee-ff",
+                                                            "aa:bb:cc:dd:ee:ff",
+                                                            "AABBCCDDEEFF",
+                                                            "AA:BB:CC:DD:EE:FF",
+                                                            "AA-BB-CC-DD-EE-FF"
+                                                        ]
+                                                    },
+                                                    "final-redirect-url": {
+                                                        "description": "Define the behaviour off the final redirect. Default will honour \"userurl\" and fallback to \"local\". Alternatively it is possible to force a redirect to the \"UAM\" or \"local\" URL.",
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "default",
+                                                            "uam"
+                                                        ]
+                                                    },
+                                                    "mac-auth": {
+                                                        "description": "Try to authenticate new clients using macauth.",
+                                                        "type": "boolean",
+                                                        "default": false
+                                                    },
+                                                    "radius-gw-proxy": {
+                                                        "description": "Tunnel all radius traffic via the radius-gw-proxy.",
+                                                        "type": "boolean",
+                                                        "default": false
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "walled-garden-fqdn": {
+                                                "description": "The list of FQDNs that a non-authenticated client is allowed to connect to.",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "walled-garden-ipaddr": {
+                                                "description": "The list of IP addresses that a non-authenticated client is allowed to connect to.",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "format": "uc-ip"
+                                                }
+                                            },
+                                            "web-root": {
+                                                "description": "A base64 encoded TAR file with the custom web-root.",
+                                                "type": "string",
+                                                "format": "uc-base64"
+                                            },
+                                            "web-root-url": {
+                                                "description": "A URL where the webroot should be downloaded from.",
+                                                "type": "string"
+                                            },
+                                            "web-root-checksum": {
+                                                "description": "The SHA256 of the file located at web-root-url.",
+                                                "type": "string"
+                                            },
+                                            "idle-timeout": {
+                                                "description": "How long may a client be idle before getting removed.",
+                                                "type": "integer",
+                                                "default": 600
+                                            },
+                                            "session-timeout": {
+                                                "description": "How long may a client be idle before getting removed.",
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Unique name of this captive profile, referenced by an interface's \"captive\" field.",
+                                        "type": "string",
+                                        "examples": [
+                                            "guest-public",
+                                            "guest-staff"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
                 },
                 "gps": {
                     "description": "This section can be used to configure a GPS dongle",

@@ -47,6 +47,15 @@ properties:
       examples:
       - ssh
       - lldp
+  captive:
+    description: >
+      Name of the captive portal profile (from services.captive-profiles)
+      applied to unauthenticated clients on this interface. If omitted, this
+      interface has no captive portal. Has no effect if no matching profile is
+      present in services.captive-profiles.
+    type: string
+    examples:
+    - guest-public
   vlan-awareness:
     description:
       Setup additional VLANs inside the bridge

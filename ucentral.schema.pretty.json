@@ -2736,6 +2736,13 @@
                         ]
                     }
                 },
+                "captive": {
+                    "description": "Name of the captive portal profile (from services.captive-profiles) applied to unauthenticated clients on this interface. If omitted, this interface has no captive portal. Has no effect if no matching profile is present in services.captive-profiles.\n",
+                    "type": "string",
+                    "examples": [
+                        "guest-public"
+                    ]
+                },
                 "vlan-awareness": {
                     "description": "Setup additional VLANs inside the bridge",
                     "type": "object",
@@ -3718,6 +3725,30 @@
                 }
             }
         },
+        "service.captive-profile": {
+            "description": "A named captive portal profile. Bound to one or more interfaces through the interface \"captive\" field. Carries the same configuration as services.captive plus a name used as the reference key.",
+            "allOf": [
+                {
+                    "$ref": "#/$defs/service.captive"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "name"
+                    ],
+                    "properties": {
+                        "name": {
+                            "description": "Unique name of this captive profile, referenced by an interface's \"captive\" field.",
+                            "type": "string",
+                            "examples": [
+                                "guest-public",
+                                "guest-staff"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
         "service.gps": {
             "description": "This section can be used to configure a GPS dongle",
             "type": "object",
@@ -4305,6 +4336,13 @@
                 },
                 "captive": {
                     "$ref": "#/$defs/service.captive"
+                },
+                "captive-profiles": {
+                    "description": "A list of named captive portal profiles that interfaces may select via their \"captive\" field. Independent of the device-wide services.captive object.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/service.captive-profile"
+                    }
                 },
                 "gps": {
                     "$ref": "#/$defs/service.gps"

@@ -6718,6 +6718,17 @@ function instantiateInterface(location, value, errors) {
 			obj.services = parseServices(location + "/services", value["services"], errors);
 		}
 
+		function parseCaptive(location, value, errors) {
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
+
+			return value;
+		}
+
+		if (exists(value, "captive")) {
+			obj.captive = parseCaptive(location + "/captive", value["captive"], errors);
+		}
+
 		function parseVlanAwareness(location, value, errors) {
 			if (type(value) == "object") {
 				let obj = {};
@@ -9175,6 +9186,83 @@ function instantiateServiceWireguardOverlay(location, value, errors) {
 	return value;
 }
 
+function instantiateServiceCaptiveProfile(location, value, errors) {
+	function parseVariant0(location, value, errors) {
+		value = instantiateServiceCaptive(location, value, errors);
+
+		return value;
+	}
+
+	function parseVariant1(location, value, errors) {
+		if (type(value) == "object") {
+			let obj = {};
+
+			function parseName(location, value, errors) {
+				if (type(value) != "string")
+					push(errors, [ location, "must be of type string" ]);
+
+				return value;
+			}
+
+			if (exists(value, "name")) {
+				obj.name = parseName(location + "/name", value["name"], errors);
+			}
+			else {
+				push(errors, [ location, "is required" ]);
+			}
+
+			return obj;
+		}
+
+		if (type(value) != "object")
+			push(errors, [ location, "must be of type object" ]);
+
+		return value;
+	}
+
+	let success = 0, tryval, tryerr, vvalue = null, verrors = [];
+
+	tryerr = [];
+	tryval = parseVariant0(location, value, tryerr);
+	if (!length(tryerr)) {
+		if (type(vvalue) == "object" && type(tryval) == "object")
+			vvalue = { ...vvalue, ...tryval };
+		else
+			vvalue = tryval;
+
+		success++;
+	}
+	else {
+		push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+	}
+
+	tryerr = [];
+	tryval = parseVariant1(location, value, tryerr);
+	if (!length(tryerr)) {
+		if (type(vvalue) == "object" && type(tryval) == "object")
+			vvalue = { ...vvalue, ...tryval };
+		else
+			vvalue = tryval;
+
+		success++;
+	}
+	else {
+		push(verrors, join(" and\n", map(tryerr, err => "\t - " + err[1])));
+	}
+
+	if (success != 2) {
+		if (length(verrors))
+			push(errors, [ location, "must match all of the following constraints:\n" + join("\n- or -\n", verrors) ]);
+		else
+			push(errors, [ location, "must match only one variant" ]);
+		return null;
+	}
+
+	value = vvalue;
+
+	return value;
+}
+
 function instantiateServiceGps(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
@@ -10576,6 +10664,21 @@ function instantiateService(location, value, errors) {
 
 		if (exists(value, "captive")) {
 			obj.captive = instantiateServiceCaptive(location + "/captive", value["captive"], errors);
+		}
+
+		function parseCaptiveProfiles(location, value, errors) {
+			if (type(value) == "array") {
+				return map(value, (item, i) => instantiateServiceCaptiveProfile(location + "/" + i, item, errors));
+			}
+
+			if (type(value) != "array")
+				push(errors, [ location, "must be of type array" ]);
+
+			return value;
+		}
+
+		if (exists(value, "captive-profiles")) {
+			obj.captive_profiles = parseCaptiveProfiles(location + "/captive-profiles", value["captive-profiles"], errors);
 		}
 
 		if (exists(value, "gps")) {

@@ -1,0 +1,18 @@
+description:
+  A named captive portal profile. Bound to one or more interfaces through the
+  interface "captive" field. Carries the same configuration as services.captive
+  plus a name used as the reference key.
+allOf:
+  - $ref: "https://ucentral.io/schema/v1/service/captive/"
+  - type: object
+    required:
+      - name
+    properties:
+      name:
+        description:
+          Unique name of this captive profile, referenced by an interface's
+          "captive" field.
+        type: string
+        examples:
+          - guest-public
+          - guest-staff
