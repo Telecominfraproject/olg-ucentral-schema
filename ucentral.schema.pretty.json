@@ -231,6 +231,33 @@
                             "$ref": "#/$defs/globals.wireless-multimedia.profile"
                         }
                     ]
+                },
+                "dhcp-defaults": {
+                    "description": "Site-wide fallback values for DHCP server configuration. Any interface with an ipv4.dhcp block that omits one of these fields inherits the value from here. Renderers must resolve these fallbacks against the raw configuration, not the schemareader output, because the per-interface ipv4.dhcp.lease-time carries its own default that the reader injects when omitted. The resolution order for a given interface is therefore the per-interface value, then this site-wide default, then the per-interface schema default. No default is set here so an omitted site-wide value stays genuinely absent rather than masking the per-interface default.",
+                    "type": "object",
+                    "properties": {
+                        "lease-time": {
+                            "description": "How long the lease is valid before a RENEW must be issued.",
+                            "type": "string",
+                            "format": "uc-timeout"
+                        },
+                        "use-dns": {
+                            "description": "The DNS server sent to clients as DHCP option 6.",
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "ipv4"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "format": "ipv4"
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         },

@@ -211,6 +211,30 @@
                             "$ref": "#/$defs/globals.wireless-multimedia.profile"
                         }
                     ]
+                },
+                "dhcp-defaults": {
+                    "type": "object",
+                    "properties": {
+                        "lease-time": {
+                            "type": "string",
+                            "format": "uc-timeout"
+                        },
+                        "use-dns": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "ipv4"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "format": "ipv4"
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         },
