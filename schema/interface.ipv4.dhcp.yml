@@ -1,19 +1,26 @@
 description:
   This section describes the DHCP server configuration
 type: object
+required:
+  - lease-start
+  - lease-end
 properties:
-  lease-first:
+  lease-start:
     description:
-      The last octet of the first IPv4 address in this DHCP pool.
-    type: integer
+      The first IPv4 address in the DHCP pool (inclusive).
+    type: string
+    format: ipv4
     examples:
-    - 10
-  lease-count:
+    - "192.168.1.10"
+    - "172.20.4.1"
+  lease-end:
     description:
-      The number of IPv4 addresses inside the DHCP pool.
-    type: integer
+      The last IPv4 address in the DHCP pool (inclusive).
+    type: string
+    format: ipv4
     examples:
-    - 100
+    - "192.168.1.253"
+    - "172.20.15.254"
   lease-time:
     description:
       How long the lease is valid before a RENEW must be issued.

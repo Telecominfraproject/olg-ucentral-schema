@@ -1633,26 +1633,44 @@ function instantiateInterfaceIpv4Dhcp(location, value, errors) {
 	if (type(value) == "object") {
 		let obj = {};
 
-		function parseLeaseFirst(location, value, errors) {
-			if (type(value) != "int")
-				push(errors, [ location, "must be of type integer" ]);
+		function parseLeaseStart(location, value, errors) {
+			if (type(value) == "string") {
+				if (!matchIpv4(value))
+					push(errors, [ location, "must be a valid IPv4 address" ]);
+
+			}
+
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
 
 			return value;
 		}
 
-		if (exists(value, "lease-first")) {
-			obj.lease_first = parseLeaseFirst(location + "/lease-first", value["lease-first"], errors);
+		if (exists(value, "lease-start")) {
+			obj.lease_start = parseLeaseStart(location + "/lease-start", value["lease-start"], errors);
+		}
+		else {
+			push(errors, [ location, "is required" ]);
 		}
 
-		function parseLeaseCount(location, value, errors) {
-			if (type(value) != "int")
-				push(errors, [ location, "must be of type integer" ]);
+		function parseLeaseEnd(location, value, errors) {
+			if (type(value) == "string") {
+				if (!matchIpv4(value))
+					push(errors, [ location, "must be a valid IPv4 address" ]);
+
+			}
+
+			if (type(value) != "string")
+				push(errors, [ location, "must be of type string" ]);
 
 			return value;
 		}
 
-		if (exists(value, "lease-count")) {
-			obj.lease_count = parseLeaseCount(location + "/lease-count", value["lease-count"], errors);
+		if (exists(value, "lease-end")) {
+			obj.lease_end = parseLeaseEnd(location + "/lease-end", value["lease-end"], errors);
+		}
+		else {
+			push(errors, [ location, "is required" ]);
 		}
 
 		function parseLeaseTime(location, value, errors) {

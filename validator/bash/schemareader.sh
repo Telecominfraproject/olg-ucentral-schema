@@ -858,19 +858,27 @@ cat > "$schema_file" <<'__SCHEMA__'
 		"interface.ipv4.dhcp": {
 			"description": "This section describes the DHCP server configuration",
 			"type": "object",
+			"required": [
+				"lease-start",
+				"lease-end"
+			],
 			"properties": {
-				"lease-first": {
-					"description": "The last octet of the first IPv4 address in this DHCP pool.",
-					"type": "integer",
+				"lease-start": {
+					"description": "The first IPv4 address in the DHCP pool (inclusive).",
+					"type": "string",
+					"format": "ipv4",
 					"examples": [
-						10
+						"192.168.1.10",
+						"172.20.4.1"
 					]
 				},
-				"lease-count": {
-					"description": "The number of IPv4 addresses inside the DHCP pool.",
-					"type": "integer",
+				"lease-end": {
+					"description": "The last IPv4 address in the DHCP pool (inclusive).",
+					"type": "string",
+					"format": "ipv4",
 					"examples": [
-						100
+						"192.168.1.253",
+						"172.20.15.254"
 					]
 				},
 				"lease-time": {

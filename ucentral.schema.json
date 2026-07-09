@@ -723,17 +723,25 @@
         },
         "interface.ipv4.dhcp": {
             "type": "object",
+            "required": [
+                "lease-start",
+                "lease-end"
+            ],
             "properties": {
-                "lease-first": {
-                    "type": "integer",
+                "lease-start": {
+                    "type": "string",
+                    "format": "ipv4",
                     "examples": [
-                        10
+                        "192.168.1.10",
+                        "172.20.4.1"
                     ]
                 },
-                "lease-count": {
-                    "type": "integer",
+                "lease-end": {
+                    "type": "string",
+                    "format": "ipv4",
                     "examples": [
-                        100
+                        "192.168.1.253",
+                        "172.20.15.254"
                     ]
                 },
                 "lease-time": {
