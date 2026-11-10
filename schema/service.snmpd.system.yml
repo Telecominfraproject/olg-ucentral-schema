@@ -1,0 +1,15 @@
+description: System information used by SNMP service.
+type: object
+properties:
+  sysContact:
+    description: Contact information.
+    type: string
+    pattern: ^[^\u0000-\u001f\u007f]{0,255}$
+  sysLocation:
+    description: Location information.
+    type: string
+    pattern: ^[^\u0000-\u001f\u007f]{0,255}$
+  sysName:
+    description: System name.
+    type: string
+    pattern: ^[^\u0000-\u001f\u007f]{0,255}$

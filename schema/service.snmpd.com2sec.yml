@@ -1,0 +1,7 @@
+description: Map an SNMPv1 or SNMPv2c community string to a security name..
+type: object
+properties:
+  public:
+    $ref: https://ucentral.io/schema/v1/service/snmpd/com2sec/public/
+  private:
+    $ref: https://ucentral.io/schema/v1/service/snmpd/com2sec/private/

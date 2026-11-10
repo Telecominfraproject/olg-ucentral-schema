@@ -1,0 +1,73 @@
+description: List of access types for SNMP.
+type: object
+properties:
+  public_access:
+    type: object
+    description: Configuration of public access.
+    properties:
+      context:
+        description: A collection of management information accessible by an SNMP entity.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      group:
+        description: Group related to the access.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      level:
+        description: Level of authorization.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      notify:
+        description: Specifies the view to be used for GET*, SET and TRAP/INFORM requests.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      prefix:
+        description: Specifies how CONTEXT should be matched against the context of the incoming request.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      read:
+        description: Specifies the view to be used for GET*, SET and TRAP/INFORM requests.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      version:
+        description: SNMP version.
+        type: string
+      write:
+        description: Specifies the view to be used for GET*, SET and TRAP/INFORM requests.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+  private_access:
+    type: object
+    description: Configuration of public access.
+    properties:
+      context:
+        description: A collection of management information accessible by an SNMP entity.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      group:
+        description: Group related to the access.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      level:
+        description: Level of authorization.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      notify:
+        description: Specifies the view to be used for GET*, SET and TRAP/INFORM requests.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      prefix:
+        description: Specifies how CONTEXT should be matched against the context of the incoming request.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      read:
+        description: Specifies the view to be used for GET*, SET and TRAP/INFORM requests.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$
+      version:
+        description: SNMP version.
+        type: string
+      write:
+        description: Specifies the view to be used for GET*, SET and TRAP/INFORM requests.
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,32}$

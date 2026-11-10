@@ -1,0 +1,28 @@
+type: object
+properties:
+  address:
+    description: Source IPv4 address or network.
+    type: string
+    anyOf:
+    - format: uc-fw-ipv4
+    - format: uc-fw-cidr4
+    - format: uc-fw-ip4range
+    examples:
+    - '!192.168.0.9'
+    - 10.28.3.0/24
+    - '!10.76.5.98-10.76.5.187'
+  port:
+    description: Source port or port range.
+    type:
+    - integer
+    - string
+    format: uc-portrange
+    examples:
+    - 80
+    - 1024-65535
+  mac-address:
+    type: string
+    format: uc-mac
+    example: 98:e7:9a:27:fe:49
+  group:
+    $ref: https://ucentral.io/schema/v1/firewall/ipv4-rulesets/rules/source/group/

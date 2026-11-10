@@ -1,0 +1,39 @@
+type: object
+properties:
+  name:
+    type: string
+    pattern: ^[A-Za-z0-9_-]{1,32}$
+  auth-protocol:
+    type: string
+    enum:
+    - SHA
+    - SHA-256
+    - SHA-512
+    default: SHA-256
+  auth-password:
+    type: string
+    minLength: 8
+    maxLength: 64
+    pattern: ^[^"\\]+$
+    description: At least 8 characters (net-snmp's minimum); no double quote or backslash (written into
+      snmpd.conf inside quotes).
+  privacy-protocol:
+    type: string
+    enum:
+    - AES
+    default: AES
+  privacy-password:
+    type: string
+    minLength: 8
+    maxLength: 64
+    pattern: ^[^"\\]+$
+    description: At least 8 characters (net-snmp's minimum); no double quote or backslash (written into
+      snmpd.conf inside quotes).
+  write:
+    description: Allow SET requests (rwuser). Default read-only.
+    type: boolean
+    default: false
+required:
+- name
+- auth-password
+- privacy-password

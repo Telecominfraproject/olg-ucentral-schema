@@ -1,0 +1,21 @@
+type: object
+properties:
+  address-family:
+    type: string
+    enum:
+    - ipv4-unicast
+    - ipv6-unicast
+    - ipv4-multicast
+    - ipv6-multicast
+  nexthop-self:
+    type: boolean
+    default: false
+  soft-reconfig:
+    type: boolean
+    default: false
+  default-originate:
+    description: Advertise default route to this neighbor.
+    type: boolean
+    default: false
+required:
+- address-family

@@ -1,0 +1,17 @@
+type: object
+properties:
+  name:
+    description: Group name for reference in IPv4 rules.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  members:
+    description: IPv4 addresses.
+    type: array
+    items:
+      type: string
+      anyOf:
+      - format: ipv4
+      - format: uc-ip4range
+required:
+- name
+- members

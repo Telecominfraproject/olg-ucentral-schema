@@ -1,0 +1,7 @@
+description: General options for SNMP service.
+type: object
+properties:
+  enabled:
+    description: Enable or disable the service
+    type: boolean
+    default: false

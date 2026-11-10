@@ -1,0 +1,37 @@
+type: object
+properties:
+  name:
+    description: Interface name.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]{0,11}$
+  area:
+    description: Area this interface belongs to.
+    type: string
+    pattern: ^([0-9]{1,3}(\.[0-9]{1,3}){3}|[0-9]{1,10})$
+  cost:
+    description: OSPF cost for this interface. Lower is preferred.
+    type: integer
+    minimum: 1
+    maximum: 65535
+  passive:
+    description: Advertise network but do not form adjacencies.
+    type: boolean
+    default: false
+  network-type:
+    description: OSPF network type. Affects DR election and hello behavior.
+    type: string
+    enum:
+    - broadcast
+    - point-to-point
+    - non-broadcast
+    - point-to-multipoint
+  priority:
+    description: Router priority for DR/BDR election. 0 prevents becoming DR.
+    type: integer
+    minimum: 0
+    maximum: 255
+    default: 1
+  authentication:
+    $ref: https://ucentral.io/schema/v1/routing/ospf/interfaces/authentication/
+required:
+- name

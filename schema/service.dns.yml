@@ -1,0 +1,25 @@
+description: DNS recursive server configuration.
+type: object
+properties:
+  domains:
+    description: Domain names for local resolution.
+    type: array
+    items:
+      type: string
+  forwarding-servers:
+    description: Upstream DNS servers for forwarding queries.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/service/dns/forwarding-servers/
+  allow-from:
+    description: Networks allowed to query this DNS server (CIDR notation).
+    type: array
+    items:
+      type: string
+      format: uc-cidr
+  listen-addresses:
+    description: IP addresses the DNS server listens.
+    type: array
+    items:
+      type: string
+      format: uc-ip

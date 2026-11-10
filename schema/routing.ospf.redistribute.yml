@@ -1,0 +1,19 @@
+description: Import routes from other sources into OSPF.
+type: object
+properties:
+  connected:
+    description: Redistribute directly connected networks.
+    type: boolean
+    default: false
+  static:
+    description: Redistribute static routes.
+    type: boolean
+    default: false
+  bgp:
+    description: Redistribute BGP routes.
+    type: boolean
+    default: false
+  rip:
+    description: Redistribute RIP routes.
+    type: boolean
+    default: false

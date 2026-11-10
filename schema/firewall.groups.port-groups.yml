@@ -1,0 +1,19 @@
+type: object
+properties:
+  name:
+    description: Group name for reference in rules.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  members:
+    description: Ports or port ranges.
+    type: array
+    items:
+      type:
+      - integer
+      - string
+      examples:
+      - 80
+      - 8080-8090
+required:
+- name
+- members

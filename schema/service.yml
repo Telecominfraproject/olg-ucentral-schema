@@ -1,0 +1,32 @@
+description: This section describes all of the services that may be present on the AP. Each service is
+  then referenced via its name inside an interface, ssid, ...
+type: object
+properties:
+  lldp:
+    $ref: https://ucentral.io/schema/v1/service/lldp/
+  ssh:
+    $ref: https://ucentral.io/schema/v1/service/ssh/
+  ntp:
+    $ref: https://ucentral.io/schema/v1/service/ntp/
+  log:
+    $ref: https://ucentral.io/schema/v1/service/log/
+  igmp:
+    $ref: https://ucentral.io/schema/v1/service/igmp/
+  quality-of-service:
+    $ref: https://ucentral.io/schema/v1/service/quality-of-service/
+  captive:
+    $ref: https://ucentral.io/schema/v1/service/captive/
+  dhcp-relay:
+    $ref: https://ucentral.io/schema/v1/service/dhcp-relay/
+  fingerprint:
+    $ref: https://ucentral.io/schema/v1/service/fingerprint/
+  snmpd:
+    $ref: https://ucentral.io/schema/v1/service/snmpd/
+  dns:
+    $ref: https://ucentral.io/schema/v1/service/dns/
+  mdns:
+    $ref: https://ucentral.io/schema/v1/service/mdns/
+  pppoe-server:
+    $ref: https://ucentral.io/schema/v1/service/pppoe-server/
+  traffic-shaping:
+    $ref: https://ucentral.io/schema/v1/service/traffic-shaping/

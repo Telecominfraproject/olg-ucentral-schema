@@ -1,0 +1,15 @@
+description: Set values of connection/packet properties
+type: object
+properties:
+  conn-mark:
+    type: integer
+    minimum: 1
+    maximum: 2147483647
+  mark:
+    type: integer
+    minimum: 1
+    maximum: 2147483647
+  dscp:
+    type: integer
+    minimum: 0
+    maximum: 63

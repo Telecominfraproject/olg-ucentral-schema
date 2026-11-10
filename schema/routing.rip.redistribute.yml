@@ -1,0 +1,15 @@
+description: Import routes from other sources into RIP.
+type: object
+properties:
+  connected:
+    type: boolean
+    default: false
+  static:
+    type: boolean
+    default: false
+  bgp:
+    type: boolean
+    default: false
+  ospf:
+    type: boolean
+    default: false

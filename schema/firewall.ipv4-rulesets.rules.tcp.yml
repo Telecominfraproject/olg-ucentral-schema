@@ -1,0 +1,4 @@
+type: object
+properties:
+  flags:
+    $ref: https://ucentral.io/schema/v1/firewall/ipv4-rulesets/rules/tcp/flags/

@@ -1,0 +1,19 @@
+description: MPLS Label Distribution Protocol, for L3VPN and pseudowires over an operator MPLS core.
+type: object
+properties:
+  router-id:
+    type: string
+    format: ipv4
+  interfaces:
+    type: array
+    items:
+      type: string
+  address-families:
+    type: array
+    items:
+      type: string
+      enum:
+      - ipv4
+      - ipv6
+required:
+- router-id

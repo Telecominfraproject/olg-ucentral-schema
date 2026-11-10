@@ -1,0 +1,19 @@
+description: Destination address/port to match.
+type: object
+properties:
+  prefix:
+    description: Destination IPv6 prefix.
+    type: string
+    format: uc-cidr6
+    example: 2001:db8:2::/64
+  port:
+    description: Destination port or port range.
+    type:
+    - integer
+    - string
+    format: uc-portrange
+    examples:
+    - 80
+    - 1024-65535
+  group:
+    $ref: https://ucentral.io/schema/v1/nat/source-ipv6/destination/group/

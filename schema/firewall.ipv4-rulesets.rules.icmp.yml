@@ -1,0 +1,11 @@
+description: ICMP matching (IPv4).
+type: object
+properties:
+  type:
+    type: string
+    examples:
+    - echo-request
+    - echo-reply
+    - destination-unreachable
+  code:
+    type: integer

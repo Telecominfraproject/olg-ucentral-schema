@@ -1,0 +1,21 @@
+description: OSPF routing protocol configuration.
+type: object
+properties:
+  router-id:
+    description: OSPF router identifier. Must be unique within the OSPF domain.
+    type: string
+    format: ipv4
+  areas:
+    description: OSPF area definitions.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/ospf/areas/
+  interfaces:
+    description: Per-interface OSPF settings.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/ospf/interfaces/
+  redistribute:
+    $ref: https://ucentral.io/schema/v1/routing/ospf/redistribute/
+required:
+- router-id

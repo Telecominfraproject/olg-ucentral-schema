@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: integer
+    minimum: 1
+    maximum: 9999
+  source:
+    type: string
+    format: uc-cidr
+  destination:
+    type: string
+    format: uc-cidr
+  inbound-interface:
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]{0,11}$
+  wan-interfaces:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/load-balancing/wan-lb/rules/wan-interfaces/
+required:
+- id
+- inbound-interface
+- wan-interfaces

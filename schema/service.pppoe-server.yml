@@ -1,0 +1,49 @@
+description: PPPoE server configuration.
+type: object
+properties:
+  description:
+    type: string
+  auth-mode:
+    description: Authentication mode for PPPoE clients.
+    type: string
+    enum:
+    - radius
+    - local
+    - noauth
+  interfaces:
+    description: Interface to listen as PPPoE server.
+    type: array
+    items:
+      type: string
+  client-ip-pool:
+    $ref: https://ucentral.io/schema/v1/service/pppoe-server/client-ip-pool/
+  gateway-address:
+    description: Gateway address for client.
+    type: string
+    format: uc-ip
+  wins-servers:
+    description: Windows Internet Name Service (WINS) servers propagated to client.
+    type: array
+    items:
+      description: Address of WINS server
+      type: string
+      format: uc-ip
+  service-names:
+    description: Service-Name to respond. If absent, any Service-Name is acceptable and client's Service-Name
+      will be sent back.
+    type: array
+    items:
+      type: string
+  mtu:
+    description: Maximum Transmission Unit used by PPPoE server
+    type: integer
+    default: 1492
+  local:
+    description: Local user accounts for authentication.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/service/pppoe-server/local/
+  radius:
+    $ref: https://ucentral.io/schema/v1/service/pppoe-server/radius/
+required:
+- auth-mode

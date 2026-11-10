@@ -1,0 +1,10 @@
+type: object
+properties:
+  name:
+    type: string
+  certificate:
+    type: string
+  private-key:
+    type: string
+required:
+- name

@@ -1,0 +1,14 @@
+description: There are several types of mertics that shall be reported in certain intervals. This section
+  provides a granual configuration.
+type: object
+properties:
+  statistics:
+    $ref: https://ucentral.io/schema/v1/metrics/statistics/
+  health:
+    $ref: https://ucentral.io/schema/v1/metrics/health/
+  dhcp-snooping:
+    $ref: https://ucentral.io/schema/v1/metrics/dhcp-snooping/
+  telemetry:
+    $ref: https://ucentral.io/schema/v1/metrics/telemetry/
+  realtime:
+    $ref: https://ucentral.io/schema/v1/metrics/realtime/

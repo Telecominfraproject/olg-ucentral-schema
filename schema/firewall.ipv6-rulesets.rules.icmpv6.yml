@@ -1,0 +1,14 @@
+description: ICMPv6 matching.
+type: object
+properties:
+  type:
+    type: string
+    examples:
+    - echo-request
+    - echo-reply
+    - neighbor-solicitation
+    - neighbor-advertisement
+    - router-solicitation
+    - router-advertisement
+  code:
+    type: integer

@@ -1,0 +1,10 @@
+type: object
+properties:
+  ipv4-rules:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/static/ipv4-rules/
+  ipv6-rules:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/static/ipv6-rules/

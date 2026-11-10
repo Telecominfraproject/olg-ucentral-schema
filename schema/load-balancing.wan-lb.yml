@@ -1,0 +1,11 @@
+description: WAN load balancing configuration.
+type: object
+properties:
+  interfaces:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/load-balancing/wan-lb/interfaces/
+  rules:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/load-balancing/wan-lb/rules/

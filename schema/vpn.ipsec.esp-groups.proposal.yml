@@ -1,0 +1,24 @@
+type: object
+properties:
+  encryption:
+    description: Encryption algorithm for ESP SA.
+    type: string
+    enum:
+    - aes128
+    - aes256
+    - aes128ccm128
+    - aes256ccm128
+    - aes256gcm128
+    - aes128gcm128
+    - 3des
+  hash:
+    description: Hash algorithm for ESP SA integrity.
+    type: string
+    enum:
+    - sha1
+    - sha256
+    - sha384
+    - sha512
+required:
+- encryption
+- hash

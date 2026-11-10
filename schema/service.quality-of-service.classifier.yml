@@ -1,0 +1,23 @@
+type: object
+properties:
+  dscp:
+    $ref: https://ucentral.io/schema/v1/service/quality-of-service/class-selector/
+    description: |
+      The Differentiated Services Code Point (DSCP) marking to apply to matching packets.
+      DSCP values control traffic prioritization in the network. Common values include:
+      - EF (Expedited Forwarding) for real-time traffic like VoIP
+      - AF41-AF43 for video streaming
+      - CS0 for best-effort traffic
+      - CS1 for bulk/background traffic
+    default: CS1
+  ports:
+    description: Each entry defines a layer3 protocol and a port(range) that will be used to match packets.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/service/quality-of-service/classifier/ports/
+  dns:
+    description: Each entry defines a wildcard FQDN. The IP that this resolves to will be used to match
+      packets.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/service/quality-of-service/classifier/dns/

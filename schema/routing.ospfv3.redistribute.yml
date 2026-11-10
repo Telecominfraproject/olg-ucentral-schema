@@ -1,0 +1,15 @@
+description: Import routes from other sources into OSPFv3.
+type: object
+properties:
+  connected:
+    description: Redistribute directly connected networks.
+    type: boolean
+    default: false
+  static:
+    description: Redistribute static routes.
+    type: boolean
+    default: false
+  bgp:
+    description: Redistribute BGP routes.
+    type: boolean
+    default: false

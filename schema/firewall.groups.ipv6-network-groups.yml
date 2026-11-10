@@ -1,0 +1,16 @@
+type: object
+properties:
+  name:
+    description: Group name for reference in IPv6 rules.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  members:
+    description: IPv6 networks in CIDR notation.
+    type: array
+    items:
+      type: string
+      format: uc-cidr6
+      example: 2001:db8::/32
+required:
+- name
+- members

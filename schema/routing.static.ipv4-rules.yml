@@ -1,0 +1,14 @@
+description: Static ipv4 routing configuration.
+type: object
+properties:
+  destination:
+    description: Destination network (CIDR).
+    type: string
+    format: uc-cidr4
+  routes:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/static/ipv4-rules/routes/
+required:
+- destination
+- routes

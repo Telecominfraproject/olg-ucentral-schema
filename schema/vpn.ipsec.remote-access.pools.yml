@@ -1,0 +1,13 @@
+type: object
+properties:
+  name:
+    description: Name of this IP address pool
+    type: string
+  prefix:
+    description: IP range in CIDR
+    type: string
+    format: uc-cidr
+  name-server:
+    description: Name server for client
+    type: string
+    format: uc-ip

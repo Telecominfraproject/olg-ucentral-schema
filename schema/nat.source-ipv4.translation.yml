@@ -1,0 +1,15 @@
+description: Translation parameters.
+type: object
+properties:
+  address:
+    description: Translated source address. Use 'masquerade' for dynamic IP.
+    type: string
+  port:
+    description: Translated source port or port range.
+    type:
+    - integer
+    - string
+    format: uc-portrange
+    examples:
+    - 80
+    - 1024-65535

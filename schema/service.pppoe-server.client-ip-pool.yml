@@ -1,0 +1,8 @@
+description: IP address pool for assigning to PPPoE clients.
+type: object
+properties:
+  range:
+    type: string
+    format: uc-ip4range
+  name:
+    type: string

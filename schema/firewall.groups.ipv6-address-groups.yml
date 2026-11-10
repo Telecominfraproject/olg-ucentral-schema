@@ -1,0 +1,17 @@
+type: object
+properties:
+  name:
+    description: Group name for reference in IPv6 rules.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  members:
+    description: IPv6 addresses.
+    type: array
+    items:
+      type: string
+      anyOf:
+      - format: ipv6
+      - format: uc-ip6range
+required:
+- name
+- members

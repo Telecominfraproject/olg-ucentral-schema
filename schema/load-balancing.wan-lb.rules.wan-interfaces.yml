@@ -1,0 +1,11 @@
+type: object
+properties:
+  name:
+    description: name of the upstream interface
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]{0,11}$
+  weight:
+    description: weight of this interface
+    type: integer
+required:
+- name

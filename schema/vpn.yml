@@ -1,0 +1,7 @@
+description: VPN configuration section.
+type: object
+properties:
+  ipsec:
+    $ref: https://ucentral.io/schema/v1/vpn/ipsec/
+  wireguard:
+    $ref: https://ucentral.io/schema/v1/vpn/wireguard/

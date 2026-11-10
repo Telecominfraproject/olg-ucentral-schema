@@ -1,0 +1,47 @@
+description: |
+  This section configures Quality of Service (QoS) traffic classification and bandwidth shaping.
+  QoS allows prioritization of network traffic to ensure better performance for critical applications
+  like VoIP, video streaming, and gaming over bulk data transfers.
+type: object
+properties:
+  select-ports:
+    description: The physical network devices that shall be considered the primary uplink interface. All
+      classification and shaping will happen on this device.
+    type: array
+    items:
+      type: string
+      default: WAN
+  bandwidth-up:
+    description: |
+      Specifies the maximum upload bandwidth in megabits per second (Mbps) for traffic shaping.
+      Set to 0 to disable upload bandwidth limiting or when the actual bandwidth is unknown.
+      This is used by the QoS engine to properly shape outbound traffic flows.
+      Example: Set to 100 for a 100 Mbps upload connection.
+    type: integer
+    default: 0
+  bandwidth-down:
+    description: |
+      Specifies the maximum download bandwidth in megabits per second (Mbps) for traffic shaping.
+      Set to 0 to disable download bandwidth limiting or when the actual bandwidth is unknown.
+      This is used by the QoS engine to properly shape inbound traffic flows.
+      Example: Set to 500 for a 500 Mbps download connection.
+    type: integer
+    default: 0
+  bulk-detection:
+    $ref: https://ucentral.io/schema/v1/service/quality-of-service/bulk-detection/
+  services:
+    description: |
+      A list of predefined service names for automatic traffic classification.
+      Services are defined in the community QoS database and include popular applications
+      like 'zoom', 'netflix', 'gaming', 'voip', etc. Use 'all' to enable all available services.
+      Each service automatically configures appropriate DSCP marking and port/domain matching rules.
+      Example: ["zoom", "netflix", "voip"] enables QoS for these specific applications.
+    type: array
+    items:
+      type: string
+  classifier:
+    description: A list of classifiers. Each classifier will map certain traffic to specific ToS/DSCP
+      values based upon the defined constraints.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/service/quality-of-service/classifier/

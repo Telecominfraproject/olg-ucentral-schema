@@ -1,0 +1,28 @@
+type: object
+properties:
+  name:
+    description: Name identifier for this ESP group.
+    type: string
+  lifetime:
+    description: ESP SA lifetime in seconds.
+    type: integer
+    default: 3600
+  mode:
+    description: IPsec encapsulation mode.
+    type: string
+    enum:
+    - tunnel
+    - transport
+    default: tunnel
+  pfs:
+    description: Enable Perfect Forward Secrecy.
+    type: boolean
+    default: true
+  proposal:
+    description: An array of cryptographic proposals for ESP negotiation.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/vpn/ipsec/esp-groups/proposal/
+required:
+- name
+- proposal

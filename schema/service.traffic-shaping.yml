@@ -1,0 +1,24 @@
+description: 'Subscriber traffic shaping on the WAN: a ceiling for the whole link, per network segment,
+  per client and per MAC address. Distinct from OWF''s services.quality-of-service, which classifies traffic
+  rather than shaping subscribers.'
+type: object
+properties:
+  mode:
+    description: 'shaper (default) queues and paces: CAKE for the WAN ceiling and segment totals, per-client
+      HTB (ratelimit) for client and MAC limits. policer drops at the limit (lower CPU); per-client limits
+      in policer mode are not built yet.'
+    type: string
+    enum:
+    - policer
+    - shaper
+    default: shaper
+  wan-ceiling:
+    $ref: https://ucentral.io/schema/v1/service/traffic-shaping/wan-ceiling/
+  segments:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/service/traffic-shaping/segments/
+  mac-policies:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/service/traffic-shaping/mac-policies/

@@ -1,0 +1,22 @@
+type: object
+properties:
+  address:
+    description: IPv6 network (CIDR notation).
+    type: string
+    format: uc-cidr6
+    example: 2001:db8::/32
+  port:
+    description: Source port or port range.
+    type:
+    - integer
+    - string
+    format: uc-portrange
+    examples:
+    - 80
+    - 1024-65535
+  mac-address:
+    type: string
+    format: uc-mac
+    example: 98:e7:9a:27:fe:49
+  group:
+    $ref: https://ucentral.io/schema/v1/firewall/ipv6-rulesets/rules/source/group/

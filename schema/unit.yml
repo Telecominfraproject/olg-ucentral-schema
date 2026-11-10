@@ -1,0 +1,65 @@
+description: A device has certain properties that describe its identity and location. These properties
+  are described inside this object.
+type: object
+properties:
+  name:
+    description: |
+      The administrative name of the device used for identification and management purposes.
+      This descriptive label appears in management interfaces and system logs.
+      It may contain spaces and special characters to provide meaningful context.
+      Example: "Building A - Floor 2 - Conference Room AP"
+    type: string
+  hostname:
+    description: |
+      The network hostname assigned to the device for DNS and network identification.
+      Must follow standard hostname conventions (alphanumeric, hyphens, no spaces).
+      If not specified, the device's serial number will be used as the hostname.
+      This value appears in DHCP requests, mDNS broadcasts, and system prompts.
+      Example: "conference-room-ap-01"
+    type: string
+    format: hostname
+  location:
+    description: |
+      Physical location or deployment site of the device for asset tracking and maintenance.
+      This field helps technicians locate devices for service and troubleshooting.
+      It may contain spaces and special characters for detailed location information.
+      Example: "Building A, Floor 2, Room 201, Ceiling tile C3"
+    type: string
+  timezone:
+    description: |
+      System timezone configuration that determines local time for logs, scheduled tasks, and reports.
+      Accepts standard timezone identifiers (e.g., "UTC", "America/New_York") or POSIX TZ strings.
+      Proper timezone setting ensures accurate timestamps and correct execution of time-based rules.
+      If not specified, the device defaults to UTC.
+    type: string
+    examples:
+    - UTC
+    - EST5
+    - CET-1CEST,M3.5.0,M10.5.0/3
+    pattern: ^[A-Za-z0-9_+:,./<>-]+$
+  leds-active:
+    description: |
+      Controls the operational state of all LED indicators on the device.
+      When set to true (default), LEDs operate normally showing system status.
+      When set to false, all LEDs are disabled for environments requiring minimal light emission.
+      Useful in hospitality settings, bedrooms, or light-sensitive installations.
+    type: boolean
+    default: true
+  random-password:
+    description: |
+      Enables automatic generation of a secure random password for the root/admin account.
+      When enabled, the device generates a cryptographically strong password at boot
+      and reports it to the management gateway for secure storage and retrieval.
+      This enhances security by ensuring each device has a unique administrative password.
+      Cannot be used together with system-password.
+    type: boolean
+    default: false
+  system-password:
+    description: |
+      Sets a specific password for the root/admin account on the device.
+      The password should be provided in plaintext and will be securely hashed on the device.
+      Use this for environments requiring a standardized administrative password.
+      For enhanced security, consider using random-password instead.
+      Cannot be used together with random-password.
+      Example: "MySecureP@ssw0rd!"
+    type: string

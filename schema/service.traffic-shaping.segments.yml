@@ -1,0 +1,28 @@
+type: object
+properties:
+  vlan:
+    type: integer
+    minimum: 1
+    maximum: 4094
+  upload:
+    description: Mbps, decimals allowed for the whole segment.
+    type: number
+    minimum: 0
+    maximum: 10000
+  download:
+    description: Mbps, decimals allowed for the whole segment.
+    type: number
+    minimum: 0
+    maximum: 10000
+  client-upload:
+    description: Mbps, decimals allowed for each client in the segment.
+    type: number
+    minimum: 0
+    maximum: 10000
+  client-download:
+    description: Mbps, decimals allowed for each client in the segment.
+    type: number
+    minimum: 0
+    maximum: 10000
+required:
+- vlan

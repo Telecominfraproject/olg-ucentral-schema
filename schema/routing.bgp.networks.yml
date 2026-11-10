@@ -1,0 +1,15 @@
+type: object
+properties:
+  address-family:
+    type: string
+    enum:
+    - ipv4-unicast
+    - ipv6-unicast
+    - ipv4-multicast
+    - ipv6-multicast
+  network:
+    type: string
+    format: uc-cidr
+required:
+- address-family
+- network

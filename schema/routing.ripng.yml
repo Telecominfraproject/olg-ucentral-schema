@@ -1,0 +1,15 @@
+description: RIPng (IPv6) routing protocol configuration.
+type: object
+properties:
+  networks:
+    description: IPv6 networks to advertise.
+    type: array
+    items:
+      type: string
+      format: uc-cidr6
+  interfaces:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/ripng/interfaces/
+  redistribute:
+    $ref: https://ucentral.io/schema/v1/routing/ripng/redistribute/

@@ -1,0 +1,34 @@
+description: "Configure unsolicited telemetry streaming for continuous monitoring and \nanalysis. This\
+  \ metric enables bulk collection and forwarding of event data \nto the cloud at regular intervals, providing\
+  \ continuous visibility into \ndevice operations and network behavior. Events are validated against\
+  \ the \nsystem's event registry before being configured for streaming.\n"
+type: object
+properties:
+  interval:
+    description: "The reporting interval in seconds that controls how frequently telemetry \ndata is collected\
+      \ and transmitted to the cloud. This setting balances \nmonitoring frequency with bandwidth usage\
+      \ and system performance.\n\nTypical values range from 120 seconds (2 minutes) for detailed monitoring\
+      \ \nto 600 seconds (10 minutes) for standard operational telemetry. The \ninterval should be chosen\
+      \ based on monitoring requirements and network \ncapacity.\n"
+    type: integer
+    examples:
+    - 120
+    - 300
+    - 600
+    - 900
+  types:
+    description: "Array of event type identifiers to include in the telemetry stream.\nOnly event types\
+      \ that exist in the system's event registry (/etc/events.json)\nwill be configured - invalid types\
+      \ are silently filtered out.\n\nEvent types represent different categories of operational data:\n\
+      - client.associate, client.disassociate: WiFi client connection events\n- wifi.start, wifi.stop:\
+      \ WiFi interface state changes\n- dhcp.ack, dhcp.discover: DHCP transaction events  \n- dns.query:\
+      \ DNS lookup events\n- Various system and network operational events\n\nThe telemetry stream aggregates\
+      \ these events for bulk transmission,\nunlike realtime metrics which forward events immediately.\n"
+    type: array
+    items:
+      type: string
+      examples:
+      - client.associate
+      - wifi.start
+      - dhcp.ack
+      - dns.query
