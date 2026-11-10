@@ -1,0 +1,25 @@
+type: object
+properties:
+  fqdn:
+    description: |
+      The fully qualified domain name to match for traffic classification.
+      Can be an exact domain or used with suffix-matching for wildcard behavior.
+      Example: 'netflix.com' or 'zoom.us' for application-specific classification.
+    type: string
+    format: uc-fqdn
+  suffix-matching:
+    description: |
+      Controls whether to match subdomains of the specified FQDN.
+      When true (default), matches all subdomains like '*.example.com'.
+      When false, matches only the exact domain specified.
+      Example: true matches both 'api.zoom.us' and 'web.zoom.us' for FQDN 'zoom.us'.
+    type: boolean
+    default: true
+  reclassify:
+    description: |
+      Controls whether to override existing DSCP markings on matching packets.
+      When true (default), applies the new DSCP marking regardless of existing values.
+      When false, only marks packets that don't already have DSCP markings.
+      Set to false to preserve upstream QoS markings.
+    type: boolean
+    default: true

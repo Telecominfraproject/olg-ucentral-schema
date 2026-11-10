@@ -1,0 +1,138 @@
+allOf:
+- oneOf:
+  - $ref: https://ucentral.io/schema/v1/service/captive/click/
+    description: "Configure captive portal with click-to-continue authentication. This is the \nsimplest\
+      \ captive portal mode where users only need to click a \"Continue\" or \n\"Accept\" button to gain\
+      \ network access. No credentials are required, making \nit ideal for terms-of-service acceptance\
+      \ or basic splash page scenarios.\n"
+  - $ref: https://ucentral.io/schema/v1/service/captive/radius/
+    description: "Configure captive portal with RADIUS authentication. This mode requires \nusers to provide\
+      \ credentials (username/password) that are validated \nagainst a RADIUS server. Supports both authentication\
+      \ and accounting \nwith separate server configurations and provides enterprise-grade \nauthentication\
+      \ integration.\n"
+  - $ref: https://ucentral.io/schema/v1/service/captive/credentials/
+    description: "Configure captive portal with local credential-based authentication. This mode \nallows\
+      \ users to authenticate using locally stored username/password pairs. \nIdeal for guest networks\
+      \ or environments where simple local authentication \nis sufficient without requiring external authentication\
+      \ infrastructure.\n"
+  - $ref: https://ucentral.io/schema/v1/service/captive/uam/
+    description: This section can be used to setup a captive portal on the AP with a remote UAM server.
+- type: object
+  properties:
+    walled-garden-fqdn:
+      description: "Array of domain names (FQDNs) that non-authenticated clients are allowed \nto access\
+        \ without authentication. These domains bypass the captive portal \nand can be used for essential\
+        \ services like DNS, NTP, or corporate login \npages. Useful for allowing access to authentication\
+        \ servers or required \nservices before user login.\n"
+      type: array
+      items:
+        type: string
+        examples:
+        - google.com
+        - login.company.com
+        - ntp.pool.org
+      examples:
+      - - google.com
+        - facebook.com
+      - - login.company.com
+        - auth.enterprise.net
+    walled-garden-ipaddr:
+      description: "Array of IP addresses that non-authenticated clients are allowed to \naccess without\
+        \ authentication. These IP addresses bypass the captive \nportal and can be used for essential\
+        \ services like DNS servers, NTP \nservers, or authentication infrastructure. Clients can reach\
+        \ these \naddresses before completing captive portal authentication.\n"
+      type: array
+      items:
+        type: string
+        format: uc-ip
+        examples:
+        - 8.8.8.8
+        - 1.1.1.1
+        - 192.168.1.100
+      examples:
+      - - 8.8.8.8
+        - 1.1.1.1
+      - - 192.168.100.1
+        - 10.0.1.53
+    web-root:
+      description: "Base64-encoded TAR file containing a custom web root directory for \nthe captive portal.\
+        \ This allows complete customization of the captive \nportal interface including HTML, CSS, JavaScript,\
+        \ and images. The TAR \nfile will be extracted to provide the web content served to users.\n"
+      type: string
+      format: uc-base64
+    web-root-url:
+      description: "URL from which to download a custom web root TAR file for the captive \nportal. This\
+        \ provides an alternative to embedding the web root directly \nin the configuration. The downloaded\
+        \ file will be extracted to customize \nthe captive portal user interface.\n"
+      type: string
+      examples:
+      - https://portal.company.com/captive-portal.tar.gz
+      - http://assets.local/portal/custom-ui.tar
+    web-root-checksum:
+      description: "SHA256 checksum of the file located at web-root-url. This ensures \nthe integrity\
+        \ of the downloaded web root file and prevents tampering \nor corruption during download. The\
+        \ system will verify this checksum \nbefore extracting the custom web root.\n"
+      type: string
+      examples:
+      - e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    idle-timeout:
+      description: "Maximum time in seconds that an authenticated client can remain idle \n(no network\
+        \ activity) before being automatically logged out and \nrequired to re-authenticate through the\
+        \ captive portal. This prevents \nindefinite sessions and ensures periodic re-authentication.\n"
+      type: integer
+      default: 600
+      examples:
+      - 300
+      - 1800
+      - 3600
+    session-timeout:
+      description: "Maximum duration in seconds that a client session can remain active \nbefore automatic\
+        \ logout, regardless of activity level. After this \ntime expires, clients must re-authenticate\
+        \ through the captive portal. \nThis enforces periodic re-authentication for security purposes.\n"
+      type: integer
+      examples:
+      - 1800
+      - 7200
+      - 28800
+    dynamic-authorization:
+      description: Dynamic Authorization Extensions (DAE) is an extension to Radius.
+      type: object
+      properties:
+        host:
+          description: The IP of the DAE client.
+          type: string
+          format: uc-ip
+          examples:
+          - 192.168.1.10
+        port:
+          description: The network port that the DAE client can connet on.
+          type: integer
+          maximum: 65535
+          minimum: 1024
+          examples:
+          - 1812
+        secret:
+          description: The shared DAE authentication secret.
+          type: string
+          examples:
+          - secret
+    subscriber-policy:
+      description: Default bandwidth for each authenticated subscriber, until RADIUS or CoA sets another.
+      type: object
+      properties:
+        default-download-mbps:
+          description: Mbps, decimals allowed for each subscriber until RADIUS or CoA sets another.
+          type: number
+          minimum: 0
+          maximum: 10000
+        default-upload-mbps:
+          description: Mbps, decimals allowed for each subscriber until RADIUS or CoA sets another.
+          type: number
+          minimum: 0
+          maximum: 10000
+      not:
+        anyOf:
+        - required:
+          - default-download-kbps
+        - required:
+          - default-upload-kbps

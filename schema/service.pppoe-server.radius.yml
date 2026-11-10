@@ -1,0 +1,9 @@
+description: RADIUS server configuration for authentication.
+type: object
+properties:
+  address:
+    type: string
+    format: uc-ip
+  port:
+    type: integer
+    maximum: 65535

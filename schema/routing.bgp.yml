@@ -1,0 +1,26 @@
+description: BGP routing protocol configuration.
+type: object
+properties:
+  local-as:
+    description: Local autonomous system number.
+    type: integer
+    minimum: 1
+    maximum: 4294967295
+  router-id:
+    description: BGP router ID.
+    type: string
+    format: ipv4
+  neighbors:
+    description: BGP neighbors.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/bgp/neighbors/
+  networks:
+    description: Networks to advertise.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/bgp/networks/
+  redistribute:
+    $ref: https://ucentral.io/schema/v1/routing/bgp/redistribute/
+required:
+- local-as

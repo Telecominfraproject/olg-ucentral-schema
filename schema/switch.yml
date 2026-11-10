@@ -1,0 +1,10 @@
+description: This section defines the switch fabric specific features of a physical switch.
+type: object
+properties:
+  port-mirror:
+    description: Enable port mirroring.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/switch/port-mirror/
+  loop-detection:
+    $ref: https://ucentral.io/schema/v1/switch/loop-detection/

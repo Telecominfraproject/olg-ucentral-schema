@@ -1,0 +1,14 @@
+description: Static ipv6 routing configuration.
+type: object
+properties:
+  destination:
+    description: Destination network (CIDR).
+    type: string
+    format: uc-cidr6
+  routes:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/static/ipv6-rules/routes/
+required:
+- destination
+- routes

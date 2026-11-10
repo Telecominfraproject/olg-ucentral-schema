@@ -1,0 +1,19 @@
+description: Dead Peer Detection (DPD) settings.
+type: object
+properties:
+  action:
+    description: Action to take when a dead peer is detected.
+    type: string
+    enum:
+    - restart
+    - clear
+    - hold
+    - none
+  interval:
+    description: Interval in seconds between DPD keepalive messages.
+    type: integer
+    default: 30
+  timeout:
+    description: Timeout in seconds before declaring a peer dead.
+    type: integer
+    default: 120

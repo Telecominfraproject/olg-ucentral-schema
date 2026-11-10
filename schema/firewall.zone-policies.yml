@@ -1,0 +1,19 @@
+description: Zone-to-zone policy.
+type: object
+properties:
+  from:
+    description: Source zone.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  to:
+    description: Destination zone.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  ruleset:
+    description: Name of ruleset to apply.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+required:
+- from
+- to
+- ruleset

@@ -1,0 +1,18 @@
+description: "Configure realtime event monitoring and reporting. This metric enables \nfiltering and forwarding\
+  \ of specific event types to the cloud for real-time \nmonitoring and analysis. Events are validated\
+  \ against the system's available \nevent registry before being configured for forwarding.\n"
+type: object
+properties:
+  types:
+    description: "Array of event type identifiers to monitor and forward in real-time.\nOnly event types\
+      \ that exist in the system's event registry (/etc/events.json)\nwill be configured - invalid types\
+      \ are silently filtered out.\n\nCommon event types include:\n- client.associate, client.disassociate:\
+      \ WiFi client connection events\n- wifi.start, wifi.stop: WiFi interface state changes  \n- dhcp.ack,\
+      \ dhcp.discover: DHCP transaction events\n- dns.query: DNS lookup events\n"
+    type: array
+    items:
+      type: string
+      examples:
+      - client.associate
+      - wifi.start
+      - dhcp.ack

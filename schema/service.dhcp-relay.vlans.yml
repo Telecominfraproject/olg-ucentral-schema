@@ -1,0 +1,52 @@
+type: object
+additionalProperties: false
+required:
+- vlan
+- relay-server
+properties:
+  vlan:
+    description: "The VLAN ID (1-4094) that will participate in DHCP relay. \nDHCP requests from this\
+      \ VLAN will be forwarded to the \nspecified relay server.\n"
+    type: number
+    minimum: 1
+    maximum: 4094
+    examples:
+    - 100
+    - 200
+    - 1001
+  relay-server:
+    description: "The IP address of the upstream DHCP server that will handle \nDHCP requests for this\
+      \ VLAN. The relay service forwards client \nrequests to this server and returns responses back to\
+      \ clients.\n"
+    type: string
+    format: uc-ip
+    examples:
+    - 192.168.100.1
+    - 10.0.1.10
+    - dhcp.example.com
+  circuit-id-format:
+    description: "Optional DHCP option 82 circuit ID format that identifies the \nrelay circuit. This\
+      \ information helps the DHCP server make \nper-circuit decisions about address assignment and options.\n\
+      If not specified, defaults to \"vlan-id\" format.\n"
+    type: string
+    enum:
+    - vlan-id
+    - ap-mac
+    - ssid
+    default: vlan-id
+    examples:
+    - vlan-id
+    - ap-mac
+  remote-id-format:
+    description: "Optional DHCP option 82 remote ID format that identifies the \nremote host or circuit.\
+      \ This provides additional context to \nhelp the DHCP server customize responses. If not specified,\
+      \ \ndefaults to \"ap-mac\" format.\n"
+    type: string
+    enum:
+    - vlan-id
+    - ap-mac
+    - ssid
+    default: ap-mac
+    examples:
+    - ap-mac
+    - vlan-id

@@ -1,0 +1,16 @@
+type: object
+properties:
+  name:
+    description: Group name for reference in IPv4 rules.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  members:
+    description: IPv4 networks in CIDR notation.
+    type: array
+    items:
+      type: string
+      format: uc-cidr4
+      example: 192.168.1.0/24
+required:
+- name
+- members

@@ -1,0 +1,9 @@
+description: Reference to a firewall address/network/port group.
+type: object
+properties:
+  address-group:
+    type: string
+  network-group:
+    type: string
+  port-group:
+    type: string

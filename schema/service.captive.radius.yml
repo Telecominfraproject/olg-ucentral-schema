@@ -1,0 +1,72 @@
+type: object
+properties:
+  auth-mode:
+    description: This field must be set to 'radius'
+    type: string
+    const: radius
+  auth-server:
+    description: "Hostname or IP address of the RADIUS authentication server that will \nvalidate user\
+      \ credentials. This server handles authentication requests \nwhen users attempt to log in through\
+      \ the captive portal.\n"
+    type: string
+    format: uc-host
+    examples:
+    - 192.168.1.10
+    - radius.company.com
+    - 10.0.1.100
+  auth-port:
+    description: "Network port number for the RADIUS authentication server. Standard \nRADIUS authentication\
+      \ port is 1812, but can be customized based on \nserver configuration.\n"
+    type: integer
+    maximum: 65535
+    minimum: 1024
+    default: 1812
+    examples:
+    - 1812
+    - 1645
+  auth-secret:
+    description: "Shared secret for RADIUS authentication server communication. This \npre-shared key\
+      \ must match the configuration on the RADIUS server \nand is used to encrypt communication between\
+      \ the captive portal \nand authentication server.\n"
+    type: string
+    examples:
+    - shared-secret-123
+    - radius-auth-key
+  acct-server:
+    description: "Hostname or IP address of the RADIUS accounting server that will \ntrack user session\
+      \ information, data usage, and connection timing. \nCan be the same as auth-server or a separate\
+      \ accounting-specific server.\n"
+    type: string
+    format: uc-host
+    examples:
+    - 192.168.1.11
+    - accounting.company.com
+    - 10.0.1.101
+  acct-port:
+    description: "Network port number for the RADIUS accounting server. Standard \nRADIUS accounting port\
+      \ is 1813, but can be customized based on \nserver configuration.\n"
+    type: integer
+    maximum: 65535
+    minimum: 1024
+    default: 1813
+    examples:
+    - 1813
+    - 1646
+  acct-secret:
+    description: "Shared secret for RADIUS accounting server communication. This \npre-shared key must\
+      \ match the configuration on the RADIUS accounting \nserver and is used to encrypt session and usage\
+      \ data transmission.\n"
+    type: string
+    examples:
+    - accounting-secret-456
+    - radius-acct-key
+  acct-interval:
+    description: "Interval in seconds for sending interim accounting updates to the \nRADIUS accounting\
+      \ server. These updates provide ongoing session \ninformation including data usage and connection\
+      \ status during \nactive user sessions.\n"
+    type: integer
+    default: 600
+    examples:
+    - 300
+    - 600
+    - 1800

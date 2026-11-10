@@ -1,0 +1,5 @@
+description: System configuration section.
+type: object
+properties:
+  name-servers:
+    $ref: https://ucentral.io/schema/v1/system/name-servers/

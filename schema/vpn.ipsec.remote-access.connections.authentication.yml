@@ -1,0 +1,20 @@
+description: Pre-shared key (PSK) authentication configuration.
+type: object
+properties:
+  client-mode:
+    type: string
+    enum:
+    - x509
+    - eap-tls
+    - eap-mschapv2
+    - eap-radius
+    default: eap-mschapv2
+  local-id:
+    description: Local identity for IKE authentication.
+    type: string
+  ca-cert:
+    description: Name of ca certificate stored in vyos pki
+    type: string
+  server-cert:
+    description: Name of server certificate stored in vyos pki
+    type: string

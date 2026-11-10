@@ -1,0 +1,17 @@
+description: OSPFv3 (IPv6) routing protocol configuration.
+type: object
+properties:
+  areas:
+    description: OSPF area definitions.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/ospfv3/areas/
+  interfaces:
+    description: Per-interface OSPF settings.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/ospfv3/interfaces/
+  redistribute:
+    $ref: https://ucentral.io/schema/v1/routing/ospfv3/redistribute/
+required:
+- router-id

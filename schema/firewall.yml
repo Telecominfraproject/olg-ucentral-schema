@@ -1,0 +1,25 @@
+description: Firewall configuration (zone-based and chain-based, stateful).
+type: object
+properties:
+  ipv4-rulesets:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/ipv4-rulesets/
+  ipv6-rulesets:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/ipv6-rulesets/
+  zones:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/zones/
+  zone-policies:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/zone-policies/
+  flow-offloading:
+    description: Software flow offloading for established connections (OpenWrt fw4 flowtable).
+    type: boolean
+    default: true
+  groups:
+    $ref: https://ucentral.io/schema/v1/firewall/groups/

@@ -1,0 +1,30 @@
+type: object
+properties:
+  area-id:
+    description: Area identifier (integer or dotted-decimal).
+    type: string
+    examples:
+    - '0'
+    - '1'
+    - 0.0.0.1
+    pattern: ^([0-9]{1,3}(\.[0-9]{1,3}){3}|[0-9]{1,10})$
+  area-type:
+    description: Area type. Stub/NSSA areas reduce LSA flooding.
+    type: string
+    enum:
+    - normal
+    - stub
+    - nssa
+    default: normal
+  no-summary:
+    description: For stub/NSSA, block inter-area routes (totally stubby).
+    type: boolean
+    default: false
+  networks:
+    description: Networks to include in this area (CIDR notation).
+    type: array
+    items:
+      type: string
+      format: uc-cidr4
+required:
+- area-id

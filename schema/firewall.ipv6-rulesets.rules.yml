@@ -1,0 +1,46 @@
+description: IPv6 firewall rule configuration.
+type: object
+properties:
+  rule-number:
+    description: Rule sequence number. Lower numbers evaluated first.
+    type: integer
+    minimum: 1
+    maximum: 65535
+  disabled:
+    type: boolean
+    default: false
+  action:
+    type: string
+    enum:
+    - accept
+    - drop
+    - reject
+  protocol:
+    description: Protocol to match.
+    type: string
+    examples:
+    - tcp_udp
+    - tcp
+    - udp
+    - icmpv6
+    - all
+    default: all
+  source:
+    $ref: https://ucentral.io/schema/v1/firewall/ipv6-rulesets/rules/source/
+  destination:
+    $ref: https://ucentral.io/schema/v1/firewall/ipv6-rulesets/rules/destination/
+  state:
+    $ref: https://ucentral.io/schema/v1/firewall/ipv6-rulesets/rules/state/
+  icmpv6:
+    $ref: https://ucentral.io/schema/v1/firewall/ipv6-rulesets/rules/icmpv6/
+  tcp:
+    $ref: https://ucentral.io/schema/v1/firewall/ipv6-rulesets/rules/tcp/
+  limit:
+    $ref: https://ucentral.io/schema/v1/firewall/ipv6-rulesets/rules/limit/
+  log:
+    type: boolean
+    default: false
+required:
+- rule-number
+- action
+- protocol

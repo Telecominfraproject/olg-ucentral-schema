@@ -1,0 +1,9 @@
+type: object
+properties:
+  name:
+    type: string
+  passive:
+    type: boolean
+    default: false
+required:
+- name

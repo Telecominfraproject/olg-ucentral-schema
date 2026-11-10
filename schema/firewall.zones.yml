@@ -1,0 +1,26 @@
+description: Firewall zone configuration.
+type: object
+properties:
+  name:
+    description: Zone name.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  default-action:
+    description: Default action for intra-zone traffic.
+    type: string
+    enum:
+    - drop
+    - reject
+    default: drop
+  interfaces:
+    description: Interfaces belonging to this zone.
+    type: array
+    items:
+      type: string
+      pattern: ^[A-Za-z][A-Za-z0-9_-]{0,11}$
+  local-zone:
+    description: Designate as local zone (traffic to/from router itself).
+    type: boolean
+    default: false
+required:
+- name

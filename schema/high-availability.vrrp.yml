@@ -1,0 +1,7 @@
+description: VRRP configuration.
+type: object
+properties:
+  groups:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/high-availability/vrrp/groups/

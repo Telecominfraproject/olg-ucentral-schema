@@ -1,0 +1,38 @@
+description: "Configure DHCP relay service that forwards DHCP requests and responses between \nVLANs and\
+  \ upstream DHCP servers. This service enables centralized DHCP management \nby relaying DHCP traffic\
+  \ from client VLANs to designated DHCP servers on upstream \nnetworks. The service is automatically\
+  \ enabled when interfaces are configured with \n\"dhcp-relay\" in their services array and valid VLANs\
+  \ are specified.\n"
+type: object
+properties:
+  select-ports:
+    description: "Array of physical network port selectors that define which upstream ports \nshould be\
+      \ used for DHCP relay traffic. These ports connect to networks \ncontaining the DHCP servers that\
+      \ will handle requests from relay VLANs.\nThe DHCP relay service forwards client requests through\
+      \ these ports to \nreach the configured relay servers.\n"
+    type: array
+    items:
+      type: string
+      examples:
+      - WAN
+      - eth0
+      - eth1
+    examples:
+    - - WAN
+    - - eth0
+      - eth1
+    - - LAN*
+  vlans:
+    description: "Array of VLAN configurations that define which VLANs participate in DHCP \nrelay and\
+      \ their associated relay servers. Each VLAN entry specifies the \nVLAN ID, target DHCP server, and\
+      \ optional circuit/remote ID formatting \nfor DHCP option 82 relay agent information.\n"
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/service/dhcp-relay/vlans/
+    examples:
+    - - vlan: 100
+        relay-server: 192.168.100.1
+        circuit-id-format: vlan-id
+        remote-id-format: ap-mac
+      - vlan: 200
+        relay-server: 192.168.200.1

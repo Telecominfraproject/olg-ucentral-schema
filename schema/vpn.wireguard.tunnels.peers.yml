@@ -1,0 +1,45 @@
+type: object
+required:
+- name
+- public-key
+properties:
+  name:
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+    description: Peer name (unique within the tunnel).
+  public-key:
+    type: string
+    pattern: ^[A-Za-z0-9+/]{42}[AEIMQUYcgkosw480]=$
+    description: The peer's public key (base64, 44 characters).
+  preshared-key:
+    type: string
+    pattern: ^[A-Za-z0-9+/]{42}[AEIMQUYcgkosw480]=$
+    description: Optional extra symmetric key shared with this peer (base64, 44 characters).
+  endpoint-host:
+    type: string
+    pattern: ^[A-Za-z0-9.:-]{1,253}$
+    description: 'Where to reach the peer: a hostname or IP address. Leave out for a peer that connects
+      in.'
+  endpoint-port:
+    type: integer
+    minimum: 1
+    maximum: 65535
+    description: The peer's UDP port.
+  allowed-ips:
+    type: array
+    items:
+      type: string
+      anyOf:
+      - format: uc-cidr4
+      - format: uc-cidr6
+    description: Networks reached through this peer, and the only source addresses accepted from it.
+  persistent-keepalive:
+    type: integer
+    minimum: 0
+    maximum: 65535
+    description: Seconds between keepalive packets; 0 or absent means none. 25 keeps a tunnel open through
+      NAT.
+  route-allowed-ips:
+    type: boolean
+    default: false
+    description: Add routes for allowed-ips through this tunnel. Otherwise routes come from routing.static.

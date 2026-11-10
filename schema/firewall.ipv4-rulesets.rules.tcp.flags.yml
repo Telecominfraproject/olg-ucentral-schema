@@ -1,0 +1,24 @@
+type: object
+properties:
+  set:
+    type: array
+    items:
+      type: string
+      enum:
+      - syn
+      - ack
+      - fin
+      - rst
+      - urg
+      - psh
+  not-set:
+    type: array
+    items:
+      type: string
+      enum:
+      - syn
+      - ack
+      - fin
+      - rst
+      - urg
+      - psh

@@ -1,0 +1,10 @@
+type: object
+properties:
+  established:
+    type: boolean
+  related:
+    type: boolean
+  new:
+    type: boolean
+  invalid:
+    type: boolean

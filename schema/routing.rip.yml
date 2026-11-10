@@ -1,0 +1,27 @@
+description: RIP routing protocol configuration.
+type: object
+properties:
+  version:
+    type: number
+    enum:
+    - 1
+    - 2
+    default: 2
+  networks:
+    description: Networks to advertise.
+    type: array
+    items:
+      type: string
+      format: uc-cidr4
+  interfaces:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/rip/interfaces/
+  neighbors:
+    description: Neighbors to advertise with unicast
+    type: array
+    items:
+      type: string
+      format: ipv4
+  redistribute:
+    $ref: https://ucentral.io/schema/v1/routing/rip/redistribute/

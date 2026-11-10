@@ -1,0 +1,68 @@
+$id: https://openwrt.org/ucentral.schema.json
+$schema: http://json-schema.org/draft-07/schema#
+title: OpenLAN Gateway configuration (Inventum proposal)
+description: 'A configuration is the device''s whole desired state: every push carries the complete document,
+  a section left out means that function is off, and a field left out takes its default. Bandwidth in
+  OLG additions is in Mbps, decimals allowed. Parts taken from ec_proposal: Copyright (c) 2025, Telecom
+  Infra Project, BSD-3-Clause.'
+type: object
+properties:
+  uuid:
+    description: The unique ID of the configuration. This is the unix timestamp of when the config was
+      created.
+    type: integer
+  strict:
+    description: The device will reject any configuration that causes warnings if strict mode is enabled.
+    type: boolean
+    default: false
+  unit:
+    $ref: https://ucentral.io/schema/v1/unit/
+  globals:
+    $ref: https://ucentral.io/schema/v1/globals/
+  definitions:
+    $ref: https://ucentral.io/schema/v1/definitions/
+  ethernet:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/ethernet/
+  switch:
+    $ref: https://ucentral.io/schema/v1/switch/
+  interfaces:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/interface/
+    minItems: 1
+    contains:
+      type: object
+      properties:
+        role:
+          const: upstream
+      required:
+      - role
+  services:
+    $ref: https://ucentral.io/schema/v1/service/
+  metrics:
+    $ref: https://ucentral.io/schema/v1/metrics/
+  timeouts:
+    $ref: https://ucentral.io/schema/v1/timeouts/
+  third-party:
+    type: object
+    additionalProperties: true
+  firewall:
+    $ref: https://ucentral.io/schema/v1/firewall/
+  nat:
+    $ref: https://ucentral.io/schema/v1/nat/
+  routing:
+    $ref: https://ucentral.io/schema/v1/routing/
+  vpn:
+    $ref: https://ucentral.io/schema/v1/vpn/
+  pki:
+    $ref: https://ucentral.io/schema/v1/pki/
+  high-availability:
+    $ref: https://ucentral.io/schema/v1/high-availability/
+  load-balancing:
+    $ref: https://ucentral.io/schema/v1/load-balancing/
+  system:
+    $ref: https://ucentral.io/schema/v1/system/
+required:
+- interfaces

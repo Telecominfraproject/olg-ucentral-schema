@@ -1,0 +1,6 @@
+type: object
+properties:
+  rate:
+    type: string
+  burst:
+    type: integer

@@ -1,0 +1,27 @@
+description: IPv6 Source NAT rule (NAT66/NPTv6).
+type: object
+properties:
+  rule-number:
+    description: Rule number for ordering (lower numbers processed first).
+    type: integer
+    minimum: 1
+  outbound-interface:
+    description: Outbound interface for NAT.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]{0,11}$
+  protocol:
+    description: Protocol to match.
+    type: string
+    examples:
+    - tcp
+    - udp
+    - icmpv6
+    - all
+  source:
+    $ref: https://ucentral.io/schema/v1/nat/source-ipv6/source/
+  destination:
+    $ref: https://ucentral.io/schema/v1/nat/source-ipv6/destination/
+  translation:
+    $ref: https://ucentral.io/schema/v1/nat/source-ipv6/translation/
+required:
+- rule-number

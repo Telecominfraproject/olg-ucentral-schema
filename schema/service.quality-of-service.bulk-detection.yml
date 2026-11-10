@@ -1,0 +1,13 @@
+description: The QoS feature can automatically detect and classify bulk flows. This is based on average
+  packet size and PPS.
+type: object
+properties:
+  dscp:
+    $ref: https://ucentral.io/schema/v1/service/quality-of-service/class-selector/
+    description: The differentiated services code point that shall be assigned to packets that belong
+      to a bulk flow.
+    default: CS0
+  packets-per-second:
+    description: The required PPS rate that will cause a flow to be classified as bulk.
+    type: number
+    default: 0

@@ -1,0 +1,21 @@
+description: IPsec peer configurations.
+type: object
+properties:
+  pools:
+    description: IP address pool
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/vpn/ipsec/remote-access/pools/
+  connections:
+    description: IPsec peer configurations.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/vpn/ipsec/remote-access/connections/
+    required:
+    - name
+    - ike-group
+    - esp-group
+    - bind
+required:
+- pools
+- connections

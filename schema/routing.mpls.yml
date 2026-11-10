@@ -1,0 +1,4 @@
+type: object
+properties:
+  ldp:
+    $ref: https://ucentral.io/schema/v1/routing/mpls/ldp/

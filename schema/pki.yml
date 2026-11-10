@@ -1,0 +1,16 @@
+description: PKI certificates.
+type: object
+properties:
+  ca-certs:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/pki/ca-certs/
+  certs:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/pki/certs/
+  dh:
+    description: Diffie-Hellman algorithm.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/pki/dh/

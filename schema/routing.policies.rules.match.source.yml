@@ -1,0 +1,28 @@
+description: Source matching criteria.
+type: object
+properties:
+  address:
+    description: Source address, network (CIDR), or IP range.
+    type: string
+    anyOf:
+    - format: uc-cidr
+    - format: uc-ip
+    - format: uc-ip4range
+    - format: uc-ip6range
+  port:
+    description: Source port or range.
+    type:
+    - integer
+    - string
+    format: uc-portrange
+    examples:
+    - 2345
+    - 1024-65535
+  group:
+    description: Address/port group reference.
+    type: string
+  mac-address:
+    description: Source MAC address.
+    type: string
+    format: uc-mac
+    example: 98:e7:9a:27:fe:49

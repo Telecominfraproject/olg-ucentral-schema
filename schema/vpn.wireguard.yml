@@ -1,0 +1,12 @@
+description: 'WireGuard tunnels (OLG addition). Mirrors the native WireGuard settings of OpenWrt (netifd)
+  and VyOS: each tunnel is a network interface with its own key, port and addresses, and a list of peers.
+  Firewall zones and static routes refer to a tunnel by its name, like an interface.'
+type: object
+properties:
+  tunnels:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/vpn/wireguard/tunnels/
+not:
+  required:
+  - interfaces

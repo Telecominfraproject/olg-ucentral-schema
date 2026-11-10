@@ -1,0 +1,23 @@
+description: Destination matching criteria.
+type: object
+properties:
+  address:
+    description: Destination address, network (CIDR), or IP range.
+    type: string
+    anyOf:
+    - format: uc-cidr
+    - format: uc-ip
+    - format: uc-ip4range
+    - format: uc-ip6range
+  port:
+    description: Destination port or range.
+    type:
+    - integer
+    - string
+    format: uc-portrange
+    examples:
+    - 2345
+    - 1024-65535
+  group:
+    description: Address/port group reference.
+    type: string

@@ -1,0 +1,41 @@
+type: object
+properties:
+  name:
+    description: Name identifier for this peer configuration.
+    type: string
+  authentication:
+    $ref: https://ucentral.io/schema/v1/vpn/ipsec/remote-access/connections/authentication/
+  bind:
+    description: Vti interface to bind for this connection.
+    type: string
+  local-address:
+    description: Device IP address accepting IPsec connection, mutually exclusive with dhcp-interface.
+    type: string
+    format: ipv4
+  dhcp-interface:
+    description: DHCP interface accepting IPsec connection, mutually exclusive with local-address
+    type: string
+  remote-address:
+    description: Remote peer IP address.
+    type: string
+    format: ipv4
+  remote-id:
+    description: Remote identity for IKE authentication.
+    type: string
+  ike-group:
+    description: Name of the IKE group to use for this peer.
+    type: string
+  esp-group:
+    description: Name of the ESP group to use for this peer.
+    type: string
+  connection-type:
+    description: Connection initiation behavior.
+    type: string
+    enum:
+    - initiate
+    - none
+    - trap
+    default: none
+  pool:
+    description: Name of the IP address pool to assign to clients connecting to this peer.
+    type: string

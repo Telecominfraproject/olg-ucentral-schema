@@ -1,0 +1,36 @@
+type: object
+required:
+- name
+- private-key
+properties:
+  name:
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]{0,14}$
+    description: Tunnel name. Becomes the Linux device (at most 15 characters) and the name zones and
+      routes use.
+  private-key:
+    type: string
+    pattern: ^[A-Za-z0-9+/]{42}[AEIMQUYcgkosw480]=$
+    description: This device's private key for the tunnel (base64, 44 characters).
+  listen-port:
+    type: integer
+    minimum: 1
+    maximum: 65535
+    description: UDP port that accepts tunnel traffic. A device that only connects out can leave it out.
+  addresses:
+    type: array
+    items:
+      type: string
+      anyOf:
+      - format: uc-cidr4
+      - format: uc-cidr6
+    description: This device's addresses inside the tunnel, in CIDR notation.
+  mtu:
+    type: integer
+    minimum: 1280
+    maximum: 1500
+    description: Tunnel MTU. WireGuard's usual value is 1420.
+  peers:
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/vpn/wireguard/tunnels/peers/

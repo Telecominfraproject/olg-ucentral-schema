@@ -1,0 +1,28 @@
+description: Firewall address, port, and MAC groups for reuse in rules.
+type: object
+properties:
+  ipv4-address-groups:
+    description: Groups of IPv4 addresses.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/groups/ipv4-address-groups/
+  ipv4-network-groups:
+    description: Groups of IPv4 networks.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/groups/ipv4-network-groups/
+  ipv6-address-groups:
+    description: Groups of IPv6 addresses.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/groups/ipv6-address-groups/
+  ipv6-network-groups:
+    description: Groups of IPv6 networks.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/groups/ipv6-network-groups/
+  port-groups:
+    description: Groups of ports. Shared between IPv4 and IPv6 rulesets.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/firewall/groups/port-groups/

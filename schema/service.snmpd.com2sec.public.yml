@@ -1,0 +1,15 @@
+description: Public com2sec.
+type: object
+properties:
+  community:
+    description: Community name.
+    type: string
+    pattern: ^[A-Za-z0-9._@%+=:,-]{1,64}$
+  secname:
+    description: Security name.
+    type: string
+    pattern: ^[A-Za-z0-9_-]{1,32}$
+  source:
+    description: A restricted source can either be a specific hostname or a subnet.
+    type: string
+    pattern: ^(default|[0-9a-fA-F.:]+(/[0-9]{1,3})?)$

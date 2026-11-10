@@ -1,0 +1,41 @@
+description: "Configure periodic statistics collection and reporting. This metric enables \nmonitoring\
+  \ of various system subsystems and network components through regular \ndata collection intervals. Statistics\
+  \ include traffic counters, client \nassociations, neighbor information, and other operational metrics\
+  \ that help \ntrack system health and performance.\n"
+type: object
+properties:
+  interval:
+    description: "The reporting interval in seconds that defines how frequently statistics \nare collected\
+      \ and reported. This controls the balance between monitoring \ngranularity and system resource usage.\n\
+      \nMinimum value is 60 seconds to prevent excessive system load. Common \nvalues are 300 seconds\
+      \ (5 minutes) for regular monitoring or 120 seconds \n(2 minutes) for more detailed tracking.\n"
+    type: integer
+    minimum: 60
+    examples:
+    - 120
+    - 300
+    - 600
+  types:
+    description: "Array of subsystem types to monitor and report statistics for. Each type \nrepresents\
+      \ a different category of operational data that can be collected \nindependently.\n\nAvailable statistics\
+      \ types:\n- ssids: Wireless network statistics including client counts, traffic \n  volumes, and\
+      \ association metrics per SSID\n- lldp: Link Layer Discovery Protocol information about neighboring\
+      \ \n  network devices and topology\n- clients: Connected client device information including association\
+      \ \n  status, signal strength, and traffic statistics  \n- tid-stats: Traffic Identifier statistics\
+      \ for analyzing different \n  types of network traffic flows and QoS metrics\n"
+    type: array
+    items:
+      type: string
+      enum:
+      - ssids
+      - lldp
+      - clients
+      - tid-stats
+      examples:
+      - - ssids
+        - clients
+      - - lldp
+      - - ssids
+        - lldp
+        - clients
+        - tid-stats

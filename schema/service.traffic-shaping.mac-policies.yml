@@ -1,0 +1,19 @@
+type: object
+properties:
+  mac:
+    type: string
+    format: uc-mac
+  upload:
+    description: Mbps, decimals allowed for this MAC address.
+    type: number
+    minimum: 0
+    maximum: 10000
+  download:
+    description: Mbps, decimals allowed for this MAC address.
+    type: number
+    minimum: 0
+    maximum: 10000
+  description:
+    type: string
+required:
+- mac

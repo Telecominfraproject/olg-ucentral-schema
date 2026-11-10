@@ -1,0 +1,30 @@
+type: object
+properties:
+  protocol:
+    description: The port match can apply for TCP, UDP or any IP protocol.
+    type: string
+    enum:
+    - any
+    - tcp
+    - udp
+    default: any
+  port:
+    description: |
+      The TCP/UDP port number to match for traffic classification.
+      Can be combined with range-end to specify a port range.
+      Example: 80 for HTTP, 443 for HTTPS, 5060 for SIP.
+    type: integer
+  range-end:
+    description: |
+      The ending port number when defining a port range for classification.
+      Used together with 'port' to specify a range like 'port: 5060, range-end: 5070'.
+      Leave unset when matching a single port number.
+    type: integer
+  reclassify:
+    description: |
+      Controls whether to override existing DSCP markings on matching packets.
+      When true (default), applies the new DSCP marking regardless of existing values.
+      When false, only marks packets that don't already have DSCP markings.
+      Set to false to preserve upstream QoS markings.
+    type: boolean
+    default: true

@@ -1,0 +1,10 @@
+type: object
+properties:
+  address:
+    description: IP address of the upstream DNS server.
+    type: string
+    format: uc-ip
+  port:
+    description: Port number of the upstream DNS server.
+    type: integer
+    maximum: 65535

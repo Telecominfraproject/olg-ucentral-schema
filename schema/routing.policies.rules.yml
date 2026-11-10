@@ -1,0 +1,25 @@
+type: object
+properties:
+  name:
+    description: Rule name for reference when binding to interfaces.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  priority:
+    description: Rule priority. Lower values evaluated first.
+    type: integer
+    minimum: 1
+    maximum: 65535
+  match:
+    $ref: https://ucentral.io/schema/v1/routing/policies/rules/match/
+  action:
+    description: Action for matching traffic
+    type: string
+    enum:
+    - accept
+    - reject
+    - drop
+  set:
+    $ref: https://ucentral.io/schema/v1/routing/policies/rules/set/
+required:
+- priority
+- action

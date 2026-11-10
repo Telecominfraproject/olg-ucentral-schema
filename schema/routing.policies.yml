@@ -1,0 +1,21 @@
+description: Policy-based routing configuration.
+type: object
+properties:
+  name:
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]*$
+  interface:
+    description: Interface to apply this policy to.
+    type: string
+    pattern: ^[A-Za-z][A-Za-z0-9_-]{0,11}$
+  address-family:
+    description: IPv4 or IPv6 policy.
+    type: string
+    enum:
+    - ipv4
+    - ipv6
+  rules:
+    description: Policy routing rules.
+    type: array
+    items:
+      $ref: https://ucentral.io/schema/v1/routing/policies/rules/
